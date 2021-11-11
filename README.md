@@ -1,7 +1,6 @@
 # FairPolitics project
 # Languages:
-## Backend: Python(django),nodeJs(express).
+## Backend: Python,nodeJs(express).
 ## Frontend: html,css,reactJs,bootstrap.
-## DataBases:MongoDb,redis, mySql?
-## Docker?
+## DataBase: MySql.
 ## [color:red]BloodBrother!
