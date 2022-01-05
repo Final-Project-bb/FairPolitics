@@ -271,6 +271,9 @@ export const Bars = styled(FaBars)`
         position: absolute;
     top: 0;
     right: 0;
+    &:hover {
+  color: green;
+  }
   @media screen and (max-width: 768px) {
     display: flex;
     position: absolute;
@@ -281,7 +284,29 @@ export const Bars = styled(FaBars)`
     cursor: pointer;
   }
 `;
-
+export const Language = styled.div`
+  display: flex;
+  color: #fff;
+  font-size: 1rem;
+  ${'' /* position: sticky;
+    top: 0px;
+    left: 1070px; */}
+        position: absolute;
+    top: 0;
+    right: 70px;
+    &:hover {
+  color: green;
+  }
+  @media screen and (max-width: 768px) {
+    display: flex;
+    position: absolute;
+    top: 0;
+    right: 15px;
+    transform: translate(-100%, 75%);
+    font-size: 1rem;
+    cursor: pointer;
+  }
+`;
 export const NavMenuBar = styled.div`
   display: none;
   align-items: center;

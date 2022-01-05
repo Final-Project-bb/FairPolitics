@@ -9,6 +9,7 @@ import {
     NavLinkSearch,
     NavMenuBar,
     Bars,
+    Language,
     NavMenu,
     NavBtn,
     NavBtnLink,
@@ -28,12 +29,15 @@ const Navbar = () => {
     }
     const onSearch = (event) => {
         event.preventDefault();
-        alert("click")
+        alert("Search clicked")
     }
     const onPressBar = (event) => {
         event.preventDefault();
         setOnBar(!onBar)
         // alert("bar clicked")
+    }
+    const onLanguagePress=()=>{
+        alert("Language clicked")
     }
     // let navHeight= "80px"  
     useEffect(() => {
@@ -78,6 +82,7 @@ const Navbar = () => {
                 {/* </NavLinkSearch> */}
 
                 <Bars onClickCapture={onPressBar} />
+                <Language onClickCapture={onLanguagePress}>language </Language>
                 {/* {!onBar && style={{display:navDisplay}}*/}
 
                 {/* } */}
