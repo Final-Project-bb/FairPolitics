@@ -1,4 +1,4 @@
-const likes = require('./models/like');
+const Like = require('./models/like');
 
 class Comment {
     constructor(
@@ -11,7 +11,7 @@ class Comment {
         this.post_id = post_id;
         this.user_id = user_id;
         this.comment = comment;
-        this.likes = [likes];
+        this.likes = [Like];
     }
 }
 

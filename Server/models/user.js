@@ -1,4 +1,4 @@
-const picture = require('./models/picture');
+const Picture = require('./models/picture');
 
 class User {
   constructor(
@@ -23,7 +23,7 @@ class User {
     this.date_of_birth = date_of_birth;
     this.job_title = job_title;
     this.description = description;
-    this.profile_picture = picture;
+    this.profile_picture = Picture;
     this.gender = gender;
     this.rating = rating;
   }

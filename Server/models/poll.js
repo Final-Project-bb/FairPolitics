@@ -1,5 +1,5 @@
-const answers = require('./models/answer');
-const pictures = require('./models/picture');
+const Answer = require('./models/answer');
+const Picture = require('./models/picture');
 
 class Poll {
     constructor(
@@ -12,8 +12,8 @@ class Poll {
         this.user_id = user_id;
         this.title = title;
         this.description = description;
-        this.pictures = [pictures];
-        this.answers = [answers];
+        this.pictures = [Picture];
+        this.answers = [Answer];
     }
 }
 
