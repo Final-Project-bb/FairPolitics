@@ -1,7 +1,7 @@
 const express = require('express');
 const { createDiscussion, getDiscussion, updateDiscussion, deleteDiscussion,
         addComment, addLikeToDiscussion, addLikeToComment, getComment,
-        getLikeOfDiscussion, getLikeOfComment } =
+        getLikeOfDiscussion, getLikeOfComment, discussionsByID, discussionsFollowing } =
         require("../controllers/discussion_controller")
 
 const router = express.Router();
@@ -16,6 +16,8 @@ router.post("/add_like_to_comment/:comment_id/:user_id", addLikeToComment);
 router.get("/get_comment/:discussion_id/:user_id/:comment_id", getComment);
 router.get("/get_like_of_discussion/:discussion_id/:user_id", getLikeOfDiscussion);
 router.get("/get_like_of_comment/:comment_id/:user_id", getLikeOfComment);
+router.get("/discussions_by_id/:user_id", discussionsByID);
+router.get("/discussion_feed/:user_id", discussionsFollowing);
 
 module.exports = {
     routes: router

@@ -41,6 +41,14 @@ const getLikeOfComment = async (req, res, next) => {
     
 }
 
+const discussionsByID = async (req, res, next) => {
+    
+}
+
+const discussionsFollowing = async (req, res, next) => {
+    
+}
+
 module.exports = {
     createDiscussion,
     getDiscussion,
@@ -51,5 +59,7 @@ module.exports = {
     addLikeToComment,
     getComment,
     getLikeOfDiscussion,
-    getLikeOfComment
+    getLikeOfComment,
+    discussionsByID,
+    discussionsFollowing
 };

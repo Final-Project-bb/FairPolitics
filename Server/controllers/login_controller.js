@@ -21,10 +21,20 @@ const auth = async (req, res, next) => {
     
 }
 
+const getFollowing = async (req, res, next) => {
+    
+}
+
+const getFollowers = async (req, res, next) => {
+    
+}
+
 module.exports = {
     createUser,
     getUser,
     updateUser,
     deleteUser,
-    auth
+    auth,
+    getFollowing,
+    getFollowers
 };
