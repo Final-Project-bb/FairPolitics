@@ -21,10 +21,20 @@ const answerPoll = async (req, res, next) => {
     
 }
 
+const pollsByID = async (req, res, next) => {
+    
+}
+
+const pollsFollowing = async (req, res, next) => {
+    
+}
+
 module.exports = {
     createPoll,
     getPoll,
     updatePoll,
     deletePoll,
-    answerPoll
+    answerPoll,
+    pollsByID,
+    pollsFollowing
 }
