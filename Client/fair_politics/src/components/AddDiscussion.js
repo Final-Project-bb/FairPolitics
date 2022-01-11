@@ -31,9 +31,10 @@ const AddDiscussion = () => {
                 <label>Tagged elected officials:</label>
                 <input
                     type="text"
-                    // pattern="[@]{1}[a-z][a-z]"
+                    // pattern="[@]{1}[a-z]"
                     // required
                     placeholder='valid tags format!'
+                    className='tagInput'
                     value={tags}
                     onChange={(e) => setTags(e.target.value)}
                 />
