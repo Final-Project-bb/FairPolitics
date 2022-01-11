@@ -63,6 +63,7 @@ const Register = () => {
                     placeholder='valid phone number!'
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
+                    className='inputPhoneNum'
                 />
                 <small>05... requird Exmple: 0544567891</small><br />
                 <input type="submit" />
