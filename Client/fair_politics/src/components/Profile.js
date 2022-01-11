@@ -11,8 +11,8 @@ const Profile = () => {
       <Header title="Profile Page" />
       <ProfileShowDetails/>
       <div style={styles.order}>
-      <NavLink to='/profile/addDiscussion'>Add Discussion</NavLink><br/>
-      <NavLink to='/profile/addFeedback'>Add Feedback</NavLink>
+      <NavLink to='/profile/addDiscussion' className={"addDiscussionLink"}>Add Discussion</NavLink><br/>
+      <NavLink to='/profile/addFeedback' className={"addFeedbackLink"}>Add Feedback</NavLink>
         <DiscussionCard />
         <FeedbackCard />
       </div>

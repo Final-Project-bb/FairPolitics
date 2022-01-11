@@ -93,6 +93,7 @@ const Navbar = () => {
                             <NavLinkBar
                                 key={index}
                                 to={item.url}
+                                className={item.cName}
                             >
                                 {item.title}
                             </NavLinkBar>
@@ -112,6 +113,7 @@ const Navbar = () => {
                                 <NavLink
                                     key={index}
                                     to={item.url}
+                                    className={item.cName}
                                 >
                                     {item.title}<br />
                                 </NavLink>
