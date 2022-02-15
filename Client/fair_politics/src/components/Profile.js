@@ -9,12 +9,16 @@ const Profile = () => {
     <div>
       {/* <a href=''>Login<a/> */}
       <Header title="Profile Page" />
-      <ProfileShowDetails/>
       <div style={styles.order}>
-      <NavLink to='/profile/addDiscussion' className={"addDiscussionLink"}>Add Discussion</NavLink><br/>
-      <NavLink to='/profile/addFeedback' className={"addFeedbackLink"}>Add Feedback</NavLink>
-        <DiscussionCard />
-        <FeedbackCard />
+      <div style={styles.profileHead}>
+        <ProfileShowDetails />
+        <NavLink to='/profile/addDiscussion' className={"addDiscussionLink"}>Add Discussion</NavLink><br />
+        <NavLink to='/profile/addFeedback' className={"addFeedbackLink"}>Add Feedback</NavLink>
+        </div>
+        <div style={styles.card}>
+          <DiscussionCard />
+          <FeedbackCard />
+        </div>
       </div>
     </div>
   )
@@ -23,6 +27,16 @@ const Profile = () => {
 const styles = {
   order: {
     flexDirection: 'row',
+  },
+  card: {
+    display: "flex",
+    justifyContent: 'space-around',
+    flexDirection: 'row',
+    // color:"yellow",
+    //       flex: 1,
+
+    //       padding: 24,
+    //       backgroundColor: "#eaeaea"
   },
   head: {
     // color:"yellow",
@@ -46,7 +60,13 @@ const styles = {
     //   textAlign: "center",
     fontSize: 30,
     fontWeight: "bold"
-  }
+  },
+  profileHead:{
+  display: "flex",
+  position:"relative",
+  top:30,
+  justifyContent: 'space-around',
+  flexDirection: 'column',},
 };
 
 
