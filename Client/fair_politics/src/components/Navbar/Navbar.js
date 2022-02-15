@@ -98,7 +98,7 @@ const Navbar = () => {
                                 {item.title}
                             </NavLinkBar>
                         )
-
+                        
                     })}
                 </NavMenuBar>
                 <NavBtn>
