@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useHistory } from "react-router-dom";
 import Header from './Header';
+import ProfileHeader from './ProfileHeader';
 import styled from 'styled-components';
 
 const AddDiscussion = () => {
@@ -29,6 +30,7 @@ const AddDiscussion = () => {
     return (
         <div>
             <Header title="Add Discussion page" />
+            <ProfileHeader/>
             <RegisterFormStyle>
                 <form onSubmit={addDiscussionSubmit}>
                     <label>Tagged elected officials:</label>

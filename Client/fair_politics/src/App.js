@@ -9,6 +9,7 @@ import Home from './components/Home';
 import Profile from './components/Profile';
 import AddDiscussion from './components/AddDiscussion';
 import AddFeedback from './components/AddFeedback';
+import AboutMe from './components/AboutMe';
 import {
   BrowserRouter as Router,
   Switch,
@@ -38,6 +39,9 @@ function App() {
         </Route>
         <Route exact path="/profile">
           <Profile />
+        </Route>
+        <Route exact path="/profile/aboutProfile">
+          <AboutMe />
         </Route>
         <Route exact path="/profile/addDiscussion">
           <AddDiscussion />
