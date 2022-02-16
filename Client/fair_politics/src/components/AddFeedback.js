@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useHistory } from "react-router-dom";
 import Header from './Header';
+import ProfileHeader from './ProfileHeader';
 import styled from 'styled-components';
 
 const AddFeedback = () => {
@@ -29,6 +30,7 @@ const AddFeedback = () => {
     return (
         <div>
             <Header title="Add Feedback page" />
+            <ProfileHeader/>
             <RegisterFormStyle>
                 <form onSubmit={addFeedbackSubmit}>
                     <label>title of the question:</label>

@@ -3,12 +3,12 @@ const ProfileShowDetails = () => {
     const UserInfo = [
         {
             user_id: 1,
-            FirstName: "Tal",
-            LastName: "Schreiber",
-            Location: "Ramat-gan",
+            FirstName: "Israel",
+            LastName: "Israeli",
+            Location: "Ramat-Gan",
             occupation: "Computer Science student",
-            Picture: "Tal.jpeg",
-            Age: 24,
+            Picture: '../images/profilePicExmple.jpg',
+            Age: 26,
             IsPublicelected: false
         }
     ];
@@ -48,7 +48,7 @@ const styles = {
         position: "absolute",
         // marginLeft:10,
         fontSize: 25,
-        top: 150,
+        top: -40,
         left: 150
     },
     profileHead:{
@@ -56,16 +56,17 @@ const styles = {
         justifyContent: 'space-around',
         flexDirection: 'column',
         position: "absolute",
-        left: 10,
+        left: -50,
+        top:-70
     },
     semiDetails: {
         display: "flex",
         justifyContent: 'space-around',
         flexDirection: 'column',
-        position: "absolute",
+        position: "relative",
         left: 200,
-        margin:20,
-        top:0
+        margin:0,
+        top:-80
     },
 };
 

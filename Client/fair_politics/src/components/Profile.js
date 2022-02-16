@@ -1,26 +1,23 @@
 import React from 'react'
-import { NavLink } from "react-router-dom"
+import { NavLink as Link } from "react-router-dom"
 import Header from './Header';
+import ProfileHeader from './ProfileHeader';
 import ProfileShowDetails from './ProfileShowDetails';
 import DiscussionCard from './DiscussionCard';
 import FeedbackCard from './FeedbackCard';
+import styled from 'styled-components';
 const Profile = () => {
   return (
     <div>
       {/* <a href=''>Login<a/> */}
       <Header title="Profile Page" />
-      <div style={styles.order}>
-      <div style={styles.profileHead}>
-        <ProfileShowDetails />
-        <NavLink to='/profile/addDiscussion' className={"addDiscussionLink"}>Add Discussion</NavLink><br />
-        <NavLink to='/profile/addFeedback' className={"addFeedbackLink"}>Add Feedback</NavLink>
-        </div>
-        <div style={styles.card}>
-          <DiscussionCard />
-          <FeedbackCard />
-        </div>
+      <ProfileHeader />
+      <div style={styles.card}>
+        <DiscussionCard />
+        <FeedbackCard />
       </div>
     </div>
+    // </div >
   )
 }
 
@@ -61,13 +58,122 @@ const styles = {
     fontSize: 30,
     fontWeight: "bold"
   },
-  profileHead:{
-  display: "flex",
-  position:"relative",
-  top:30,
-  justifyContent: 'space-around',
-  flexDirection: 'column',},
+  profileHead: {
+    display: "flex",
+    position: "relative",
+    top: 10,
+    justifyContent: 'space-around',
+    flexDirection: 'column',
+    margin: 50,
+
+  },
+  addDisButton: {
+    display: "flex",
+    position: "absolute",
+    top: 110,
+    left: 180,
+    fontSize: 20,
+    textDecoration: 'none',
+    color: "red",
+    fontWeight: "bold",
+    // justifyContent: 'space-around',
+  },
+  addFeedButton: {
+    display: "flex",
+    position: "absolute",
+    top: 110,
+    left: 350,
+    fontSize: 20,
+    textDecoration: 'none',
+    color: "red",
+    fontWeight: "bold",
+    // justifyContent: 'space-around',
+  },
+  profileBody: {
+    // display: "flex",
+    // position: "absolute",
+    // top: 110,
+    // left:180,
+    // backgroundColor:"red",
+    // height:150,
+    // left:0,
+    // top:0,
+    // // margin:100,
+  },
 };
-
-
+const NavLinkAbout = styled(Link)`
+  color: #fff;
+   ${'' /* justify-content: space-between; */}
+   flex-direction:row;
+   color:white;
+   font-weight:bold;
+   display: flex;
+   align-items: center;
+   position: absolute;
+  left:50px; 
+  ${'' /* fontSize:30px; */}
+  ${'' /* size:30px; */}
+  text-decoration: none;
+  ${'' /* margin-left: 30px; */}
+  top:-100px;
+  ${'' /* padding: 0 0.1rem; */}
+  height: 100%;
+  cursor: pointer;  
+  &:hover {
+  color: green;
+  }
+  &.active {
+    color: #15cdfc; 
+  }
+`;
+const NavLinkDis = styled(Link)`
+  color: #fff;
+   ${'' /* justify-content: space-between; */}
+   flex-direction:row;
+   color:white;
+   font-weight:bold;
+   display: flex;
+   align-items: center;
+   position: absolute;
+  left:140px; 
+  ${'' /* fontSize:30px; */}
+  ${'' /* size:30px; */}
+  text-decoration: none;
+  ${'' /* margin-left: 30px; */}
+  top:-100px;
+  ${'' /* padding: 0 0.1rem; */}
+  height: 100%;
+  cursor: pointer;  
+  &:hover {
+  color: green;
+  }
+  &.active {
+    color: #15cdfc; 
+  }
+`;
+const NavLinkFeed = styled(Link)`
+  color: #fff;
+   ${'' /* justify-content: space-between; */}
+   flex-direction:row;
+   color:white;
+   font-weight:bold;
+   display: flex;
+   align-items: center;
+   position: absolute;
+  left:270px; 
+  ${'' /* fontSize:30px; */}
+  ${'' /* size:30px; */}
+  text-decoration: none;
+  ${'' /* margin-left: 30px; */}
+  top:-100px;
+  ${'' /* padding: 0 0.1rem; */}
+  height: 100%;
+  cursor: pointer;  
+  &:hover {
+  color: green;
+  }
+  &.active {
+    color: #15cdfc; 
+  }
+`;
 export default Profile

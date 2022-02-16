@@ -102,11 +102,11 @@ const Navbar = () => {
                     })}
                 </NavMenuBar>
                 <NavBtn>
-                    <NavBtnLink to='/connection/login'>Sign In</NavBtnLink>
+                    <NavBtnLink to='/connection/login' style={{ display: navDisplay === "none" ? "flex" : "none" }}>Sign In</NavBtnLink>
                 </NavBtn>
                 <div >
                     {/* {onBar && */}
-                    <NavMenu style={{ display: navDisplay == "none" ? "flex" : "none" }}>
+                    <NavMenu style={{ display: navDisplay === "none" ? "flex" : "none" }}>
                         <br />
                         {MenuItems.map((item, index) => {
                             return (

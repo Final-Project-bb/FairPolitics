@@ -89,11 +89,12 @@ const LoginFormStyle = styled.div`
  ${'' /* background-position: 50% 50%; */}
  ${'' /* background-repeat: no-repeat; */}
   padding-left: 2rem;
-  background: transparent linear-gradient(93deg,#025fdb 0%,#025fdb 35%,#0b3668 100%) 0% 0% no-repeat padding-box;
+  background: transparent linear-gradient(150deg,#025fdb 0%,#025fdb 35%,#0b3668 100%) 0% 0% no-repeat padding-box;
   box-shadow: 0 3px 20px rgb(0 0 0 / 8%);
   height: 300px;
   width:500px;  
   position:absolute;
+  top:180px;
   left:550px;
   border-radius:30px;
   ${'' /* display: flex; */}
