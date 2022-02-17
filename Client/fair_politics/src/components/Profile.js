@@ -9,7 +9,6 @@ import styled from 'styled-components';
 const Profile = () => {
   return (
     <div>
-      {/* <a href=''>Login<a/> */}
       <Header title="Profile Page" />
       <ProfileHeader />
       <div style={styles.card}>
@@ -17,7 +16,6 @@ const Profile = () => {
         <FeedbackCard />
       </div>
     </div>
-    // </div >
   )
 }
 
@@ -29,32 +27,21 @@ const styles = {
     display: "flex",
     justifyContent: 'space-around',
     flexDirection: 'row',
-    // color:"yellow",
-    //       flex: 1,
-
-    //       padding: 24,
-    //       backgroundColor: "#eaeaea"
   },
   head: {
-    // color:"yellow",
     flex: 1,
-
     padding: 24,
     backgroundColor: "#eaeaea"
   },
   title: {
     flexDirection: 'row',
-    // justifyContent: 'space-around',
-    //   marginTop: 0,
     paddingVertical: 8,
     padding: 20,
     textDecoration: 'none',
     borderWidth: 4,
     borderColor: "#20232a",
-    //   borderRadius: 0,
     backgroundColor: "#61dafb",
     color: "#20232a",
-    //   textAlign: "center",
     fontSize: 30,
     fontWeight: "bold"
   },
@@ -65,7 +52,6 @@ const styles = {
     justifyContent: 'space-around',
     flexDirection: 'column',
     margin: 50,
-
   },
   addDisButton: {
     display: "flex",
@@ -76,7 +62,6 @@ const styles = {
     textDecoration: 'none',
     color: "red",
     fontWeight: "bold",
-    // justifyContent: 'space-around',
   },
   addFeedButton: {
     display: "flex",
@@ -90,13 +75,6 @@ const styles = {
     // justifyContent: 'space-around',
   },
   profileBody: {
-    // display: "flex",
-    // position: "absolute",
-    // top: 110,
-    // left:180,
-    // backgroundColor:"red",
-    // height:150,
-    // left:0,
     // top:0,
     // // margin:100,
   },
