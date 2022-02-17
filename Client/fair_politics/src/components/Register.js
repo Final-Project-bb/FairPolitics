@@ -53,9 +53,9 @@ const Register = () => {
         history.push("/connection/login");
     }
     return (
-        <div >
+        <div>
             <Header title="Register Page" />
-            <RegisterFormStyle>
+            <RegisterFormStyle style={{position: "relative"}}>
             <form onSubmit={phoneSubmit}>
                 <label>Enter a Phone Number:</label>
                 <input
@@ -152,7 +152,7 @@ const RegisterFormStyle = styled.div`
   width:500px;  
   position:absolute;
   left:550px;
-  top:180px;
+  top:40px;
   border-radius:30px;
   ${'' /* display: flex; */}
   flex-direction:row;
