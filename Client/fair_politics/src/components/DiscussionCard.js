@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components';
 
-const DiscussionCard = (DiscussionCards) => {
+const DiscussionCard = () => {
     const [commentsButtonId, setCommentsButtonId] = useState(0);
     const [commentsButton, setCommentsButton] = useState(false);
     const [height, setHeight] = useState(0);
