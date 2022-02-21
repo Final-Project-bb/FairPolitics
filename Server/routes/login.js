@@ -2,6 +2,7 @@ const express = require('express');
 const { createUser, getUser, updateUser, deleteUser, auth,
         getFollowing, getFollowers} = require("../controllers/login_controller")
 
+
 const router = express.Router();
 
 router.post("/create_user", createUser);
