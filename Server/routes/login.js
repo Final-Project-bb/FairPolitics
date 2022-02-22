@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-// const connection = require('../lib/db');
+const connection = require('../lib/db');
 
 const { createUser, getUser, updateUser, deleteUser, auth,
         getFollowing, getFollowers} = require("../controllers/login_controller")

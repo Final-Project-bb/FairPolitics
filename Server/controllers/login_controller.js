@@ -4,26 +4,28 @@ const mysql = require('mysql');
 const connection  = require('../lib/db');
 const session = require('express-session');
 const path = require('path');
+const { Console } = require("console");
 
 
 const createUser = async (req, res, next) => {
 
 }
 
-const getUser = async (req, res, next) => {
-	var user_id = req.body.user_id;
-    connection.query('select * from user_details where user_id = ?', [user_id], function (err, rows) {
+const getUser = (req, res) => {
+    console.log("in getUser func");
+    var user_id = req.params.user_id;
+    console.log("user_id= "+user_id );
+    connection.query(`select * from user_details where user_id = ${user_id}`, function (err, result) {
         if (err) {
-			// throw err;
-			console.log(err);
+			throw err;
 		} 
         // if user not found
-        if (rows.length <= 0) {
+        if (result.length <= 0) {
             res.status(404).send({ message: "user_id dosen't found!" });
         }
         else { // if user found
-            req.session.loggedin = true;
-			res.status(200).send({ rows });
+            // req.session.loggedin = true;
+			res.status(200).send({ result });
         }
     })
 }
