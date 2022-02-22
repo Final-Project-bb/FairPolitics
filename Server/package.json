@@ -8,6 +8,7 @@
     "start": "nodemon index.js",
     "algo": "node algo.js"
   },
+
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -16,6 +17,13 @@
     "express-session": "^1.17.2",
     "express-validator": "^6.14.0",
     "method-override": "^3.0.0",
-    "mysql": "^2.18.1"
-  }
+    "mysql": "^2.18.1",
+    "cors": "^2.8.5",
+    "body-parser": "^1.19.0"
+  },
+  
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+}
+  
 }
