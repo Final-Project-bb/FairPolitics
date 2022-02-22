@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const express = require('express');
 const mysql = require('mysql');
-const connection  = require('./lib/db');
+const connection  = require('../lib/db');
 const session = require('express-session');
 const path = require('path');
 
@@ -14,7 +14,8 @@ const getUser = async (req, res, next) => {
 	var user_id = req.body.user_id;
     connection.query('select * from user_details where user_id = ?', [user_id], function (err, rows) {
         if (err) {
-			throw err;
+			// throw err;
+			console.log(err);
 		} 
         // if user not found
         if (rows.length <= 0) {

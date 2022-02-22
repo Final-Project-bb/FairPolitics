@@ -1,5 +1,5 @@
-const Answer = require('./models/answer');
-const Picture = require('./models/picture');
+const Answer = require('../models/answer');
+const Picture = require('../models/picture');
 
 class Poll {
     constructor(
