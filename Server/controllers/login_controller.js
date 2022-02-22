@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const express = require('express');
 const mysql = require('mysql');
-const connection  = require('./lib/db');
+const connection  = require('../lib/db');
 const session = require('express-session');
 const path = require('path');
 

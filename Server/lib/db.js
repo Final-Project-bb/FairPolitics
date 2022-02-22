@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 
 const connection = mysql.createConnection({
-    host: 'localhost',
+    host: 'localhost:3306',
     user: 'root',
     password: 'sheva7',
     database: 'fairpoliticsdb'
@@ -10,6 +10,7 @@ const connection = mysql.createConnection({
 connection.connect(function (error) {
     if (error) {
         console.log(error);
+        console.log('Not Connected!:)');
     }
     else {
         console.log('Connected!:)');
