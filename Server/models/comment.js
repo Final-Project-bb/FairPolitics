@@ -1,4 +1,4 @@
-const Like = require('./models/like');
+const Like = require('../models/like');
 
 class Comment {
     constructor(

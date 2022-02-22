@@ -14,7 +14,8 @@ const getUser = async (req, res, next) => {
 	var user_id = req.body.user_id;
     connection.query('select * from user_details where user_id = ?', [user_id], function (err, rows) {
         if (err) {
-			throw err;
+			// throw err;
+			console.log(err);
 		} 
         // if user not found
         if (rows.length <= 0) {
