@@ -6,17 +6,21 @@ import styled from 'styled-components';
 
 const Login = () => {
   const [phone, setPhone] = useState();
+  const [password, setPassword] = useState();
   const history = useHistory();
   const handleClick = () => {
     history.push("/connection/register");
   }
-
+  
+const login=()=>{
+ console.log("as");
+}
   return (
     <div >
       {/* <a href=''>Login<a/> */}
       <Header title="Login Page" />
       <LoginFormStyle>
-        <form>
+        <form onSubmit={login()}>
           <label style={styles.label}>Enter a Phone Number:</label>
           <input
             style={styles.input}
@@ -28,6 +32,18 @@ const Login = () => {
             onChange={(e) => setPhone(e.target.value)}
           />
           <small style={styles.small}>05... requird Exmple: 0544567891</small><br />
+          <label style={styles.label2}>Enter a password:</label>
+          <input
+            style={styles.input2}
+            type="tel"
+            // pattern="[0]{1}[5]{1}[0-9]{8}"
+            required
+            placeholder='valid password!'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <small style={styles.small2}>valid password!</small><br />
+          <button style={styles.subBut}>submit</button><br />
         </form>
         <button>Facebook</button><br />
         <button>Gmail</button><br />
@@ -49,12 +65,30 @@ const styles = {
   label:{
     position:"absolute",
     left:"140px",
-    // top:"45px",
+    top:"5px",
+  },
+  subBut:{
+    position:"absolute",
+    left:"330px",
+    top:"55px",
+  },
+  label2:{
+    position:"absolute",
+    left:"140px",
+    top:"55px",
   },
   input: {
     position:"absolute",
     left:"140px",
-    top:"45px",
+    top:"30px",
+    borderRadius:"10px",
+    borderWidth:"3px",
+    borderColor:"green", 
+  }, 
+   input2: {
+    position:"absolute",
+    left:"140px",
+    top:"80px",
     borderRadius:"10px",
     borderWidth:"3px",
     borderColor:"green", 
@@ -62,7 +96,12 @@ const styles = {
   small:{
     position:"absolute",
     left:"320px",
-    top:"50px"
+    top:"30px"
+  },
+  small2:{
+    position:"absolute",
+    left:"320px",
+    top:"80px"
   },
   title: {
     flexDirection: 'row',

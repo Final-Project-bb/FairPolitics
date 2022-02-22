@@ -7,47 +7,169 @@ const path = require('path');
 const { Console } = require("console");
 
 
-const createUser = async (req, res, next) => {
+const createUser = (req, res) => {
+    var sqlFindUserId = `select * from user_details where user_id = ${req.body.user_id}`;
 
+    var sqlInsert = `Insert into user_details(user_id,first_name,last_name,city,birthdate,job_title,description,profile_picture,gender)
+    values(${req.body.user_id},${JSON.stringify(req.body.first_name)},${JSON.stringify(req.body.last_name)},${JSON.stringify(req.body.city)}
+    ,${JSON.stringify(req.body.birthdate)},${JSON.stringify(req.body.job_title)},${JSON.stringify(req.body.description)}
+    ,${JSON.stringify(req.body.profile_picture)}, ${JSON.stringify(req.body.gender)})`;
+    
+    connection.query(sqlFindUserId, function (err, result) {
+        if (err) {
+			throw err;
+		} 
+        // if user not exist
+        if (result.length === 0) {
+            connection.query(sqlInsert);
+            res.status(200).send({ message: "user created successfully" });
+        }
+        else { // if user exist
+			res.status(404).send({ message: "user already exists" });
+        }
+    })
 }
 
 const getUser = (req, res) => {
-    console.log("in getUser func");
     var user_id = req.params.user_id;
-    console.log("user_id= "+user_id );
     connection.query(`select * from user_details where user_id = ${user_id}`, function (err, result) {
         if (err) {
 			throw err;
 		} 
         // if user not found
-        if (result.length <= 0) {
-            res.status(404).send({ message: "user_id dosen't found!" });
+        if (result.length === 0) {
+            res.status(404).send({ message: "user_id not exists!" });
         }
         else { // if user found
-            // req.session.loggedin = true;
 			res.status(200).send({ result });
         }
     })
 }
 
-const updateUser = async (req, res, next) => {
+const updateUser = (req, res) => {
+    var sqlFindUserId = `select * from user_details where user_id = ${req.body.user_id}`;
     
+    var sqlUpdate = `UPDATE user_details set first_name=${JSON.stringify(req.body.first_name)},last_name=${JSON.stringify(req.body.last_name)},
+    city=${JSON.stringify(req.body.city)},birthdate=${JSON.stringify(req.body.birthdate)},job_title=${JSON.stringify(req.body.job_title)},
+    description=${JSON.stringify(req.body.description)},profile_picture=${JSON.stringify(req.body.profile_picture)},gender=${JSON.stringify(req.body.gender)}
+    where user_id=${JSON.stringify(req.body.user_id)}`;
+    
+    connection.query(sqlFindUserId, function (err, result) {
+        if (err) {
+			throw err;
+		} 
+        // if user not exist
+        if (result.length === 0) {
+            res.status(404).send({ message: "user_id not exists!" });
+        }
+        else { // if user exist
+            connection.query(sqlUpdate);
+            res.status(200).send({ message: "user update successfully" });
+        }
+    })
 }
 
-const deleteUser = async (req, res, next) => {
-    
+const deleteUser = (req, res) => {
+    var user_id = req.params.user_id;
+    connection.query(`delete from user_details where user_id = ${user_id}`, function (err, result) {
+        if (err) {
+			throw err;
+		} 
+        // if user not found
+        if (result.length === 0) {
+            res.status(404).send({ message: "user_id not exists!" });
+        }
+        else { // if user found
+			res.status(200).send({ message:"user delete successfully!" });
+        }
+    })
 }
 
-const auth = async (req, res, next) => {
+//Note: didn't check this function yet!
+const auth = (req, res) => {
+    var sqlFindUserId = `select * from login_details where user_id = ${req.body.user_id}`;
+
+    var sqlInsert = `Insert into login_details(user_id,phone_number,password)
+    values(${req.body.user_id},${JSON.stringify(req.body.phone_number)},${JSON.stringify(req.body.password)})`;
     
+    connection.query(sqlFindUserId, function (err, result) {
+        if (err) {
+			throw err;
+		} 
+        // if user not exist
+        if (result.length === 0) {
+            //Note: auth with sms temp code !!
+            connection.query(sqlInsert);
+            res.status(200).send({ message: "user auth successfully" });
+        }
+        else { //Note: if user exist, need to check where it should be taking care of.
+			res.status(404).send({ message: "user already exists" });
+        }
+    })
 }
 
-const getFollowing = async (req, res, next) => {
-    
+const getFollowing = (req, res) => {
+    var user_id = req.params.user_id;
+    connection.query(`select user_following_id from follower where user_id= ${user_id}`, function (err, result) {
+        if (err) {
+			throw err;
+		}
+        else {
+			res.status(200).send({ result });
+        }
+    })
 }
 
-const getFollowers = async (req, res, next) => {
+const getFollowers = (req, res) => {
+    var user_id = req.params.user_id;
+    connection.query(`select user_id from follower where user_following_id= ${user_id}`, function (err, result) {
+        if (err) {
+			throw err;
+		}
+        else {
+			res.status(200).send({ result });
+        }
+    })
+}
+//select user_following_id from follower where user_id=111 and user_following_id=222
+const addFollowing = (req, res) => {
+    var sqlUserId = `select user_following_id from follower where user_id=${req.body.user_id} and user_following_id = ${req.body.user_following_id}`;
+    var sqlInsert = `Insert into follower(user_id,user_following_id)
+    values(${req.body.user_id},${JSON.stringify(req.body.user_following_id)})`;
     
+    connection.query(sqlUserId, function (err, result) {
+        if (err) {
+			throw err;
+		} 
+        // if user not exist
+        if (result.length === 0) {
+            connection.query(sqlInsert);
+            res.status(200).send({ message: "user following successfully" });
+        }
+        else { // if user exist
+			res.status(404).send({ message: "user already following" });
+        }
+    })
+}
+
+// delete from user_details where user_id = ${user_id}
+const removeFollowing = (req, res) => {
+    var sqlUserId = `select user_following_id from follower where user_id=${req.body.user_id} and user_following_id = ${req.body.user_following_id}`;
+    var sqlDel = `delete from follower where user_id=${req.body.user_id} and user_following_id = ${req.body.user_following_id}`;
+    
+    connection.query(sqlUserId, function (err, result) {
+        if (err) {
+			throw err;
+		} 
+        // if user not exist
+        if (result.length === 0) {
+            res.status(404).send({ message: `user ${req.body.user_following_id} not following` });
+        }
+        else { // if user exist
+            connection.query(sqlDel);
+            res.status(200).send({ message: "user following deleted" });
+        }
+    })
 }
 
 module.exports = {
@@ -57,66 +179,7 @@ module.exports = {
     deleteUser,
     auth,
     getFollowing,
-    getFollowers
+    getFollowers,
+    addFollowing,
+    removeFollowing
 };
-
-
-
-// const createError = require('http-errors');
-// const express = require('express');
-// const path = require('path');
-// const cookieParser = require('cookie-parser');
-// const logger = require('morgan');
-// const expressValidator = require('express-validator');
-// const flash = require('express-flash');
-// const session = require('express-session');
-// const bodyParser = require('body-parser');
-// const mysql = require('mysql');
-// const connection  = require('./lib/db');
-// const authRouter = require('./routes/login');
- 
-// const app = express();
- 
-// // view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'ejs');
- 
-// app.use(logger('dev'));
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(cookieParser());
-// app.use(express.static(path.join(__dirname, 'public')));
- 
-// app.use(session({ 
-//     secret: '123456cat',
-//     resave: false,
-//     saveUninitialized: true,
-//     cookie: { maxAge: 60000 }
-// }))
- 
-// app.use(flash());
-// app.use(expressValidator());
- 
-// app.use('/auth', authRouter);
- 
-// // catch 404 and forward to error handler
-// app.use(function(req, res, next) {
-//   next(createError(404));
-// });
- 
-// // error handler
-// app.use(function(err, req, res, next) {
-//   // set locals, only providing error in development
-//   res.locals.message = err.message;
-//   res.locals.error = req.app.get('env') === 'development' ? err : {};
- 
-//   // render the error page
-//   res.status(err.status || 500);
-//   res.render('error');
-// });
-// // port must be set to 3000 because incoming http requests are routed from port 80 to port 8080
-// app.listen(3000, function () {
-//     console.log('Node app is running on port 3000');
-// });
-
-// module.exports = app;
