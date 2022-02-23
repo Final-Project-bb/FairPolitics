@@ -125,7 +125,7 @@ const styles = {
         // position: "relative",
         // marginLeft:10,
         fontSize:25,
-        // top: 10,
+        // top: 100,
         // right:150    
     },
     text:{

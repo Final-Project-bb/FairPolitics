@@ -2,16 +2,13 @@ const User = require("../models/user");
 const express = require('express');
 const mysql = require('mysql');
 const connection  = require('../lib/db');
-const session = require('express-session');
-const path = require('path');
-const { Console } = require("console");
 
 
 const createUser = (req, res) => {
-    var sqlFindUserId = `select * from user_details where user_id = ${req.body.user_id}`;
+    var sqlFindUserId = `select * from user_details where user_id = ${JSON.stringify(req.body.user_id)}`;
 
     var sqlInsert = `Insert into user_details(user_id,first_name,last_name,city,birthdate,job_title,description,profile_picture,gender)
-    values(${req.body.user_id},${JSON.stringify(req.body.first_name)},${JSON.stringify(req.body.last_name)},${JSON.stringify(req.body.city)}
+    values(${JSON.stringify(req.body.user_id)},${JSON.stringify(req.body.first_name)},${JSON.stringify(req.body.last_name)},${JSON.stringify(req.body.city)}
     ,${JSON.stringify(req.body.birthdate)},${JSON.stringify(req.body.job_title)},${JSON.stringify(req.body.description)}
     ,${JSON.stringify(req.body.profile_picture)}, ${JSON.stringify(req.body.gender)})`;
     
@@ -32,6 +29,7 @@ const createUser = (req, res) => {
 
 const getUser = (req, res) => {
     var user_id = req.params.user_id;
+    
     connection.query(`select * from user_details where user_id = ${user_id}`, function (err, result) {
         if (err) {
 			throw err;
@@ -47,7 +45,7 @@ const getUser = (req, res) => {
 }
 
 const updateUser = (req, res) => {
-    var sqlFindUserId = `select * from user_details where user_id = ${req.body.user_id}`;
+    var sqlFindUserId = `select * from user_details where user_id = ${JSON.stringify(req.body.user_id)}`;
     
     var sqlUpdate = `UPDATE user_details set first_name=${JSON.stringify(req.body.first_name)},last_name=${JSON.stringify(req.body.last_name)},
     city=${JSON.stringify(req.body.city)},birthdate=${JSON.stringify(req.body.birthdate)},job_title=${JSON.stringify(req.body.job_title)},
@@ -71,6 +69,7 @@ const updateUser = (req, res) => {
 
 const deleteUser = (req, res) => {
     var user_id = req.params.user_id;
+    
     connection.query(`delete from user_details where user_id = ${user_id}`, function (err, result) {
         if (err) {
 			throw err;
@@ -87,10 +86,10 @@ const deleteUser = (req, res) => {
 
 //Note: didn't check this function yet!
 const auth = (req, res) => {
-    var sqlFindUserId = `select * from login_details where user_id = ${req.body.user_id}`;
+    var sqlFindUserId = `select * from login_details where user_id = ${JSON.stringify(req.body.user_id)}`;
 
     var sqlInsert = `Insert into login_details(user_id,phone_number,password)
-    values(${req.body.user_id},${JSON.stringify(req.body.phone_number)},${JSON.stringify(req.body.password)})`;
+    values(${JSON.stringify(req.body.user_id)},${JSON.stringify(req.body.phone_number)},${JSON.stringify(req.body.password)})`;
     
     connection.query(sqlFindUserId, function (err, result) {
         if (err) {
@@ -110,6 +109,7 @@ const auth = (req, res) => {
 
 const getFollowing = (req, res) => {
     var user_id = req.params.user_id;
+    
     connection.query(`select user_following_id from follower where user_id= ${user_id}`, function (err, result) {
         if (err) {
 			throw err;
@@ -122,6 +122,7 @@ const getFollowing = (req, res) => {
 
 const getFollowers = (req, res) => {
     var user_id = req.params.user_id;
+    
     connection.query(`select user_id from follower where user_following_id= ${user_id}`, function (err, result) {
         if (err) {
 			throw err;
@@ -133,9 +134,10 @@ const getFollowers = (req, res) => {
 }
 //select user_following_id from follower where user_id=111 and user_following_id=222
 const addFollowing = (req, res) => {
-    var sqlUserId = `select user_following_id from follower where user_id=${req.body.user_id} and user_following_id = ${req.body.user_following_id}`;
+    var sqlUserId = `select user_following_id from follower where user_id=${JSON.stringify(req.body.user_id)} and user_following_id = ${JSON.stringify(req.body.user_following_id)}`;
+    
     var sqlInsert = `Insert into follower(user_id,user_following_id)
-    values(${req.body.user_id},${JSON.stringify(req.body.user_following_id)})`;
+    values(${JSON.stringify(req.body.user_id)},${JSON.stringify(req.body.user_following_id)})`;
     
     connection.query(sqlUserId, function (err, result) {
         if (err) {
@@ -154,8 +156,9 @@ const addFollowing = (req, res) => {
 
 // delete from user_details where user_id = ${user_id}
 const removeFollowing = (req, res) => {
-    var sqlUserId = `select user_following_id from follower where user_id=${req.body.user_id} and user_following_id = ${req.body.user_following_id}`;
-    var sqlDel = `delete from follower where user_id=${req.body.user_id} and user_following_id = ${req.body.user_following_id}`;
+    var sqlUserId = `select user_following_id from follower where user_id=${JSON.stringify(req.body.user_id)} and user_following_id = ${JSON.stringify(req.body.user_following_id)}`;
+    
+    var sqlDel = `delete from follower where user_id=${JSON.stringify(req.body.user_id)} and user_following_id = ${JSON.stringify(req.body.user_following_id)}`;
     
     connection.query(sqlUserId, function (err, result) {
         if (err) {
@@ -163,7 +166,7 @@ const removeFollowing = (req, res) => {
 		} 
         // if user not exist
         if (result.length === 0) {
-            res.status(404).send({ message: `user ${req.body.user_following_id} not following` });
+            res.status(404).send({ message: `user ${JSON.stringify(req.body.user_following_id)} not following` });
         }
         else { // if user exist
             connection.query(sqlDel);

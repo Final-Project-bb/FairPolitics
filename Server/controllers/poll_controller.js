@@ -1,32 +1,84 @@
 const Poll = require("../models/poll");
-const db = require("mysql")
+const express = require('express');
+const mysql = require('mysql');
+const connection = require('../lib/db');
+const { query } = require("express");
 
-const createPoll = async (req, res, next) => {
+const createPoll = async (req, res) => {
+    var sqlInsertPoll = `Insert into poll(user_id,title,description,picture)
+                values(${JSON.stringify(req.body.user_id)},${JSON.stringify(req.body.title)},${JSON.stringify(req.body.description)}
+                ,${JSON.stringify(req.body.picture)})`;
+
+    var sqlPollId = "select LAST_INSERT_ID() as poll_id from poll limit 1"
+
+    connection.query(sqlInsertPoll, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        else {
+            connection.query(sqlPollId, function (err, result) {
+                if (err) {
+                    throw err;
+                }
+                else {
+                    req.body.answer.forEach((ans) => {
+                        connection.query(`Insert into poll_answer(poll_id,user_id,answer)
+                        values(${result[0].poll_id}, ${JSON.stringify(req.body.user_id)}, ${JSON.stringify(ans)})`, function (err, result) {
+                            if (err) {
+                                throw err;
+                            }
+                        });
+                    })
+                    res.status(200).send({ message: `poll ${result[0].poll_id} added!` });
+                }
+            })
+        }
+    })
+}
+
+const getPoll = (req, res) => {
+    // var user_id = req.params.user_id;
+
+    connection.query(`select * from poll where user_id = ${req.params.user_id} and poll_id=${req.params.poll_id}`, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        // if polll not found
+        if (result.length === 0) {
+            res.status(404).send({ message: "poll id or user id not exists!" });
+        }
+        else { // if poll found
+            connection.query(`select * from poll_answer where user_id = ${req.params.user_id} and poll_id=${req.params.poll_id}`
+                , function (err1, res1) {
+                    if (err1) {
+                        throw err1;
+                    }
+                    else {
+                        res.status(200).send({ result,res1 });
+                    }
+                });
+        }
+    })
+}
+
+const updatePoll = (req, rest) => {
 
 }
 
-const getPoll = async (req, res, next) => {
-    
+const deletePoll = (req, res) => {
+
 }
 
-const updatePoll = async (req, res, next) => {
-    
+const answerPoll = (req, res) => {
+
 }
 
-const deletePoll = async (req, res, next) => {
-    
+const pollsByID = (req, res) => {
+
 }
 
-const answerPoll = async (req, res, next) => {
-    
-}
+const pollsFollowing = (req, res) => {
 
-const pollsByID = async (req, res, next) => {
-    
-}
-
-const pollsFollowing = async (req, res, next) => {
-    
 }
 
 module.exports = {
