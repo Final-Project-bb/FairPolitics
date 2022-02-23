@@ -15,7 +15,7 @@ const ProfileShowDetails = () => {
     return (
         <div>
             <div style={styles.name}>
-                {UserInfo[0].FirstName} {UserInfo[0].LastName}
+                {UserInfo[0].FirstName} {UserInfo[0].LastName} {UserInfo[0].Picture}
             </div>
             <div style={styles.profileHead}>
             <img src={require('../images/profilePicExmple.jpg')} alt='logo'
@@ -34,9 +34,9 @@ const ProfileShowDetails = () => {
                     </div>
                 </div>
             </div>
-            {/* image profile will be here
-            about and more.. */}
-            <button> more info</button>
+             {/* image profile will be here */}
+            {/* about and more..  */}
+            {/* <button style={styles.info}> more info</button> */}
         </div>
     )
 }
@@ -48,8 +48,8 @@ const styles = {
         position: "absolute",
         // marginLeft:10,
         fontSize: 25,
-        top: -40,
-        left: 150
+        top: -60,
+        left: 130
     },
     profileHead:{
         display: "flex",
@@ -64,9 +64,9 @@ const styles = {
         justifyContent: 'space-around',
         flexDirection: 'column',
         position: "relative",
-        left: 200,
+        left: 180,
         margin:0,
-        top:-80
+        top:-105
     },
 };
 

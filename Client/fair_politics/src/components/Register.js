@@ -19,7 +19,7 @@ const Register = () => {
     const [gender, setGender] = useState();
     const current = new Date().toISOString().split("T")[0]
     // const [approve]  
-    const userInfo ={
+    const userInfo = {
         user_id: id,
         first_name: firstName,
         last_name: lastName,
@@ -29,16 +29,16 @@ const Register = () => {
         description: "None yet",
         profile_picture: picture,
         gender: gender,
-      }
-      const userLogin ={
+    }
+    const userLogin = {
         user_id: id,
-        phone_number:phone,
+        phone_number: phone,
         password: pass,
-      }
+    }
     const phoneSubmit = (event) => {
         event.preventDefault();
         setTempPassFromDB("1225") // here should get the temp pass from server
-        alert(`The name you entered was: ${tempPassFromDB}`) // here should send pass to phone in sms
+        alert(`The temp pass is: ${tempPassFromDB}`) // here should send pass to phone in sms
         // if(tempPassFromDB===tempPass){
         //     alert(`Password approved`)
         // }
@@ -120,7 +120,7 @@ const Register = () => {
 
                     />
                     <input type="submit" />
-                </form><br/>
+                </form><br />
                 <form onSubmit={approvePassword}>
                     <label>Enter your final password:</label><br />
                     <input
