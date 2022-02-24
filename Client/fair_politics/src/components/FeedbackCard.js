@@ -76,7 +76,7 @@ const FeedbackCard = (FeedbackCards) => {
         <div>
             <div style={styles.title}>Feedback Card Side</div>
             {FeedbackCardss.map((item) => (
-                <DisCard >
+                <DisCard key={item.FeedBack_id} >
                     {/* style={{height:(item.text.length/70)*32+height}}> */}
                     <div style={styles.title}>{item.FeedBack_id} {item.title} </div>
                     <div style={styles.text}>{item.text}</div>
@@ -84,7 +84,7 @@ const FeedbackCard = (FeedbackCards) => {
                         <form>
                             <div style={styles.question}>
                                 {item.Questions.map((question) =>
-                                    <div>
+                                    <div key={question.Questions_id}>
                                         {question.Questions_title}
                                         {question.answer.map((ans) =>
                                             <div>
@@ -97,14 +97,7 @@ const FeedbackCard = (FeedbackCards) => {
                             </div>
                             <button onClick={() => addAnswer(item)}>submit!</button>
                         </form>
-                        {/* <button onClick={() => CommentsButton(item)}>Show Comments!</button> */}
-                        {/* <button onClick={() => LikeDiscussion(1,2)}>Like!</button> */}
-                        {/* <div style={styles.likes}>{item.Likes.length}</div> */}
                     </div>
-                    {commentsButton && commentsButtonId === item.Discussion_id && <div>
-                        {item.Comments.map((comment) =>
-                            <div style={styles.comment}>{comment.Comment_title}</div>)}
-                    </div>}
                 </DisCard>
             ))}
         </div>

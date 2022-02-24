@@ -5,6 +5,7 @@ import { useHistory } from "react-router-dom";
 import styled from 'styled-components';
 
 const Login = () => {
+  const [onReset, setOnReset] = useState(false);
   const [phone, setPhone] = useState();
   const [id, setId] = useState();
   const [password, setPassword] = useState();
@@ -60,6 +61,7 @@ const approvePassword = (event) => {
     <div >
       {/* <a href=''>Login<a/> */}
       <Header title="Login Page" />
+      {!onReset &&
       <LoginFormStyle>
         <form onSubmit={login()}>
           <label style={styles.label}>Enter your id:</label>
@@ -86,12 +88,13 @@ const approvePassword = (event) => {
           <small style={styles.small2}>valid password!</small>
           <button style={styles.subBut}>submit</button>
         </form>
-        <button style={styles.forgotButton} onClick={() => ResetPass()}>Reset password</button>
+        <button style={styles.forgotButton} onClick={() => setOnReset(!onReset)}>Reset password</button>
         <small style={styles.small3}>Sign in quickly!</small>
         <button style={styles.faceButton}>Facebook</button>
         <button style={styles.gmailButton}>Gmail</button>
         <button style={styles.signUpButton} onClick={handleClick}>don't have an account ? sign up here!</button>
-      </LoginFormStyle>
+      </LoginFormStyle>}
+      {onReset &&
       <FirstRegisterFormStyle >
                 <form onSubmit={phoneSubmit}>
                     <label>Enter a Phone Number:</label>
@@ -139,9 +142,11 @@ const approvePassword = (event) => {
                         value={pass2}
                         onChange={(e) => setPass2(e.target.value)}
                     />
+                    <button style={styles.cancelForgotButton} onClick={() => setOnReset(!onReset)}>Cancle reset</button>
                     <input type="submit" />
                 </form>
             </FirstRegisterFormStyle>
+            }
     </div>
 
   )
@@ -221,6 +226,11 @@ const styles = {
     position: "absolute",
     left: "20px",
     top: "150px"
+  },
+  cancelForgotButton:{
+    position: "absolute",
+    left: "270px",
+    top: "215px"
   },
   faceButton: {
     position: "absolute",

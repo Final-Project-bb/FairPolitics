@@ -1,5 +1,6 @@
-import React from 'react'
+import React,{useState} from 'react'
 const ProfileShowDetails = () => {
+    const [picturePress, setPicturePress] = useState(false)
     const UserInfo = [
         {
             user_id: 1,
@@ -15,12 +16,12 @@ const ProfileShowDetails = () => {
     return (
         <div>
             <div style={styles.name}>
-                {UserInfo[0].FirstName} {UserInfo[0].LastName} {UserInfo[0].Picture}
+                {UserInfo[0].FirstName} {UserInfo[0].LastName}
             </div>
             <div style={styles.profileHead}>
             <img src={require('../images/profilePicExmple.jpg')} alt='logo'
-                    style={{ borderRadius: 300, position: 'relative', left: 0 ,  height: 150 ,width: 150}}
-                    // onClickCapture={handleClick}
+                    style={{ borderRadius:picturePress?350:0, position: 'relative', left: 0 ,  height:picturePress?150:400 ,width:picturePress?150:400}}
+                    onClickCapture={()=>setPicturePress(!picturePress)}
                 />
                 <div style={styles.semiDetails}>
                     <div>
