@@ -1,5 +1,6 @@
-import React from 'react'
+import React,{useState} from 'react'
 const ProfileShowDetails = () => {
+    const [picturePress, setPicturePress] = useState(false)
     const UserInfo = [
         {
             user_id: 1,
@@ -19,8 +20,8 @@ const ProfileShowDetails = () => {
             </div>
             <div style={styles.profileHead}>
             <img src={require('../images/profilePicExmple.jpg')} alt='logo'
-                    style={{ borderRadius: 300, position: 'relative', left: 0 ,  height: 150 ,width: 150}}
-                    // onClickCapture={handleClick}
+                    style={{ borderRadius:picturePress?350:0, position: 'relative', left: 0 ,  height:picturePress?150:400 ,width:picturePress?150:400}}
+                    onClickCapture={()=>setPicturePress(!picturePress)}
                 />
                 <div style={styles.semiDetails}>
                     <div>
@@ -34,9 +35,9 @@ const ProfileShowDetails = () => {
                     </div>
                 </div>
             </div>
-            {/* image profile will be here
-            about and more.. */}
-            <button> more info</button>
+             {/* image profile will be here */}
+            {/* about and more..  */}
+            {/* <button style={styles.info}> more info</button> */}
         </div>
     )
 }
@@ -48,8 +49,8 @@ const styles = {
         position: "absolute",
         // marginLeft:10,
         fontSize: 25,
-        top: -40,
-        left: 150
+        top: -60,
+        left: 130
     },
     profileHead:{
         display: "flex",
@@ -64,9 +65,9 @@ const styles = {
         justifyContent: 'space-around',
         flexDirection: 'column',
         position: "relative",
-        left: 200,
+        left: 180,
         margin:0,
-        top:-80
+        top:-105
     },
 };
 

@@ -90,7 +90,7 @@ const NavLinkAbout = styled(Link)`
   ${'' /* size:30px; */}
   text-decoration: none;
   ${'' /* margin-left: 30px; */}
-  top:-100px;
+  top:-80px;
   ${'' /* padding: 0 0.1rem; */}
   height: 100%;
   cursor: pointer;  
@@ -115,7 +115,7 @@ const NavLinkDis = styled(Link)`
   ${'' /* size:30px; */}
   text-decoration: none;
   ${'' /* margin-left: 30px; */}
-  top:-100px;
+  top:-80px;
   ${'' /* padding: 0 0.1rem; */}
   height: 100%;
   cursor: pointer;  
@@ -140,7 +140,7 @@ const NavLinkFeed = styled(Link)`
   ${'' /* size:30px; */}
   text-decoration: none;
   ${'' /* margin-left: 30px; */}
-  top:-100px;
+  top:-80px;
   ${'' /* padding: 0 0.1rem; */}
   height: 100%;
   cursor: pointer;  

@@ -78,7 +78,7 @@ const DiscussionCard = () => {
             {/* {DiscussionCards[0].title} */}
 
             {DiscussionCardss.map((item) => (
-                <DisCard style={{height:((item.text.length)/70)*32+height+35}}>
+                <DisCard key={item.Discussion_id} style={{height:((item.text.length)/70)*32+height+35}}>
                     <div style={styles.title}>{item.Discussion_id} {item.title} </div>
                     <div style={styles.text}>{item.text}</div>
                     <div style={styles.cardFooter}>
@@ -88,7 +88,7 @@ const DiscussionCard = () => {
                     </div>
                     {commentsButton && commentsButtonId === item.Discussion_id && <div>
                         {item.Comments.map((comment) =>
-                            <div style={styles.comment}>{comment.Comment_title}</div>)}
+                            <div key={comment.Comment_id} style={styles.comment}>{comment.Comment_title}</div>)}
                     </div>}
                     <form 
                     // onSubmit={onSearch}
@@ -125,7 +125,7 @@ const styles = {
         // position: "relative",
         // marginLeft:10,
         fontSize:25,
-        // top: 10,
+        // top: 100,
         // right:150    
     },
     text:{
