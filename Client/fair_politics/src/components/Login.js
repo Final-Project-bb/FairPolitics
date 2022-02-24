@@ -17,17 +17,16 @@ const Login = () => {
   const handleClick = () => {
     history.push("/connection/register");
   }
-  const userLogin ={
-    user_id: id,
-    phone_number:phone,
-    password: pass,
-  }
+
   const login = () => {
-    console.log("as");
+    const login_details ={
+      user_id: id,
+      phone_number:phone,
+      password: pass,
+    }
+    loginFromDb(login_details);
   }
-  const ResetPass = () => {
-    console.log("reset");
-  }
+  const loginFromDb=()=>{}
   const phoneSubmit = (event) => {
     event.preventDefault();
     setTempPassFromDB("1225") // here should get the temp pass from server

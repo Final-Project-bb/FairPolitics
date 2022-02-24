@@ -10,31 +10,20 @@ const Register = () => {
     const [pass2, setPass2] = useState();
     const [tempPass, setTempPass] = useState();
     const [tempPassFromDB, setTempPassFromDB] = useState();
-    const [firstName, setFirstName] = useState();
-    const [lastName, setLastName] = useState();
-    const [location, setLocation] = useState();
-    const [rule, setRule] = useState();
+    const [first_name, setFirstName] = useState();
+    const [last_name, setLastName] = useState();
+    const [city, setCity] = useState();
+    const [job_title, setJobTitle] = useState();
     const [date, setDate] = useState();
-    const [picture, setPicture] = useState();
+    const [profile_picture, setProfilePicture] = useState();
     const [gender, setGender] = useState();
+    const [age, setAge] = useState();
+    const [is_public_elected, setIsPublicElected] = useState(false);
+    const [description, setDescription] = useState();
+    const [semi_description, setSemiDescription] = useState();
+
+
     const current = new Date().toISOString().split("T")[0]
-    // const [approve]  
-    const userInfo = {
-        user_id: id,
-        first_name: firstName,
-        last_name: lastName,
-        city: location,
-        birthdate: date,
-        job_title: rule,
-        description: "None yet",
-        profile_picture: picture,
-        gender: gender,
-    }
-    const userLogin = {
-        user_id: id,
-        phone_number: phone,
-        password: pass,
-    }
     const phoneSubmit = (event) => {
         event.preventDefault();
         setTempPassFromDB("1225") // here should get the temp pass from server
@@ -64,17 +53,29 @@ const Register = () => {
             alert(`Password failed`)
         }
     }
-    const registerSubmit = (event) => {
-        const newUser = {
-            firstName: firstName,
-            lastName: lastName,
-            location: location,
-            rule: rule,
-            picture: picture
-        }
-        addNewUser(newUser)
+    const registerSubmit = () => {
+        const newUser = [{
+            user_id: id,
+            first_name: first_name,
+            last_name: last_name,
+            city: city,
+            birthdate: date,
+            job_title: job_title,
+            description: description,
+            semi_description: semi_description,
+            profile_picture: profile_picture,
+            gender: gender,
+            age: age,
+            is_public_elected: is_public_elected,
+        },
+        {
+            user_id: id,
+            phone_number: phone,
+            password: pass,
+        }]
+        addNewUserToDb(newUser)
     }
-    const addNewUser = (newUser) => {
+    const addNewUserToDb = (newUser) => {
         // users.push(newUser)
     }
     const history = useHistory();
@@ -96,7 +97,7 @@ const Register = () => {
                         onChange={(e) => setId(e.target.value)}
                         className='inputId'
                     /><br />
-                    <label>Enter a Phone Number:</label>
+                    <label>Enter a Phone Number: </label>
                     <input
                         type="tel"
                         pattern="[0]{1}[5]{1}[0-9]{8}"
@@ -117,7 +118,6 @@ const Register = () => {
                         placeholder='password from sms!'
                         value={tempPass}
                         onChange={(e) => setTempPass(e.target.value)}
-
                     />
                     <input type="submit" />
                 </form><br />
@@ -153,7 +153,7 @@ const Register = () => {
                         // pattern="[0]{1}[5]{1}[0-9]{8}"
                         // required
                         placeholder='first name!'
-                        value={firstName}
+                        value={first_name}
                         onChange={(e) => setFirstName(e.target.value)}
                     /><br />
                     <label>Enter your last name:</label>
@@ -162,15 +162,14 @@ const Register = () => {
                         // pattern="[0]{1}[5]{1}[0-9]{8}"
                         // required
                         placeholder='last name!'
-                        value={lastName}
+                        value={last_name}
                         onChange={(e) => setLastName(e.target.value)}
                     /><br />
                     <div>
                         <input
                             name="gender"
                             type="radio"
-                            value="male"
-
+                            value="Male"
                             ref={val => {
                                 setGender(val);
                             }}
@@ -180,7 +179,6 @@ const Register = () => {
                             name="gender"
                             type="radio"
                             value="Female"
-
                             ref={val => {
                                 setGender(val);
                             }}
@@ -190,19 +188,29 @@ const Register = () => {
                     <label>Enter your Birth Of Date:</label>
                     <input type='date'
                         placeholder='Enter BirthDate'
-                        value={rule}
+                        value={date}
                         onChange={(e) => setDate(e.target.value)}
                         name='birthdate'
                         max={current}
                     /><br />
+                    <label>How old are you:</label>
+                    <input
+                        type="number"
+                        // pattern="[0]{1}[5]{1}[0-9]{8}"
+                        // required
+                        placeholder='age!'
+                        value={age}
+                        onChange={(e) => setAge(e.target.value)}
+                    /><br />
+
                     <label>Enter your location:</label>
                     <input
                         type="text"
                         // pattern="[0]{1}[5]{1}[0-9]{8}"
                         // required
-                        placeholder='location!'
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
+                        placeholder='city!'
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
                     /><br />
                     <label>Enter your rule:</label>
                     <input
@@ -210,8 +218,31 @@ const Register = () => {
                         // pattern="[0]{1}[5]{1}[0-9]{8}"
                         // required
                         placeholder='Rule!'
-                        value={rule}
-                        onChange={(e) => setRule(e.target.value)}
+                        value={job_title}
+                        onChange={(e) => setJobTitle(e.target.value)}
+                    /><br />
+                    <label>Enter your semi-description:</label>
+                    <input
+                        type="text"
+                        placeholder='semi describe yourself!'
+                        value={semi_description}
+                        onChange={(e) => setSemiDescription(e.target.value)}
+                    /><br />
+                    <label>Enter your description:</label>
+                    <input
+                        type="text"
+                        placeholder='describe yourself!'
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    /><br />
+                    <label>Are you public elected?     </label>
+                    <input
+                        type="checkbox"
+                        // pattern="[0]{1}[5]{1}[0-9]{8}"
+                        // required
+                        placeholder='public elected?'
+                        value={is_public_elected}
+                        onChange={(e) => setIsPublicElected(e.target.value)}
                     /><br />
                     <label>Insert your Profile's picture:</label>
                     <input
@@ -219,8 +250,8 @@ const Register = () => {
                         // pattern="[0]{1}[5]{1}[0-9]{8}"
                         // required
                         placeholder='Picture!'
-                        value={picture}
-                        onChange={(e) => setPicture(e.target.value)}
+                        value={profile_picture}
+                        onChange={(e) => setProfilePicture(e.target.value)}
                     /><br />
 
                     <input type="submit" />
@@ -242,7 +273,7 @@ const RegisterFormStyle = styled.div`
   padding-left: 2rem;
   background: transparent linear-gradient(150deg,#025fdb 0%,#025fdb 35%,#0b3668 100%) 0% 0% no-repeat padding-box;
   box-shadow: 0 3px 20px rgb(0 0 0 / 8%);
-  height: 360px;
+  height: 380px;
   width:500px;  
   position:absolute;
   left:850px;

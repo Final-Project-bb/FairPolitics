@@ -1,42 +1,72 @@
-import React,{useState} from 'react'
+import React, { useState } from 'react'
 import Header from './Header';
 import ProfileHeader from './ProfileHeader';
 import styled from 'styled-components';
 const AboutMe = () => {
-    const [firstName, setFirstName] = useState();
-    const [lastName, setLastName] = useState();
-    const [location, setLocation] = useState();
-    const [rule, setRule] = useState();
+    const [first_name, setFirstName] = useState();
+    const [last_name, setLastName] = useState();
+    const [city, setCity] = useState();
+    const [job_title, setJobTitle] = useState();
     const [date, setDate] = useState();
-    const [picture, setPicture] = useState();
+    const [profile_picture, setProfilePicture] = useState();
     const [gender, setGender] = useState();
+    const [description, setDescription] = useState();
+    const [semi_description, setSemiDescription] = useState();
+    const [age, setAge] = useState();
+    const [is_public_elected, setIsPublicElected] = useState(false);
+
     const current = new Date().toISOString().split("T")[0]
-const [onEdit, setOnEdit] = useState(false)
-    const editSubmit = (event) => {
-        const newUser = {
-            firstName: firstName,
-            lastName: lastName,
-            location: location,
-            rule: rule,
-            picture: picture
-        }
-        // editUserDb(newUser);
+    const [onEdit, setOnEdit] = useState(false)
+    const user_details =
+    {
+        user_id: "1",
+        first_name: "Israel",
+        last_name: "Israeli",
+        city: "Ramat gan",
+        birthdate: "26/04/1995",
+        job_title: "Computer Science student",
+        description: "king",
+        semi_description: "semi_description",
+        profile_picture: "../images/profilePicExmple.jpg",
+        gender: "male",
+        age: 26,
+        is_public_elected: false
+    };
+    const editSubmit = () => {
+        const user_details =
+        {
+            first_name: first_name,
+            last_name: last_name,
+            city: city,
+            birthdate: date,
+            job_title: job_title,
+            description: description,
+            semi_description: semi_description,
+            profile_picture: profile_picture,
+            gender: gender,
+            age: age,
+            is_public_elected: is_public_elected,
+        };
+        editUserDb(user_details);
+    }
+    const editUserDb = () => {
+
     }
     return (
         <div>
             <Header title="About Me" />
             <ProfileHeader />
             {/* about and more..  */}
-            <button style={styles.edit_info} onClick={()=>setOnEdit(!onEdit)}> {onEdit?"Cancle info":"Edit info"}</button>
-        {onEdit && <RegisterFormStyle>
-            <form onSubmit={editSubmit}>
+            <button style={styles.edit_info} onClick={() => setOnEdit(!onEdit)}> {onEdit ? "Cancle info" : "Edit info"}</button>
+            {onEdit && <RegisterFormStyle>
+                <form onSubmit={editSubmit}>
                     <label>Enter your first name:</label>
                     <input
                         type="text"
                         // pattern="[0]{1}[5]{1}[0-9]{8}"
                         // required
                         placeholder='first name!'
-                        value={firstName}
+                        value={first_name}
                         onChange={(e) => setFirstName(e.target.value)}
                     /><br />
                     <label>Enter your last name:</label>
@@ -45,7 +75,7 @@ const [onEdit, setOnEdit] = useState(false)
                         // pattern="[0]{1}[5]{1}[0-9]{8}"
                         // required
                         placeholder='last name!'
-                        value={lastName}
+                        value={last_name}
                         onChange={(e) => setLastName(e.target.value)}
                     /><br />
                     <div>
@@ -73,10 +103,42 @@ const [onEdit, setOnEdit] = useState(false)
                     <label>Enter your Birth Of Date:</label>
                     <input type='date'
                         placeholder='Enter BirthDate'
-                        value={rule}
+                        value={date}
                         onChange={(e) => setDate(e.target.value)}
                         name='birthdate'
                         max={current}
+                    /><br />
+                    <label>How old are you:</label>
+                    <input
+                        type="number"
+                        // pattern="[0]{1}[5]{1}[0-9]{8}"
+                        // required
+                        placeholder='age!'
+                        value={age}
+                        onChange={(e) => setAge(e.target.value)}
+                    /><br />
+                    <label>Enter your semi-description:</label>
+                    <input
+                        type="text"
+                        placeholder='semi describe yourself!'
+                        value={semi_description}
+                        onChange={(e) => setSemiDescription(e.target.value)}
+                    /><br />
+                    <label>Enter your description:</label>
+                    <input
+                        type="text"
+                        placeholder='describe yourself!'
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    /><br />
+                    <label>Are you public elected?     </label>
+                    <input
+                        type="checkbox"
+                        // pattern="[0]{1}[5]{1}[0-9]{8}"
+                        // required
+                        placeholder='public elected?'
+                        value={is_public_elected}
+                        onChange={(e) => setIsPublicElected(e.target.value)}
                     /><br />
                     <label>Enter your location:</label>
                     <input
@@ -84,8 +146,8 @@ const [onEdit, setOnEdit] = useState(false)
                         // pattern="[0]{1}[5]{1}[0-9]{8}"
                         // required
                         placeholder='location!'
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
                     /><br />
                     <label>Enter your rule:</label>
                     <input
@@ -93,8 +155,8 @@ const [onEdit, setOnEdit] = useState(false)
                         // pattern="[0]{1}[5]{1}[0-9]{8}"
                         // required
                         placeholder='Rule!'
-                        value={rule}
-                        onChange={(e) => setRule(e.target.value)}
+                        value={job_title}
+                        onChange={(e) => setJobTitle(e.target.value)}
                     /><br />
                     <label>Insert your Profile's picture:</label>
                     <input
@@ -102,13 +164,15 @@ const [onEdit, setOnEdit] = useState(false)
                         // pattern="[0]{1}[5]{1}[0-9]{8}"
                         // required
                         placeholder='Picture!'
-                        value={picture}
-                        onChange={(e) => setPicture(e.target.value)}
+                        value={profile_picture}
+                        onChange={(e) => setProfilePicture(e.target.value)}
                     /><br />
-
                     <input type="submit" />
                 </form>
-        </RegisterFormStyle>}
+            </RegisterFormStyle>}
+            {!onEdit && <div style={styles.description}>
+                {user_details.description}
+            </div>}
         </div>
     )
 
@@ -124,6 +188,15 @@ const styles = {
         margin: 0,
         top: 10
     },
+    description:{
+        display: "flex",
+        justifyContent: 'space-around',
+        flexDirection: 'column',
+        position: "relative",
+        left: 280,
+        margin: 0,
+        top: 20
+    },
 };
 
 const RegisterFormStyle = styled.div`
@@ -136,7 +209,7 @@ ${'' /* background-repeat: no-repeat; */}
 padding-left: 2rem;
 background: transparent linear-gradient(150deg,#025fdb 0%,#025fdb 35%,#0b3668 100%) 0% 0% no-repeat padding-box;
 box-shadow: 0 3px 20px rgb(0 0 0 / 8%);
-height: 200px;
+height: 300px;
 width:500px;  
 position:absolute;
 left:550px;
