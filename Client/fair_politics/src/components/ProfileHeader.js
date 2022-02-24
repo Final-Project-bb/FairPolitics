@@ -1,5 +1,4 @@
 import React from 'react'
-import Header from './Header';
 import ProfileShowDetails from './ProfileShowDetails';
 import { NavLink as Link } from "react-router-dom"
 import styled from 'styled-components';
