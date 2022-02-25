@@ -3,6 +3,7 @@ import Header from './Header';
 import ProfileHeader from './ProfileHeader';
 import styled from 'styled-components';
 const AboutMe = () => {
+
     const [first_name, setFirstName] = useState();
     const [last_name, setLastName] = useState();
     const [city, setCity] = useState();
@@ -14,9 +15,9 @@ const AboutMe = () => {
     const [semi_description, setSemiDescription] = useState();
     const [age, setAge] = useState();
     const [is_public_elected, setIsPublicElected] = useState(false);
-
-    const current = new Date().toISOString().split("T")[0]
     const [onEdit, setOnEdit] = useState(false)
+    const current = new Date().toISOString().split("T")[0]
+
     const user_details =
     {
         user_id: "1",
@@ -35,6 +36,7 @@ const AboutMe = () => {
     const editSubmit = () => {
         const user_details =
         {
+            user_id: user_details.user_id,
             first_name: first_name,
             last_name: last_name,
             city: city,
@@ -49,9 +51,7 @@ const AboutMe = () => {
         };
         editUserDb(user_details);
     }
-    const editUserDb = () => {
-
-    }
+    const editUserDb = () => {}
     return (
         <div>
             <Header title="About Me" />
@@ -188,7 +188,7 @@ const styles = {
         margin: 0,
         top: 10
     },
-    description:{
+    description: {
         display: "flex",
         justifyContent: 'space-around',
         flexDirection: 'column',
