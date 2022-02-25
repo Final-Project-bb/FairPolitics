@@ -1,41 +1,46 @@
-import React,{useState} from 'react'
+import React, { useState } from 'react'
 const ProfileShowDetails = () => {
     const [picturePress, setPicturePress] = useState(false)
-    const UserInfo = [
-        {
-            user_id: 1,
-            FirstName: "Israel",
-            LastName: "Israeli",
-            Location: "Ramat-Gan",
-            occupation: "Computer Science student",
-            Picture: '../images/profilePicExmple.jpg',
-            Age: 26,
-            IsPublicelected: false
-        }
-    ];
+    const user_details =
+    {
+        user_id: "1",
+        first_name: "Israel",
+        last_name: "Israeli",
+        city: "Ramat gan",
+        birthdate: "26/04/1995",
+        job_title: "Computer Science student",
+        description: "king",
+        semi_description: "semi_description",
+        profile_picture: "../images/profilePicExmple.jpg",
+        gender: "male",
+        age: 26,
+        is_public_elected: false
+    };
     return (
         <div>
-            <div style={styles.name}>
-                {UserInfo[0].FirstName} {UserInfo[0].LastName}
-            </div>
-            <div style={styles.profileHead}>
-            <img src={require('../images/profilePicExmple.jpg')} alt='logo'
-                    style={{ borderRadius:picturePress?350:0, position: 'relative', left: 0 ,  height:picturePress?150:400 ,width:picturePress?150:400}}
-                    onClickCapture={()=>setPicturePress(!picturePress)}
-                />
-                <div style={styles.semiDetails}>
-                    <div>
-                        age: {UserInfo[0].Age}
-                    </div>
-                    <div>
-                        Location: {UserInfo[0].Location}
-                    </div>
-                    <div>
-                        Occupation: {UserInfo[0].occupation}
-                    </div>
+
+            <div style={styles.semiDetails}>
+                <div style={styles.name}>
+                    {user_details.first_name} {user_details.last_name}
+                </div>
+                <div>
+                    {user_details.gender} , {user_details.age}
+                </div>
+                <div>
+                    Working it: {user_details.job_title} living in {user_details.city}
+                </div>
+                <div>
+                    {user_details.semi_description}
                 </div>
             </div>
-             {/* image profile will be here */}
+            <div style={styles.profileHead}>
+                <img src={require('../images/profilePicExmple.jpg')} alt='logo'
+                    style={{ borderRadius: !picturePress ? 350 : 0, position: !picturePress ? 'relative' : "absolute", left: 0, height: !picturePress ? 150 : 400, width: !picturePress ? 150 : 400 }}
+                    onClickCapture={() => setPicturePress(!picturePress)}
+                />
+
+            </div>
+            {/* image profile will be here */}
             {/* about and more..  */}
             {/* <button style={styles.info}> more info</button> */}
         </div>
@@ -49,25 +54,25 @@ const styles = {
         position: "absolute",
         // marginLeft:10,
         fontSize: 25,
-        top: -60,
-        left: 130
+        top: -30,
+        left: -10
     },
-    profileHead:{
+    profileHead: {
         display: "flex",
         justifyContent: 'space-around',
         flexDirection: 'column',
         position: "absolute",
         left: -50,
-        top:-70
+        top: -70
     },
     semiDetails: {
         display: "flex",
         justifyContent: 'space-around',
         flexDirection: 'column',
-        position: "relative",
-        left: 180,
-        margin:0,
-        top:-105
+        position: "absolute",
+        left: 150,
+        margin: 0,
+        top: -25
     },
 };
 
