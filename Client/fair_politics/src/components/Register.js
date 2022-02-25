@@ -48,13 +48,23 @@ const Register = () => {
         event.preventDefault();
         if (pass2 === pass) {
             alert(`Password approved`)
+            authUsers();
         }
         else {
             alert(`Password failed`)
         }
     }
+    const authUsers=()=>{
+        const login_details={
+            user_id: id,
+            phone_number: phone,
+            password: pass,
+        }
+        authFromDb(login_details);
+    }
+    const authFromDb=()=>{}
     const registerSubmit = () => {
-        const newUser = [{
+        const newUser = {
             user_id: id,
             first_name: first_name,
             last_name: last_name,
@@ -67,17 +77,10 @@ const Register = () => {
             gender: gender,
             age: age,
             is_public_elected: is_public_elected,
-        },
-        {
-            user_id: id,
-            phone_number: phone,
-            password: pass,
-        }]
+        }
         addNewUserToDb(newUser)
     }
-    const addNewUserToDb = (newUser) => {
-        // users.push(newUser)
-    }
+    const addNewUserToDb = (newUser) => {}
     const history = useHistory();
     const handleClick = () => {
         history.push("/connection/login");
@@ -144,6 +147,7 @@ const Register = () => {
                     <input type="submit" />
                 </form>
             </FirstRegisterFormStyle>
+
             <RegisterFormStyle>
 
                 <form onSubmit={registerSubmit}>
