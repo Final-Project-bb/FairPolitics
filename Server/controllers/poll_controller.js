@@ -146,9 +146,9 @@ const answerPoll = (req, res) => {
 
 const pollsFollowing = (req, res) => {
 
-    var sqlGetUserFollowersId = `select user_id from follower where user_following_id= ${req.params.user_id}`;
+    var sqlGetUserFollowingId = `select user_following_id from follower where user_id = ${req.params.user_id}`;
     
-    connection.query(sqlGetUserFollowersId, function (err, result) {
+    connection.query(sqlGetUserFollowingId, function (err, result) {
         if (err) {
 			throw err;
 		}

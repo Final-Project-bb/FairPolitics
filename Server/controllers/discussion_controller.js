@@ -23,6 +23,21 @@ const createDiscussion = (req, res) => {
 
 const getDiscussion = (req, res) => {
     
+    var sqlGetDiscussion = `select * from discussion where post_id=${req.params.post_id}`;
+
+    connection.query(sqlGetDiscussion, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        if (result.length === 0) {
+            res.status(404).send({ message: "post_id dosn't exists!" });
+        }
+        else {
+            res.status(200).send({ result });
+        }
+    });
+
+    getLikeOfDiscussion(req.params.post_id);
 }
 
 const updateDiscussion = (req, res) => {
@@ -79,6 +94,21 @@ const addComment = (req, res) => {
 
 const getComment = (req, res) => {
     
+    var sqlGetComment = `select * from discussion_response where comment_id=${req.params.comment_id}`;
+
+    connection.query(sqlGetComment, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        if (result.length === 0) {
+            res.status(404).send({ message: "comment_id dosn't exists!" });
+        }
+        else {
+            res.status(200).send({ result });
+        }
+    });
+
+    getLikeOfComment(req.params.comment_id);
 }
 
 const updateComment = (req, res) => {
@@ -211,6 +241,26 @@ const deleteLikeFromComment = (req, res) => {
 
 const discussionsFollowing = (req, res) => {
     
+    var sqlGetUserFollowingId = `select user_following_id from follower where user_id = ${req.params.user_id}`;
+    
+    connection.query(sqlGetUserFollowingId, function (err, result) {
+        if (err) {
+			throw err;
+		}
+        else {
+            result.forEach((r) => {
+                connection.query(`select * from discussion
+                                where discussion.user_id = ${r.user_id}`, function (err, result) {
+                    if (err) {
+                        throw err;
+                    }
+                    else {
+                        res.status(200).send({ result });
+                    }        
+                });
+            });
+        }
+    });
 }
 
 module.exports = {
