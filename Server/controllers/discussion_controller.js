@@ -11,15 +11,19 @@ const createDiscussion = (req, res) => {
                         ${JSON.stringify(req.body.tag)}, ${JSON.stringify(req.body.description)},
                         ${JSON.stringify(req.body.picture)})`;
 
+    var sqlGetPostId = "select LAST_INSERT_ID() as post_id from discussion limit 1";                    
+
     connection.query(sqlInsertDiscussion, function (err, result) {
         if (err) {
             throw err;
         }
         else {
-            res.status(200).send({ message: "post added successfully!" });
+            connection.query(sqlGetPostId, function (err, result) {
+                res.status(200).send({ result });
+            });
         }
     });
-}
+};
 
 const getDiscussion = (req, res) => {
     
@@ -29,21 +33,17 @@ const getDiscussion = (req, res) => {
         if (err) {
             throw err;
         }
-        if (result.length === 0) {
-            res.status(404).send({ message: "post_id dosn't exists!" });
-        }
         else {
-            res.status(200).send({ result });
+            var likes = getLikeOfDiscussion(req.params.post_id);
+            res.status(200).send({ result, likes });
         }
     });
-
-    getLikeOfDiscussion(req.params.post_id);
 }
 
 const updateDiscussion = (req, res) => {
     
     var sqlUpdatePost = `update discussion set title=${JSON.stringify(req.body.title)},
-                        tag=${JSON.stringify(req.body.title)}, description=${JSON.stringify(req.body.description)},
+                        tag=${JSON.stringify(req.body.tag)}, description=${JSON.stringify(req.body.description)},
                         picture=${JSON.stringify(req.body.picture)} where post_id=${req.params.post_id}`;
 
     connection.query(sqlUpdatePost, function (err, result) {
@@ -135,10 +135,7 @@ const deleteComment = (req, res) => {
     connection.query(sqlDelComment, function (err, result) {
         if (err) {
 			throw err;
-		} 
-        if (result.length === 0) {
-            res.status(404).send({ message: "comment_id or user_id dosn't exists!" });
-        }
+		}
         else {
 			res.status(200).send({ message:"comment deleted successfully!" });
         }
@@ -178,14 +175,15 @@ const addLikeToComment = (req, res) => {
 const getLikeOfDiscussion = (req, res) => {
     
     var sqlGetLikeByPostId = `select user_id from discussion_like_approval
-                            where post_id=${req.params.post_id}`;
+                            where post_id=${req}`;
 
     connection.query(sqlGetLikeByPostId, function (err, result) {
         if (err) {
             throw err;
         }
         else {
-            res.status(200).send({ result });
+            return result;
+            // res.status(200).send({ result });
         }
     });
 }
@@ -274,9 +272,10 @@ module.exports = {
     deleteComment,
     addLikeToDiscussion,
     addLikeToComment,
-    getLikeOfDiscussion,
-    getLikeOfComment,
     deleteLikeFromDiscussion,
     deleteLikeFromComment,
     discussionsFollowing
 };
+
+// getLikeOfDiscussion,
+//     getLikeOfComment,
