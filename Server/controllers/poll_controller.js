@@ -129,6 +129,7 @@ const deletePoll = (req, res) => {
     });
 };
 
+// support multipul chooses
 const answerPoll = (req, res) => {
 
     var sqlInsertAnsApproval = `insert into poll_answer_approval(answer_id, user_id)
@@ -148,19 +149,27 @@ const pollsFollowing = (req, res) => {
 
     var sqlGetUserFollowingId = `select user_following_id from follower where user_id = ${req.params.user_id}`;
     
+    var allPolls = [];
+    
     connection.query(sqlGetUserFollowingId, function (err, result) {
         if (err) {
-			throw err;
+            throw err;
 		}
         else {
+            var size = result.length;
             result.forEach((r) => {
-                connection.query(`select * from poll where poll.user_id = ${r.user_id}`, function (err, result) {
+                connection.query(`select * from poll where poll.user_id = ${JSON.stringify(r.user_following_id)}`, function (err, result) {
                     if (err) {
                         throw err;
                     }
                     else {
-                        res.status(200).send({ result });
-                    }        
+                        if (result.length > 0) {
+                            allPolls.push(result);
+                        }
+                        if (allPolls.length === size) {
+                            res.status(200).send({ allPolls });
+                        }
+                    }     
                 });
             });
         }
