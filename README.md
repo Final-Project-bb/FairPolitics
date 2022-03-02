@@ -1,6 +1,7 @@
 # FairPolitics project
 
-initialize project: 
+
+## Initialize project: 
   * Basically can be executed by Linux Ubuntu/Windows.
   - ### requirements:
     - VSCode
@@ -18,7 +19,14 @@ initialize project:
     - Client side: run with npm from Client folder by commands: ```cd ./Client ``` and then  ```npm start```
 
   
+
 # Languages:
 ## Backend: Python,nodeJs(express).
 ## Frontend: html,css,reactJs,bootstrap.
-## DataBase: MySql.
+## DataBase: MySQL.
+
+
+  ## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome.<br />
+Feel free to check our [issues page](https://github.com/Final-Project-bb/FairPolitics/issues).
