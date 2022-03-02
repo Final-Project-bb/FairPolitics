@@ -1,4 +1,6 @@
-<h1> FairPolitics project <h1/>
+<h1> FairPolitics project </h1><br>
+
+here we need to describe a little about who we are and what is our project working and so on
 
 ## Initialize project: 
   * Basically can be executed by Linux Ubuntu/Windows.
@@ -15,7 +17,7 @@
      <br> 4. ```sudo mysql_secure_installation``` - here you need to create a password for your username (usually root)
      
       <strong> password restrictions: </strong>
-			     <br> password Is at least eight characters long.
+			    <br> password Is at least eight characters long.
 			    <br> Combines letters, numbers, and symbol characters within the password.
 			    <br> Is not found in a dictionary.
 			    <br> Is not the name of a command.
@@ -23,7 +25,7 @@
 			    <br> Is not the name of a user.
 			    <br> Is not the name of a computer.
 			    <br> Is changed regularly.
-			    <br> Is different from previous passwords.." 
+			    <br> Is different from previous passwords..
 
     - To run this project basically you'll required to open 3 different bash terminals and execute 3 commands
         <br> 1. Run DBinit.sh script (located in DB Folder, can be run from bash terminal by command: ```./DB/DBinit.sh```.
