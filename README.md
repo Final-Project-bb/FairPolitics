@@ -40,7 +40,7 @@
 
 ## Code Contributors
 
-This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+This project exists thanks to all the people who contribute. [[Contribute](https://github.com/Final-Project-bb/FairPolitics/graphs/contributors)].
 * [Tal Schreiber](https://github.com/TalSchreiber95)
 * [Omer Shalom](https://github.com/Omer2041)
 * [Shai Bonfil](https://github.com/shaiBonfil)
