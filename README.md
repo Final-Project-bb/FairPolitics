@@ -24,10 +24,12 @@
 			    <br> Is not the name of a computer.
 			    <br> Is changed regularly.
 			    <br> Is different from previous passwords.." 
-     
-    - Run DBinit.sh script (located in DB Folder, can be run from bash terminal by command: ```./DB/DBinit.sh```.
-    - Server side: run with npm from Server folder by commands: ```cd .\Server\ | npm start```
-    - Client side: run with npm from Client folder by commands: ```cd .\Client\fair_politics\ | npm start```
+
+    - To run this project basically you'll required to open 3 different bash terminals and execute 3 commands
+        <br> 1. Run DBinit.sh script (located in DB Folder, can be run from bash terminal by command: ```./DB/DBinit.sh```.
+        <br> 2. Server side: run with npm from Server folder by commands: ```cd .\Server\ | npm start```
+        <br> 3. Client side: run with npm from Client folder by commands: ```cd .\Client\fair_politics\ | npm start```
+
 
   
 
@@ -39,10 +41,13 @@
 
 ## Code Contributors
 
-This project exists thanks to all the people who contribute. [[Contribute](https://github.com/Final-Project-bb/FairPolitics/graphs/contributors)].
+This project exists thanks to all the people who contribute.<br>
+<a href="https://github.com/Final-Project-bb/FairPolitics/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Final-Project-bb/FairPolitics" />
+</a>
 * [Tal Schreiber](https://github.com/TalSchreiber95)
-* [Omer Shalom](https://github.com/Omer2041)
 * [Shai Bonfil](https://github.com/shaiBonfil)
+* [Omer Shalom](https://github.com/Omer2041)
 
   ## 🤝 Contributing
 
