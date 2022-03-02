@@ -39,10 +39,13 @@
 
 ## Code Contributors
 
-This project exists thanks to all the people who contribute. [[Contribute](https://github.com/Final-Project-bb/FairPolitics/graphs/contributors)].
+This project exists thanks to all the people who contribute.<br>
+<a href="https://github.com/Final-Project-bb/FairPolitics/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Final-Project-bb/FairPolitics" />
+</a>
 * [Tal Schreiber](https://github.com/TalSchreiber95)
-* [Omer Shalom](https://github.com/Omer2041)
 * [Shai Bonfil](https://github.com/shaiBonfil)
+* [Omer Shalom](https://github.com/Omer2041)
 
   ## 🤝 Contributing
 
