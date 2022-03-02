@@ -43,7 +43,7 @@
 
 This project exists thanks to all the people who contribute.<br>
 <a href="https://github.com/Final-Project-bb/FairPolitics/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Final-Project-bb/FairPolitics" />
+  <img src="https://contrib.rocks/image?max=3&repo=Final-Project-bb/FairPolitics" />
 </a>
 * [Tal Schreiber](https://github.com/TalSchreiber95)
 * [Shai Bonfil](https://github.com/shaiBonfil)
