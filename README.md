@@ -14,6 +14,18 @@
      <br> 2. ```sudo apt install mysql-server``` 
      <br> 3. ```sudo /etc/init.d/mysql start ``` 
      <br> 4. ```sudo mysql_secure_installation``` - here you need to create a password for your username (usually root)
+     
+      <strong> password restrictions: </strong>
+			     <br> password Is at least eight characters long.
+			    <br> Combines letters, numbers, and symbol characters within the password.
+			    <br> Is not found in a dictionary.
+			    <br> Is not the name of a command.
+			    <br> Is not the name of a person.
+			    <br> Is not the name of a user.
+			    <br> Is not the name of a computer.
+			    <br> Is changed regularly.
+			    <br> Is different from previous passwords.." 
+     
     - Run DBinit.sh script (located in DB Folder, can be run from bash terminal by command: ```./DB/DBinit.sh```.
     - Server side: run with npm from Server folder by commands: ```cd ./Server ``` and then  ```npm start```
     - Client side: run with npm from Client folder by commands: ```cd ./Client ``` and then  ```npm start```
