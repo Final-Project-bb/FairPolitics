@@ -1,9 +1,9 @@
 import React from 'react'
 import Header from './Header';
-import { useState } from "react";
+import { useState ,useContext } from "react";
 import { useHistory } from "react-router-dom";
 import styled from 'styled-components';
-
+import { AppContext } from './Context';
 const Login = () => {
   const [onReset, setOnReset] = useState(false);
   const [phone, setPhone] = useState();
@@ -13,20 +13,33 @@ const Login = () => {
   const [pass2, setPass2] = useState();
   const [tempPass, setTempPass] = useState();
   const [tempPassFromDB, setTempPassFromDB] = useState();
+
+  const { setUserLogin, setUserInfo, setIsConnected } = useContext(AppContext);
+
   const history = useHistory();
   const handleClick = () => {
     history.push("/connection/register");
   }
-
-  const login = () => {
-    const login_details ={
-      user_id: id,
-      phone_number:phone,
-      password: pass,
-    }
-    loginFromDb(login_details);
+  // this function made to check the first get fetch , just click on the gmail button
+const click = async ()=>{
+  const response = await fetch('127.0.0.1:4000/api/get_user/222');
+  const data = response.json;
+  console.log(data);
+}
+  const login  = async  () => {
+    // const login_details = {
+    //   user_id: id,
+    //   phone_number: phone,
+    //   password: pass,
+    // }
+    const response = await fetch(`127.0.0.1:4000/api/get_user/${id}`);
+    const data = response.json;
+    console.log(data);
+  
+    // const user_info;
+    // loginFromDb(login_details);
   }
-  const loginFromDb=()=>{}
+  const loginFromDb = () => { }
   const phoneSubmit = (event) => {
     event.preventDefault();
     setTempPassFromDB("1225") // here should get the temp pass from server
@@ -37,115 +50,115 @@ const Login = () => {
     // else{
     //     alert(`Password failed`)    
     // }
-}
-const approveSubmit = (event) => {
+  }
+  const approveSubmit = (event) => {
     event.preventDefault();
     if (tempPassFromDB === tempPass) {
-        alert(`Password approved`)
+      alert(`Password approved`)
     }
     else {
-        alert(`Password failed`)
+      alert(`Password failed`)
     }
-}
-const approvePassword = (event) => {
+  }
+  const approvePassword = (event) => {
     event.preventDefault();
     if (pass2 === pass) {
-        alert(`Password approved`)
+      alert(`Password approved`)
     }
     else {
-        alert(`Password failed`)
+      alert(`Password failed`)
     }
-}
+  }
   return (
     <div >
       {/* <a href=''>Login<a/> */}
       <Header title="Login Page" />
       {!onReset &&
-      <LoginFormStyle>
-        <form onSubmit={login()}>
-          <label style={styles.label}>Enter your id:</label>
-          <input
-            style={styles.input}
-            type="id"
-            pattern="[0-9]{9}"
-            required
-            placeholder='valid id number!'
-            value={id}
-            onChange={(e) => setId(e.target.value)}
-          />
-          <small style={styles.small}>Forgot your password?!</small><br />
-          <label style={styles.label2}>Enter a password:</label>
-          <input
-            style={styles.input2}
-            type="tel"
-            // pattern="[0]{1}[5]{1}[0-9]{8}"
-            required
-            placeholder='valid password!'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <small style={styles.small2}>valid password!</small>
-          <button style={styles.subBut}>submit</button>
-        </form>
-        <button style={styles.forgotButton} onClick={() => setOnReset(!onReset)}>Reset password</button>
-        <small style={styles.small3}>Sign in quickly!</small>
-        <button style={styles.faceButton}>Facebook</button>
-        <button style={styles.gmailButton}>Gmail</button>
-        <button style={styles.signUpButton} onClick={handleClick}>don't have an account ? sign up here!</button>
-      </LoginFormStyle>}
+        <LoginFormStyle>
+          <form onSubmit={login()}>
+            <label style={styles.label}>Enter your id:</label>
+            <input
+              style={styles.input}
+              type="id"
+              pattern="[0-9]{9}"
+              required
+              placeholder='valid id number!'
+              value={id}
+              onChange={(e) => setId(e.target.value)}
+            />
+            <small style={styles.small}>Forgot your password?!</small><br />
+            <label style={styles.label2}>Enter a password:</label>
+            <input
+              style={styles.input2}
+              type="tel"
+              // pattern="[0]{1}[5]{1}[0-9]{8}"
+              required
+              placeholder='valid password!'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <small style={styles.small2}>valid password!</small>
+            <button style={styles.subBut}>submit</button>
+          </form>
+          <button style={styles.forgotButton} onClick={() => setOnReset(!onReset)}>Reset password</button>
+          <small style={styles.small3}>Sign in quickly!</small>
+          <button style={styles.faceButton}>Facebook</button>
+          <button style={styles.gmailButton} onClick={() => click()}>Gmail</button>
+          <button style={styles.signUpButton} onClick={handleClick}>don't have an account ? sign up here!</button>
+        </LoginFormStyle>}
       {onReset &&
-      <FirstRegisterFormStyle >
-                <form onSubmit={phoneSubmit}>
-                    <label>Enter a Phone Number:</label>
-                    <input
-                        type="tel"
-                        pattern="[0]{1}[5]{1}[0-9]{8}"
-                        required
-                        placeholder='valid phone number!'
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        className='inputPhoneNum'
-                    /><br />
-                    <input type="submit" />
-                </form>
-                <form onSubmit={approveSubmit}>
-                    <label>Enter a temporary password:</label><br />
-                    <input
-                        type="password"
-                        // pattern="[0]{1}[5]{1}[0-9]{8}"
-                        // required
-                        placeholder='password from sms!'
-                        value={tempPass}
-                        onChange={(e) => setTempPass(e.target.value)}
+        <FirstRegisterFormStyle >
+          <form onSubmit={phoneSubmit}>
+            <label>Enter a Phone Number:</label>
+            <input
+              type="tel"
+              pattern="[0]{1}[5]{1}[0-9]{8}"
+              required
+              placeholder='valid phone number!'
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className='inputPhoneNum'
+            /><br />
+            <input type="submit" />
+          </form>
+          <form onSubmit={approveSubmit}>
+            <label>Enter a temporary password:</label><br />
+            <input
+              type="password"
+              // pattern="[0]{1}[5]{1}[0-9]{8}"
+              // required
+              placeholder='password from sms!'
+              value={tempPass}
+              onChange={(e) => setTempPass(e.target.value)}
 
-                    />
-                    <input type="submit" />
-                </form><br/>
-                <form onSubmit={approvePassword}>
-                    <label>Enter your final password:</label><br />
-                    <input
-                        type="password"
-                        // pattern="[0]{1}[5]{1}[0-9]{8}"
-                        // required
-                        placeholder='your password!'
-                        value={pass}
-                        onChange={(e) => setPass(e.target.value)}
+            />
+            <input type="submit" />
+          </form><br />
+          <form onSubmit={approvePassword}>
+            <label>Enter your final password:</label><br />
+            <input
+              type="password"
+              // pattern="[0]{1}[5]{1}[0-9]{8}"
+              // required
+              placeholder='your password!'
+              value={pass}
+              onChange={(e) => setPass(e.target.value)}
 
-                    /><br />
-                    <label>Enter your final password again:</label><br />
-                    <input
-                        type="password"
-                        // pattern="[0]{1}[5]{1}[0-9]{8}"
-                        // required
-                        placeholder='repet your password!'
-                        value={pass2}
-                        onChange={(e) => setPass2(e.target.value)}
-                    />
-                    <button style={styles.cancelForgotButton} onClick={() => setOnReset(!onReset)}>Cancle reset</button>
-                    <input type="submit" />
-                </form>
-            </FirstRegisterFormStyle>
-            }
+            /><br />
+            <label>Enter your final password again:</label><br />
+            <input
+              type="password"
+              // pattern="[0]{1}[5]{1}[0-9]{8}"
+              // required
+              placeholder='repet your password!'
+              value={pass2}
+              onChange={(e) => setPass2(e.target.value)}
+            />
+            <button style={styles.cancelForgotButton} onClick={() => setOnReset(!onReset)}>Cancle reset</button>
+            <input type="submit" />
+          </form>
+        </FirstRegisterFormStyle>
+      }
     </div>
 
   )
@@ -226,7 +239,7 @@ const styles = {
     left: "20px",
     top: "150px"
   },
-  cancelForgotButton:{
+  cancelForgotButton: {
     position: "absolute",
     left: "270px",
     top: "215px"
