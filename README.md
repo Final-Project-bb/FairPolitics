@@ -1,5 +1,4 @@
-# FairPolitics project
-
+<h1> FairPolitics project <h1/>
 
 ## Initialize project: 
   * Basically can be executed by Linux Ubuntu/Windows.
