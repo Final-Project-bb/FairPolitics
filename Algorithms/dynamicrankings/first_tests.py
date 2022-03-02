@@ -366,6 +366,3 @@ print(gr_values == {0: 3, 1: 2, 2: 2, 3: 2, 4: float('inf'), 5: float('inf')})
 #     clean_data_path, setup_file_path, dest_path,
 #     20, 60, 20, 60, 5, measures  
 # )
-
-if __name__ == '__main__':
-    profile
