@@ -1,6 +1,6 @@
 
 import './App.css';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import InitialPage from './components/InitialPage';
 import Login from './components/Login';
 import Register from './components/Register';
@@ -18,24 +18,20 @@ import {
   Route,
 } from "react-router-dom";
 function App() {
-  const [user_login, setUserLogin] = useState({});
-  const [user_info, setUserInfo] = useState({});
+  const [user_details, setUserDetails] = useState({});
   const [is_connected, setIsConnected] = useState(false);
+  const [loading, setLoading] = useState(false);
   return (
     <AppContext.Provider
       value={{
-        user_login, setUserLogin,
-        user_info,setUserInfo,
-        is_connected,setIsConnected,
-
+        user_details, setUserDetails,
+        is_connected, setIsConnected,
+        loading, setLoading,
       }}>
       <Router>
         <Switch>
           <Route exact path="/">
             <InitialPage />
-          </Route>
-          <Route exact path="/home">
-            <Home />
           </Route>
           <Route exact path="/connection/login">
             <Login />
@@ -49,18 +45,24 @@ function App() {
           <Route exact path="/contact-us">
             <ContactUs />
           </Route>
-          <Route exact path="/profile">
-            <Profile />
-          </Route>
-          <Route exact path="/profile/aboutProfile">
-            <AboutMe />
-          </Route>
-          <Route exact path="/profile/addDiscussion">
-            <AddDiscussion />
-          </Route>
-          <Route exact path="/profile/addFeedback">
-            <AddFeedback />
-          </Route>
+          {is_connected && <div>
+            <Route exact path="/home">
+              <Home />
+            </Route>
+            <Route exact path="/profile">
+              <Profile />
+            </Route>
+            <Route exact path="/profile/aboutProfile">
+              <AboutMe />
+            </Route>
+            <Route exact path="/profile/addDiscussion">
+              <AddDiscussion />
+            </Route>
+            <Route exact path="/profile/addFeedback">
+              <AddFeedback />
+            </Route>
+          </div>
+          }
         </Switch>
       </Router>
     </AppContext.Provider>

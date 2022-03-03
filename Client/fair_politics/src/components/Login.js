@@ -1,9 +1,10 @@
 import React from 'react'
 import Header from './Header';
-import { useState ,useContext } from "react";
+import { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import styled from 'styled-components';
 import { AppContext } from './Context';
+import Loading from './Loading';
 const Login = () => {
   const [onReset, setOnReset] = useState(false);
   const [phone, setPhone] = useState();
@@ -14,28 +15,37 @@ const Login = () => {
   const [tempPass, setTempPass] = useState();
   const [tempPassFromDB, setTempPassFromDB] = useState();
 
-  const { setUserLogin, setUserInfo, setIsConnected } = useContext(AppContext);
+  const { setUserDetails, setIsConnected, loading, setLoading } = useContext(AppContext);
 
   const history = useHistory();
   const handleClick = () => {
     history.push("/connection/register");
   }
   // this function made to check the first get fetch , just click on the gmail button
-const click = async ()=>{
-  const response = await fetch('127.0.0.1:4000/api/get_user/222');
-  const data = response.json;
-  console.log(data);
-}
-  const login  = async  () => {
+  const click = async () => {
+    const response = await fetch("http://localhost:4000/api/get_user/222");
+    const data = await response.json();
+    console.log(data.result[0].user_id);
+    // setUserInfo(data);
+  }
+  const login = async (e) => {
+    setLoading(true)
+    e.preventDefault()
     // const login_details = {
     //   user_id: id,
     //   phone_number: phone,
     //   password: pass,
     // }
-    const response = await fetch(`127.0.0.1:4000/api/get_user/${id}`);
-    const data = response.json;
-    console.log(data);
-  
+    const response = await fetch(`http://localhost:4000/api/get_user/${id}`);
+    const data = await response.json();
+    console.log(data.result[0]);
+    if (data.result[0] != undefined) {
+      setUserDetails(data.result[0])
+      setIsConnected(true);
+      history.push("/home");
+    }
+    setLoading(false);
+
     // const user_info;
     // loginFromDb(login_details);
   }
@@ -73,92 +83,95 @@ const click = async ()=>{
     <div >
       {/* <a href=''>Login<a/> */}
       <Header title="Login Page" />
-      {!onReset &&
-        <LoginFormStyle>
-          <form onSubmit={login()}>
-            <label style={styles.label}>Enter your id:</label>
-            <input
-              style={styles.input}
-              type="id"
-              pattern="[0-9]{9}"
-              required
-              placeholder='valid id number!'
-              value={id}
-              onChange={(e) => setId(e.target.value)}
-            />
-            <small style={styles.small}>Forgot your password?!</small><br />
-            <label style={styles.label2}>Enter a password:</label>
-            <input
-              style={styles.input2}
-              type="tel"
-              // pattern="[0]{1}[5]{1}[0-9]{8}"
-              required
-              placeholder='valid password!'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <small style={styles.small2}>valid password!</small>
-            <button style={styles.subBut}>submit</button>
-          </form>
-          <button style={styles.forgotButton} onClick={() => setOnReset(!onReset)}>Reset password</button>
-          <small style={styles.small3}>Sign in quickly!</small>
-          <button style={styles.faceButton}>Facebook</button>
-          <button style={styles.gmailButton} onClick={() => click()}>Gmail</button>
-          <button style={styles.signUpButton} onClick={handleClick}>don't have an account ? sign up here!</button>
-        </LoginFormStyle>}
-      {onReset &&
-        <FirstRegisterFormStyle >
-          <form onSubmit={phoneSubmit}>
-            <label>Enter a Phone Number:</label>
-            <input
-              type="tel"
-              pattern="[0]{1}[5]{1}[0-9]{8}"
-              required
-              placeholder='valid phone number!'
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className='inputPhoneNum'
-            /><br />
-            <input type="submit" />
-          </form>
-          <form onSubmit={approveSubmit}>
-            <label>Enter a temporary password:</label><br />
-            <input
-              type="password"
-              // pattern="[0]{1}[5]{1}[0-9]{8}"
-              // required
-              placeholder='password from sms!'
-              value={tempPass}
-              onChange={(e) => setTempPass(e.target.value)}
+      {!loading && <div>
+        {!onReset &&
+          <LoginFormStyle>
+            <form onSubmit={(e) => login(e)}>
+              <label style={styles.label}>Enter your id:</label>
+              <input
+                style={styles.input}
+                type="id"
+                // pattern="[0-9]{9}"
+                required
+                placeholder='valid id number!'
+                value={id}
+                onChange={(e) => setId(e.target.value)}
+              />
+              <small style={styles.small}>Forgot your password?!</small><br />
+              <label style={styles.label2}>Enter a password:</label>
+              <input
+                style={styles.input2}
+                type="tel"
+                // pattern="[0]{1}[5]{1}[0-9]{8}"
+                required
+                placeholder='valid password!'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <small style={styles.small2}>valid password!</small>
+              <button style={styles.subBut}>submit</button>
+            </form>
+            <button style={styles.forgotButton} onClick={() => setOnReset(!onReset)}>Reset password</button>
+            <small style={styles.small3}>Sign in quickly!</small>
+            <button style={styles.faceButton}>Facebook</button>
+            <button style={styles.gmailButton} onClick={() => click()}>Gmail</button>
+            <button style={styles.signUpButton} onClick={handleClick}>don't have an account ? sign up here!</button>
+          </LoginFormStyle>}
+        {onReset &&
+          <FirstRegisterFormStyle >
+            <form onSubmit={phoneSubmit}>
+              <label>Enter a Phone Number:</label>
+              <input
+                type="tel"
+                pattern="[0]{1}[5]{1}[0-9]{8}"
+                required
+                placeholder='valid phone number!'
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className='inputPhoneNum'
+              /><br />
+              <input type="submit" />
+            </form>
+            <form onSubmit={approveSubmit}>
+              <label>Enter a temporary password:</label><br />
+              <input
+                type="password"
+                // pattern="[0]{1}[5]{1}[0-9]{8}"
+                // required
+                placeholder='password from sms!'
+                value={tempPass}
+                onChange={(e) => setTempPass(e.target.value)}
 
-            />
-            <input type="submit" />
-          </form><br />
-          <form onSubmit={approvePassword}>
-            <label>Enter your final password:</label><br />
-            <input
-              type="password"
-              // pattern="[0]{1}[5]{1}[0-9]{8}"
-              // required
-              placeholder='your password!'
-              value={pass}
-              onChange={(e) => setPass(e.target.value)}
+              />
+              <input type="submit" />
+            </form><br />
+            <form onSubmit={approvePassword}>
+              <label>Enter your final password:</label><br />
+              <input
+                type="password"
+                // pattern="[0]{1}[5]{1}[0-9]{8}"
+                // required
+                placeholder='your password!'
+                value={pass}
+                onChange={(e) => setPass(e.target.value)}
 
-            /><br />
-            <label>Enter your final password again:</label><br />
-            <input
-              type="password"
-              // pattern="[0]{1}[5]{1}[0-9]{8}"
-              // required
-              placeholder='repet your password!'
-              value={pass2}
-              onChange={(e) => setPass2(e.target.value)}
-            />
-            <button style={styles.cancelForgotButton} onClick={() => setOnReset(!onReset)}>Cancle reset</button>
-            <input type="submit" />
-          </form>
-        </FirstRegisterFormStyle>
-      }
+              /><br />
+              <label>Enter your final password again:</label><br />
+              <input
+                type="password"
+                // pattern="[0]{1}[5]{1}[0-9]{8}"
+                // required
+                placeholder='repet your password!'
+                value={pass2}
+                onChange={(e) => setPass2(e.target.value)}
+              />
+              <button style={styles.cancelForgotButton} onClick={() => setOnReset(!onReset)}>Cancle reset</button>
+              <input type="submit" />
+            </form>
+          </FirstRegisterFormStyle>
+        }
+      </div>}
+      {loading && <Loading/>}
     </div>
 
   )
