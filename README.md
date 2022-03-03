@@ -28,9 +28,18 @@ here we need to describe a little about who we are and what is our project worki
       <br> - Is different from previous passwords.
 
     - To run this project basically you'll required to open 3 different bash terminals and execute 3 commands
-        <br> 1. Run DBinit.sh script (located in DB Folder, can be run from bash terminal by command: ```./DB/DBinit.sh```.
-        <br> 2. Server side: run with npm from Server folder by commands: ```cd .\Server\ | npm start```
-        <br> 3. Client side: run with npm from Client folder by commands: ```cd .\Client\fair_politics\ |  npm i install | npm start```
+        <br> 1. Run DBinit.sh script (located in DB Folder, can be run from bash terminal by command: 
+        ```
+        ./DB/DBinit.sh
+        ```
+        <br> 2. Server side: run with npm from Server folder by commands: 
+        ```
+        cd .\Server\ | npm start
+        ```
+        <br> 3. Client side: run with npm from Client folder by commands: 
+        ```
+        cd .\Client\fair_politics\ |  npm i install | npm start
+        ```
 
 
   
