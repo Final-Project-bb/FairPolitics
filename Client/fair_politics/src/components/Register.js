@@ -279,9 +279,9 @@ const RegisterFormStyle = styled.div`
   box-shadow: 0 3px 20px rgb(0 0 0 / 8%);
   height: 380px;
   width:500px;  
-  position:absolute;
+  position:relative;
   left:850px;
-  top:260px;
+  top:-150px;
   border-radius:30px;
   ${'' /* display: flex; */}
   flex-direction:row;

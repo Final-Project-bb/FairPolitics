@@ -1,21 +1,26 @@
-import React, { useState } from 'react'
+import React, { useState,useContext } from 'react'
+import { AppContext } from './Context';
+
 const ProfileShowDetails = () => {
     const [picturePress, setPicturePress] = useState(false)
-    const user_details =
-    {
-        user_id: "1",
-        first_name: "Israel",
-        last_name: "Israeli",
-        city: "Ramat gan",
-        birthdate: "26/04/1995",
-        job_title: "Computer Science student",
-        description: "king",
-        semi_description: "semi_description",
-        profile_picture: "../images/profilePicExmple.jpg",
-        gender: "male",
-        age: 26,
-        is_public_elected: false
-    };
+    const { user_details, setIsConnected } = useContext(AppContext);
+    
+    // 
+    // const user_details = 
+    // {
+    //     user_id: "1",
+    //     first_name: "Israel",
+    //     last_name: "Israeli",
+    //     city: "Ramat gan",
+    //     birthdate: "26/04/1995",
+    //     job_title: "Computer Science student",
+    //     description: "king",
+    ////     semi_description: "semi_description",
+    //     profile_picture: "../images/profilePicExmple.jpg",
+    //     gender: "male",
+    ////     age: 26,
+    ////     is_public_elected: false
+    // };
     return (
         <div>
 
