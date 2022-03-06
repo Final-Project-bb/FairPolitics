@@ -1,50 +1,46 @@
-import React from 'react'
+import React ,{useEffect,useContext} from 'react'
 import Header from './Header';
 import DiscussionCard from './DiscussionCard';
 import FeedbackCard from './FeedbackCard';
+import { AppContext } from "./Context";
+
 const Home = () => {
-    const DiscussionCards =
-        [
-            {
-                Discussion_id: 1,
-                owner_id: 1,
-                title: "first discussion",
-                text: "my first discussion that im going to talk about is dsadjsa;dl;ksa;d sDdsadDSad",
-                Comments: [
-                    {
-                        Comment_id: 1,
-                        user_id: 2,
-                        Comment_title: "great first discussion!"
-                    }
-                ],
-                Likes: [
-                    {
-                        user_id: 2
-                    }
-                ]
-            },
-            {
-                Discussion_id: 2,
-                owner_id: 1,
-                title: "secound discussion",
-                text: "my secound discussion that im going to talk about is dsadjsa;dl;ksa;d sDdsadDSad",
-                Comments: [
-                    {
-                        Comment_id: 1,
-                        user_id: 2,
-                        Comment_title: "great secound discussion!"
-                    }
-                ],
-                Likes: [
-                    {
-                        user_id: 2
-                    },
-                    {
-                        user_id: 1
-                    }
-                ]
-            }
-        ];
+  const { user_details, setLoading, discussionCards, setDiscussionCards } = useContext(AppContext);
+
+
+    const fetchDiscussions = async (e) => {
+        setLoading(true);
+        // e.preventDefault();
+        const response = await fetch(`http://localhost:4000/api/get_discussion/${user_details.user_id}`);
+        const data = await response.json();
+        console.log("fetchDiscussions")
+        console.log(data.result);
+    
+        if (data.result[0] != undefined) {
+          setDiscussionCards(data.result);
+        }
+        setLoading(false);
+      };
+    
+      const fetchPoll = async (e) => {
+        setLoading(true);
+        // e.preventDefault();
+        const response = await fetch(`http://localhost:4000/api/get_discussion/${user_details.user_id}`);
+        const data = await response.json();
+        console.log("fetchDiscussions")
+        console.log(data.result);
+    
+        if (data.result[0] != undefined) {
+          setDiscussionCards(data.result);
+        }
+        setLoading(false);
+      };
+    
+      useEffect(() => {
+        fetchDiscussions();
+    }, []);
+  
+    
     const FeedbackCards = [
         {
             FeedBack_id: 1,
@@ -84,7 +80,7 @@ const Home = () => {
             {/* <a href=''>Login<a/> */}
             <Header title="Home Page" />
             <div style={styles.head}>
-                <DiscussionCard DiscussionCards={DiscussionCards} />
+                <DiscussionCard />
                 <FeedbackCard FeedbackCards={FeedbackCards} />
             </div>
         </div>
