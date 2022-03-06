@@ -1,7 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Header from './Header';
 import ProfileHeader from './ProfileHeader';
+import { useHistory } from "react-router-dom";
+import { AppContext } from './Context';
 import styled from 'styled-components';
+import Loading from './Loading';
+
 const AboutMe = () => {
 
     const [first_name, setFirstName] = useState();
@@ -16,25 +20,29 @@ const AboutMe = () => {
     const [age, setAge] = useState();
     const [is_public_elected, setIsPublicElected] = useState(false);
     const [onEdit, setOnEdit] = useState(false)
+    const [onDelete, setOnDelete] = useState(false)
     const current = new Date().toISOString().split("T")[0]
+    const { user_details, setUserDetails, setIsConnected, loading, setLoading } = useContext(AppContext);
+    const history = useHistory();
 
-    const user_details =
-    {
-        user_id: "1",
-        first_name: "Israel",
-        last_name: "Israeli",
-        city: "Ramat gan",
-        birthdate: "26/04/1995",
-        job_title: "Computer Science student",
-        description: "king",
-        semi_description: "semi_description",
-        profile_picture: "../images/profilePicExmple.jpg",
-        gender: "male",
-        age: 26,
-        is_public_elected: false
-    };
-    const editSubmit = () => {
-        const user_details =
+    // const user_details =
+    // {
+    //     user_id: "1",
+    //     first_name: "Israel",
+    //     last_name: "Israeli",
+    //     city: "Ramat gan",
+    //     birthdate: "26/04/1995",
+    //     job_title: "Computer Science student",
+    //     description: "king",
+    //     semi_description: "semi_description",
+    //     profile_picture: "../images/profilePicExmple.jpg",
+    //     gender: "male",
+    //     age: 26,
+    //     is_public_elected: false
+    // };
+    const editSubmit = (e) => {
+        e.preventDefault()
+        const new_user_details =
         {
             user_id: user_details.user_id,
             first_name: first_name,
@@ -49,130 +57,179 @@ const AboutMe = () => {
             age: age,
             is_public_elected: is_public_elected,
         };
-        editUserDb(user_details);
+        setUserDetails(new_user_details);
+        setLoading(true);
+        editUserDb();
+        setLoading(false);
     }
-    const editUserDb = () => {}
+    const editButton = () => {
+        setOnDelete(false);
+        setOnEdit(!onEdit);
+    }
+
+    const editUserDb = async () => {
+        await fetch(`http://localhost:4000/api/update_user/${user_details.user_id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(user_details),
+        })
+            .then(res => res.json())
+            .then(json => {
+                console.log(json);
+            })
+            .catch(error => console.error(error));
+    }
+
+    // work but doesn't delete from login_deteils table 
+    const deleteUser = () => {
+        setOnEdit(false);
+        setOnDelete(!onDelete);
+        if (window.confirm("Are you sure you want to delete this account?")) {
+            setLoading(true);
+            deletefromDb()
+            history.push("/about");
+        }
+        setOnDelete(false);
+        setIsConnected(false);
+        setLoading(false)
+    
+    }
+    // work but doesn't delete from login_deteils table 
+    const deletefromDb = async () => {
+        await fetch(`http://localhost:4000/api/delete_user/${user_details.user_id}`, {
+            method: 'DELETE',
+        }).catch(error => console.error(error));
+    }
+
     return (
         <div>
             <Header title="About Me" />
-            <ProfileHeader />
-            {/* about and more..  */}
-            <button style={styles.edit_info} onClick={() => setOnEdit(!onEdit)}> {onEdit ? "Cancle info" : "Edit info"}</button>
-            {onEdit && <RegisterFormStyle>
-                <form onSubmit={editSubmit}>
-                    <label>Enter your first name:</label>
-                    <input
-                        type="text"
-                        // pattern="[0]{1}[5]{1}[0-9]{8}"
-                        // required
-                        placeholder='first name!'
-                        value={first_name}
-                        onChange={(e) => setFirstName(e.target.value)}
-                    /><br />
-                    <label>Enter your last name:</label>
-                    <input
-                        type="text"
-                        // pattern="[0]{1}[5]{1}[0-9]{8}"
-                        // required
-                        placeholder='last name!'
-                        value={last_name}
-                        onChange={(e) => setLastName(e.target.value)}
-                    /><br />
-                    <div>
-                        <input
-                            name="gender"
-                            type="radio"
-                            value="male"
+            {!loading &&
+                <div>
+                    <ProfileHeader />
+                    {/* about and more..  */}
+                    <button style={styles.edit_info} onClick={() => editButton()}> {onEdit ? "Cancle info" : "Edit info"}</button>
+                    <button style={styles.delete_user} onClick={() => deleteUser()}> {onDelete ? "Cancle Delete" : "Delete account?"}</button>
+                    {/* <div className='delete-button' onClick={() => { if (window.confirm('Are you sure you wish to delete this item?')) this.onCancel() } } /> */}
+                    {onEdit && <RegisterFormStyle>
+                        <form onSubmit={(e) => editSubmit(e)}>
+                            <label>Enter your first name:</label>
+                            <input
+                                type="text"
+                                // pattern="[0]{1}[5]{1}[0-9]{8}"
+                                // required
+                                placeholder='first name!'
+                                value={first_name}
+                                onChange={(e) => setFirstName(e.target.value)}
+                            /><br />
+                            <label>Enter your last name:</label>
+                            <input
+                                type="text"
+                                // pattern="[0]{1}[5]{1}[0-9]{8}"
+                                // required
+                                placeholder='last name!'
+                                value={last_name}
+                                onChange={(e) => setLastName(e.target.value)}
+                            /><br />
+                            <div>
+                                <input
+                                    name="gender"
+                                    type="radio"
+                                    value="male"
 
-                            ref={val => {
-                                setGender(val);
-                            }}
-                        />
-                        <label>Male</label>
-                        <input
-                            name="gender"
-                            type="radio"
-                            value="Female"
+                                    ref={val => {
+                                        setGender(val);
+                                    }}
+                                />
+                                <label>Male</label>
+                                <input
+                                    name="gender"
+                                    type="radio"
+                                    value="Female"
 
-                            ref={val => {
-                                setGender(val);
-                            }}
-                        />
-                        <label>Female</label>
-                    </div>
-                    <label>Enter your Birth Of Date:</label>
-                    <input type='date'
-                        placeholder='Enter BirthDate'
-                        value={date}
-                        onChange={(e) => setDate(e.target.value)}
-                        name='birthdate'
-                        max={current}
-                    /><br />
-                    <label>How old are you:</label>
-                    <input
-                        type="number"
-                        // pattern="[0]{1}[5]{1}[0-9]{8}"
-                        // required
-                        placeholder='age!'
-                        value={age}
-                        onChange={(e) => setAge(e.target.value)}
-                    /><br />
-                    <label>Enter your semi-description:</label>
-                    <input
-                        type="text"
-                        placeholder='semi describe yourself!'
-                        value={semi_description}
-                        onChange={(e) => setSemiDescription(e.target.value)}
-                    /><br />
-                    <label>Enter your description:</label>
-                    <input
-                        type="text"
-                        placeholder='describe yourself!'
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    /><br />
-                    <label>Are you public elected?     </label>
-                    <input
-                        type="checkbox"
-                        // pattern="[0]{1}[5]{1}[0-9]{8}"
-                        // required
-                        placeholder='public elected?'
-                        value={is_public_elected}
-                        onChange={(e) => setIsPublicElected(e.target.value)}
-                    /><br />
-                    <label>Enter your location:</label>
-                    <input
-                        type="text"
-                        // pattern="[0]{1}[5]{1}[0-9]{8}"
-                        // required
-                        placeholder='location!'
-                        value={city}
-                        onChange={(e) => setCity(e.target.value)}
-                    /><br />
-                    <label>Enter your rule:</label>
-                    <input
-                        type="text"
-                        // pattern="[0]{1}[5]{1}[0-9]{8}"
-                        // required
-                        placeholder='Rule!'
-                        value={job_title}
-                        onChange={(e) => setJobTitle(e.target.value)}
-                    /><br />
-                    <label>Insert your Profile's picture:</label>
-                    <input
-                        type="text"
-                        // pattern="[0]{1}[5]{1}[0-9]{8}"
-                        // required
-                        placeholder='Picture!'
-                        value={profile_picture}
-                        onChange={(e) => setProfilePicture(e.target.value)}
-                    /><br />
-                    <input type="submit" />
-                </form>
-            </RegisterFormStyle>}
-            {!onEdit && <div style={styles.description}>
-                {user_details.description}
-            </div>}
+                                    ref={val => {
+                                        setGender(val);
+                                    }}
+                                />
+                                <label>Female</label>
+                            </div>
+                            <label>Enter your Birth Of Date:</label>
+                            <input type='date'
+                                placeholder='Enter BirthDate'
+                                value={date}
+                                onChange={(e) => setDate(e.target.value)}
+                                name='birthdate'
+                                max={current}
+                            /><br />
+                            <label>How old are you:</label>
+                            <input
+                                type="number"
+                                // pattern="[0]{1}[5]{1}[0-9]{8}"
+                                // required
+                                placeholder='age!'
+                                value={age}
+                                onChange={(e) => setAge(e.target.value)}
+                            /><br />
+                            <label>Enter your semi-description:</label>
+                            <input
+                                type="text"
+                                placeholder='semi describe yourself!'
+                                value={semi_description}
+                                onChange={(e) => setSemiDescription(e.target.value)}
+                            /><br />
+                            <label>Enter your description:</label>
+                            <input
+                                type="text"
+                                placeholder='describe yourself!'
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                            /><br />
+                            <label>Are you public elected?     </label>
+                            <input
+                                type="checkbox"
+                                // pattern="[0]{1}[5]{1}[0-9]{8}"
+                                // required
+                                placeholder='public elected?'
+                                value={is_public_elected}
+                                onChange={(e) => setIsPublicElected(e.target.value)}
+                            /><br />
+                            <label>Enter your location:</label>
+                            <input
+                                type="text"
+                                // pattern="[0]{1}[5]{1}[0-9]{8}"
+                                // required
+                                placeholder='location!'
+                                value={city}
+                                onChange={(e) => setCity(e.target.value)}
+                            /><br />
+                            <label>Enter your rule:</label>
+                            <input
+                                type="text"
+                                // pattern="[0]{1}[5]{1}[0-9]{8}"
+                                // required
+                                placeholder='Rule!'
+                                value={job_title}
+                                onChange={(e) => setJobTitle(e.target.value)}
+                            /><br />
+                            <label>Insert your Profile's picture:</label>
+                            <input
+                                type="text"
+                                // pattern="[0]{1}[5]{1}[0-9]{8}"
+                                // required
+                                placeholder='Picture!'
+                                value={profile_picture}
+                                onChange={(e) => setProfilePicture(e.target.value)}
+                            /><br />
+                            <input type="submit" />
+                        </form>
+                    </RegisterFormStyle>}
+
+                    {!onEdit && <div style={styles.description}>
+                        {user_details.description}
+                    </div>}
+                </div>}
+                {loading && <Loading/>}
+
         </div>
     )
 
@@ -187,6 +244,16 @@ const styles = {
         left: 180,
         margin: 0,
         top: 10
+    },
+    delete_user: {
+        display: "flex",
+        justifyContent: 'space-around',
+        flexDirection: 'column',
+        position: "relative",
+        left: 180,
+        margin: 0,
+        top: 10,
+        color: "red"
     },
     description: {
         display: "flex",
