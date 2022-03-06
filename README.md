@@ -27,8 +27,8 @@
 			    <br> Is different from previous passwords.." 
      
     - Run DBinit.sh script (located in DB Folder, can be run from bash terminal by command: ```./DB/DBinit.sh```.
-    - Server side: run with npm from Server folder by commands: ```cd ./Server ``` and then  ```npm start```
-    - Client side: run with npm from Client folder by commands: ```cd ./Client ``` and then  ```npm start```
+    - Server side: run with npm from Server folder by commands: ```cd ./Server && npm start ``` and then  ```npm start```
+    - Client side: run with npm from Client folder by commands: ```cd ./Client/fair_politics && npm start``` and then  ```npm start```
 
   
 
