@@ -2,7 +2,7 @@
 Sequence of consecutive DPR elections with implementations.
 """
 
-from dynamicrankings import dprrules
+from Algorithms.dynamicrankings import dprrules
 
 import random
 import math

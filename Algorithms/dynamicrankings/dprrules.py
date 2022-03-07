@@ -4,12 +4,13 @@ from __future__ import print_function
 import sys
 import functools
 from itertools import combinations
-try:
-    from gmpy2 import mpq as Fraction
-except ImportError:
-    print("Warning: module gmpy2 not found, "
-          + "resorting to Python's fractions.Fraction")
-    from fractions import Fraction
+# try:
+#     from gmpy2 import mpq as Fraction
+# except ImportError:
+#     print("Warning: module gmpy2 not found, "
+#           + "resorting to Python's fractions.Fraction")
+    # from fractions import Fraction
+from fractions import Fraction    
 from abcvoting import abcrules_gurobi
 from abcvoting.misc import sort_committees
 from abcvoting.misc import hamming
