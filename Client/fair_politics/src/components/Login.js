@@ -37,12 +37,18 @@ const Login = () => {
     //   password: pass,
     // }
     const response = await fetch(`http://localhost:4000/api/get_user/${id}`);
+    if(response.status==404){
+      setLoading(false);
+      return ;
+    }
     const data = await response.json();
-    console.log(data.result[0]);
-    if (data.result[0] != undefined) {
-      setUserDetails(data.result[0])
-      setIsConnected(true);
-      history.push("/home");
+    if (data.result!=undefined) {
+      if (data.result[0] != undefined) {
+        console.log(data.result[0]);
+        setUserDetails(data.result[0])
+        setIsConnected(true);
+        history.push("/home");
+      }
     }
     setLoading(false);
 
@@ -171,7 +177,7 @@ const Login = () => {
           </FirstRegisterFormStyle>
         }
       </div>}
-      {loading && <Loading/>}
+      {loading && <Loading />}
     </div>
 
   )
