@@ -12,6 +12,7 @@ import AddFeedback from "./components/AddFeedback";
 import AboutMe from "./components/AboutMe";
 import { AppContext } from "./components/Context";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Search from "./components/Search";
 function App() {
   const [user_details, setUserDetails] = useState({});
   const [is_connected, setIsConnected] = useState(false);
@@ -63,6 +64,9 @@ function App() {
               </Route>
               <Route exact path='/profile/addFeedback'>
                 <AddFeedback />
+              </Route>
+              <Route exact path='/search'>
+                <Search />
               </Route>
             </div>
           )}
