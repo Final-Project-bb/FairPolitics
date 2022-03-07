@@ -17,6 +17,7 @@ function get_scorefct(scorefct_str, committeesize) {
         return __av_score_fct;
     }
     else if (scorefct_str.startsWith('geom')) {
+        // var base = 
         // base = Fraction(scorefct_str[4:])
         // return functools.partial(__geom_score_fct, base=base)
     }
@@ -128,3 +129,70 @@ function marginal_thiele_scores_add(scorefct, profile, committee) {
     }
     return marg;
 }
+
+function marginal_thiele_scores_remove(scorefct, profile, committee) {
+
+    var marg_util_cand = [];
+    var intersection = [];
+    var commi = new Set(committee);
+    var satisfaction = 0; 
+    for (let i = 0; i < profile.num_cand; i++) {
+        marg_util_cand.push(0);        
+    }
+    // marginal utility gained by adding candidate to the committee
+    for (const pref in profile) {
+        for (const c in pref) {
+            if (pref.approved.includes(c) && commi.has(c)) {
+                intersection.push(c);
+            }
+            satisfaction = intersection.length;
+            marg_util_cand[c] += pref.weight * scorefct(satisfaction);
+        }
+    }
+    for (let i = 0; i < profile.num_cand; i++) {
+        if (!commi.has(i)) {
+            // do not choose candidates that already have been removed
+            marg_util_cand[i] = Math.max(marg_util_cand) + 1;
+        }        
+    }
+    return marg_util_cand;
+}
+
+function monroescore(profile, committee) {
+
+    if (profile.length%committee.length == 0) {
+        // faster
+        return monroescore_matching(profile, committee);
+    }
+    else {
+        return monroescore_flowbased(profile, committee);
+    }
+}
+
+// function monroescore_matching(profile, committee) {
+//     // Returns Monroe score of a given committee.
+//     // Uses a matching-based algorithm that works only if
+//     // the committee size divides the number of voters
+//     if (profile.length%committee.length != 0) {
+//         throw ValueError;
+//     }
+//     var graph = {};
+//     var sizeofdistricts = Math.floor(profile.length/committee.length);
+//     for (const cand in committee) {
+//         var interestedvoters = [];
+//         for (let i = 0; i < profile.length; i++) {
+//             if (profile[i].includes(cand)) {
+//                 interestedvoters.push(i);
+//             }            
+//         }
+//         for (let j = 0; j < sizeofdistricts; j++) {
+
+//         }
+        
+//     }
+//     for cand in committee:
+//         for j in range(sizeofdistricts):
+//             graph[str(cand) + "/" + str(j)] = interestedvoters
+//     m, _, _ = matching.bipartiteMatch(graph)
+//     return len(m)
+// }    
