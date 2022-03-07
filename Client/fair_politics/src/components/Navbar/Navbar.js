@@ -36,7 +36,12 @@ const Navbar = () => {
     }
     const onSearch = (event) => {
         event.preventDefault();
-        alert("Search clicked")
+        if (is_connected) {
+            history.push('/search')
+        }
+        else{
+            alert("you have to sign in first")
+        }
     }
     const onPressBar = (event) => {
         event.preventDefault();
@@ -90,9 +95,9 @@ const Navbar = () => {
 
                 <Bars onClickCapture={onPressBar} />
                 <Language onClickCapture={onLanguagePress}>language </Language>
-    
+
                 <NavMenuBar style={{ display: navDisplay }} >
-          
+
                     {is_connected &&
                         <div>
                             <NavLinkBar
