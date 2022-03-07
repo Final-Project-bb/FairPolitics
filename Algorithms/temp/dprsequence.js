@@ -1,12 +1,11 @@
 // Sequence of consecutive DPR elections with implementations.
+const { DPRRule, compute, compute_lazy_seqpav, compute_dynamic_seqpav, compute_av, get_rulesifno } = require('./dprrules');
 
-// from dynamicrankings import dprrules  ->  change to module.export
-
-class DPRSequence {
+module.exports = class DPRSequence {
     // Sequence of consecutive DPR elections with implementations.
     constructor(profile, rule_name, info=null) {
         this.profile = profile;
-        this.rule_name = dprrules.rules[rule_name];
+        this.rule_name = get_rulesifno(rule_name);
         this.outcomes = null;
         this.info = info;
     }
@@ -28,15 +27,34 @@ class DPRSequence {
         this.info = info;
     }
 
-    run_random(windowheight, timehorizon, prob_type='unif', verbose=0, resolute=True) {
+    toString() {
+        return `
+    {
+        profile: {
+            names: ${JSON.stringify(this.profile[0])},
+            num_cand: ${JSON.stringify(this.profile[1])},
+            preferences: ${JSON.stringify(this.profile[2])},
+        rule: {
+            rule_id: ${JSON.stringify(this.rule_name[0])},
+            shortname: ${JSON.stringify(this.rule_name[1])},
+            longname: ${JSON.stringify(this.rule_name[2])},
+            function: ${JSON.stringify(this.rule_name[3])},
+            algorithm: ${JSON.stringify(this.rule_name[4])},
+            resolute: ${JSON.stringify(this.rule_name[5])},
+        outcomes: ${JSON.stringify(this.outcomes)},
+        info: ${JSON.stringify(this.info)}
+    }`
+    }
+
+    run_random(windowheight, timehorizon, prob_type='unif', verbose=0, resolute=true) {
         // Let election run for timehorizon many steps, where candidates get implemented
         // according to prob_type among the first windowheight many canidates in each round.
         // This depends on the voting rule used!
-        if (timehorizon > this.profile.num_cand) {
-            var message = `Timehorizon is set too high for profile of ${JSON.stringify(this.profile.num_cand)} candidates`;
+        if (timehorizon > this.profile[1]) {
+            var message = `Timehorizon is set too high for profile of ${JSON.stringify(this.profile[1])} candidates`;
             throw message
         }
-        if (prob_type !== 'unif' && prob_type !== 'decr' && prob_type !== 'gctr') {
+        if ((prob_type !== 'unif') && (prob_type !== 'decr') && (prob_type !== 'gctr')) {
             var message = `Probability type ${JSON.stringify(prob_type)} not supported.`;
             throw message
         }
@@ -88,15 +106,15 @@ class DPRSequence {
         return outcomes;
     }
 
-    get_random_ranks(windowheight, timehorizon, prob_type='unif', verbose=0, resolute=True) {
+    get_random_ranks(windowheight, timehorizon, prob_type='unif', verbose=0, resolute=true) {
         // Output timehorizon-1 many ranks, where ranks get chosen according to prob_type 
         // among the first windowheight many ranks. These ranks can then be used for run_by_rank.
         // This is independent of the voting rule used.
-        if (timehorizon > this.profile.num_cand) {
-            var message = `Timehorizon is set too high for profile of ${JSON.stringify(this.profile.num_cand)} candidates`;
+        if (timehorizon > this.profile[1]) {
+            var message = `Timehorizon is set too high for profile of ${JSON.stringify(this.profile[1])} candidates`;
             throw message
         }
-        if (prob_type !== 'unif' && prob_type !== 'decr' && prob_type !== 'gctr') {
+        if ((prob_type !== 'unif') && (prob_type !== 'decr') && (prob_type !== 'gctr')) {
             var message = `Probability type ${JSON.stringify(prob_type)} not supported.`;
             throw message
         }
@@ -104,7 +122,7 @@ class DPRSequence {
         var curr_ranking = [];
         var next_impl;
         // use dummy ranking to get ranks
-        for (let i of range(his.profile.num_cand)) {
+        for (let i of range(his.profile[1])) {
             curr_ranking[i] = i;
         }
 
@@ -180,15 +198,15 @@ class DPRSequence {
         return curr_ranking[ind];
     }
 
-    run_by_rank(rank_sequence, verbose=0, resolute=True) {
+    run_by_rank(rank_sequence, verbose=0, resolute=true) {
         var adapted_max_value = 0; 
         for (const [ind, value] of rank_sequence.entries()) {
             if (ind+value > adapted_max_value) {
                 adapted_max_value = ind+value;
             }
         }
-        if (adapted_max_value > this.profile.num_cand) {
-            var message = `Rank sequence too long or ranks too high for profile of ${JSON.stringify(this.profile.num_cand)} candidates.`;
+        if (adapted_max_value > this.profile[1]) {
+            var message = `Rank sequence too long or ranks too high for profile of ${JSON.stringify(this.profile[1])} candidates.`;
             throw message
         }
         var outcomes = [];
@@ -228,17 +246,16 @@ class DPRSequence {
         return outcomes;
     }
 
-    run_by_name(name_sequence, verbose=0, resolute=True) {
-        var contains_duplicates = name_sequence.some((name) => {
-            name_sequence.filter(name).length > 1;
-        });
-        if (contains_duplicates) {
+    run_by_name(name_sequence, verbose=0, resolute=true) {
+        var contains_duplicates = new Set(name_sequence);
+        if (contains_duplicates.size !== name_sequence.length) {
             var message = "Given name sequence contains duplicates.";
             throw message;
         }
         var outcomes = [];
         var curr_tau = [];
         var curr_ranking = [];
+        var fct = this.rule_name[3];
 
         // optional output
         if (verbose > 0) {
@@ -248,9 +265,12 @@ class DPRSequence {
         }
         // end of optional output
 
-        for (let i = 0; i < rank_sequence.length; i++) { // line 221 [-1]
-            curr_ranking = this.rule.compute(this.profile, curr_tau, verbose=verbose, resolute=resolute);
+        name_sequence.push(-1);
+        for (let i = 0; i < name_sequence.length; i++) {
+            curr_ranking = compute(fct ,this.profile, curr_tau, verbose=verbose, resolute=resolute);
+            console.log(curr_ranking);
             outcomes.concat(curr_tau).concat(curr_ranking);
+            console.log(outcomes);
 
             // optional output
             if (verbose > 0) {
@@ -261,13 +281,13 @@ class DPRSequence {
             }
             // end of optional output
 
-            curr_tau = curr_tau + [next_impl];
+            curr_tau.push(i);
         }
         this.outcomes = outcomes;
         return outcomes;
     }
 
-    run_adversarial(timehorizon, forbidden_cands, windowheight=None, verbose=0, resolute=True) {
+    run_adversarial(timehorizon, forbidden_cands, windowheight=None, verbose=0, resolute=true) {
         // Let election run for timehorizon many iterations. In each step implement the highest 
         // ranked candidate among the first windowheight many that is not in forbidden_cands. 
         // If there are no more such candidates, implement the lowest ranked forbidden candidate.
@@ -276,7 +296,7 @@ class DPRSequence {
             throw message;
         }
         if (!windowheight) {
-            windowheight = this.profile.num_cand;
+            windowheight = this.profile[1];
         }
         var outcomes = [];
         var curr_tau = [];
@@ -331,7 +351,7 @@ class DPRSequence {
             throw message;
         }
         if (rounds == null) {
-            for (let i of range(his.profile.num_cand)) {
+            for (let i of range(his.profile[1])) {
                 rounds[i] = i;
             }
         }
@@ -354,7 +374,7 @@ class DPRSequence {
             throw message;
         }
         if (rounds == null) {
-            for (let i of range(his.profile.num_cand)) {
+            for (let i of range(his.profile[1])) {
                 rounds[i] = i;
             }
         }
@@ -395,7 +415,7 @@ class DPRSequence {
             throw message;
         }
         if (rounds == null) {
-            for (let i of range(his.profile.num_cand)) {
+            for (let i of range(his.profile[1])) {
                 rounds[i] = i;
             }
         }
@@ -450,7 +470,7 @@ class DPRSequence {
             throw message;
         }
         if (rounds == null) {
-            for (let i of range(his.profile.num_cand)) {
+            for (let i of range(his.profile[1])) {
                 rounds[i] = i;
             }
         }
@@ -472,7 +492,7 @@ class DPRSequence {
         return bad_rounds;
     }
 
-    get_group_represenation(voters, frac=1, use_tau=False, rounds=null) {
+    get_group_represenation(voters, frac=1, use_tau=false, rounds=null) {
         // Get group representation value, i.e. the k s.t. 
         // $avg(r_{\leq k}) \geq \lambda$, where lambda is
         // frac * (num of canidates approved by some i in voters).
@@ -484,7 +504,7 @@ class DPRSequence {
             throw message;
         }
         if (rounds == null) {
-            for (let i of range(his.profile.num_cand)) {
+            for (let i of range(his.profile[1])) {
                 rounds[i] = i;
             }
         }
