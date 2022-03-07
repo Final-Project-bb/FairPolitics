@@ -93,3 +93,13 @@ function hamming(a, b) {
     }
     return diffs.length;
 }
+
+
+module.exports = {
+    sort_committees,
+    enough_approved_candidates,
+    str_candset,
+    str_candsets,
+    str_committees_header,
+    hamming
+}

@@ -1,5 +1,5 @@
 // Calculating all kinds of scores
-
+const { sort_committees, enough_approved_candidates, str_candset, str_candsets, str_committees_header, hamming } = require('./misc');
 
 // returns score function given its name
 function get_scorefct(scorefct_str, committeesize) {
@@ -107,24 +107,26 @@ function cumulative_score_fct(scorefct, cand_in_com) {
 // gained by adding candidate i
 function marginal_thiele_scores_add(scorefct, profile, committee) {
 
+    console.log(`in marginal_thiele_scores_add function`);
+    console.log(`${JSON.stringify(scorefct)}`); // undefined
     var marg = [];
     var commi = new Set(committee);
     var intersection = [];
-    for (let i = 0; i < profile.num_cand; i++) {
+    for (let i = 0; i < profile[1]; i++) {
         marg.push(0);        
     }
-    for (const pref in profile) {
-        for (const c in pref) {
-            if (pref.approved.includes(c) && commi.has(c)) {
+    for (let pref = 0; pref < profile[2]; pref++) {
+        for (let c = 0; c < pref.length; c++) {
+            if (pref.approved.includes(c) && commi.has(c)) { // need to check
                 intersection.push(c);
-                marg[c] += pref.weight * scorefct(intersection.length + 1);
+                marg[c] = pref.weight * scorefct(intersection.length + 1);
             }
             else {
-                marg[c] += pref.weight * scorefct(1);
+                marg[c] = pref.weight * scorefct(1);
             }
-        }
+        }        
     }
-    for (const c in committee) {
+    for (let c = 0; c < committee.length; c++) {
         marg[c] = -1;
     }
     return marg;
@@ -195,4 +197,19 @@ function monroescore(profile, committee) {
 //             graph[str(cand) + "/" + str(j)] = interestedvoters
 //     m, _, _ = matching.bipartiteMatch(graph)
 //     return len(m)
-// }    
+// }  
+
+
+module.exports = {
+    get_scorefct,
+    thiele_score,
+    __pav_score_fct,
+    __slav_score_fct,
+    __cc_score_fct,
+    __av_score_fct,
+    __geom_score_fct,
+    cumulative_score_fct,
+    marginal_thiele_scores_add,
+    marginal_thiele_scores_remove,
+    monroescore
+}

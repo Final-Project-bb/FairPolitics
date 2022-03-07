@@ -1,5 +1,9 @@
 // Dynamic proportional ranking rules.
-const assert = require('assert');
+const DPRSequence = require('./dprsequence');
+const { sort_committees, enough_approved_candidates, str_candset, str_candsets, str_committees_header, hamming } = require('./misc');
+const { get_scorefct, thiele_score, __pav_score_fct, __slav_score_fct, __cc_score_fct, __av_score_fct, __geom_score_fct,
+    cumulative_score_fct, marginal_thiele_scores_add, marginal_thiele_scores_remove, monroescore } = require('./scores');
+// const assert = require('assert');
 
 class DPRRule {
     // Class for DPR rules containing basic information and function call
@@ -16,9 +20,9 @@ class DPRRule {
     // assert(resolute.length > 0);
     // assert(algorithms.length > 0);
 
-    compute(profile, tau, /**kwargs*/) {
-        return this.fct(profile, tau, /**kwargs*/);
-    }
+    // compute(profile, tau, ...args) {
+    //     return this.fct(profile, tau, ...args);
+    // }
 
     // # def fastest_algo(self):
     // #     for algo in self.algorithms:
@@ -28,10 +32,13 @@ class DPRRule {
 
 }
 
+function compute(fct, profile, tau, ...args) {
+    return compute_dynamic_seqpav(profile, tau, ...args); // hardcoded  ->  need to use 'fct'
+}
 
-function compute_lazy_seqpav(profile, tau, resolute=true, verbose=0) {
+function compute_lazy_seqpav(profile, tau, verbose=0, resolute=true) {
 
-    var score_fct = scores.get_scorefct('pav', profile.length);
+    var score_fct = get_scorefct('pav', profile.length);
 
     // optional output
     if (verbose > 0) {
@@ -70,14 +77,14 @@ function compute_lazy_seqpav(profile, tau, resolute=true, verbose=0) {
     return ranking;
 }
 
-function compute_dynamic_seqpav(profile, tau, resolute=true, verbose=0) {
+function compute_dynamic_seqpav(profile, tau, verbose=0, resolute=true) {
 
     var scorefct_str = 'pav';
-    var score_fct = scores.get_scorefct('pav', profile.length);
+    var score_fct = get_scorefct('pav', profile[2].length); // undefined 
 
     // optional output
     if (verbose > 0) {
-        console.log(rules["lseqpav"].longname);
+        console.log(`${JSON.stringify(this.rule_name)}`); // undefined
     }
     // end of optional output
 
@@ -90,14 +97,16 @@ function compute_dynamic_seqpav(profile, tau, resolute=true, verbose=0) {
     // optional output
     if (verbose >= 2) {
         console.log(`starting with the empty committee and tau = ${JSON.stringify(tau)} 
-                    (score = ${JSON.stringify(scores.thiele_score(scorefct_str, profile, tau + ranking))})`);
+                    (score = ${JSON.stringify(thiele_score(scorefct_str, profile, tau + ranking))})`);
     }
     // end of optional output
 
     // build the ranking starting with the empty set
-    for (let i = 0; i < profile.num_cand; i++) {
+    for (let i = 0; i < profile[1]; i++) {
         d.concat(tau).concat(ranking);
-        additional_score_cand = scores.marginal_thiele_scores_add(score_fct, profile, d);
+        console.log("before marginal_thiele_scores_add function");
+        additional_score_cand = marginal_thiele_scores_add(score_fct, profile, d);
+        console.log("after marginal_thiele_scores_add function");
         // console.log(additional_score_cand);
         next_cand = additional_score_cand[Math.max(additional_score_cand)];
         // check whether all candidates outide of tau have been ranked
@@ -110,7 +119,7 @@ function compute_dynamic_seqpav(profile, tau, resolute=true, verbose=0) {
         if (verbose >= 2) {
             console.log(`adding candidate number ${JSON.stringify(ranking.length)}: ${JSON.stringify(profile.names[next_cand])}, 
             score increases by ${JSON.stringify(Math.max(additional_score_cand))}  to a total of 
-            ${JSON.stringify(scores.thiele_score(scorefct_str, profile, tau + ranking))}`);
+            ${JSON.stringify(thiele_score(scorefct_str, profile, tau + ranking))}`);
             for (let i = 0; i < additional_score_cand.length; i++) {
                 if ((i > next_cand) && (additional_score_cand[i] == Math.max(additional_score_cand))) {
                     tied_cands.push(i);
@@ -125,8 +134,7 @@ function compute_dynamic_seqpav(profile, tau, resolute=true, verbose=0) {
 
     // optional output
     if (verbose > 0) {
-        console.log(`The ranking, using tau = ${JSON.stringify(tau)} is `);
-        console.log(ranking);
+        console.log(`The ranking, using tau = ${JSON.stringify(tau)} is ${JSON.stringify(ranking)}`);
     }
     // end of optional output
 
@@ -134,7 +142,7 @@ function compute_dynamic_seqpav(profile, tau, resolute=true, verbose=0) {
 }
 
 
-function compute_av(profile, tau, resolute=true, verbose=0) {
+function compute_av(profile, tau, verbose=0, resolute=true) {
     // Dynamic sequential Phragmen (dynamic-seq-Phragmen)
 
     // optional output
@@ -169,15 +177,31 @@ function compute_av(profile, tau, resolute=true, verbose=0) {
 }
 
 
-__RULESINFO = [
-    ("lseqpav", "lazy seq-PAV", "lazy sequential PAV", compute_lazy_seqpav, ("standard"), (true, false)),
-    ("dseqpav", "dynamic seq-PAV", "dynamic sequential PAV", compute_dynamic_seqpav, ("standard"), (true, false)),
-    ("lseqphrag", "lazy seq-Phragmen", "lazy sequential Phragmen", compute_lazy_seqphrag, ("standard"), (true, false)),
-    ("dseqphrag", "dynamic seq-Phragmen", "dynamic sequential Phragmen", compute_dynamic_seqphrag, ("standard"), (true, false)),
-    ("av", "AV", "approval voting", compute_av, ("standard"), (true, false))
-];
-rules = {};
-for (const ruleinfo in __RULESINFO) {
-    rules[ruleinfo[0]] = DPRRule(ruleinfo);
-    // rules[ruleinfo[0]] = DPRRule(*ruleinfo);
+function get_rulesifno(rule_name) {
+
+    var __RULESINFO = [
+        ['lseqpav', 'lazy seq-PAV', 'lazy sequential PAV', compute_lazy_seqpav, 'standard', [true, false]],
+        ['dseqpav', 'dynamic seq-PAV', 'dynamic sequential PAV', 'compute_dynamic_seqpav', 'standard', [true, false]],
+        // ['lseqphrag', "lazy seq-Phragmen", "lazy sequential Phragmen", compute_lazy_seqphrag, ("standard"), (true, false)],
+        // ['dseqphrag', "dynamic seq-Phragmen", "dynamic sequential Phragmen", compute_dynamic_seqphrag, ("standard"), (true, false)],
+        ['av', 'AV', 'approval voting', compute_av, 'standard', [true, false]]
+    ];
+
+    for (let i = 0; i < __RULESINFO.length; i++) {
+        var rule = __RULESINFO[i];
+        if (rule[0] === rule_name) {
+            return __RULESINFO[i];
+        }        
+    }
+    return null;
+}
+
+
+module.exports = {
+    DPRRule,
+    compute,
+    compute_lazy_seqpav,
+    compute_dynamic_seqpav,
+    compute_av,
+    get_rulesifno
 }
