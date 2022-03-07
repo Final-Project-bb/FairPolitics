@@ -14,8 +14,8 @@ var election = [];
 
 pyshell.send(profile, "dseqpav");
 
-pyshell.stdout.on('DPRSequence', function(_init_) {
-  election = _init_;
+pyshell.stdout.on('DPRSequence', function(__init__) {
+  election = __init__;
 });
 console.log(election);
 
