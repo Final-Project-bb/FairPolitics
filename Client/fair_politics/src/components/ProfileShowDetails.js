@@ -16,13 +16,22 @@ const ProfileShowDetails = () => {
   const history = useHistory();
 
   const showFollowing = () => {
+    setLoading(true);
     let following_ids = followings.map((user) => user.user_following_id);
-    console.log(following_ids);
-    fetchUserDetailsById(following_ids);
+
+    fetchUserDetailsById(following_ids,true);
+    setLoading(false);
     history.push("/profile/following");
   };
+  const showFollower = () => {
+    setLoading(true);
+    let follower_ids = followers.map((user) => user.user_id);
+    fetchUserDetailsById(follower_ids,false);
+    setLoading(false);
+    history.push("/profile/follower");
+  };
 
-  const fetchUserDetailsById = async (ids) => {
+  const fetchUserDetailsById = async (ids,isFollowing) => {
     // await fetch("http://localhost:4000/api/get_users_by_ids", {
     //   method: "PUT",
     //   headers: { "Content-Type": "application/json" },
@@ -38,18 +47,16 @@ const ProfileShowDetails = () => {
       body: JSON.stringify(ids),
     });
     const data = await response.json();
-    console.log(data.length);
-    setFollowingDetails(data);
+    if(isFollowing){
+      setFollowingDetails(data.result);
+    }
+    else{
+      setFollowerDetails(data.result);
+    }
   };
 
-  const showFollower = () => {
-    let follower_ids = followers.map((user) => user.user_id);
-    console.log(follower_ids);
-    fetchUserDetailsById(follower_ids);
-    history.push("/profile/follower");
-  };
-
-  const fetchFollowerDetails = () => {};
+ 
+  // const fetchFollowerDetails = () => {};
 
   return (
     <div>

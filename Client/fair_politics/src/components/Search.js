@@ -1,8 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Header from './Header';
 import Loading from './Loading';
+import { AppContext } from "./Context";
+
+
 import UserCard from './UserCard';
 const Search = () => {
+    const { setLoading,usersSearch,setUserDetails, is_connected, setIsConnected } = useContext(AppContext);
+
     const users = [
         {
             user_id: "1",
@@ -37,7 +42,7 @@ const Search = () => {
         <div>
             <Header title="Search Page" />
             <div style={styles.text}>
-                {users.map((user) =>
+                {usersSearch.map((user) =>
                 (
                     <div>
                         <UserCard key={user.user_id} user_info={user} />

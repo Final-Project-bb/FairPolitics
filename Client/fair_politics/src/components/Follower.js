@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import Header from "./Header";
 import { AppContext } from "./Context";
 import UserCard from "./UserCard";
+import ProfileHeader from "./ProfileHeader";
 
 const Follower = () => {
   const { loading, setLoading, followerDetails } = useContext(AppContext);
@@ -9,8 +10,11 @@ const Follower = () => {
   return (
     <div>
       <Header title='Follower' />
-      Follower
-      {followerDetails.map(user => <UserCard key={user.user_id} user_info={user}/>)}
+      <ProfileHeader/>
+      <br/>
+      {followerDetails.map(user =>
+        <UserCard key={user.user_id} user_info={user}/>
+       )}
     </div>
   );
 };

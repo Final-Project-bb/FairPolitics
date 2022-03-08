@@ -11,6 +11,7 @@ const Profile = () => {
     <div>
       <Header title="Profile Page" />
       <ProfileHeader />
+      <br/><br/>
       <div style={styles.card}>
         <DiscussionCard />
         <FeedbackCard />

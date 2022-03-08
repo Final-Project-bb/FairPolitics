@@ -24,6 +24,7 @@ function App() {
   const [followers, setFollowers] = useState([]);
   const [followingDetails, setFollowingDetails] = useState([]);
   const [followerDetails, setFollowerDetails] = useState([]);
+  const [usersSearch, setUsersSearch] = useState([]);
 
   return (
     <AppContext.Provider
@@ -43,7 +44,9 @@ function App() {
         followingDetails,
         setFollowingDetails,
         followerDetails,
-        setFollowerDetails
+        setFollowerDetails,
+        usersSearch,
+        setUsersSearch,
       }}>
       <Router>
         <Switch>

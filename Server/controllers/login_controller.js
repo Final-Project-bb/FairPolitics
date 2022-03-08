@@ -180,12 +180,17 @@ const getFollow = (req, res) => {
 
 const addFollowing = (req, res) => {
 
+    
     var sqlUserId = `select user_following_id from follower where user_id=${JSON.stringify(req.body.user_id)} and
                     user_following_id = ${JSON.stringify(req.body.user_following_id)}`;
     
     var sqlInsert = `Insert into follower(user_id,user_following_id)
                 values(${JSON.stringify(req.body.user_id)},${JSON.stringify(req.body.user_following_id)})`;
-    
+    if(req.body.user_following_id===req.body.user_id)
+    {
+			res.status(404).send({ message: "user can't follow himself!" });
+            return;
+    }
     connection.query(sqlUserId, function (err, result) {
         if (err) {
 			throw err;
@@ -248,9 +253,9 @@ const searchByName = (req, res) => {
 }
 
 const getUsers = (req, res) => {
-    var sqlGetUserDetails = `select * from user_details where user_id = ${JSON.stringify(req.body.ids[0])}`;
-    for (let i = 1; i < req.body.ids.length; i++) {
-        sqlGetUserDetails += ` or user_id = ${JSON.stringify(req.body.ids[i])}`;
+    var sqlGetUserDetails = `select * from user_details where user_id = ${JSON.stringify(req.body[0])}`;
+    for (let i = 1; i < req.body.length; i++) {
+        sqlGetUserDetails += ` or user_id = ${JSON.stringify(req.body[i])}`;
     }
     connection.query(sqlGetUserDetails, function (err, result) {
         if (err) {
