@@ -14,10 +14,11 @@ var profile = [names, num_cand, ballotts];
 var election = new DPRSequence(profile, 'dseqpav');
 // console.log(election.toString());
 var outcomes = election.run_by_name([1]);
-var expected_answer = [([], [0, 1, 2, 3]), ([1], [2, 3, 0])];
+var expected_answer = [[[], [0, 1, 2, 3]], [[1], [2, 3, 0]]];
 if (outcomes == expected_answer) {
     console.log("TRUE");
 }
 else {
     console.log("FALSE");
 }
+console.log(outcomes);

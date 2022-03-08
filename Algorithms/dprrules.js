@@ -32,8 +32,8 @@ class DPRRule {
 
 }
 
-function compute(fct, profile, tau, ...args) {
-    return compute_dynamic_seqpav(profile, tau, ...args); // hardcoded  ->  need to use 'fct'
+function compute(profile, rule_name, tau, ...args) {
+    return rule_name[3](profile, rule_name, tau, ...args);
 }
 
 function compute_lazy_seqpav(profile, tau, verbose=0, resolute=true) {
@@ -77,22 +77,22 @@ function compute_lazy_seqpav(profile, tau, verbose=0, resolute=true) {
     return ranking;
 }
 
-function compute_dynamic_seqpav(profile, tau, verbose=0, resolute=true) {
+function compute_dynamic_seqpav(profile, rule_name, tau, verbose=0, resolute=true) {
 
     var scorefct_str = 'pav';
     var score_fct = get_scorefct('pav', profile[2].length); // undefined 
 
     // optional output
     if (verbose > 0) {
-        console.log(`${JSON.stringify(this.rule_name)}`); // undefined
+        console.log(`${JSON.stringify(this.rule_name[2])}`);
     }
     // end of optional output
 
     var ranking = [];
     var d = [];
     var additional_score_cand = [];
-    var next_cand = 0;
     var tied_cands = [];
+    var next_cand = 0;
 
     // optional output
     if (verbose >= 2) {
@@ -103,12 +103,14 @@ function compute_dynamic_seqpav(profile, tau, verbose=0, resolute=true) {
 
     // build the ranking starting with the empty set
     for (let i = 0; i < profile[1]; i++) {
-        d.concat(tau).concat(ranking);
-        console.log("before marginal_thiele_scores_add function");
+        d = tau.concat(ranking);
+        // console.log("before marginal_thiele_scores_add function");
         additional_score_cand = marginal_thiele_scores_add(score_fct, profile, d);
-        console.log("after marginal_thiele_scores_add function");
-        // console.log(additional_score_cand);
-        next_cand = additional_score_cand[Math.max(additional_score_cand)];
+        // console.log("after marginal_thiele_scores_add function");
+        console.log(`additional_score_cand: ${JSON.stringify(additional_score_cand)}`);
+        console.log(`Math.max(additional_score_cand): ${JSON.stringify(Math.max(...additional_score_cand))}`);
+        next_cand = additional_score_cand.indexOf(Math.max(...additional_score_cand));
+        console.log(`next_cand: ${JSON.stringify(next_cand)}`);
         // check whether all candidates outide of tau have been ranked
         if (Math.max(additional_score_cand) < 0) {
             break;
@@ -181,7 +183,7 @@ function get_rulesifno(rule_name) {
 
     var __RULESINFO = [
         ['lseqpav', 'lazy seq-PAV', 'lazy sequential PAV', compute_lazy_seqpav, 'standard', [true, false]],
-        ['dseqpav', 'dynamic seq-PAV', 'dynamic sequential PAV', 'compute_dynamic_seqpav', 'standard', [true, false]],
+        ['dseqpav', 'dynamic seq-PAV', 'dynamic sequential PAV', compute_dynamic_seqpav, 'standard', [true, false]],
         // ['lseqphrag', "lazy seq-Phragmen", "lazy sequential Phragmen", compute_lazy_seqphrag, ("standard"), (true, false)],
         // ['dseqphrag', "dynamic seq-Phragmen", "dynamic sequential Phragmen", compute_dynamic_seqphrag, ("standard"), (true, false)],
         ['av', 'AV', 'approval voting', compute_av, 'standard', [true, false]]
