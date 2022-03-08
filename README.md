@@ -34,11 +34,11 @@ here we need to describe a little about who we are and what is our project worki
         ```
         <br> 2. Server side: run with npm from Server folder by commands: 
         ```
-        cd .\Server\  |  npm i install | npm start
+        cd .\Server\  ;  npm i install ; npm start
         ```
         <br> 3. Client side: run with npm from Client folder by commands: 
         ```
-        cd .\Client\fair_politics\ |  npm i install | npm start
+        cd .\Client\fair_politics\ ;  npm i install ; npm start
         ```
 
 
