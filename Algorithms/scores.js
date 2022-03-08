@@ -5,7 +5,7 @@ const { sort_committees, enough_approved_candidates, str_candset, str_candsets, 
 function get_scorefct(scorefct_str, committeesize) {
 
     if (scorefct_str === 'pav') {
-        return '__pav_score_fct';
+        return __pav_score_fct;
     }
     else if (scorefct_str === 'slav') {
         return __slav_score_fct;
@@ -107,8 +107,6 @@ function cumulative_score_fct(scorefct, cand_in_com) {
 // gained by adding candidate i
 function marginal_thiele_scores_add(scorefct, profile, committee) {
 
-    // console.log(`${JSON.stringify(scorefct)}`); // undefined
-    // var scorefunc = window['scorefct'];
     var marg = [];
     var pref = [];
     var intersection = [];
@@ -120,10 +118,10 @@ function marginal_thiele_scores_add(scorefct, profile, committee) {
         intersection = pref.filter(x => committee.includes(x));
         for (const c of pref) {
             if (intersection.length > 0) {
-                marg[c] += __pav_score_fct(intersection.length + 1);
+                marg[c] += scorefct(intersection.length + 1);
             }
             else {
-                marg[c] += __pav_score_fct(1);
+                marg[c] += scorefct(1);
             }
         }       
     }

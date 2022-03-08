@@ -1,11 +1,11 @@
 // Sequence of consecutive DPR elections with implementations.
-const { DPRRule, compute, compute_lazy_seqpav, compute_dynamic_seqpav, compute_av, get_rulesifno } = require('./dprrules');
+const { DPRRule, compute, compute_lazy_seqpav, compute_dynamic_seqpav, compute_av, get_rulesinfo } = require('./dprrules');
 
 module.exports = class DPRSequence {
     // Sequence of consecutive DPR elections with implementations.
     constructor(profile, rule_name, info=null) {
         this.profile = profile;
-        this.rule_name = get_rulesifno(rule_name);
+        this.rule_name = get_rulesinfo(rule_name);
         this.outcomes = null;
         this.info = info;
     }
