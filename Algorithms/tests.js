@@ -1,5 +1,5 @@
 const DPRSequence = require('./dprsequence');
-const { DPRRule, compute, compute_lazy_seqpav, compute_dynamic_seqpav, compute_av, get_rulesifno } = require('./dprrules');
+const { DPRRule, compute, compute_lazy_seqpav, compute_dynamic_seqpav, compute_av, get_rulesinfo } = require('./dprrules');
 const { sort_committees, enough_approved_candidates, str_candset, str_candsets, str_committees_header, hamming } = require('./misc');
 const { get_scorefct, thiele_score, __pav_score_fct, __slav_score_fct, __cc_score_fct, __av_score_fct, __geom_score_fct,
     cumulative_score_fct, marginal_thiele_scores_add, marginal_thiele_scores_remove, monroescore } = require('./scores');

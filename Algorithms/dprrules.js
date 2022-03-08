@@ -174,7 +174,7 @@ function compute_av(profile, tau, verbose=0, resolute=true) {
 }
 
 
-function get_rulesifno(rule_name) {
+function get_rulesinfo(rule_name) {
 
     var __RULESINFO = [
         ['lseqpav', 'lazy seq-PAV', 'lazy sequential PAV', compute_lazy_seqpav, 'standard', [true, false]],
@@ -200,5 +200,5 @@ module.exports = {
     compute_lazy_seqpav,
     compute_dynamic_seqpav,
     compute_av,
-    get_rulesifno
+    get_rulesinfo
 }
