@@ -1,13 +1,31 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Header from "./Header";
 import Loading from "./Loading";
 import styled from "styled-components";
 import { AppContext } from "./Context";
+
 const UserCard = ({ user_info }) => {
-  const { user_details, loading, setLoading } = useContext(AppContext);
+  const { user_details, loading, setLoading, followings, followers } =
+    useContext(AppContext);
+
   const [picturePress, setPicturePress] = useState(false);
   const [isFollow, setIsFollow] = useState(false);
 
+  useEffect(() => {
+    const checkFollow = () => {
+      let followState = false;
+      followState = followings
+        .map((user) => user.user_following_id)
+        .map((id) => {
+          if (id === user_info.user_id) {
+            return true;
+          }
+        });
+        console.log(followState)
+      setIsFollow(followState);
+    };
+    checkFollow();
+  }, []);
   // here should add and remove follow from db.
   const followUser = (e) => {
     e.preventDefault();
@@ -29,8 +47,8 @@ const UserCard = ({ user_info }) => {
   const addFollowDb = async () => {
     const ids = {
       user_id: user_details.user_id,
-      user_following_id: user_info.user_id
-    }
+      user_following_id: user_info.user_id,
+    };
     const response = await fetch("http://localhost:4000/api/add_following", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -42,8 +60,8 @@ const UserCard = ({ user_info }) => {
   const removeFollowDb = async () => {
     const ids = {
       user_id: user_details.user_id,
-      user_following_id: user_info.user_id
-    }
+      user_following_id: user_info.user_id,
+    };
     const response = await fetch("http://localhost:4000/api/remove_following", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -79,7 +97,9 @@ const UserCard = ({ user_info }) => {
                 height: !picturePress ? 50 : 200,
                 width: !picturePress ? 50 : 200,
               }}
-              onClickCapture={() => setPicturePress(!picturePress)}
+              onClickCapture={() => {
+                setPicturePress(!picturePress);
+              }}
             />
           </div>
         </div>
@@ -147,10 +167,10 @@ const UserCardStyle = styled.div`
   width: 500px;
   position: relative;
   top: 20px;
-  left:0px;
+  left: 0px;
   ${"" /* buttom:500px; */}
   margin-top:20px;
-  ${'' /* justify-content: space-around; */}
+  ${"" /* justify-content: space-around; */}
   ${"" /* left:-150px; */}
   border-radius:30px;
   display: flex;
