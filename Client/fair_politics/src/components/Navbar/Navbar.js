@@ -23,7 +23,7 @@ const Navbar = () => {
     const [onBar, setOnBar] = useState(false);
     const [navHeight, setNavHeight] = useState("80px");
     const [navDisplay, setNavDisplay] = useState("none");
-    const { setUserDetails, is_connected, setIsConnected } = useContext(AppContext);
+    const { setLoading,setUsersSearch,setUserDetails, is_connected, setIsConnected } = useContext(AppContext);
     const history = useHistory();
 
     const handleClick = () => {
@@ -36,12 +36,23 @@ const Navbar = () => {
     }
     const onSearch = (e) => {
         e.preventDefault();
+        console.log(search)
         if (is_connected) {
+            setLoading(true);
+            fetchSearchUsers()
+            setLoading(false);
             history.push('/search')
         }
         else{
             alert("you have to sign in first")
         }
+    }
+    const fetchSearchUsers= async()=>{
+        const response = await fetch(`http://localhost:4000/api/search_by_name/${search}`);
+        const data = await response.json();
+        console.log(data.result);
+        setUsersSearch(data.result);
+
     }
     const onPressBar = (event) => {
         event.preventDefault();
