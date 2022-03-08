@@ -12,7 +12,7 @@ router.post("/create_user", createUser); //works fine
 router.put("/login_user", loginUser); //works fine
 router.put("/update_user", updateUser); //works fine
 router.delete("/delete_user/:user_id", deleteUser); //works fine
-router.get("/search_by_name/:first_name", searchByName); //works fine
+router.get("/search_by_name/:first_name/:user_id", searchByName); //works fine
 router.put("/get_users_by_ids", getUsers); //works fine
 router.put("/add_user/", auth); 
 

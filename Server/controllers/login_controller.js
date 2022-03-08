@@ -243,7 +243,8 @@ const removeFollowing = (req, res) => {
 
 
 const searchByName = (req, res) => {
-    var sqlGetUserDetails = `select * from user_details where first_name = ${JSON.stringify(req.params.first_name)}`; 
+    var sqlGetUserDetails = `select * from user_details where first_name = ${JSON.stringify(req.params.first_name)} 
+    and user_id != ${JSON.stringify(req.params.user_id)}`; 
     connection.query(sqlGetUserDetails, function (err, result) {
         if (err) {
             throw err;
