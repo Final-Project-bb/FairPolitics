@@ -217,7 +217,7 @@ module.exports = class DPRSequence {
         // optional output
         if (verbose > 0) {
             console.log(`Computing ${JSON.stringify(rank_sequence.length)} iterations`);
-            console.log(" of DPR-elections with rule " + this.rule.longname);
+            console.log(" of DPR-elections with rule " + this.rule_name[2]);
             console.log(" given rank sequence of candidates to be implemented.");
         }
         // end of optional output
@@ -240,7 +240,7 @@ module.exports = class DPRSequence {
             }
             // end of optional output
 
-            curr_tau = curr_tau + [next_impl];
+            curr_tau.push(next_impl);
         }
         this.outcomes = outcomes;
         return outcomes;
@@ -255,21 +255,21 @@ module.exports = class DPRSequence {
         var outcomes = [];
         var curr_tau = [];
         var curr_ranking = [];
-        var fct = this.rule_name[3];
 
         // optional output
         if (verbose > 0) {
             console.log(`Computing ${JSON.stringify(name_sequence.length+1)} iterations 
-            of DPR-elections with rule ${JSON.stringify(this.rule.longname)} 
+            of DPR-elections with rule ${JSON.stringify(this.rule_name[2])} 
             given name sequence of candidates to be implemented.`);
         }
         // end of optional output
 
         name_sequence.push(-1);
         for (let i = 0; i < name_sequence.length; i++) {
-            curr_ranking = compute(fct ,this.profile, curr_tau, verbose=verbose, resolute=resolute);
+            curr_ranking = compute(this.profile, this.rule_name, curr_tau, verbose=verbose, resolute=resolute);
             console.log(curr_ranking);
-            outcomes.concat(curr_tau).concat(curr_ranking);
+            outcomes = curr_tau.concat(curr_ranking);
+            console.log(curr_tau);
             console.log(outcomes);
 
             // optional output
