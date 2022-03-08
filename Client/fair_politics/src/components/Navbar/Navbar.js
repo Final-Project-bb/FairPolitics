@@ -34,8 +34,8 @@ const Navbar = () => {
         setUserDetails({})
         history.push("/connection/login");
     }
-    const onSearch = (event) => {
-        event.preventDefault();
+    const onSearch = (e) => {
+        e.preventDefault();
         if (is_connected) {
             history.push('/search')
         }
