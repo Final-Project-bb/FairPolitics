@@ -36,23 +36,26 @@ function compute(profile, rule_name, tau, ...args) {
     return rule_name[3](profile, rule_name, tau, ...args);
 }
 
-function compute_lazy_seqpav(profile, tau, verbose=0, resolute=true) {
+function compute_lazy_seqpav(profile, rule_name, tau, verbose=0, resolute=true) {
 
-    var score_fct = get_scorefct('pav', profile.length);
+    var scorefct_str = 'pav';
+    var score_fct = get_scorefct(scorefct_str, profile[2].length);
 
     // optional output
     if (verbose > 0) {
-        console.log(rules["lseqpav"].longname);
+        console.log(`${JSON.stringify(this.rule_name[2])}`);
     }
     // end of optional output
 
+    var ranking = [];
     var candidate_scores = [];
-    candidate_scores = scores.marginal_thiele_scores_add(score_fct, profile, tau);
+    var temp = [];
+    candidate_scores = marginal_thiele_scores_add(score_fct, profile, tau);
 
     // optional output
     if (verbose > 0) {
         console.log("Using marginal contributions of");
-        for (let i = 0; i < profile.num_cand; i++) {
+        for (let i = 0; i < profile[1]; i++) {
             if (candidate_scores[i] >= 0) {
                 console.log(`Candidate ${JSON.stringify(i)}: ${JSON.stringify(candidate_scores[i])}`);
             }
@@ -61,16 +64,29 @@ function compute_lazy_seqpav(profile, tau, verbose=0, resolute=true) {
     // end of optional output
 
     // in lazy rules we can just ignore canidates from tau and remove them later
-    var ranking = [];
-    // ----------------------------------------line 78-81 python-----------------------------------------
-    for (let i = 0; i < candidate_scores.length; i++) {
-        ranking[i] = i;        
+    temp = [...candidate_scores];
+    temp.sort();
+    temp.reverse();
+    for (const x of temp) {
+        var i = candidate_scores.indexOf(x);
+        if (i != -1 && !ranking.includes(i)) {
+            ranking.push(i);
+        }
+        else {
+            while (i != -1) {
+                i = candidate_scores.indexOf(x, i+1);
+                if (i != -1 && !ranking.includes(i)) {
+                    ranking.push(i);
+                    break;
+                }
+            }
+        }
     }
+    ranking = ranking.filter(x => !tau.includes(x));
 
     // optional output
     if (verbose > 0) {
-        console.log(`The ranking, using tau = ${JSON.stringify(tau)} is `);
-        console.log(ranking);
+        console.log(`The ranking, using tau = ${tau} is ${ranking}`);
     }
     // end of optional output
 
@@ -80,7 +96,7 @@ function compute_lazy_seqpav(profile, tau, verbose=0, resolute=true) {
 function compute_dynamic_seqpav(profile, rule_name, tau, verbose=0, resolute=true) {
 
     var scorefct_str = 'pav';
-    var score_fct = get_scorefct('pav', profile[2].length); 
+    var score_fct = get_scorefct(scorefct_str, profile[2].length); 
 
     // optional output
     if (verbose > 0) {
@@ -96,7 +112,7 @@ function compute_dynamic_seqpav(profile, rule_name, tau, verbose=0, resolute=tru
 
     // optional output
     if (verbose >= 2) {
-        console.log(`starting with the empty committee and tau = ${JSON.stringify(tau)} 
+        console.log(`starting with the empty committee and tau = ${tau} 
                     (score = ${JSON.stringify(thiele_score(scorefct_str, profile, tau + ranking))})`);
     }
     // end of optional output
@@ -114,24 +130,24 @@ function compute_dynamic_seqpav(profile, rule_name, tau, verbose=0, resolute=tru
 
         // optional output
         if (verbose >= 2) {
-            console.log(`adding candidate number ${JSON.stringify(ranking.length)}: ${JSON.stringify(profile.names[next_cand])}, 
-            score increases by ${JSON.stringify(Math.max(additional_score_cand))}  to a total of 
+            console.log(`adding candidate number ${JSON.stringify(ranking.length)}: ${JSON.stringify(profile[0][next_cand])}, 
+            score increases by ${JSON.stringify(Math.max(...additional_score_cand))}  to a total of 
             ${JSON.stringify(thiele_score(scorefct_str, profile, tau + ranking))}`);
             for (let i = 0; i < additional_score_cand.length; i++) {
-                if ((i > next_cand) && (additional_score_cand[i] == Math.max(additional_score_cand))) {
+                if ((i > next_cand) && (additional_score_cand[i] == Math.max(...additional_score_cand))) {
                     tied_cands.push(i);
                 }                
             }
             if (tied_cands.length > 0) {
-                console.log(`tie broken in favor of ${JSON.stringify(next_cand)} candidates ${JSON.stringify(str_candset(tied_cands))} 
-                would increase the score by the same amount (${JSON.stringify(Math.max(additional_score_cand))})`);
+                console.log(`tie broken in favor of ${JSON.stringify(next_cand)} candidates ${str_candset(tied_cands)} 
+                would increase the score by the same amount (${JSON.stringify(Math.max(...additional_score_cand))})`);
             }
         }
     }
 
     // optional output
     if (verbose > 0) {
-        console.log(`The ranking, using tau = ${JSON.stringify(tau)} is ${JSON.stringify(ranking)}`);
+        console.log(`The ranking, using tau = ${tau} is ${ranking}`);
     }
     // end of optional output
 
@@ -139,34 +155,53 @@ function compute_dynamic_seqpav(profile, rule_name, tau, verbose=0, resolute=tru
 }
 
 
-function compute_av(profile, tau, verbose=0, resolute=true) {
+function compute_av(profile, rule_name, tau, verbose=0, resolute=true) {
     // Dynamic sequential Phragmen (dynamic-seq-Phragmen)
 
     // optional output
     if (verbose > 0) {
-        console.log(rules["av"].longname);
+        console.log(`${JSON.stringify(this.rule_name[2])}`);
     }
     // end of optional output
 
     var ranking = [];
     var appr_scores = [];
-    for (let i = 0; i < profile.num_cand; i++) {
+    var temp = [];
+    for (let i = 0; i < profile[1]; i++) {
         appr_scores.push(0);        
-  }
-    for (const pref in profile) {
-        for (const cand in pref) {
+    }
+    for (let p = 0; p < profile[2].length; p++) {
+        pref = profile[2][p];
+        for (const c of pref) {
             // (Classic) Approval Voting
-            appr_scores[cand] += pref.weight;
-        }
+            appr_scores[c] += 1;
+        }       
     }
 
     // sort candidates by approval ranking and output ranking\tau
-    // ranking = ---------------------------line 348-351 python-------------------------------------------
+    temp = [...appr_scores];
+    temp.sort();
+    temp.reverse();
+    for (const x of temp) {
+        var i = appr_scores.indexOf(x);
+        if (i != -1 && !ranking.includes(i)) {
+            ranking.push(i);
+        }
+        else {
+            while (i != -1) {
+                i = appr_scores.indexOf(x, i+1);
+                if (i != -1 && !ranking.includes(i)) {
+                    ranking.push(i);
+                    break;
+                }
+            }
+        }
+    }
+    ranking = ranking.filter(x => !tau.includes(x));
 
     // optional output
     if (verbose > 0) {
-        console.log(`The ranking, using tau = ${JSON.stringify(tau)} is `);
-        console.log(ranking);
+        console.log(`The ranking, using tau = ${tau} is ${ranking}`);
     }
     // end of optional output
 
