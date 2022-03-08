@@ -80,7 +80,7 @@ function compute_lazy_seqpav(profile, tau, verbose=0, resolute=true) {
 function compute_dynamic_seqpav(profile, rule_name, tau, verbose=0, resolute=true) {
 
     var scorefct_str = 'pav';
-    var score_fct = get_scorefct('pav', profile[2].length); // undefined 
+    var score_fct = get_scorefct('pav', profile[2].length); 
 
     // optional output
     if (verbose > 0) {
@@ -104,15 +104,10 @@ function compute_dynamic_seqpav(profile, rule_name, tau, verbose=0, resolute=tru
     // build the ranking starting with the empty set
     for (let i = 0; i < profile[1]; i++) {
         d = tau.concat(ranking);
-        // console.log("before marginal_thiele_scores_add function");
         additional_score_cand = marginal_thiele_scores_add(score_fct, profile, d);
-        // console.log("after marginal_thiele_scores_add function");
-        console.log(`additional_score_cand: ${JSON.stringify(additional_score_cand)}`);
-        console.log(`Math.max(additional_score_cand): ${JSON.stringify(Math.max(...additional_score_cand))}`);
         next_cand = additional_score_cand.indexOf(Math.max(...additional_score_cand));
-        console.log(`next_cand: ${JSON.stringify(next_cand)}`);
         // check whether all candidates outide of tau have been ranked
-        if (Math.max(additional_score_cand) < 0) {
+        if (Math.max(...additional_score_cand) < 0) {
             break;
         }
         ranking.push(next_cand);
