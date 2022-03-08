@@ -22,7 +22,7 @@ function get_scorefct(scorefct_str, committeesize) {
         // return functools.partial(__geom_score_fct, base=base)
     }
     else {
-        throw `Score function ${JSON.stringify(scorefct_str)} does not exist.`;
+        throw `Score function ${scorefct_str} does not exist.`;
     }
 }
 
@@ -30,16 +30,19 @@ function thiele_score(scorefct_str, profile, committee) {
     // computes the Thiele score of a committee subject to a given score function (scorefct_str)
     var scorefct = get_scorefct(scorefct_str, committee.length);
     var score = 0;
-    var commi = new Set(committee);
-    for (const vote in profile) {
+    var intersection = [];
+    for (let p = 0; p < profile[2].length; p++) {
+        pref = profile[2][p];
+        intersection = pref.filter(x => committee.includes(x));
         var cand_in_com = 0;
-        for (const i in vote.approved) {
-            if (commi.has(i)) {
+        for (const c of pref) {
+            if (intersection.length > 0) {
                 cand_in_com += 1;
-                score += vote.weight * scorefct(cand_in_com);
+                score += scorefct(cand_in_com);
             }
-        }
+        }       
     }
+
     return score;
 }
 
@@ -137,7 +140,7 @@ function marginal_thiele_scores_remove(scorefct, profile, committee) {
     var intersection = [];
     var commi = new Set(committee);
     var satisfaction = 0; 
-    for (let i = 0; i < profile.num_cand; i++) {
+    for (let i = 0; i < profile[1]; i++) {
         marg_util_cand.push(0);        
     }
     // marginal utility gained by adding candidate to the committee
@@ -150,7 +153,7 @@ function marginal_thiele_scores_remove(scorefct, profile, committee) {
             marg_util_cand[c] += pref.weight * scorefct(satisfaction);
         }
     }
-    for (let i = 0; i < profile.num_cand; i++) {
+    for (let i = 0; i < profile[1]; i++) {
         if (!commi.has(i)) {
             // do not choose candidates that already have been removed
             marg_util_cand[i] = Math.max(marg_util_cand) + 1;

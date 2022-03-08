@@ -275,7 +275,7 @@ module.exports = class DPRSequence {
             
             // optional output
             if (verbose > 0) {
-                console.log(`\nCurrent dynamic ranking consits of tau: ${JSON.stringify(curr_tau)}, r: ${JSON.stringify(curr_ranking)}.`);
+                console.log(`\nCurrent dynamic ranking consits of tau: ${curr_tau}, r: ${curr_ranking}.`);
                 if (i >= 0) {
                     console.log(`The next implemented candidate is ${JSON.stringify(i)}`);
                 }
