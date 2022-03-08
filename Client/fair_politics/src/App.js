@@ -6,6 +6,8 @@ import Register from "./components/Register";
 import About from "./components/About";
 import ContactUs from "./components/ContactUs";
 import Home from "./components/Home";
+import Following from "./components/Following";
+import Follower from "./components/Follower";
 import Profile from "./components/Profile";
 import AddDiscussion from "./components/AddDiscussion";
 import AddFeedback from "./components/AddFeedback";
@@ -18,6 +20,10 @@ function App() {
   const [is_connected, setIsConnected] = useState(false);
   const [loading, setLoading] = useState(false);
   const [discussionCards, setDiscussionCards] = useState([]);
+  const [followings, setFollowings] = useState([]);
+  const [followers, setFollowers] = useState([]);
+  const [followingDetails, setFollowingDetails] = useState([]);
+  const [followerDetails, setFollowerDetails] = useState([]);
 
   return (
     <AppContext.Provider
@@ -30,6 +36,14 @@ function App() {
         setLoading,
         discussionCards,
         setDiscussionCards,
+        followings,
+        setFollowings,
+        followers,
+        setFollowers,
+        followingDetails,
+        setFollowingDetails,
+        followerDetails,
+        setFollowerDetails
       }}>
       <Router>
         <Switch>
@@ -64,6 +78,12 @@ function App() {
               </Route>
               <Route exact path='/profile/addFeedback'>
                 <AddFeedback />
+              </Route>
+              <Route exact path='/profile/following'>
+                <Following />
+              </Route>
+              <Route exact path='/profile/follower'>
+                <Follower />
               </Route>
               <Route exact path='/search'>
                 <Search />

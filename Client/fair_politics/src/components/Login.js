@@ -16,7 +16,7 @@ const Login = () => {
   const [tempPass, setTempPass] = useState("");
   const [tempPassFromDB, setTempPassFromDB] = useState("");
 
-  const { setUserDetails, setIsConnected, loading, setLoading } =
+  const { setUserDetails, setIsConnected, loading, setLoading, setFollowings, setFollowers } =
     useContext(AppContext);
 
   const history = useHistory();
@@ -30,6 +30,8 @@ const Login = () => {
     console.log(data.result[0].user_id);
     // setUserInfo(data);
   };
+
+
   const login = async (e) => {
     setLoading(true);
     e.preventDefault();
@@ -57,12 +59,23 @@ const Login = () => {
         history.push("/home");
       }
     }
+
+    fetchFollow();
     setLoading(false);
 
-    // const user_info;
-    // loginFromDb(login_details);
   };
-  // const loginFromDb = () => { }
+
+
+  const fetchFollow = async () => { 
+    const response = await fetch(`http://localhost:4000/api/get_follow/${id}`);
+    const data = await response.json();
+    console.log(data);
+    setFollowings(data.following);
+    setFollowers(data.follower);
+
+  }
+
+
   const phoneSubmit = (event) => {
     event.preventDefault();
     setTempPassFromDB("1225"); // here should get the temp pass from server

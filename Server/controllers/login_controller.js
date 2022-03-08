@@ -52,7 +52,7 @@ const loginUser = (req, res) => {
         else { // if user found
             if (req.body.password === result1[0].password) {
                 connection.query(sqlGetUserDetails, function (err, result) {
-                    console.log(result);
+                    // console.log(result);
                     res.status(200).send({ result, message: "successfully logged-in" });
                 });
             } else {
@@ -153,6 +153,31 @@ const getFollowers = (req, res) => {
     });
 };
 
+const getFollow = (req, res) => {
+    var sqlGetUserFollowingId = `select user_following_id from follower where user_id= ${req.params.user_id}`;
+    var sqlGetUserFollowersId = `select user_id from follower where user_following_id= ${req.params.user_id}`;
+
+    connection.query(sqlGetUserFollowingId, function (err, following) {
+        if (err) {
+			throw err;
+		}
+        else {
+            connection.query(sqlGetUserFollowersId, function (err, follower) {
+                if (err) {
+                    throw err;
+                }
+                else {
+                    res.status(200).send({ following, follower });
+                }
+            });
+        }
+    });
+
+    
+
+};
+
+
 const addFollowing = (req, res) => {
 
     var sqlUserId = `select user_following_id from follower where user_id=${JSON.stringify(req.body.user_id)} and
@@ -222,15 +247,33 @@ const searchByName = (req, res) => {
     });
 }
 
+const getUsers = (req, res) => {
+    var sqlGetUserDetails = `select * from user_details where user_id = ${JSON.stringify(req.body.ids[0])}`;
+    for (let i = 1; i < req.body.ids.length; i++) {
+        sqlGetUserDetails += ` or user_id = ${JSON.stringify(req.body.ids[i])}`;
+    }
+    connection.query(sqlGetUserDetails, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.status(200).send({ result });
+    });
+
+
+}
+
+
 module.exports = {
     createUser,
     loginUser,
     updateUser,
     deleteUser,
     searchByName,
+    getUsers,
     auth,
     getFollowing,
     getFollowers,
+    getFollow,
     addFollowing,
     removeFollowing
 };
