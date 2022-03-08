@@ -107,45 +107,29 @@ function cumulative_score_fct(scorefct, cand_in_com) {
 // gained by adding candidate i
 function marginal_thiele_scores_add(scorefct, profile, committee) {
 
-    console.log(`${JSON.stringify(scorefct)}`); // undefined
+    // console.log(`${JSON.stringify(scorefct)}`); // undefined
     // var scorefunc = window['scorefct'];
-    console.log(`committee.length: ${JSON.stringify(committee.length)}`);
-    console.log(`in marginal_thiele_scores_add function`);
     var marg = [];
     var pref = [];
-    var set = new Set(committee);
-    var commi = Array.from(set);
-    console.log('commi:');
-    console.log(commi);
     var intersection = [];
     for (let i = 0; i < profile[1]; i++) {
         marg.push(0);        
     }
-    console.log(marg);
     for (let p = 0; p < profile[2].length; p++) {
         pref = profile[2][p];
-        intersection = pref.filter(x => commi.includes(x));
-        for (let c = 0; c < pref.length; c++) {
-            // var temp = pref[c];
-            // if (intersection.length > 0) { // need to check
-            //     marg[c] += pref.weight * __pav_score_fct(intersection.length + 1);
-            // }
-            // else {
-            //     marg[c] += pref.weight * __pav_score_fct(1);
-            // }
-            if (intersection.length > 0) { // need to check
+        intersection = pref.filter(x => committee.includes(x));
+        for (const c of pref) {
+            if (intersection.length > 0) {
                 marg[c] += __pav_score_fct(intersection.length + 1);
             }
             else {
                 marg[c] += __pav_score_fct(1);
             }
-        }        
+        }       
     }
-    console.log(marg);
-    for (let c = 0; c < committee.length; c++) {
+    for (const c of committee) {
         marg[c] = -1;
     }
-    console.log(marg);
     return marg;
 }
 

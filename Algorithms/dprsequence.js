@@ -255,6 +255,7 @@ module.exports = class DPRSequence {
         var outcomes = [];
         var curr_tau = [];
         var curr_ranking = [];
+        var tuple = [];
 
         // optional output
         if (verbose > 0) {
@@ -266,12 +267,12 @@ module.exports = class DPRSequence {
 
         name_sequence.push(-1);
         for (let i = 0; i < name_sequence.length; i++) {
+            tuple = [];
             curr_ranking = compute(this.profile, this.rule_name, curr_tau, verbose=verbose, resolute=resolute);
-            console.log(curr_ranking);
-            outcomes = curr_tau.concat(curr_ranking);
-            console.log(curr_tau);
-            console.log(outcomes);
-
+            tuple.push(curr_tau);
+            tuple.push(curr_ranking);
+            outcomes.push(tuple);
+            
             // optional output
             if (verbose > 0) {
                 console.log(`\nCurrent dynamic ranking consits of tau: ${JSON.stringify(curr_tau)}, r: ${JSON.stringify(curr_ranking)}.`);
@@ -280,8 +281,8 @@ module.exports = class DPRSequence {
                 }
             }
             // end of optional output
-
-            curr_tau.push(i);
+            
+            curr_tau = curr_tau.concat(Number(name_sequence[i]));
         }
         this.outcomes = outcomes;
         return outcomes;
