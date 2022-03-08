@@ -63,34 +63,22 @@ const loginUser = (req, res) => {
     });
 };
 
-const updateUser = (req, res) => { // remove id auth - not neccesarry
-    var sqlFindUserId = `select * from user_details where user_id = ${JSON.stringify(req.body.user_id)}`; //here
+const updateUser = (req, res) => { 
     
     var sqlUpdate = `UPDATE user_details set first_name=${JSON.stringify(req.body.first_name)},
             last_name=${JSON.stringify(req.body.last_name)}, city=${JSON.stringify(req.body.city)},
             birthdate=${JSON.stringify(req.body.birthdate)},job_title=${JSON.stringify(req.body.job_title)},
             description=${JSON.stringify(req.body.description)}, profile_picture=${JSON.stringify(req.body.profile_picture)},
             gender=${JSON.stringify(req.body.gender)}, is_public_elected=${JSON.stringify(req.body.is_public_elected)} where user_id=${JSON.stringify(req.body.user_id)}`;
-    
-    connection.query(sqlFindUserId, function (err, result) { //and here
-        if (err) {
-			throw err;
-		} 
-        // if user not exist
-        if (result.length === 0) {
-            res.status(404).send({ message: "user_id not exists!" });
-        }
-        else { // if user exist
+
             connection.query(sqlUpdate, function (err, result) {
                 if (err) {
                     throw err;
                 }
                 else {
-                    res.status(200).send({ message: "user update successfully" });
+                    res.status(200).send({ result, message: "user update successfully" });
                 }
             });
-        }
-    });
 };
 
 const deleteUser = (req, res) => {
@@ -223,11 +211,23 @@ const removeFollowing = (req, res) => {
     });
 };
 
+
+const searchByName = (req, res) => {
+    var sqlGetUserDetails = `select * from user_details where first_name = ${JSON.stringify(req.params.first_name)}`; 
+    connection.query(sqlGetUserDetails, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.status(200).send({ result });
+    });
+}
+
 module.exports = {
     createUser,
     loginUser,
     updateUser,
     deleteUser,
+    searchByName,
     auth,
     getFollowing,
     getFollowers,
