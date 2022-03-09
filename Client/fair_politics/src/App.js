@@ -20,6 +20,9 @@ function App() {
   const [is_connected, setIsConnected] = useState(false);
   const [loading, setLoading] = useState(false);
   const [discussionCards, setDiscussionCards] = useState([]);
+  const [feedbackCards, setFeedbackCards] = useState([]);
+  const [profileDiscussionCards, setProfileDiscussionCards] = useState([]);
+  const [profileFeedbackCards, setProfileFeedbackCards] = useState([]);
   const [followings, setFollowings] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [followingDetails, setFollowingDetails] = useState([]);
@@ -37,6 +40,12 @@ function App() {
         setLoading,
         discussionCards,
         setDiscussionCards,
+        feedbackCards,
+        setFeedbackCards,
+        profileDiscussionCards,
+        setProfileDiscussionCards,
+        profileFeedbackCards,
+        setProfileFeedbackCards,
         followings,
         setFollowings,
         followers,
