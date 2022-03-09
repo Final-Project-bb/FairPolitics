@@ -9,46 +9,6 @@ const FeedbackCard = ({FeedbackCards}) => {
   const { user_details, setLoading, feedbackCards, setFeedbackCards } =
     useContext(AppContext);
 
-  // const FeedbackCardss = [
-  //     {
-  //         FeedBack_id: 1,
-  //         user_id: 1,
-  //         title: "first feedback",
-  //         Questions_title: "are you agree?",
-  //         answer: [
-  //                     "yes",
-  //                     "no",
-  //                     "not sure"
-  //                 ]
-
-  //     },
-  //     {
-  //         FeedBack_id: 2,
-  //         user_id: 1,
-  //         title: "secound feedback",
-  //         Questions: [
-  //             {
-  //                 Questions_id: 1,
-  //                 Questions_title: "are you agree in this secound feedback?",
-  //                 answer: [
-  //                     "yes",
-  //                     "no",
-  //                     "not sure",
-  //                     "none of the above"
-  //                 ]
-  //             },
-  //             {
-  //                 Questions_id: 2,
-  //                 Questions_title: "are you agree in this secound feedback here?",
-  //                 answer: [
-  //                     "yes",
-  //                     "no",
-  //                     "not sure"
-  //                 ]
-  //             }
-  //         ]
-  //     }
-  // ];
   const CommentsButton = (item) => {
     // setCommentsButtonId(item.Discussion_id)
     // if(commentsButton)
@@ -78,7 +38,7 @@ const FeedbackCard = ({FeedbackCards}) => {
           return (
             <PollCard
               key={item.poll_id}
-              style={{ height: (item.description.length / 4) * 32 + height }}>
+              style={{ height: (item.description.length / 3) * 40 + height }}>
               <div style={styles.title}>
                 {item.poll_id} {item.title}{" "}
               </div>
@@ -86,19 +46,17 @@ const FeedbackCard = ({FeedbackCards}) => {
               <div style={styles.cardFooter}>
                 <form>
                   <div style={styles.question}>
-                    {/* {item.Questions.map((question) => (
-                  <div key={question.Questions_id}>
-                    {question.Questions_title}
-                    {question.answer.map((ans) => (
+                    {item.answers.map((answer) => (
+                  <div key={answer.answer_id}>
+                    {answer.title}
                       <div>
                         <label>
                           <input type='checkbox' />
-                          {ans}
+                          {answer.answer}
                         </label>
                       </div>
-                    ))}
                   </div>
-                ))} */}
+                ))}
                   </div>
                   <button onClick={() => addAnswer(item)}>submit!</button>
                 </form>

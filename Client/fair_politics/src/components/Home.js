@@ -74,7 +74,7 @@ const Home = () => {
       {/* <a href=''>Login<a/> */}
       <Header title='Home Page' />
       <div style={styles.head}>
-        {/* <DiscussionCard DiscussionCards={discussionCards}/> */}
+        <DiscussionCard DiscussionCards={discussionCards}/>
         <FeedbackCard FeedbackCards={feedbackCards}/>
 
       </div>
