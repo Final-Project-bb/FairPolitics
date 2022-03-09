@@ -7,14 +7,15 @@ import ProfileHeader from "./ProfileHeader";
 
 const Following = () => {
   const { loading, setLoading, followingDetails } = useContext(AppContext);
-
+// console.log("followingDetails");
+// console.log(followingDetails);
   return (
     <div>
       <Header title='Following' />
       <ProfileHeader/>
       <br/>
       {followingDetails.map(user =>
-        <UserCard key={user.user_id} user_info={user}/>
+        <UserCard key={user.user_id} user_info={user} inFollowing={true}/>
       )}
     </div>
   );

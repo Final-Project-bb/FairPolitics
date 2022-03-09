@@ -30,6 +30,7 @@ const Navbar = () => {
     setUserDetails,
     is_connected,
     setIsConnected,
+    setFollowerDetails, setFollowingDetails, setFollowers, setFollowings,
   } = useContext(AppContext);
   const history = useHistory();
 
@@ -39,6 +40,10 @@ const Navbar = () => {
   const loginClick = () => {
     setIsConnected(false);
     setUserDetails({});
+    setFollowerDetails([]);
+    setFollowingDetails([]);
+    setFollowers([]);
+    setFollowings([]);
     history.push("/connection/login");
   };
   const onSearch = (e) => {

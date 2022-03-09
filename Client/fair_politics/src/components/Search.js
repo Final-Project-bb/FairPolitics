@@ -49,7 +49,7 @@ const Search = () => {
       <div style={styles.text}>
         {usersSearch.map((user) => (
           <div>
-            <UserCard key={user.user_id} user_info={user} />
+            <UserCard key={user.user_id} user_info={user} inSearch={true}/>
           </div>
         ))}
       </div>

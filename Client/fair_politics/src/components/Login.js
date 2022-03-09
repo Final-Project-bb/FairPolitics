@@ -71,7 +71,6 @@ const Login = () => {
     console.log(data);
     setFollowings(data.following);
     setFollowers(data.follower);
-
   }
 
 

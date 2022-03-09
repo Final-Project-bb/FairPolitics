@@ -42,10 +42,10 @@ const ProfileShowDetails = () => {
     const data = await response.json();
     if (isFollowing) {
       setFollowingDetails(data.result);
-      console.log(data.result);
+      // console.log(data.result);
     } else {
       setFollowerDetails(data.result);
-      console.log(data.result);
+//      console.log(data.result);
     }
   };
 
