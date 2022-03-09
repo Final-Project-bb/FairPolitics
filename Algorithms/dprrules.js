@@ -154,6 +154,77 @@ function compute_dynamic_seqpav(profile, rule_name, tau, verbose=0, resolute=tru
     return ranking;
 }
 
+function __phragmen_loads_from_sequence(profile, sequence, verbose=0) {
+    // Algorithm for computing Phragmen-loads w.r.t. to a sequence of candidates
+
+
+
+}
+
+function compute_lazy_seqphrag(profile, rule_name, tau, verbose=0, resolute=true) {
+    // Lazy sequential Phragmen (lazy-seq-Phragmen)
+
+    // optional output
+    if (verbose > 0) {
+        console.log(`${JSON.stringify(this.rule_name[2])}`);
+    }
+    // end of optional output
+
+    var ranking = [];
+    var cands = [];
+    var curr_tau = [];
+    var temp = [];
+    var sort_values = [];
+    var approvers_weight = {};
+    var induced_loads = {};
+    var sorted_induced_loads = {};
+    // for (let i = 0; i < profile[1]; i++) { // lines 238-242
+
+    // }
+
+    for (let i = 0; i < profile[1]; i++) {
+        if(!tau.includes(i)) {
+            cands.push(i);
+        }        
+    }
+
+    for (const cand of cands) {
+        curr_tau = tau.concat(Number(cand));
+        induced_loads[cand] = __phragmen_loads_from_sequence(profile, curr_tau, verbose);
+        for (const v in induced_loads) {
+            temp.push([v, induced_loads[v]]);
+        }
+        temp.sort(function(a, b) {
+            return a[1] - b[1];
+        });
+        temp.reverse();
+        sorted_induced_loads[cand] = [...temp]; 
+    }
+
+    // optional output
+    if (verbose > 0) {
+        console.log(`Induced loads by adding candidate x to tau are ${induced_loads}`);
+    }
+    // end of optional output
+
+    for (const il in sorted_induced_loads) {
+        sort_values.push([il, sorted_induced_loads[il]]);
+    }
+    sort_values.sort(function(a, b) {
+        return a[1] - b[1];
+    });
+    for (const k of sort_values) {
+        ranking.push(sort_values[0]);
+    }
+
+    // optional output
+    if (verbose > 0) {
+        console.log(`The ranking, using tau = ${tau} is ${ranking}`);
+    }
+    // end of optional output
+
+    return ranking;
+}
 
 function compute_av(profile, rule_name, tau, verbose=0, resolute=true) {
     // Dynamic sequential Phragmen (dynamic-seq-Phragmen)
@@ -214,7 +285,7 @@ function get_rulesinfo(rule_name) {
     var __RULESINFO = [
         ['lseqpav', 'lazy seq-PAV', 'lazy sequential PAV', compute_lazy_seqpav, 'standard', [true, false]],
         ['dseqpav', 'dynamic seq-PAV', 'dynamic sequential PAV', compute_dynamic_seqpav, 'standard', [true, false]],
-        // ['lseqphrag', "lazy seq-Phragmen", "lazy sequential Phragmen", compute_lazy_seqphrag, ("standard"), (true, false)],
+        ['lseqphrag', 'lazy seq-Phragmen', 'lazy sequential Phragmen', compute_lazy_seqphrag, 'standard', [true, false]],
         // ['dseqphrag', "dynamic seq-Phragmen", "dynamic sequential Phragmen", compute_dynamic_seqphrag, ("standard"), (true, false)],
         ['av', 'AV', 'approval voting', compute_av, 'standard', [true, false]]
     ];
@@ -234,6 +305,7 @@ module.exports = {
     compute,
     compute_lazy_seqpav,
     compute_dynamic_seqpav,
+    compute_lazy_seqphrag,
     compute_av,
     get_rulesinfo
 }
