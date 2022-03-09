@@ -8,7 +8,7 @@ const { createDiscussion, getDiscussion, updateDiscussion, deleteDiscussion,
 const router = express.Router();
 
 router.post("/create_discussion", createDiscussion);
-router.get("/get_discussion/:post_id", getDiscussion);
+router.get("/get_discussions/:post_id", getDiscussion);
 router.put("/update_discussion/:post_id", updateDiscussion);
 router.delete("/delete_discussion/:post_id", deleteDiscussion);
 

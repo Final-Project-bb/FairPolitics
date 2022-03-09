@@ -46,14 +46,14 @@ const Login = () => {
       body: JSON.stringify(login_details),
     });
     if (response.status == 404) {
-      console.log(response)
+      // console.log(response)
       setLoading(false);
       return;
     }
     const data = await response.json();
     if (data.result !== undefined) {
       if (data.result[0] !== undefined) {
-        console.log(data.result[0]);
+        // console.log(data.result[0]);
         setUserDetails(data.result[0]);
         setIsConnected(true);
         history.push("/home");
@@ -68,7 +68,7 @@ const Login = () => {
   const fetchFollow = async () => { 
     const response = await fetch(`http://localhost:4000/api/get_follow/${id}`);
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     setFollowings(data.following);
     setFollowers(data.follower);
   }

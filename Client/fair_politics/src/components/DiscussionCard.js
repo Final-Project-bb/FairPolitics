@@ -1,77 +1,60 @@
-import React, { useState, useEffect,useContext } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { AppContext } from "./Context";
-const DiscussionCard = () => {
+
+const DiscussionCard = ({DiscussionCards}) => {
   const [commentsButtonId, setCommentsButtonId] = useState(0);
   const [commentsButton, setCommentsButton] = useState(false);
   const [height, setHeight] = useState(0);
-//   const [discussionCards, setDiscussionCards] = useState([]);
-  const { user_details, setLoading, discussionCards, setDiscussionCards } = useContext(AppContext);
+  const { user_details, setLoading, discussionCards, setDiscussionCards } =
+    useContext(AppContext);
 
-//   const fetchDiscussions = async (e) => {
-//     setLoading(true);
-//     e.preventDefault();
-//     const response = await fetch(`http://localhost:4000/api/get_discussion/${user_details.user_id}`);
-//     const data = await response.json();
-//     console.log(data.result);
-
-//     if (data.result[0] != undefined) {
-//       setDiscussionCards(data.result);
-//     }
-//     setLoading(false);
-//   };
-
-//   useEffect(() => {
-//     fetchDiscussions();
-// }, []);
-  
-
-  const discussionCardss = [
-    {
-      post_id: 1,
-      owner_id: 1,
-      title: "first discussion",
-      description: "my first discussion Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-      Comments: [
-        {
-          Comment_id: 1,
-          user_id: 2,
-          Comment_title: "great first discussion!",
-        },
-      ],
-      Likes: [
-        {
-          user_id: 2,
-        },
-      ],
-    },
-    {
-      post_id: 2,
-      owner_id: 1,
-      title: "secound discussion",
-      description: "my secound discussion Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-      Comments: [
-        {
-          Comment_id: 1,
-          user_id: 2,
-          Comment_title: "great secound discussion!",
-        },
-        {
-          Comment_id: 1,
-          user_id: 2,
-          Comment_title: "great secound discussion2!",
-        },
-      ],
-      Likes: [
-        {
-          user_id: 2,
-        },
-        {
-          user_id: 1,
-        },
-      ],
-    },
-  ];
+  // const discussionCardss = [
+  //   {
+  //     post_id: 1,
+  //     owner_id: 1,
+  //     title: "first discussion",
+  //     description: "my first discussion Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+  //     Comments: [
+  //       {
+  //         Comment_id: 1,
+  //         user_id: 2,
+  //         Comment_title: "great first discussion!",
+  //       },
+  //     ],
+  //     Likes: [
+  //       {
+  //         user_id: 2,
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     post_id: 2,
+  //     owner_id: 1,
+  //     title: "secound discussion",
+  //     description: "my secound discussion Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+  //     Comments: [
+  //       {
+  //         Comment_id: 1,
+  //         user_id: 2,
+  //         Comment_title: "great secound discussion!",
+  //       },
+  //       {
+  //         Comment_id: 1,
+  //         user_id: 2,
+  //         Comment_title: "great secound discussion2!",
+  //       },
+  //     ],
+  //     Likes: [
+  //       {
+  //         user_id: 2,
+  //       },
+  //       {
+  //         user_id: 1,
+  //       },
+  //     ],
+  //   },
+  // ];
   const CommentsButton = (item) => {
     setCommentsButtonId(item.Discussion_id);
     if (commentsButton) {
@@ -96,54 +79,61 @@ const DiscussionCard = () => {
     <div style={styles.head}>
       <div style={styles.title}>Discussion Card Side</div>
       {/* {DiscussionCards[0].title} */}
-
-      {discussionCardss.map((item) => (
-        <DisCard
-          key={item.post_id}
-          style={{ height: (item.description.length / 70) * 32 + height + 35 }}>
-          <div style={styles.title}>
-            {item.post_id} {item.title}{" "}
-          </div>
-          <div style={styles.text}>{item.description}</div>
-          <div style={styles.cardFooter}>
-            <button onClick={() => CommentsButton(item)}>Show Comments!</button>
-            <button onClick={() => LikeDiscussion(1, item.post_id)}>
-              Like!
-            </button>
-            <div style={styles.likes}>{item.Likes.length}</div>
-          </div>
-          {commentsButton && commentsButtonId === item.Discussion_id && (
-            <div>
-              {item.Comments.map((comment) => (
-                <div key={comment.Comment_id} style={styles.comment}>
-                  {comment.Comment_title}
-                </div>
-              ))}
-            </div>
-          )}
-          <form
-            // onSubmit={onSearch}
-            style={styles.formStyle}>
-            {/* <label onClick={onSearch}>Search:</label> */}
-            <input
-              // onKeyDown={handleKeyDown(onSearch)}
+      {DiscussionCards.map((following) => {
+        return following.map((item) => {
+          return (
+            <DisCard
+              key={item.post_id}
               style={{
-                height: "20px",
-                width: "150px",
-                position: "relative",
-                top: "22px",
-                borderRadius: 70,
-              }}
-              type='text'
-              placeholder='add comment'
-              // value={search}
-              // onChange={(e) => setSearch(e.target.value)}
-            />
+                height: (item.description.length / 3) * 32 + height + 35,
+              }}>
+              <div style={styles.title}>
+                {item.post_id} {item.title}{" "}
+              </div>
+              <div style={styles.text}>{item.description}</div>
+              <div style={styles.cardFooter}>
+                <button onClick={() => CommentsButton(item)}>
+                  Show Comments!
+                </button>
+                <button onClick={() => LikeDiscussion(1, item.post_id)}>
+                  Like!
+                </button>
+                {/* <div style={styles.likes}>{item.Likes.length}</div> */}
+              </div>
+              {/* {commentsButton && commentsButtonId === item.Discussion_id && (
+  <div>
+    {item.Comments.map((comment) => (
+      <div key={comment.Comment_id} style={styles.comment}>
+        {comment.Comment_title}
+      </div>
+    ))}
+  </div>
+)} */}
+              <form
+                // onSubmit={onSearch}
+                style={styles.formStyle}>
+                {/* <label onClick={onSearch}>Search:</label> */}
+                <input
+                  // onKeyDown={handleKeyDown(onSearch)}
+                  style={{
+                    height: "20px",
+                    width: "150px",
+                    position: "relative",
+                    top: "22px",
+                    borderRadius: 70,
+                  }}
+                  type='text'
+                  placeholder='add comment'
+                  // value={search}
+                  // onChange={(e) => setSearch(e.target.value)}
+                />
 
-            {/* <input type="submit" style={{ color: "white", backgroundColor: "black" }} /> */}
-          </form>
-        </DisCard>
-      ))}
+                {/* <input type="submit" style={{ color: "white", backgroundColor: "black" }} /> */}
+              </form>
+            </DisCard>
+          );
+        });
+      })}
     </div>
   );
 };
@@ -151,7 +141,7 @@ const DiscussionCard = () => {
 const styles = {
   head: {
     display: "flex",
-    justifyContent: "space-around",
+    // justifyContent: "space-around",
     flexDirection: "column",
   },
   title: {

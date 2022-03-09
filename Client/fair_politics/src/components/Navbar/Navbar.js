@@ -44,6 +44,7 @@ const Navbar = () => {
     setFollowingDetails([]);
     setFollowers([]);
     setFollowings([]);
+    setLoading(false);
     history.push("/connection/login");
   };
   const onSearch = (e) => {
