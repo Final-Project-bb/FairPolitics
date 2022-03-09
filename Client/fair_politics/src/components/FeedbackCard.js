@@ -74,8 +74,7 @@ const FeedbackCard = ({FeedbackCards}) => {
   return (
     <div style={styles.head}>
       <div style={styles.title}>Feedback Card Side</div>
-      {FeedbackCards.map((following) => {
-        return following.map((item) => {
+      {FeedbackCards.map((item) => {
           return (
             <PollCard
               key={item.poll_id}
@@ -106,7 +105,6 @@ const FeedbackCard = ({FeedbackCards}) => {
               </div>
             </PollCard>
           );
-        });
       })}
     </div>
   );

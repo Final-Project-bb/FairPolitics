@@ -40,7 +40,7 @@ const Profile = () => {
       <br />
       <br />
       <div style={styles.card}>
-        <DiscussionCard DiscussionCards={profileDiscussionCards} />
+        {/* <DiscussionCard DiscussionCards={profileDiscussionCards} /> */}
         <FeedbackCard FeedbackCards={profileFeedbackCards} />
       </div>
     </div>

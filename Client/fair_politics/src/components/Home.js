@@ -27,12 +27,12 @@ const Home = () => {
     setLoading(true);
     const response = await fetch(`http://localhost:4000/api/poll_feed/${user_details.user_id}`);
     const data = await response.json();
-    // console.log(data.result);
+    console.log(data.allPollsWithAnswer);
     console.log("fetchPolls");
-    console.log(data.allPolls);
+    // console.log(data.allPollsWithAnswer);
 
     if (data !== undefined) {
-      await setFeedbackCards(data.allPolls);
+      await setFeedbackCards(data.allPollsWithAnswer);
     }
     setLoading(false);
   };
@@ -74,7 +74,7 @@ const Home = () => {
       {/* <a href=''>Login<a/> */}
       <Header title='Home Page' />
       <div style={styles.head}>
-        <DiscussionCard DiscussionCards={discussionCards}/>
+        {/* <DiscussionCard DiscussionCards={discussionCards}/> */}
         <FeedbackCard FeedbackCards={feedbackCards}/>
 
       </div>
