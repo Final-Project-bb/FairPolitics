@@ -7,11 +7,11 @@ const connection = require("../lib/db");
 const createPoll = (req, res) => {
   var sqlInsertPoll = `insert into poll(user_id,title,description,picture)
                         values(${JSON.stringify(
-                          req.body.user_id
-                        )},${JSON.stringify(req.body.title)},
+    req.body.user_id
+  )},${JSON.stringify(req.body.title)},
                         ${JSON.stringify(
-                          req.body.description
-                        )},${JSON.stringify(req.body.picture)})`;
+    req.body.description
+  )},${JSON.stringify(req.body.picture)})`;
 
   var sqlGetPollId = "select LAST_INSERT_ID() as poll_id from poll limit 1";
 
@@ -26,9 +26,8 @@ const createPoll = (req, res) => {
           req.body.answer.forEach((ans) => {
             connection.query(
               `insert into poll_answer(poll_id,user_id,answer)
-                                        values(${
-                                          result[0].poll_id
-                                        }, ${JSON.stringify(req.body.user_id)},
+                                        values(${result[0].poll_id
+              }, ${JSON.stringify(req.body.user_id)},
                                         ${JSON.stringify(ans)})`,
               function (err, result) {
                 if (err) {
@@ -70,9 +69,8 @@ const updatePoll = (req, res) => {
   var sqlUpdatePoll = `update poll set title=${JSON.stringify(req.body.title)},
                         description=${JSON.stringify(req.body.description)},
                         picture=${JSON.stringify(req.body.picture)}
-                        where user_id=${req.params.user_id} and poll_id=${
-    req.params.poll_id
-  }`;
+                        where user_id=${req.params.user_id} and poll_id=${req.params.poll_id
+    }`;
 
   connection.query(sqlUpdatePoll, function (err, result) {
     if (err) {
@@ -143,45 +141,92 @@ const answerPoll = (req, res) => {
 
 const pollsFollowing = (req, res) => {
   var sqlGetUserFollowingId = `select user_following_id from follower where user_id = ${req.params.user_id}`;
+  var count = 0;
+  var sumOfPull=0;
+  var pollCount =0;
+  console.log("pollCount");
+  console.log(pollCount);
 
+  console.log("sumOfPollsByUsers:");
   var allPolls = [];
+  var countFollowing = 0;
+  var allPollsWithAnswer = [];
+
   connection.query(sqlGetUserFollowingId, function (err, following) {
     if (err) {
       throw err;
     }
     var size = following.length;
     following.forEach((r) => {
+      countFollowing++;
       var sqlGetPollByUserId = `select * from poll where user_id = ${JSON.stringify(
-        r.user_following_id
-      )}`;
+        r.user_following_id)}`;
       connection.query(sqlGetPollByUserId, function (err, polls) {
+        var f=true;
         if (err) {
           throw err;
         }
         if (polls.length > 0) {
           allPolls.push(polls);
-
-          console.log(polls.poll_id);
           polls.forEach((poll) => {
-          console.log(poll);
+            var panswers = [];
             var sqlGetAnsOfPoll = `select * from poll_answer where poll_id=${JSON.stringify(
               poll.poll_id
             )}`;
+            if(f){
+              console.log("polls.length:"+polls.length)
+              sumOfPull+=polls.length;
+              console.log("sumOfPull:"+sumOfPull)
+              f=false;
+            }
             connection.query(sqlGetAnsOfPoll, function (err, answers) {
               if (err) {
                 throw err;
               }
-              poll.push(answers);
+              answers.forEach((answer) => {
+               
+                panswers.push(answer);
+              });
+      
+              allPollsWithAnswer.push(poll);
+              pollCount++;
+              console.log("poll pushed");
+              // poll.push(answers);
+              console.log("allpollswithanswer:\n" + JSON.stringify(allPollsWithAnswer));
+              console.log(countFollowing == following.length)
+              console.log(allPollsWithAnswer.length == pollCount)
+              console.log("allPollsWithAnswer: " + allPollsWithAnswer.length)
+              console.log("pollCount: " + pollCount)
+
+              if (countFollowing == following.length && allPollsWithAnswer.length == sumOfPull) {
+                console.log("allpollswithanswer sent");
+                res.status(200).send({ allPollsWithAnswer });
+                return;
+              }
             });
+
+            poll.answers = panswers;
           });
         }
-        if (allPolls.length === size) {
-          res.status(200).send({ allPolls });
+        // console.log("___asasdasda__"+pollCount);
+        // if (allPollsWithAnswer.length === pollCount) {
+        // console.log("___dddddddddddddddasasdasda__ sent"+pollCount);
+        //   res.status(200).send({ allPollsWithAnswer });
+        //   return;
+        // }
+        count++;
+        console.log(count);
+        console.log(size);
+        if (count == size) {
+          // console.log("aaaaaaaaaaaaaa sent"+pollCount);
+          // res.status(200).send({allPollsWithAnswer:[]});
+          // return;
         }
       });
     });
   });
 };
+
 
 module.exports = {
   createPoll,
