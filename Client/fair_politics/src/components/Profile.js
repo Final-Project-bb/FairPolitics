@@ -36,16 +36,30 @@ const Profile = () => {
     const response = await fetch(`http://localhost:4000/api/get_polls/${user_details.user_id}`);
     const data = await response.json();
     console.log(data.allPollsWithAnswer);
-    console.log("fetchPolls");
-    // console.log(data.allPollsWithAnswer);
+    console.log("fetchSelfPolls");
 
     if (data !== undefined) {
       await setProfileFeedbackCards(data.allPollsWithAnswer);
     }
     setLoading(false);
   };
+
+  const fetchSelfDiscussions = async () => {
+    setLoading(true);
+    const response = await fetch(`http://localhost:4000/api/get_discussions/${user_details.user_id}`);
+    const data = await response.json();
+    console.log(data.allPostsWithComments);
+    console.log("fetchSelfDiscussions");
+
+    if (data !== undefined) {
+      await setProfileDiscussionCards(data.allPostsWithComments);
+    }
+    setLoading(false);
+  };
+
+
   useEffect(() => {
-    // fetchDiscussions();
+    fetchSelfDiscussions();
     console.log('Profile effected')
     fetchSelfPolls();
   }, []);
@@ -56,7 +70,7 @@ const Profile = () => {
       <br />
       <br />
       <div style={styles.card}>
-        {/* <DiscussionCard DiscussionCards={profileDiscussionCards} /> */}
+        <DiscussionCard DiscussionCards={profileDiscussionCards} />
         <FeedbackCard FeedbackCards={profileFeedbackCards} />
       </div>
     </div>

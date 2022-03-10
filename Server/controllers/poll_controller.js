@@ -7,11 +7,11 @@ const connection = require("../lib/db");
 const createPoll = (req, res) => {
   var sqlInsertPoll = `insert into poll(user_id,title,description,picture)
                         values(${JSON.stringify(
-    req.body.user_id
-  )},${JSON.stringify(req.body.title)},
+                          req.body.user_id
+                        )},${JSON.stringify(req.body.title)},
                         ${JSON.stringify(
-    req.body.description
-  )},${JSON.stringify(req.body.picture)})`;
+                          req.body.description
+                        )},${JSON.stringify(req.body.picture)})`;
 
   var sqlGetPollId = "select LAST_INSERT_ID() as poll_id from poll limit 1";
 
@@ -26,8 +26,9 @@ const createPoll = (req, res) => {
           req.body.answer.forEach((ans) => {
             connection.query(
               `insert into poll_answer(poll_id,user_id,answer)
-                                        values(${result[0].poll_id
-              }, ${JSON.stringify(req.body.user_id)},
+                                        values(${
+                                          result[0].poll_id
+                                        }, ${JSON.stringify(req.body.user_id)},
                                         ${JSON.stringify(ans)})`,
               function (err, result) {
                 if (err) {
@@ -42,7 +43,7 @@ const createPoll = (req, res) => {
     }
   });
 };
-const getPoll=(req,res)=>{
+const getPoll = (req, res) => {
   let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer
   FROM poll JOIN poll_answer join follower ON poll.poll_id=poll_answer.poll_id and follower.user_following_id=poll.user_id
   where poll.user_id = ${JSON.stringify(req.params.user_id)}
@@ -56,13 +57,12 @@ const getPoll=(req,res)=>{
     }
     let poll;
     console.log(polls);
-    polls.forEach(p => {
+    polls.forEach((p) => {
       if (p.poll_id == poll_id_hand) {
-        poll.answers.push({ answer_id: p.answer_id, answer: p.answer })
-      }
-      else {
+        poll.answers.push({ answer_id: p.answer_id, answer: p.answer });
+      } else {
         poll_id_hand = p.poll_id;
-        poll ={
+        poll = {
           poll_id: p.poll_id,
           user_id: p.user_id,
           title: p.title,
@@ -71,16 +71,16 @@ const getPoll=(req,res)=>{
           answers: [
             {
               answer_id: p.answer_id,
-              answer: p.answer
-            }
-          ]
+              answer: p.answer,
+            },
+          ],
         };
         allPollsWithAnswer.push(poll);
       }
-    })
-    res.status(200).send({ allPollsWithAnswer })
+    });
+    res.status(200).send({ allPollsWithAnswer });
   });
-}
+};
 // const getPoll = (req, res) => {
 //   var sqlGetPollByUserId = `select * from poll where user_id=${req.params.user_id}`;
 //   var sqlGetAnsOfPoll = `select * from poll_answer where user_id=${req.params.user_id}`;
@@ -107,8 +107,9 @@ const updatePoll = (req, res) => {
   var sqlUpdatePoll = `update poll set title=${JSON.stringify(req.body.title)},
                         description=${JSON.stringify(req.body.description)},
                         picture=${JSON.stringify(req.body.picture)}
-                        where user_id=${req.params.user_id} and poll_id=${req.params.poll_id
-    }`;
+                        where user_id=${req.params.user_id} and poll_id=${
+    req.params.poll_id
+  }`;
 
   connection.query(sqlUpdatePoll, function (err, result) {
     if (err) {
@@ -180,7 +181,9 @@ const answerPoll = (req, res) => {
 const pollsFollowing = (req, res) => {
   let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer
   FROM poll JOIN poll_answer join follower ON poll.poll_id=poll_answer.poll_id and 
-  poll.user_id in (select user_following_id from follower where user_id=${JSON.stringify(req.params.user_id)})
+  poll.user_id in (select user_following_id from follower where user_id=${JSON.stringify(
+    req.params.user_id
+  )})
   group by poll_answer.answer_id order by poll.poll_id`;
 
   let allPollsWithAnswer = [];
@@ -191,13 +194,12 @@ const pollsFollowing = (req, res) => {
     }
     let poll;
     console.log(polls);
-    polls.forEach(p => {
+    polls.forEach((p) => {
       if (p.poll_id == poll_id_hand) {
-        poll.answers.push({ answer_id: p.answer_id, answer: p.answer })
-      }
-      else {
+        poll.answers.push({ answer_id: p.answer_id, answer: p.answer });
+      } else {
         poll_id_hand = p.poll_id;
-        poll ={
+        poll = {
           poll_id: p.poll_id,
           user_id: p.user_id,
           title: p.title,
@@ -206,14 +208,14 @@ const pollsFollowing = (req, res) => {
           answers: [
             {
               answer_id: p.answer_id,
-              answer: p.answer
-            }
-          ]
+              answer: p.answer,
+            },
+          ],
         };
         allPollsWithAnswer.push(poll);
       }
-    })
-    res.status(200).send({ allPollsWithAnswer })
+    });
+    res.status(200).send({ allPollsWithAnswer });
   });
 };
 

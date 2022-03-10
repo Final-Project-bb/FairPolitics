@@ -15,10 +15,10 @@ const Home = () => {
     );
     const data = await response.json();
     console.log("fetchDiscussions");
-    console.log(data.allPolls);
+    console.log(data.allPostsWithComments);
 
     if (data != undefined) {
-      await setDiscussionCards(data.allDisc);
+      await setDiscussionCards(data.allPostsWithComments);
     }
     setLoading(false);
   };
