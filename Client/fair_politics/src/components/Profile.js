@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext,useEffect } from "react";
 import { NavLink as Link } from "react-router-dom";
 import Header from "./Header";
 import ProfileHeader from "./ProfileHeader";
@@ -31,8 +31,24 @@ const Profile = () => {
   //   }
   //   setLoading(false);
   // };
+  const fetchSelfPolls = async () => {
+    setLoading(true);
+    const response = await fetch(`http://localhost:4000/api/get_polls/${user_details.user_id}`);
+    const data = await response.json();
+    console.log(data.allPollsWithAnswer);
+    console.log("fetchPolls");
+    // console.log(data.allPollsWithAnswer);
 
-
+    if (data !== undefined) {
+      await setProfileFeedbackCards(data.allPollsWithAnswer);
+    }
+    setLoading(false);
+  };
+  useEffect(() => {
+    // fetchDiscussions();
+    console.log('Profile effected')
+    fetchSelfPolls();
+  }, []);
   return (
     <div>
       <Header title='Profile Page' />
