@@ -28,15 +28,42 @@ const createDiscussion = (req, res) => {
 };
 
 const getDiscussion = (req, res) => {
-  var sqlGetDiscussion = `select * from discussion where post_id=${req.params.post_id}`;
+  let query = `SELECT discussion.post_id, discussion.user_id, discussion.title, discussion.description, discussion.tag, discussion.picture, 
+    discussion_response.comment_id, discussion_response.comment
+    FROM discussion JOIN discussion_response JOIN follower ON discussion.post_id=discussion_response.post_id and follower.user_following_id=discussion.user_id
+    where discussion.user_id = ${JSON.stringify(req.params.user_id)}
+    group by discussion_response.comment_id order by discussion.post_id`;
 
-  connection.query(sqlGetDiscussion, function (err, result) {
+  let allPostsWithComments = [];
+  let post_id_hand = -1;
+  connection.query(query, function (err, posts) {
     if (err) {
       throw err;
-    } else {
-      var likes = getLikeOfDiscussion(req.params.post_id);
-      res.status(200).send({ result, likes });
     }
+    let post;
+    console.log(posts);
+    posts.forEach((p) => {
+      if (p.post_id == post_id_hand) {
+        post.comments.push({ comment_id: p.comment_id, comment: p.comment });
+      } else {
+        post_id_hand = p.post_id;
+        post = {
+          post_id: p.post_id,
+          user_id: p.user_id,
+          title: p.title,
+          description: p.description,
+          picture: p.picture,
+          comments: [
+            {
+              comment_id: p.comment_id,
+              comment: p.comment,
+            },
+          ],
+        };
+        allPostsWithComments.push(post);
+      }
+    });
+    res.status(200).send({ allPostsWithComments });
   });
 };
 
@@ -44,13 +71,10 @@ const updateDiscussion = (req, res) => {
   var sqlUpdatePost = `update discussion set title=${JSON.stringify(
     req.body.title
   )},
-                        tag=${JSON.stringify(
-                          req.body.tag
-                        )}, description=${JSON.stringify(req.body.description)},
-                        picture=${JSON.stringify(
-                          req.body.picture
-                        )} where post_id=${req.params.post_id}`;
-
+                        tag=${JSON.stringify(req.body.tag)}, 
+                        description=${JSON.stringify(req.body.description)},
+                        picture=${JSON.stringify(req.body.picture)} 
+                        where post_id=${req.params.post_id}`;
   connection.query(sqlUpdatePost, function (err, result) {
     if (err) {
       throw err;
@@ -228,32 +252,47 @@ const deleteLikeFromComment = (req, res) => {
 };
 
 const discussionsFollowing = (req, res) => {
-  var sqlGetUserFollowingId = `select user_following_id from follower where user_id = ${JSON.stringify(
+  let query = `SELECT discussion.post_id, discussion.user_id, discussion.title, discussion.description, discussion.tag, discussion.picture, 
+  discussion_response.comment_id, discussion_response.comment
+  FROM discussion JOIN discussion_response JOIN follower ON discussion.post_id=discussion_response.post_id and 
+  discussion.user_id in (select user_following_id from follower where user_id= ${JSON.stringify(
     req.params.user_id
-  )}`;
-  var allDisc = [];
-  connection.query(sqlGetUserFollowingId, function (err, result) {
+  )})
+  group by discussion_response.comment_id order by discussion.post_id`;
+
+  let allPostsWithComments = [];
+  let post_id_hand = -1;
+  connection.query(query, function (err, posts) {
     if (err) {
-        throw err;
+      throw err;
     }
-    var size = result.length;
-    result.forEach((r) => {
-      connection.query(
-        `select * from discussion where user_id = ${JSON.stringify(r.user_following_id)}`,function (err, result1) {
-          if (err) {
-            throw err;
-          }
-          if (result.length > 0) {
-            allDisc.push(result1);
-          }
-          if (allDisc.length === size) {
-            res.status(200).send( {allDisc} );
-          }
-        }
-      );
+    let post;
+    console.log(posts);
+    posts.forEach((p) => {
+      if (p.post_id == post_id_hand) {
+        post.comments.push({ comment_id: p.comment_id, comment: p.comment });
+      } else {
+        post_id_hand = p.post_id;
+        post = {
+          post_id: p.post_id,
+          user_id: p.user_id,
+          title: p.title,
+          description: p.description,
+          picture: p.picture,
+          comments: [
+            {
+              comment_id: p.comment_id,
+              comment: p.comment,
+            },
+          ],
+        };
+        allPostsWithComments.push(post);
+      }
     });
+    res.status(200).send({ allPostsWithComments });
   });
 };
+
 
 module.exports = {
   createDiscussion,
