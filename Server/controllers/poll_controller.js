@@ -5,7 +5,7 @@ const connection = require("../lib/db");
 // const { getFollowing } = require("./login_controller")
 
 const createPoll = (req, res) => {
-  var sqlInsertPoll = `insert into poll(user_id,title,description,picture)
+  let sqlInsertPoll = `insert into poll(user_id,title,description,picture)
                         values(${JSON.stringify(
                           req.body.user_id
                         )},${JSON.stringify(req.body.title)},
@@ -13,31 +13,33 @@ const createPoll = (req, res) => {
                           req.body.description
                         )},${JSON.stringify(req.body.picture)})`;
 
-  var sqlGetPollId = "select LAST_INSERT_ID() as poll_id from poll limit 1";
+  let sqlGetPollId = "select LAST_INSERT_ID() as poll_id from poll limit 1";
 
   connection.query(sqlInsertPoll, function (err, result) {
     if (err) {
       throw err;
     } else {
-      connection.query(sqlGetPollId, function (err, result) {
+      connection.query(sqlGetPollId, function (err, pollId) {
         if (err) {
           throw err;
         } else {
+          let id = pollId[0].poll_id;
+        //   console.log(id);
           req.body.answer.forEach((ans) => {
             connection.query(
-              `insert into poll_answer(poll_id,user_id,answer)
-                                        values(${
-                                          result[0].poll_id
-                                        }, ${JSON.stringify(req.body.user_id)},
-                                        ${JSON.stringify(ans)})`,
-              function (err, result) {
-                if (err) {
-                  throw err;
-                }
-              }
+              `insert into poll_answer(poll_id, user_id, answer) 
+                values(
+                ${id}, 
+                ${JSON.stringify(req.body.user_id)},
+                ${JSON.stringify(ans)})`
+              //   function (err, result) {
+              //     if (err) {
+              //       throw err;
+              //     }
+              //   }
             );
           });
-          res.status(200).send({ message: `poll ${result[0].poll_id} added!` });
+          res.status(200).send({ message: `poll ${id} added successfully!` });
         }
       });
     }
@@ -56,7 +58,7 @@ const getPoll = (req, res) => {
       throw err;
     }
     let poll;
-    console.log(polls);
+    // console.log(polls);
     polls.forEach((p) => {
       if (p.poll_id == poll_id_hand) {
         poll.answers.push({ answer_id: p.answer_id, answer: p.answer });
@@ -82,8 +84,8 @@ const getPoll = (req, res) => {
   });
 };
 // const getPoll = (req, res) => {
-//   var sqlGetPollByUserId = `select * from poll where user_id=${req.params.user_id}`;
-//   var sqlGetAnsOfPoll = `select * from poll_answer where user_id=${req.params.user_id}`;
+//   let sqlGetPollByUserId = `select * from poll where user_id=${req.params.user_id}`;
+//   let sqlGetAnsOfPoll = `select * from poll_answer where user_id=${req.params.user_id}`;
 
 //   connection.query(sqlGetPollByUserId, function (err, result) {
 //     if (err) {
@@ -104,7 +106,7 @@ const getPoll = (req, res) => {
 // };
 
 const updatePoll = (req, res) => {
-  var sqlUpdatePoll = `update poll set title=${JSON.stringify(req.body.title)},
+  let sqlUpdatePoll = `update poll set title=${JSON.stringify(req.body.title)},
                         description=${JSON.stringify(req.body.description)},
                         picture=${JSON.stringify(req.body.picture)}
                         where user_id=${req.params.user_id} and poll_id=${
@@ -135,10 +137,10 @@ const updatePoll = (req, res) => {
 };
 
 const deletePoll = (req, res) => {
-  var sqlDelPoll = `delete from poll where user_id = ${req.params.user_id} and
+  let sqlDelPoll = `delete from poll where user_id = ${req.params.user_id} and
                             poll_id = ${req.params.poll_id}`;
 
-  var sqlDelAnsOfPoll = `delete from poll_answer where user_id = ${req.params.user_id} and
+  let sqlDelAnsOfPoll = `delete from poll_answer where user_id = ${req.params.user_id} and
                             poll_id=${req.params.poll_id}`;
 
   connection.query(sqlDelAnsOfPoll, function (err, result) {
@@ -166,7 +168,7 @@ const deletePoll = (req, res) => {
 
 // support multipul chooses
 const answerPoll = (req, res) => {
-  var sqlInsertAnsApproval = `insert into poll_answer_approval(answer_id, user_id)
+  let sqlInsertAnsApproval = `insert into poll_answer_approval(answer_id, user_id)
                                 values(${req.params.answer_id}, ${req.params.user_id})`;
 
   connection.query(sqlInsertAnsApproval, function (err, result) {
@@ -193,7 +195,7 @@ const pollsFollowing = (req, res) => {
       throw err;
     }
     let poll;
-    console.log(polls);
+    // console.log(polls);
     polls.forEach((p) => {
       if (p.poll_id == poll_id_hand) {
         poll.answers.push({ answer_id: p.answer_id, answer: p.answer });
@@ -220,37 +222,37 @@ const pollsFollowing = (req, res) => {
 };
 
 // const pollsFollowing = (req, res) => {
-//   var sqlGetUserFollowingId = `select user_following_id from follower where user_id = ${req.params.user_id}`;
-//   var count = 0;
-//   var sumOfPull=0;
-//   var pollCount =0;
+//   let sqlGetUserFollowingId = `select user_following_id from follower where user_id = ${req.params.user_id}`;
+//   let count = 0;
+//   let sumOfPull=0;
+//   let pollCount =0;
 //   console.log("pollCount");
 //   console.log(pollCount);
 
 //   console.log("sumOfPollsByUsers:");
-//   var allPolls = [];
-//   var countFollowing = 0;
-//   var allPollsWithAnswer = [];
+//   let allPolls = [];
+//   let countFollowing = 0;
+//   let allPollsWithAnswer = [];
 
 //   connection.query(sqlGetUserFollowingId, function (err, following) {
 //     if (err) {
 //       throw err;
 //     }
-//     var size = following.length;
+//     let size = following.length;
 //     following.forEach((r) => {
 //       countFollowing++;
-//       var sqlGetPollByUserId = `select * from poll where user_id = ${JSON.stringify(
+//       let sqlGetPollByUserId = `select * from poll where user_id = ${JSON.stringify(
 //         r.user_following_id)}`;
 //       connection.query(sqlGetPollByUserId, function (err, polls) {
-//         var f=true;
+//         let f=true;
 //         if (err) {
 //           throw err;
 //         }
 //         if (polls.length > 0) {
 //           allPolls.push(polls);
 //           polls.forEach((poll) => {
-//             var panswers = [];
-//             var sqlGetAnsOfPoll = `select * from poll_answer where poll_id=${JSON.stringify(
+//             let panswers = [];
+//             let sqlGetAnsOfPoll = `select * from poll_answer where poll_id=${JSON.stringify(
 //               poll.poll_id
 //             )}`;
 //             if(f){
