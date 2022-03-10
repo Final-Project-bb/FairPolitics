@@ -7,11 +7,11 @@ const connection = require("../lib/db");
 const createPoll = (req, res) => {
   var sqlInsertPoll = `insert into poll(user_id,title,description,picture)
                         values(${JSON.stringify(
-                          req.body.user_id
-                        )},${JSON.stringify(req.body.title)},
+    req.body.user_id
+  )},${JSON.stringify(req.body.title)},
                         ${JSON.stringify(
-                          req.body.description
-                        )},${JSON.stringify(req.body.picture)})`;
+    req.body.description
+  )},${JSON.stringify(req.body.picture)})`;
 
   var sqlGetPollId = "select LAST_INSERT_ID() as poll_id from poll limit 1";
 
@@ -26,9 +26,8 @@ const createPoll = (req, res) => {
           req.body.answer.forEach((ans) => {
             connection.query(
               `insert into poll_answer(poll_id,user_id,answer)
-                                        values(${
-                                          result[0].poll_id
-                                        }, ${JSON.stringify(req.body.user_id)},
+                                        values(${result[0].poll_id
+              }, ${JSON.stringify(req.body.user_id)},
                                         ${JSON.stringify(ans)})`,
               function (err, result) {
                 if (err) {
@@ -43,36 +42,73 @@ const createPoll = (req, res) => {
     }
   });
 };
+const getPoll=(req,res)=>{
+  let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer
+  FROM poll JOIN poll_answer join follower ON poll.poll_id=poll_answer.poll_id and follower.user_following_id=poll.user_id
+  where poll.user_id = ${JSON.stringify(req.params.user_id)}
+  group by poll_answer.answer_id order by poll.poll_id`;
 
-const getPoll = (req, res) => {
-  var sqlGetPollByUserId = `select * from poll where user_id=${req.params.user_id}`;
-  var sqlGetAnsOfPoll = `select * from poll_answer where user_id=${req.params.user_id}`;
-
-  connection.query(sqlGetPollByUserId, function (err, result) {
+  let allPollsWithAnswer = [];
+  let poll_id_hand = -1;
+  connection.query(query, function (err, polls) {
     if (err) {
       throw err;
     }
-    if (result.length === 0) {
-      res.status(404).send({ message: "poll_id or user_id dosn't exists!" });
-    } else {
-      connection.query(sqlGetAnsOfPoll, function (err, res1) {
-        if (err) {
-          throw err;
-        } else {
-          res.status(200).send({ result, res1 });
-        }
-      });
-    }
+    let poll;
+    console.log(polls);
+    polls.forEach(p => {
+      if (p.poll_id == poll_id_hand) {
+        poll.answers.push({ answer_id: p.answer_id, answer: p.answer })
+      }
+      else {
+        poll_id_hand = p.poll_id;
+        poll ={
+          poll_id: p.poll_id,
+          user_id: p.user_id,
+          title: p.title,
+          description: p.description,
+          picture: p.picture,
+          answers: [
+            {
+              answer_id: p.answer_id,
+              answer: p.answer
+            }
+          ]
+        };
+        allPollsWithAnswer.push(poll);
+      }
+    })
+    res.status(200).send({ allPollsWithAnswer })
   });
-};
+}
+// const getPoll = (req, res) => {
+//   var sqlGetPollByUserId = `select * from poll where user_id=${req.params.user_id}`;
+//   var sqlGetAnsOfPoll = `select * from poll_answer where user_id=${req.params.user_id}`;
+
+//   connection.query(sqlGetPollByUserId, function (err, result) {
+//     if (err) {
+//       throw err;
+//     }
+//     if (result.length === 0) {
+//       res.status(404).send({ message: "poll_id or user_id dosn't exists!" });
+//     } else {
+//       connection.query(sqlGetAnsOfPoll, function (err, res1) {
+//         if (err) {
+//           throw err;
+//         } else {
+//           res.status(200).send({ result, res1 });
+//         }
+//       });
+//     }
+//   });
+// };
 
 const updatePoll = (req, res) => {
   var sqlUpdatePoll = `update poll set title=${JSON.stringify(req.body.title)},
                         description=${JSON.stringify(req.body.description)},
                         picture=${JSON.stringify(req.body.picture)}
-                        where user_id=${req.params.user_id} and poll_id=${
-    req.params.poll_id
-  }`;
+                        where user_id=${req.params.user_id} and poll_id=${req.params.poll_id
+    }`;
 
   connection.query(sqlUpdatePoll, function (err, result) {
     if (err) {
@@ -143,18 +179,41 @@ const answerPoll = (req, res) => {
 
 const pollsFollowing = (req, res) => {
   let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer
-    FROM poll JOIN poll_answer join follower ON poll.poll_id=poll_answer.poll_id and follower.user_following_id=poll.user_id
-    where poll.user_id = ${JSON.stringify(req.params.user_id)}
-    group by poll_answer.answer_id order by poll.poll_id`;
+  FROM poll JOIN poll_answer join follower ON poll.poll_id=poll_answer.poll_id and 
+  poll.user_id in (select user_following_id from follower where user_id=${JSON.stringify(req.params.user_id)})
+  group by poll_answer.answer_id order by poll.poll_id`;
 
   let allPollsWithAnswer = [];
-
-  connection.query(query, function (err, result) {
+  let poll_id_hand = -1;
+  connection.query(query, function (err, polls) {
     if (err) {
       throw err;
     }
-    console.log(result);
-
+    let poll;
+    console.log(polls);
+    polls.forEach(p => {
+      if (p.poll_id == poll_id_hand) {
+        poll.answers.push({ answer_id: p.answer_id, answer: p.answer })
+      }
+      else {
+        poll_id_hand = p.poll_id;
+        poll ={
+          poll_id: p.poll_id,
+          user_id: p.user_id,
+          title: p.title,
+          description: p.description,
+          picture: p.picture,
+          answers: [
+            {
+              answer_id: p.answer_id,
+              answer: p.answer
+            }
+          ]
+        };
+        allPollsWithAnswer.push(poll);
+      }
+    })
+    res.status(200).send({ allPollsWithAnswer })
   });
 };
 
