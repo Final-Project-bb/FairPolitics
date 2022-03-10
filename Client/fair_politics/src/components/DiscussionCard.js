@@ -46,10 +46,11 @@ const DiscussionCard = ({ DiscussionCards }) => {
               <button onClick={() => CommentsButton(item)}>
                 Show Comments!
               </button>
+              <div style={styles.likes}>{item.comments.length}</div>
               <button onClick={() => LikeDiscussion(1, item.post_id)}>
                 Like!
               </button>
-              {/* <div style={styles.likes}>{item.likes.length}</div> */}
+              <div style={styles.likes}>{item.likes.length}</div>
             </div>
             {commentsButton && commentsButtonId === item.post_id && (
               <div>
@@ -124,7 +125,7 @@ const styles = {
   },
   likes: {
     position: "relative",
-    right: 105,
+    right: 70,
   },
   comment: {
     position: "relative",
