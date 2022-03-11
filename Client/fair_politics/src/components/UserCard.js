@@ -14,17 +14,16 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
   const [picturePress, setPicturePress] = useState(false);
   const [isFollow, setIsFollow] = useState(false);
   const [flag, setFlag] = useState(true);
-
   // const flag= true;
+  let followState = false;
   useEffect(() => {
     fetchFollow();
-    let following_ids = followings.map((user) => user.user_following_id);
-    fetchUserDetailsById(following_ids, true)
+    // let following_ids = followings.map((user) => user.user_following_id);
+    // fetchUserDetailsById(following_ids, true)
     const checkFollow = () => {
-      let followState = false;
       followState = followings
-        .map((user) => user.user_following_id)
-        .every((id) => id == user_info.user_id);
+        .some((user) => user.user_id ==user_info.user_id);
+        console.log(followState);
       setIsFollow(followState);
       if (followings.length === 0) {
         setIsFollow(false);
@@ -44,8 +43,8 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
       }
     };
     checkFollow();
+  }, []);
 
-  }, [flag, isFollow]);
   // here should add and remove follow from db.
   const followUser = (e) => {
     // e.preventDefault();

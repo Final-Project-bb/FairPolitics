@@ -5,14 +5,14 @@ import UserCard from "./UserCard";
 import ProfileHeader from "./ProfileHeader";
 
 const Follower = () => {
-  const { loading, setLoading, followerDetails } = useContext(AppContext);
+  const { loading, setLoading, followerDetails ,followers} = useContext(AppContext);
 
   return (
     <div>
       <Header title='Follower' />
       <ProfileHeader/>
       <br/>
-      {followerDetails.map(user =>
+      {followers.map(user =>
         <UserCard key={user.user_id} user_info={user}/>
        )}
     </div>
