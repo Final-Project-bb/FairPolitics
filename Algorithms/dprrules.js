@@ -179,20 +179,24 @@ function __phragmen_loads_from_sequence(profile, sequence, verbose=0) {
                 supp_cand.push(p);
             }            
         }
+
+        supp_cand.sort(function (a, b) {
+            return load[a] - load[b];
+        });
         
-        for (const k in supp_cand) {
-            sort_values.push(load[k]);
-        }
+        // for (const k in supp_cand) {
+        //     sort_values.push(load[k]);
+        // }
         // console.log("induced_loads[cand]:");
         // console.log(sort_values);
         // sort_values.sort(function(a, b) {
         //     return a[1] - b[1];
         // });
-        sort_values.sort();
-        supp_cand = [];
-        for (const k of sort_values) {
-            supp_cand.push(sort_values[0]);
-        }
+        // sort_values.sort();
+        // supp_cand = [];
+        // for (const k of sort_values) {
+        //     supp_cand.push(sort_values[0]);
+        // }
 
         // optional output
         if (verbose >= 2) {
@@ -294,11 +298,12 @@ function compute_lazy_seqphrag(profile, rule_name, tau, verbose=0, resolute=true
     var ranking = [];
     var cands = [];
     var curr_tau = [];
-    var temp = [];
+    var key_sorted = [];
     var sort_values = [];
     var approvers_weight = {};
     var induced_loads = {};
     var sorted_induced_loads = {};
+    var temp = {};
 
     weights.fill(0);
 
@@ -317,7 +322,6 @@ function compute_lazy_seqphrag(profile, rule_name, tau, verbose=0, resolute=true
         approvers_weight[i] = weights[i];
     }
     
-
     //********************************* lines 240-242 *********************************
 
     for (let i = 0; i < profile[1]; i++) {
@@ -332,19 +336,13 @@ function compute_lazy_seqphrag(profile, rule_name, tau, verbose=0, resolute=true
     
     for (const cand of cands) {
         curr_tau = tau.concat(cand);
-        induced_loads[cand] = __phragmen_loads_from_sequence(profile, curr_tau, verbose); // here is the bug!!!!!!!!!
-        console.log("induced_loads[cand]:");
-        // console.log(induced_loads[cand]);
-        // for (const v in induced_loads) {
-        //     temp.push(induced_loads[v]);
-        // }
-        temp.push(induced_loads[cand]);
-        temp.sort();
-        // temp.sort(function(a, b) {
-        //     return a[1] - b[1];
-        // });
-        temp.reverse();
-        sorted_induced_loads[cand] = [...temp]; 
+        induced_loads[cand] = __phragmen_loads_from_sequence(profile, curr_tau, verbose);
+        temp = induced_loads[cand];
+        key_sorted = Object.keys(temp).sort(function (a, b) {
+            return temp[a]-temp[b];
+        });
+        key_sorted.reverse();
+        sorted_induced_loads[cand] = key_sorted; 
     }
 
     // optional output
@@ -353,19 +351,18 @@ function compute_lazy_seqphrag(profile, rule_name, tau, verbose=0, resolute=true
     }
     // end of optional output
 
-    for (const il in sorted_induced_loads) {
-        sort_values.push(sorted_induced_loads[il]);
-    }
-    sort_values.sort();
-    // sort_values.sort(function(a, b) {
-    //     return a[1] - b[1];
+    // ************************************ line 263 ***************************************
+    // //----------------------------------------------------------------------
+    // for(const i in sorted_induced_loads) {
+    //     for (const j in sorted_induced_loads[i]) {
+    //         sort_values.push([j, sorted_induced_loads[i][j]]);
+    //     }
+    // }
+    // key_sorted = [];
+    // key_sorted = Object.keys(sort_values).sort(function (a, b) {
+    //     return sort_values[a]-sort_values[b];
     // });
-    for (const k of sort_values) {
-    //     console.log("sort_values[0]:");
-    //     console.log(sort_values[0]);
-        ranking.push(sort_values[0]);
-        console.log(ranking);
-    }
+    //----------------------------------------------------------------------
 
     // optional output
     if (verbose > 0) {
