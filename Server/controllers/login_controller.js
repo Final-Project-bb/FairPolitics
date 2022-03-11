@@ -154,8 +154,14 @@ const getFollowers = (req, res) => {
 };
 
 const getFollow = (req, res) => {
-    var sqlGetUserFollowingId = `select user_following_id from follower where user_id= ${req.params.user_id}`;
-    var sqlGetUserFollowersId = `select user_id from follower where user_following_id= ${req.params.user_id}`;
+    var sqlGetUserFollowingId = `select distinct ud.user_id ,ud.first_name,ud.last_name,ud.city,ud.job_title,
+    ud.description,ud.profile_picture,ud.gender,ud.semi_description,ud.is_public_elected,ud.age,ud.birthdate 
+    from user_details as ud left join follower as f on f.user_id=ud.user_id
+    where ud.user_id in (select user_following_id as user_id from follower where user_id= ${req.params.user_id})`;
+    var sqlGetUserFollowersId = `select ud.user_id ,first_name,last_name,city,job_title,
+    description,profile_picture,gender,semi_description,is_public_elected,age,birthdate 
+    from follower as f join user_details as ud on f.user_id=ud.user_id
+     where user_following_id= ${req.params.user_id}`;
 
     connection.query(sqlGetUserFollowingId, function (err, following) {
         if (err) {

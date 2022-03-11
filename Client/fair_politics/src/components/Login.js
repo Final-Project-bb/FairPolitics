@@ -68,7 +68,7 @@ const Login = () => {
   const fetchFollow = async () => { 
     const response = await fetch(`http://localhost:4000/api/get_follow/${id}`);
     const data = await response.json();
-    // console.log(data);
+    console.log(data);
     setFollowings(data.following);
     setFollowers(data.follower);
   }
