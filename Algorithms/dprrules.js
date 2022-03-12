@@ -7,7 +7,7 @@ const { get_scorefct, thiele_score, __pav_score_fct, __slav_score_fct, __cc_scor
 
 class DPRRule {
     // Class for DPR rules containing basic information and function call
-    constructor(rule_id, shortname, longname, fct, algorithms=('standard'), resolute=(true, false)) {
+    constructor(rule_id, shortname, longname, fct, algorithms='standard', resolute=[true, false]) {
         this.rule_id = rule_id;
         this.shortname = shortname;
         this.longname = longname;
@@ -156,15 +156,9 @@ function compute_dynamic_seqpav(profile, rule_name, tau, verbose=0, resolute=tru
 
 function __phragmen_loads_from_sequence(profile, sequence, verbose=0) {
     // Algorithm for computing Phragmen-loads w.r.t. to a sequence of candidates
-
-    var load = {};
-    var supp_cand = [];
-    var sort_values = [];
-    var load_values = [];
-    var loads_of_first_supps = [];
-    var supporters = [];
-
     
+    var load = {};
+
     for (let i = 0; i < profile[2].length; i++) {
         load[i] = 0;
     }
@@ -172,7 +166,11 @@ function __phragmen_loads_from_sequence(profile, sequence, verbose=0) {
     // compute loads w.r.t. sequence
     for (const cand of sequence) {
         // sort supporters of cand by load
-        // supp_cand = [];//------------------------------------------------------------------------------------
+        
+        var supp_cand = [];
+        var loads_of_first_supps = [];
+        var supporters = [];
+        
         for (let p = 0; p < profile[2].length; p++) {
             pref = profile[2][p];
             if (pref.includes(cand)) {
@@ -183,20 +181,6 @@ function __phragmen_loads_from_sequence(profile, sequence, verbose=0) {
         supp_cand.sort(function (a, b) {
             return load[a] - load[b];
         });
-        
-        // for (const k in supp_cand) {
-        //     sort_values.push(load[k]);
-        // }
-        // console.log("induced_loads[cand]:");
-        // console.log(sort_values);
-        // sort_values.sort(function(a, b) {
-        //     return a[1] - b[1];
-        // });
-        // sort_values.sort();
-        // supp_cand = [];
-        // for (const k of sort_values) {
-        //     supp_cand.push(sort_values[0]);
-        // }
 
         // optional output
         if (verbose >= 2) {
@@ -230,7 +214,7 @@ function __phragmen_loads_from_sequence(profile, sequence, verbose=0) {
             // end of optional output
 
             load_sum = loads_of_first_supps.reduce((partialSum, a) => partialSum + a, 0);
-            // load_sum = sum(load[supp_cand[:index]])  ---->> also in source code this line was in comment
+            // load_sum = sum(load[supp_cand[:index]])  ---->>  also in source code this line was in comment
             new_load = (1+load_sum)/(i+1);
 
             if (i == supp_cand.length-1) {
@@ -246,7 +230,6 @@ function __phragmen_loads_from_sequence(profile, sequence, verbose=0) {
                 break;
             }
 
-            //-------------------- line 203 -----------------------------
             load_diff = new_load - load[supp_cand[i+1]];
 
             if (load_diff <= 0) {
@@ -263,7 +246,6 @@ function __phragmen_loads_from_sequence(profile, sequence, verbose=0) {
             }
         }
 
-        //-------------------- line 214 -----------------------------
         for (let i = 0; i < cutoff_index; i++) {
             supporters.push(supp_cand[i]);
         }
@@ -298,12 +280,12 @@ function compute_lazy_seqphrag(profile, rule_name, tau, verbose=0, resolute=true
     var ranking = [];
     var cands = [];
     var curr_tau = [];
-    var key_sorted = [];
     var sort_values = [];
     var approvers_weight = {};
     var induced_loads = {};
     var sorted_induced_loads = {};
     var temp = {};
+    var key_sorted = {};
 
     weights.fill(0);
 
@@ -330,7 +312,7 @@ function compute_lazy_seqphrag(profile, rule_name, tau, verbose=0, resolute=true
         }        
     }
 
-    for (let i = 0; i < profile[2].length; i++) {
+    for (let i = 0; i < profile[1]; i++) {
         induced_loads[i] = 0;
     }
     
@@ -351,18 +333,119 @@ function compute_lazy_seqphrag(profile, rule_name, tau, verbose=0, resolute=true
     }
     // end of optional output
 
-    // ************************************ line 263 ***************************************
-    // //----------------------------------------------------------------------
-    // for(const i in sorted_induced_loads) {
-    //     for (const j in sorted_induced_loads[i]) {
-    //         sort_values.push([j, sorted_induced_loads[i][j]]);
-    //     }
-    // }
-    // key_sorted = [];
-    // key_sorted = Object.keys(sort_values).sort(function (a, b) {
-    //     return sort_values[a]-sort_values[b];
-    // });
-    //----------------------------------------------------------------------
+    for(const i in sorted_induced_loads) {
+        sort_values.push([i, sorted_induced_loads[i]]);
+    }
+    sort_values.sort(function (a, b) {
+        return a[1]-b[1];
+    });
+    for (let i = 0; i < sort_values.length; i++) {
+        item = sort_values[i];
+        ranking.push(Number(item[0]));        
+    }
+
+    // optional output
+    if (verbose > 0) {
+        console.log(`The ranking, using tau = ${tau} is ${ranking}`);
+    }
+    // end of optional output
+
+    return ranking;
+}
+
+function compute_dynamic_seqphrag(profile, rule_name, tau, verbose=0, resolute=true) {
+    // Dynamic sequential Phragmen (dynamic-seq-Phragmen)
+
+    // optional output
+    if (verbose > 0) {
+        console.log(`${JSON.stringify(this.rule_name[2])}`);
+    }
+    // end of optional output
+
+    var ranking = [];
+    var weights = new Array(profile[1]);
+    var approvers_weight = {};
+    var next_cand;
+
+    weights.fill(0);
+
+    for (let i = 0; i < profile[1]; i++) {
+        for (let p = 0; p < profile[2].length; p++) {
+            pref = profile[2][p];
+            for (const c of pref) {
+                if (c == i) {
+                    weights[i] += 1;
+                }
+            } 
+        }
+    }
+
+    for (let i = 0; i < profile[1]; i++) {
+        approvers_weight[i] = weights[i];
+    }
+    
+    //********************************* lines 288-290 *********************************
+
+    for (let i = 0; i < profile[1]-tau.length; i++) {
+        
+        var already_ranked = [];
+        var cands = [];
+        var curr_tau = [];
+        var curr_induced_loads = [];
+        var min_induced_loads = new Array(1);
+        var induced_loads = {};
+        var temp = {};
+        var key_sorted = {};
+
+        already_ranked = tau.concat(ranking);
+        // exclude = already_ranked + no_supporters   ---->>  also in source code this line was in comment
+
+        for (let i = 0; i < profile[1]; i++) {
+            if(!already_ranked.includes(i)) {
+                cands.push(i);
+            }        
+        }
+        
+        min_induced_loads.fill(Infinity);
+        next_cand = -1;
+        
+        // compute induced loads for each candidate and find lex. minimum
+        for (const cand of cands) {
+            curr_tau = tau.concat(ranking).concat(cand);
+            induced_loads[cand] = __phragmen_loads_from_sequence(profile, curr_tau, verbose);
+            temp = induced_loads[cand];
+            key_sorted = Object.keys(temp).sort(function (a, b) {
+                return temp[a]-temp[b];
+            });
+            for (const key in key_sorted) {
+                curr_induced_loads.push(key_sorted[key]);
+            }
+            curr_induced_loads.reverse();
+            
+            for (let i = 0; i < curr_induced_loads.length; i++) {
+                if (curr_induced_loads[i] < min_induced_loads[i]) {
+                    min_induced_loads = curr_induced_loads;
+                    next_cand = cand;
+                }
+                break;
+            }
+        }
+
+        // optional output
+        if (verbose > 0) {
+            console.log(`Filling position ${JSON.stringify(i+1)} of the ranking. 
+            Induced max load by adding candidate x to the ranking are`);
+
+            // for cand, load in induced_loads.items():
+            //     print("candidate " + str(cand) + ": " + str(max(load.values())))
+
+            console.log(`Thus, candidate ${JSON.stringify(next_cand)} is chosen.\n`);
+        }
+        // end of optional output
+
+        // append lex. argmin to the ranking
+        ranking.push(next_cand);
+    }
 
     // optional output
     if (verbose > 0) {
@@ -434,7 +517,7 @@ function get_rulesinfo(rule_name) {
         ['lseqpav', 'lazy seq-PAV', 'lazy sequential PAV', compute_lazy_seqpav, 'standard', [true, false]],
         ['dseqpav', 'dynamic seq-PAV', 'dynamic sequential PAV', compute_dynamic_seqpav, 'standard', [true, false]],
         ['lseqphrag', 'lazy seq-Phragmen', 'lazy sequential Phragmen', compute_lazy_seqphrag, 'standard', [true, false]],
-        // ['dseqphrag', "dynamic seq-Phragmen", "dynamic sequential Phragmen", compute_dynamic_seqphrag, ("standard"), (true, false)],
+        ['dseqphrag', 'dynamic seq-Phragmen', 'dynamic sequential Phragmen', compute_dynamic_seqphrag, 'standard', [true, false]],
         ['av', 'AV', 'approval voting', compute_av, 'standard', [true, false]]
     ];
 
@@ -455,6 +538,7 @@ module.exports = {
     compute_dynamic_seqpav,
     __phragmen_loads_from_sequence,
     compute_lazy_seqphrag,
+    compute_dynamic_seqphrag,
     compute_av,
     get_rulesinfo
 }
