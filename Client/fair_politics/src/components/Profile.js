@@ -1,4 +1,4 @@
-import React, { useContext,useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { NavLink as Link } from "react-router-dom";
 import Header from "./Header";
 import ProfileHeader from "./ProfileHeader";
@@ -33,7 +33,9 @@ const Profile = () => {
   // };
   const fetchSelfPolls = async () => {
     setLoading(true);
-    const response = await fetch(`http://localhost:4000/api/get_polls/${user_details.user_id}`);
+    const response = await fetch(
+      `http://localhost:4000/api/get_polls/${user_details.user_id}`
+    );
     const data = await response.json();
     console.log(data.allPollsWithAnswer);
     console.log("fetchSelfPolls");
@@ -46,7 +48,9 @@ const Profile = () => {
 
   const fetchSelfDiscussions = async () => {
     setLoading(true);
-    const response = await fetch(`http://localhost:4000/api/get_discussions/${user_details.user_id}`);
+    const response = await fetch(
+      `http://localhost:4000/api/get_discussions/${user_details.user_id}`
+    );
     const data = await response.json();
     console.log(data.allPostsWithComments);
     console.log("fetchSelfDiscussions");
@@ -57,22 +61,32 @@ const Profile = () => {
     setLoading(false);
   };
 
-
   useEffect(() => {
     fetchSelfDiscussions();
-    console.log('Profile effected')
+    console.log("Profile effected");
     fetchSelfPolls();
   }, []);
-  
+
   return (
     <div>
       <Header title='Profile Page' />
       <ProfileHeader />
       <br />
       <br />
-      <div style={styles.card}>
-        <DiscussionCard DiscussionCards={profileDiscussionCards} inProfile={true} />
-        <FeedbackCard FeedbackCards={profileFeedbackCards} inProfile={true} />
+      <div style={styles.head}>
+        <br />
+        <div style={styles.card}>
+          <div style={styles.title}>Discussions Card Side</div>
+          {profileDiscussionCards.map((item) => {
+            return <DiscussionCard item={item} inProfile={true} />;
+          })}
+        </div>
+        <div style={styles.card}>
+          <div style={styles.title}>Feedbacks Card Side</div>
+          {profileFeedbackCards.map((item) => {
+            return <FeedbackCard item={item} inProfile={true}/>;
+          })}
+        </div>
       </div>
     </div>
   );
@@ -84,25 +98,28 @@ const styles = {
   },
   card: {
     display: "flex",
-    justifyContent: "space-around",
-    flexDirection: "row",
+    // justifyContent: "space-around",
+    flexDirection: "column",
   },
   head: {
-    flex: 1,
-    padding: 24,
-    backgroundColor: "#eaeaea",
+    display: "flex",
+    justifyContent: "space-around",
+    flexDirection: "row",
+    // color:"yellow",
+    //       flex: 1,
+
+    //       padding: 24,
+    //       backgroundColor: "#eaeaea"
   },
   title: {
-    flexDirection: "row",
-    paddingVertical: 8,
-    padding: 20,
-    textDecoration: "none",
-    borderWidth: 4,
-    borderColor: "#20232a",
-    backgroundColor: "#61dafb",
-    color: "#20232a",
-    fontSize: 30,
-    fontWeight: "bold",
+    display: "flex",
+    justifyContent: "space-around",
+    // flexDirection: 'row',
+    // position: "relative",
+    // marginLeft:10,
+    fontSize: 25,
+    // top: 100,
+    // right:150
   },
   profileHead: {
     display: "flex",
