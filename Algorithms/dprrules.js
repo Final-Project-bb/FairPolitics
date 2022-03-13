@@ -32,6 +32,7 @@ class DPRRule {
 
 }
 
+// compute by specific algorithm function name 
 function compute(profile, rule_name, tau, ...args) {
     return rule_name[3](profile, rule_name, tau, ...args);
 }
