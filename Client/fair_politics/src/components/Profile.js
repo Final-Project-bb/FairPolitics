@@ -71,8 +71,8 @@ const Profile = () => {
       <br />
       <br />
       <div style={styles.card}>
-        <DiscussionCard DiscussionCards={profileDiscussionCards} />
-        <FeedbackCard FeedbackCards={profileFeedbackCards} />
+        <DiscussionCard DiscussionCards={profileDiscussionCards} inProfile={true} />
+        <FeedbackCard FeedbackCards={profileFeedbackCards} inProfile={true} />
       </div>
     </div>
   );
