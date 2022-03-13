@@ -74,17 +74,13 @@ const getDiscussion = (req, res) => {
       if (err) {
         throw err;
       }
-      console.log(likes);
       allPostsWithComments.forEach((post) => {
         likes.forEach((like) => {
           if (like.post_id == post.post_id) {
-            console.log(like.post_id);
-            console.log(like.user_id);
             post.likes.push(like.user_id);
           }
         });
       });
-    //   console.log(allPostsWithComments);
       res.status(200).send({ allPostsWithComments });
     });
   });
@@ -108,20 +104,47 @@ const updateDiscussion = (req, res) => {
 };
 
 const deleteDiscussion = (req, res) => {
-  deleteLikeFromDiscussion(req.params.post_id);
+  //   deleteLikeFromDiscussion(req.params.post_id);
 
-  let sqlFindAllComments = `select * from discussion_response as dr join discussion as ds
-                            on dr.post_id = ds.post_id where ds.post_id=${req.params.post_id}`;
+  //   let sqlFindAllComments = `select * from discussion_response as dr join discussion as ds
+  //                             on dr.post_id = ds.post_id where ds.post_id=${req.params.post_id}`;
 
-  connection.query(sqlFindAllComments, function (err, result) {
+  //   connection.query(sqlFindAllComments, function (err, result) {
+  //     if (err) {
+  //       throw err;
+  //     } else {
+  //       result.forEach((r) => {
+  //         deleteComment(r.comment_id);
+  //       });
+  //       res.status(200).send({ message: "post deleted successfully" });
+  //     }
+  //   });
+
+  let deletePostSql = `delete from discussion where post_id = ${JSON.stringify(
+    req.params.post_id
+  )}`;
+  let deleteAllCommentsSql = `delete from discussion_response where post_id = ${JSON.stringify(
+    req.params.post_id
+  )}`;
+  let deleteAllLikesSql = `delete from discussion_like_approval where post_id = ${JSON.stringify(
+    req.params.post_id
+  )}`;
+
+  connection.query(deleteAllLikesSql, function (err, result) {
     if (err) {
       throw err;
-    } else {
-      result.forEach((r) => {
-        deleteComment(r.comment_id);
-      });
-      res.status(200).send({ message: "post deleted successfully" });
     }
+    connection.query(deleteAllCommentsSql, function (err, result) {
+      if (err) {
+        throw err;
+      }
+      connection.query(deletePostSql, function (err, result) {
+        if (err) {
+          throw err;
+        }
+        res.status(200).send({ message: `post deleted! successfully` });
+      });
+    });
   });
 };
 
@@ -323,13 +346,10 @@ const discussionsFollowing = (req, res) => {
       allPostsWithComments.forEach((post) => {
         likes.forEach((like) => {
           if (like.post_id == post.post_id) {
-            console.log(like.post_id);
-            console.log(like.user_id);
             post.likes.push(like.user_id);
           }
         });
       });
-      // console.log(allPostsWithComments);
       res.status(200).send({ allPostsWithComments });
     });
   });

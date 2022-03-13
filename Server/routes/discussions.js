@@ -7,10 +7,11 @@ const { createDiscussion, getDiscussion, updateDiscussion, deleteDiscussion,
 
 const router = express.Router();
 
-router.post("/create_discussion", createDiscussion);
-router.get("/get_discussions/:user_id", getDiscussion);
+router.post("/create_discussion", createDiscussion); //works fine
+router.get("/get_discussions/:user_id", getDiscussion); //works fine
+router.get("/discussion_feed/:user_id", discussionsFollowing); //works fine
 router.put("/update_discussion/:post_id", updateDiscussion);
-router.delete("/delete_discussion/:post_id", deleteDiscussion);
+router.delete("/delete_discussion/:post_id", deleteDiscussion); //works fine
 
 router.post("/add_comment/:post_id", addComment);
 router.get("/get_comment/:comment_id", getComment);
@@ -24,7 +25,6 @@ router.post("/add_like_to_comment/:comment_id/:user_id", addLikeToComment);
 router.delete("/delete_like_from_discussion/:post_id", deleteLikeFromDiscussion);
 router.delete("/delete_like_from_comment/:comment_id", deleteLikeFromComment);
 
-router.get("/discussion_feed/:user_id", discussionsFollowing);
 
 module.exports = {
     routes: router

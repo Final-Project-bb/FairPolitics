@@ -5,8 +5,14 @@ import FeedbackCard from "./FeedbackCard";
 import { AppContext } from "./Context";
 
 const Home = () => {
-  const { user_details, setLoading, setFeedbackCards, setDiscussionCards, feedbackCards, discussionCards } =
-    useContext(AppContext);
+  const {
+    user_details,
+    setLoading,
+    setFeedbackCards,
+    setDiscussionCards,
+    feedbackCards,
+    discussionCards,
+  } = useContext(AppContext);
 
   const fetchDiscussions = async () => {
     setLoading(true);
@@ -25,7 +31,9 @@ const Home = () => {
 
   const fetchPolls = async () => {
     setLoading(true);
-    const response = await fetch(`http://localhost:4000/api/poll_feed/${user_details.user_id}`);
+    const response = await fetch(
+      `http://localhost:4000/api/poll_feed/${user_details.user_id}`
+    );
     const data = await response.json();
     console.log(data.allPollsWithAnswer);
     console.log("fetchPolls");
@@ -39,44 +47,54 @@ const Home = () => {
 
   useEffect(() => {
     fetchDiscussions();
-    console.log('Home effected')
+    console.log("Home effected");
     fetchPolls();
   }, []);
 
-//   const FeedbackCards = [
-//     {
-//       FeedBack_id: 1,
-//       user_id: 1,
-//       title: "first feedback",
-//       Questions: [
-//         {
-//           Questions_id: 1,
-//           Questions_title: "are you agree?",
-//           answer: ["yes", "no", "not sure"],
-//         },
-//       ],
-//     },
-//     {
-//       FeedBack_id: 2,
-//       user_id: 1,
-//       title: "secound feedback",
-//       Questions: [
-//         {
-//           Questions_id: 1,
-//           Questions_title: "are you agree in this secound feedback?",
-//           answer: ["yes", "no", "not sure"],
-//         },
-//       ],
-//     },
-//   ];
+  //   const FeedbackCards = [
+  //     {
+  //       FeedBack_id: 1,
+  //       user_id: 1,
+  //       title: "first feedback",
+  //       Questions: [
+  //         {
+  //           Questions_id: 1,
+  //           Questions_title: "are you agree?",
+  //           answer: ["yes", "no", "not sure"],
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       FeedBack_id: 2,
+  //       user_id: 1,
+  //       title: "secound feedback",
+  //       Questions: [
+  //         {
+  //           Questions_id: 1,
+  //           Questions_title: "are you agree in this secound feedback?",
+  //           answer: ["yes", "no", "not sure"],
+  //         },
+  //       ],
+  //     },
+  //   ];
   return (
     <div>
       {/* <a href=''>Login<a/> */}
       <Header title='Home Page' />
       <div style={styles.head}>
-        <DiscussionCard DiscussionCards={discussionCards}/>
-        <FeedbackCard FeedbackCards={feedbackCards}/>
-
+        <br />
+        <div style={styles.card}>
+          <div style={styles.title}>Discussions Card Side</div>
+          {discussionCards.map((item) => {
+            return <DiscussionCard item={item} />;
+          })}
+        </div>
+        <div style={styles.card}>
+          <div style={styles.title}>Feedbacks Card Side</div>
+          {feedbackCards.map((item) => {
+            return <FeedbackCard item={item} />;
+          })}
+        </div>
       </div>
     </div>
   );
@@ -93,22 +111,21 @@ const styles = {
     //       padding: 24,
     //       backgroundColor: "#eaeaea"
   },
-  //     title: {
-  //     flexDirection: 'row',
-  //     // justifyContent: 'space-around',
-  //     //   marginTop: 0,
-  //       paddingVertical: 8,
-  //       padding: 20,
-  //       textDecoration: 'none',
-  //       borderWidth: 4,
-  //       borderColor: "#20232a",
-  //     //   borderRadius: 0,
-  //       backgroundColor: "#61dafb",
-  //       color: "#20232a",
-  //     //   textAlign: "center",
-  //       fontSize: 30,
-  //       fontWeight: "bold"
-  //     }
+  card: {
+    display: "flex",
+    // justifyContent: "space-around",
+    flexDirection: "column",
+  },
+  title: {
+    display: "flex",
+    justifyContent: "space-around",
+    // flexDirection: 'row',
+    // position: "relative",
+    // marginLeft:10,
+    fontSize: 25,
+    // top: 100,
+    // right:150
+  },
 };
 
 export default Home;

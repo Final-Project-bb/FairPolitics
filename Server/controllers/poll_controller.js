@@ -24,7 +24,7 @@ const createPoll = (req, res) => {
           throw err;
         } else {
           let id = pollId[0].poll_id;
-        //   console.log(id);
+          //   console.log(id);
           req.body.answer.forEach((ans) => {
             connection.query(
               `insert into poll_answer(poll_id, user_id, answer) 
@@ -137,33 +137,27 @@ const updatePoll = (req, res) => {
 };
 
 const deletePoll = (req, res) => {
-  let sqlDelPoll = `delete from poll where user_id = ${req.params.user_id} and
-                            poll_id = ${req.params.poll_id}`;
-
-  let sqlDelAnsOfPoll = `delete from poll_answer where user_id = ${req.params.user_id} and
-                            poll_id=${req.params.poll_id}`;
-
-  connection.query(sqlDelAnsOfPoll, function (err, result) {
-    if (err) {
-      throw err;
-    }
-    if (result.length === 0) {
-      res.status(404).send({ message: "poll_id or user_id dosn't exists!" });
-    } else {
-      res.status(200).send({ message: "poll answer deleted successfully!" });
-    }
-  });
+  console.log(req.params.poll_id);
+  let sqlDelPoll = `delete from poll where poll_id = ${JSON.stringify(
+    req.params.poll_id
+  )}`;
+  let sqlDelAnsOfPoll = `delete from poll_answer where poll_id=${JSON.stringify(
+    req.params.poll_id
+  )}`;
 
   connection.query(sqlDelPoll, function (err, result) {
     if (err) {
       throw err;
     }
-    if (result.length === 0) {
-      res.status(404).send({ message: "poll_id or user_id dosn't exists!" });
-    } else {
+    connection.query(sqlDelAnsOfPoll, function (err, result) {
+      if (err) {
+        throw err;
+      }
       res.status(200).send({ message: "poll deleted successfully!" });
-    }
+    })
+
   });
+
 };
 
 // support multipul chooses
