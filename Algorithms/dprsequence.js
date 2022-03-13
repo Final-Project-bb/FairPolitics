@@ -1,6 +1,5 @@
 // Sequence of consecutive DPR elections with implementations.
-const { DPRRule, compute, compute_lazy_seqpav, compute_dynamic_seqpav, __phragmen_loads_from_sequence,
-    compute_lazy_seqphrag, compute_dynamic_seqphrag, compute_av, get_rulesinfo } = require('./dprrules');
+const { compute, get_rulesinfo } = require('./dprrules');
 
 module.exports = class DPRSequence {
     // Sequence of consecutive DPR elections with implementations.
@@ -254,9 +253,8 @@ module.exports = class DPRSequence {
             throw message;
         }
         var outcomes = [];
-        var curr_tau = [];
-        var curr_ranking = [];
-        var tuple = [];
+        var curr_tau = []; // X in the paper
+        var curr_ranking = []; // r_<=k in the paper
 
         // optional output
         if (verbose > 0) {
@@ -268,11 +266,8 @@ module.exports = class DPRSequence {
 
         name_sequence.push(-1);
         for (let i = 0; i < name_sequence.length; i++) {
-            tuple = [];
             curr_ranking = compute(this.profile, this.rule_name, curr_tau, verbose=verbose, resolute=resolute);
-            tuple.push(curr_tau);
-            tuple.push(curr_ranking);
-            outcomes.push(tuple);
+            outcomes.push([curr_tau, curr_ranking]);
             
             // optional output
             if (verbose > 0) {

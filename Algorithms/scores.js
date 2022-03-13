@@ -110,12 +110,12 @@ function cumulative_score_fct(scorefct, cand_in_com) {
 // gained by adding candidate i
 function marginal_thiele_scores_add(scorefct, profile, committee) {
 
-    var marg = [];
+    var marg = new Array(profile[1]);
     var pref = [];
     var intersection = [];
-    for (let i = 0; i < profile[1]; i++) {
-        marg.push(0);        
-    }
+
+    marg.fill(0);        
+
     for (let p = 0; p < profile[2].length; p++) {
         pref = profile[2][p];
         intersection = pref.filter(x => committee.includes(x));
