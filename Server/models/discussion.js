@@ -1,6 +1,6 @@
-const Comment = require('./models/comment');
-const Picture = require('./models/picture');
-const Like = require('./models/like');
+const Comment = require('../models/comment');
+const Picture = require('../models/picture');
+const Like = require('../models/like');
 
 class Discussion {
     constructor(
