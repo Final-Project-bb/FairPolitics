@@ -63,6 +63,7 @@ const Profile = () => {
     console.log('Profile effected')
     fetchSelfPolls();
   }, []);
+  
   return (
     <div>
       <Header title='Profile Page' />

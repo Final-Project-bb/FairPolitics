@@ -46,7 +46,11 @@ const DiscussionCard = ({ DiscussionCards }) => {
               <button onClick={() => CommentsButton(item)}>
                 Show Comments!
               </button>
-              <div style={styles.likes}>{item.comments.length}</div>
+              <div style={styles.likes}>
+                {item.comments[0].comment_id !== null
+                  ? item.comments.length
+                  : 0}
+              </div>
               <button onClick={() => LikeDiscussion(1, item.post_id)}>
                 Like!
               </button>
