@@ -281,11 +281,11 @@ function compute_lazy_seqphrag(profile, rule_name, tau, verbose=0, resolute=true
     var cands = [];
     var curr_tau = [];
     var sort_values = [];
+    var key_sorted = [];
     var approvers_weight = {};
     var induced_loads = {};
     var sorted_induced_loads = {};
     var temp = {};
-    var key_sorted = {};
 
     weights.fill(0);
 
@@ -317,31 +317,38 @@ function compute_lazy_seqphrag(profile, rule_name, tau, verbose=0, resolute=true
     }
     
     for (const cand of cands) {
+        sorted_induced_loads[cand] = 0;
+    }
+    for (const cand of cands) {
         curr_tau = tau.concat(cand);
         induced_loads[cand] = __phragmen_loads_from_sequence(profile, curr_tau, verbose);
-        temp = induced_loads[cand];
-        key_sorted = Object.keys(temp).sort(function (a, b) {
-            return temp[a]-temp[b];
-        });
-        key_sorted.reverse();
-        sorted_induced_loads[cand] = key_sorted; 
+        key_sorted = [];
+        for (const key in induced_loads[cand]) {
+            key_sorted.push(induced_loads[cand][key]);
+        }
+        key_sorted.sort((a, b) => b[1]-a[1]);
+        sorted_induced_loads[cand] = key_sorted;
     }
-
+    
     // optional output
     if (verbose > 0) {
         console.log(`Induced loads by adding candidate x to tau are ${induced_loads}`);
     }
     // end of optional output
-
-    for(const i in sorted_induced_loads) {
-        sort_values.push([i, sorted_induced_loads[i]]);
+    for (const key in sorted_induced_loads) {
+        var arr = [];
+        count = 0;
+        arr = sorted_induced_loads[key];
+        for (const x of arr) {
+            if (x != 0) {
+                count++;
+            }
+        }
+        temp[key] = count;
     }
-    sort_values.sort(function (a, b) {
-        return a[1]-b[1];
-    });
-    for (let i = 0; i < sort_values.length; i++) {
-        item = sort_values[i];
-        ranking.push(Number(item[0]));        
+    sort_values = Object.entries(temp).sort((a, b) => b[1]-a[1]);
+    for (const x of sort_values) {
+        ranking.push(Number(x[0]));        
     }
 
     // optional output
@@ -391,11 +398,10 @@ function compute_dynamic_seqphrag(profile, rule_name, tau, verbose=0, resolute=t
         var already_ranked = [];
         var cands = [];
         var curr_tau = [];
+        var key_sorted = [];
         var curr_induced_loads = [];
         var min_induced_loads = new Array(1);
         var induced_loads = {};
-        var temp = {};
-        var key_sorted = {};
 
         already_ranked = tau.concat(ranking);
         // exclude = already_ranked + no_supporters   ---->>  also in source code this line was in comment
@@ -411,20 +417,18 @@ function compute_dynamic_seqphrag(profile, rule_name, tau, verbose=0, resolute=t
         
         // compute induced loads for each candidate and find lex. minimum
         for (const cand of cands) {
+            key_sorted = [];
             curr_tau = tau.concat(ranking).concat(cand);
             induced_loads[cand] = __phragmen_loads_from_sequence(profile, curr_tau, verbose);
-            temp = induced_loads[cand];
-            key_sorted = Object.keys(temp).sort(function (a, b) {
-                return temp[a]-temp[b];
-            });
-            for (const key in key_sorted) {
-                curr_induced_loads.push(key_sorted[key]);
+            for (const key in induced_loads[cand]) {
+                key_sorted.push(induced_loads[cand][key]);
             }
-            curr_induced_loads.reverse();
+            key_sorted.sort((a, b) => b-a);
+            curr_induced_loads = [...key_sorted];
             
             for (let i = 0; i < curr_induced_loads.length; i++) {
                 if (curr_induced_loads[i] < min_induced_loads[i]) {
-                    min_induced_loads = curr_induced_loads;
+                    min_induced_loads = [...curr_induced_loads];
                     next_cand = cand;
                 }
                 break;
