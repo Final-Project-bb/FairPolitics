@@ -6,10 +6,10 @@ import ProfileHeader from "./ProfileHeader";
 import styled from "styled-components";
 
 const AddDiscussion = () => {
-  const [title, setTitle] = useState();
-  const [tags, setTags] = useState();
-  const [description, setDescription] = useState();
-  const [picture, setPicture] = useState();
+  const [title, setTitle] = useState(null);
+  const [tags, setTags] = useState(null);
+  const [description, setDescription] = useState(null);
+  const [picture, setPicture] = useState(null);
 
   const { user_details } = useContext(AppContext);
 

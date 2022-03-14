@@ -144,7 +144,6 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
                 Working it: {user_info.job_title} living in {user_info.city}
               </div>
               <div>{user_info.semi_description}</div>
-              <button onClick={() => console.log(`is follow: ${isFollow} ${user_info.user_id}`)}>here</button>
             </div>
             <div style={styles.profileHead}>
               <img

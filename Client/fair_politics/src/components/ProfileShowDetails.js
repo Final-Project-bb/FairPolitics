@@ -2,10 +2,11 @@ import React, { useState, useContext } from "react";
 import { AppContext } from "./Context";
 import { useHistory } from "react-router-dom";
 
-const ProfileShowDetails = () => {
+const ProfileShowDetails = ({inFriend}) => {
   const [picturePress, setPicturePress] = useState(false);
   const {
     user_details,
+    friend_details,
     loading,
     setLoading,
     followings,
@@ -54,16 +55,16 @@ const ProfileShowDetails = () => {
   return (
     <div>
       <div style={styles.semiDetails}>
-        <div style={styles.name}>
-          {user_details.first_name} {user_details.last_name}
+        <div style={styles.name}>   
+          {!inFriend?user_details.first_name:friend_details.first_name} {!inFriend?user_details.last_name:friend_details.last_name}
         </div>
         <div>
-          {user_details.gender} , {user_details.age}
+          {!inFriend?user_details.gender:friend_details.gender} , {!inFriend?user_details.age:friend_details.age}
         </div>
         <div>
-          Working it: {user_details.job_title} living in {user_details.city}
+          Working it: {!inFriend?user_details.job_title:friend_details.job_title} living in {!inFriend?user_details.city:friend_details.city}
         </div>
-        <div>{user_details.semi_description}</div>
+        <div>{!inFriend?user_details.semi_description:friend_details.semi_description}</div>
       </div>
       <div style={styles.profileHead}>
         <img
@@ -99,6 +100,9 @@ const ProfileShowDetails = () => {
     </div>
   );
 };
+ProfileShowDetails.deafult = {
+  inFriend: false,
+};
 const styles = {
   name: {
     display: "flex",
@@ -128,5 +132,6 @@ const styles = {
     top: -25,
   },
 };
+
 
 export default ProfileShowDetails;
