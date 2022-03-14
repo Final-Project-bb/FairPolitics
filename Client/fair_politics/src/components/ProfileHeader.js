@@ -2,11 +2,11 @@ import React from 'react'
 import ProfileShowDetails from './ProfileShowDetails';
 import { NavLink as Link } from "react-router-dom"
 import styled from 'styled-components';
-const ProfileHeader = () => {
+const ProfileHeader = ({inFriend}) => {
   return (
     <div style={styles.order}>
       <div style={styles.profileHead}>
-        <ProfileShowDetails />
+        <ProfileShowDetails inFriend={inFriend} />
         <NavLinkDis to='/profile/addDiscussion'>Add Discussion</NavLinkDis>
         <NavLinkFeed to='/profile/addFeedback'>Add Feedback</NavLinkFeed>
         <NavLinkAbout to='/profile/aboutProfile'>About Me</NavLinkAbout>
@@ -14,6 +14,9 @@ const ProfileHeader = () => {
     </div>
   )
 }
+ProfileHeader.deafult = {
+  inFriend: false,
+};
 
 const styles = {
   order: {

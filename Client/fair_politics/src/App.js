@@ -17,6 +17,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Search from "./components/Search";
 function App() {
   const [user_details, setUserDetails] = useState({});
+  const [friend_details, setFriendDetails] = useState({});
   const [is_connected, setIsConnected] = useState(false);
   const [loading, setLoading] = useState(false);
   const [discussionCards, setDiscussionCards] = useState([]);
@@ -34,6 +35,8 @@ function App() {
       value={{
         user_details,
         setUserDetails,
+        friend_details, 
+        setFriendDetails,
         is_connected,
         setIsConnected,
         loading,

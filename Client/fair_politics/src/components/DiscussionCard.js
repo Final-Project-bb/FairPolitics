@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { AppContext } from "./Context";
 import { FaRegEdit, FaTrashAlt } from "react-icons/fa";
+import { FcGoogle} from "react-icons/fc";
 const DiscussionCard = ({ item, inProfile }) => {
   const [commentsButtonId, setCommentsButtonId] = useState(0);
   const [commentsButton, setCommentsButton] = useState(false);
@@ -54,15 +55,6 @@ const DiscussionCard = ({ item, inProfile }) => {
     setLoading(false);
   };
 
-  // work but doesn't delete from login_deteils table
-  const deletefromDb = async () => {
-    await fetch(
-      `http://localhost:4000/api/delete_user/${user_details.user_id}`,
-      {
-        method: "DELETE",
-      }
-    ).catch((error) => console.error(error));
-  };
 
   return (
     <div style={styles.head}>

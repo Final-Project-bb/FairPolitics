@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `fairpoliticsdb` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `fairpoliticsdb`;
--- MySQL dump 10.13  Distrib 8.0.28, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.19, for Win64 (x86_64)
 --
--- Host: localhost    Database: fairpoliticsdb
+-- Host: 127.0.0.1    Database: fairpoliticsdb
 -- ------------------------------------------------------
--- Server version	8.0.28
+-- Server version	8.0.19
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -51,7 +51,7 @@ CREATE TABLE `comment_like_approval` (
   `comment_id` int NOT NULL AUTO_INCREMENT,
   `user_id` varchar(9) NOT NULL,
   PRIMARY KEY (`comment_id`,`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -60,6 +60,7 @@ CREATE TABLE `comment_like_approval` (
 
 LOCK TABLES `comment_like_approval` WRITE;
 /*!40000 ALTER TABLE `comment_like_approval` DISABLE KEYS */;
+INSERT INTO `comment_like_approval` VALUES (1,'111'),(1,'222'),(1,'333'),(2,'222'),(2,'333'),(3,'222'),(3,'225'),(4,'111'),(5,'44'),(6,'222'),(6,'333');
 /*!40000 ALTER TABLE `comment_like_approval` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -78,7 +79,7 @@ CREATE TABLE `discussion` (
   `description` varchar(1000) DEFAULT NULL,
   `picture` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`post_id`,`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=322 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=344 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -87,7 +88,7 @@ CREATE TABLE `discussion` (
 
 LOCK TABLES `discussion` WRITE;
 /*!40000 ALTER TABLE `discussion` DISABLE KEYS */;
-INSERT INTO `discussion` VALUES (133,'222','sda','null','omer hu lo metachnet','null'),(321,'222','dsad','null','omer hu shuv lo metahnet','null');
+INSERT INTO `discussion` VALUES (1,'222','sda','null','omer hu lo metachnet','null'),(2,'225','schebar',NULL,'shcebarrrr',NULL),(3,'222','dsad','null','omer hu shuv lo metahnet','null'),(4,'111','title','tag','description','null'),(5,'222','shchebar','shchebarist','shchebaron',NULL),(6,'444','tal','omer','lorem ipsum','a'),(343,'111','new new post','new new post','new new post','new new post');
 /*!40000 ALTER TABLE `discussion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -99,7 +100,7 @@ DROP TABLE IF EXISTS `discussion_like_approval`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `discussion_like_approval` (
-  `post_id` int NOT NULL AUTO_INCREMENT,
+  `post_id` int NOT NULL,
   `user_id` varchar(9) NOT NULL,
   PRIMARY KEY (`post_id`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='			';
@@ -111,6 +112,7 @@ CREATE TABLE `discussion_like_approval` (
 
 LOCK TABLES `discussion_like_approval` WRITE;
 /*!40000 ALTER TABLE `discussion_like_approval` DISABLE KEYS */;
+INSERT INTO `discussion_like_approval` VALUES (1,'222'),(2,'111'),(2,'222'),(3,'111'),(3,'222'),(4,'225'),(4,'333'),(5,'111'),(5,'222'),(5,'225'),(5,'333'),(5,'444'),(6,'225');
 /*!40000 ALTER TABLE `discussion_like_approval` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -127,7 +129,7 @@ CREATE TABLE `discussion_response` (
   `user_id` varchar(9) NOT NULL,
   `comment` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`comment_id`,`post_id`,`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -136,6 +138,7 @@ CREATE TABLE `discussion_response` (
 
 LOCK TABLES `discussion_response` WRITE;
 /*!40000 ALTER TABLE `discussion_response` DISABLE KEYS */;
+INSERT INTO `discussion_response` VALUES (1,1,'111','fire'),(2,1,'111','ice'),(3,1,'222','glass'),(4,2,'333','yesterday'),(5,2,'222','i know'),(7,4,'444','who told you'),(9,2,'225','congratulations'),(10,4,'333','my friend'),(11,5,'444','shchebar'),(33,5,'333','wdf'),(34,5,'111','sdafas');
 /*!40000 ALTER TABLE `discussion_response` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -159,7 +162,7 @@ CREATE TABLE `follower` (
 
 LOCK TABLES `follower` WRITE;
 /*!40000 ALTER TABLE `follower` DISABLE KEYS */;
-INSERT INTO `follower` VALUES ('111','222'),('111','225'),('111','665'),('665','111'),('665','222');
+INSERT INTO `follower` VALUES ('111','222'),('111','333'),('222','111'),('333','111'),('333','222'),('333','225');
 /*!40000 ALTER TABLE `follower` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -184,7 +187,7 @@ CREATE TABLE `login_details` (
 
 LOCK TABLES `login_details` WRITE;
 /*!40000 ALTER TABLE `login_details` DISABLE KEYS */;
-INSERT INTO `login_details` VALUES ('222','0542522545','111'),('225','54656746','44'),('333','054225215','44'),('444','053125121','11');
+INSERT INTO `login_details` VALUES ('111','0544444444','111'),('222','0542522545','111'),('225','54656746','44'),('333','054225215','44'),('444','053125121','11');
 /*!40000 ALTER TABLE `login_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -202,7 +205,7 @@ CREATE TABLE `poll` (
   `description` varchar(1000) DEFAULT NULL,
   `picture` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`poll_id`,`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -211,7 +214,7 @@ CREATE TABLE `poll` (
 
 LOCK TABLES `poll` WRITE;
 /*!40000 ALTER TABLE `poll` DISABLE KEYS */;
-INSERT INTO `poll` VALUES (1,'111','first Poll','first desc',NULL),(2,'111','first Poll','first desc',NULL),(3,'111','first Poll','first desc',NULL),(4,'111','first feedback','first desccasas',NULL),(5,'111','first feedback','first desccasas',NULL),(6,'111','first feedback','first desccasas',NULL),(7,'111','first feedback','first desccasas',NULL),(8,'111','first feedback','first desccasas',NULL),(9,'111','first feedback','first desccasas',NULL),(10,'111','first feedback','first desccasas',NULL),(11,'111','first feedback','first desccasas',NULL),(12,'111','first feedback','first desccasas',NULL),(13,'111','first feedback','first desccasas',NULL),(14,'111','first feedback','first desccasas',NULL),(15,'111','first feedback','first desccasas',NULL),(16,'111','first feedback','first desccasas',NULL),(17,'111','first feedback','first desccasas',NULL),(18,'111','first feedback','first desccasas',NULL),(19,'111','first feedback','first desccasas',NULL),(20,'111','first feedback','first desccasas',NULL),(21,'111','first feedback','first desccasas',NULL),(22,'111','first feedback','first desccasas',NULL),(23,'111','first feedback','first desccasas',NULL),(24,'111','first feedback','first desccasas',NULL),(25,'111','first feedback','first desccasas',NULL),(26,'111','first feedback','first desccasas',NULL),(27,'111','first feedback','first desccasas',NULL),(28,'111','first feedback','first desccasas',NULL),(29,'111','first feedback','first desccasas',NULL),(30,'111','first feedback','first desccasas',NULL),(31,'111','first feedback','first desccasas',NULL),(32,'111','first feedback','first desccasas',NULL),(33,'111','first feedback','first desccasas',NULL),(34,'111','first feedback','first desccasas',NULL),(35,'111','first feedback','first desccasas',NULL),(36,'111','first feedback','first desccasas',NULL),(37,'111','first feedback','first desccasas',NULL),(38,'111','first feedback','first desccasas',NULL),(39,'111','first feedback','first desccasas',NULL),(40,'111','first feedback','first desccasas',NULL),(41,'111','first feedback','first desccasas',NULL),(42,'111','first feedback','first desccasas',NULL),(43,'111','first feedback','first desccasas',NULL),(44,'111','first feedback','first desccasas',NULL),(45,'111','first feedback','first desccasas',NULL),(46,'111','first feedback','first desccasas',NULL),(47,'111','first feedback','first desccasas',NULL),(48,'111','first feedback','first desccasas',NULL),(49,'111','first feedback','first desccasas',NULL),(50,'111','first feedback','first desccasas',NULL),(51,'111','first feedback','first desccasas',NULL),(52,'111','first feedback','first desccasas',NULL),(53,'111','first feedback','first desccasas',NULL),(54,'111','first feedback','first desccasas',NULL),(55,'111','first feedback','first desccasas',NULL),(56,'111','first feedback','first desccasas',NULL),(57,'111','first feedback','first desccasas',NULL),(58,'111','first feedback','first desccasas',NULL),(59,'111','first feedback','first desccasas',NULL),(60,'111','first feedback','first desccasas',NULL),(61,'111','first feedback','first desccasas',NULL),(62,'111','first feedback','first desccasas',NULL),(63,'111','first feedback','first desccasas',NULL),(64,'111','first feedback','first desccasas',NULL),(65,'111','first feedback','first desccasas',NULL),(66,'111','first feedback','first desccasas',NULL),(67,'111','first feedback','first desccasas',NULL),(68,'111','first feedback','first desccasas',NULL),(69,'111','first feedback','first desccasas',NULL),(70,'111','first feedback','first desccasas',NULL),(71,'111','first feedback','first desccasas',NULL),(72,'111','first feedback','first desccasas',NULL),(73,'111','first feedback','first desccasas',NULL),(74,'111','first feedback','first desccasas',NULL),(75,'111','first feedback','first desccasas',NULL);
+INSERT INTO `poll` VALUES (1,'111','first Poll','first desc',NULL),(2,'111','first Poll','first desc',NULL),(3,'333','first Poll','first desc',NULL),(5,'222','first feedback','first desccasas',NULL);
 /*!40000 ALTER TABLE `poll` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -228,7 +231,7 @@ CREATE TABLE `poll_answer` (
   `user_id` varchar(9) NOT NULL,
   `answer` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`answer_id`,`poll_id`,`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=183 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -237,7 +240,7 @@ CREATE TABLE `poll_answer` (
 
 LOCK TABLES `poll_answer` WRITE;
 /*!40000 ALTER TABLE `poll_answer` DISABLE KEYS */;
-INSERT INTO `poll_answer` VALUES (1,3,'111','test'),(2,28,'111','yes'),(3,28,'111','no'),(4,28,'111','not sure'),(5,29,'111','yes'),(6,29,'111','no'),(7,29,'111','not sure'),(8,40,'111','yes'),(9,40,'111','no'),(10,40,'111','not sure'),(11,41,'111','yes'),(12,41,'111','no'),(13,41,'111','not sure'),(14,42,'111','yes'),(15,42,'111','no'),(16,42,'111','not sure'),(17,43,'111','yes'),(18,43,'111','no'),(19,43,'111','not sure'),(20,44,'111','yes'),(21,44,'111','no'),(22,44,'111','not sure'),(23,48,'111','yes'),(24,48,'111','no'),(25,48,'111','not sure'),(26,49,'111','yes'),(27,49,'111','no'),(28,49,'111','not sure'),(29,50,'111','yes'),(30,50,'111','no'),(31,50,'111','not sure'),(32,51,'111','yes'),(33,51,'111','no'),(34,51,'111','not sure'),(35,52,'111','yes'),(36,52,'111','no'),(37,52,'111','not sure'),(38,53,'111','yes'),(39,53,'111','no'),(40,53,'111','not sure'),(41,54,'111','yes'),(42,54,'111','no'),(43,54,'111','not sure'),(44,62,'111','yes'),(45,62,'111','no'),(46,62,'111','not sure'),(47,63,'111','yes'),(48,63,'111','no'),(49,63,'111','not sure'),(50,64,'111','yes'),(51,65,'111','yes'),(52,65,'111','no'),(53,65,'111','not sure'),(54,66,'111','yes'),(55,66,'111','no'),(56,66,'111','not sure'),(57,67,'111','yes'),(58,67,'111','no'),(59,67,'111','not sure'),(60,68,'111','yes'),(61,69,'111','yes'),(62,69,'111','no'),(63,70,'111','yes'),(64,70,'111','no'),(65,70,'111','not sure'),(66,71,'111','yes'),(67,71,'111','no'),(68,71,'111','not sure'),(69,72,'111','yes'),(70,72,'111','no'),(71,72,'111','not sure'),(72,73,'111','yes'),(73,73,'111','no'),(74,73,'111','not sure'),(75,74,'111','yes'),(76,74,'111','no'),(77,74,'111','not sure'),(78,75,'111','yes'),(79,75,'111','no'),(80,75,'111','not sure');
+INSERT INTO `poll_answer` VALUES (1,1,'111','test'),(2,1,'111','yes'),(3,1,'111','no'),(4,2,'111','not sure'),(5,2,'111','yes'),(6,2,'111','no'),(7,3,'111','not sure'),(8,3,'111','yes'),(10,5,'222','no');
 /*!40000 ALTER TABLE `poll_answer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -294,9 +297,17 @@ CREATE TABLE `user_details` (
 
 LOCK TABLES `user_details` WRITE;
 /*!40000 ALTER TABLE `user_details` DISABLE KEYS */;
-INSERT INTO `user_details` VALUES ('222','Omer','Shalom','elyakim','s','e',NULL,'Male','semi omer description',0,28,'1993-10-25'),('225','Omer','Shalom','elyakim','s','e',NULL,'Male','secound semi desecreption',0,28,'1993-02-13'),('333','Tal','Schreiber','Ramat gan','Full Stack','I Did the client side',NULL,'male','im the client side',0,NULL,'1995-04-26'),('444','Shai','Bonfil','Ariel','Full Stack','i did the server side','','Male','im the server side',0,NULL,'1993-02-27');
+INSERT INTO `user_details` VALUES ('111','idan','ofer','haifa','devops','i did the whole project alone',NULL,'Male','im home',0,NULL,'1990-05-05'),('222','Omer','Shalom1','elyakim11','s1','e11',NULL,'Male','semi omer description',0,28,'0001-10-10'),('225','Omer','Shalom','elyakim','s','e',NULL,'Male','secound semi desecreption',0,28,'1993-02-13'),('333','Tal','Schreiber','Ramat gan','Full Stack','I Did the client side',NULL,'Male','im the client side',0,NULL,'1995-04-26'),('444','Shai','Bonfil','Ariel','Full Stack','i did the server side','','Male','im the server side',0,NULL,'1993-02-27');
 /*!40000 ALTER TABLE `user_details` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping events for database 'fairpoliticsdb'
+--
+
+--
+-- Dumping routines for database 'fairpoliticsdb'
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -307,4 +318,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-03-08  1:49:23
+-- Dump completed on 2022-03-14 11:20:42
