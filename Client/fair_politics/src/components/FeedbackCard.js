@@ -2,34 +2,16 @@ import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { AppContext } from "./Context";
 import { FaRegEdit, FaTrashAlt } from "react-icons/fa";
+import { useHistory } from "react-router-dom";
+
 const FeedbackCard = ({ item, inProfile }) => {
-  const [commentsButtonId, setCommentsButtonId] = useState(0);
-  const [commentsButton, setCommentsButton] = useState(false);
   const [onEdit, setOnEdit] = useState(false);
   const [height, setHeight] = useState(0);
-  const [question, setQuestion] = useState("");
-  const [picture, setPicture] = useState("");
-  const [answer1, setAnswer1] = useState("");
-  const [answer2, setAnswer2] = useState("");
-  const [answer3, setAnswer3] = useState("");
-  const [answers, setAnswers] = useState([]);
-  const [description, setDescription] = useState("");
 
-  const { user_details, setLoading, feedbackCards, setFeedbackCards } =
-    useContext(AppContext);
+  const { setLoading, feedbackCards, setCurrentItem } = useContext(AppContext);
 
-  const CommentsButton = (item) => {
-    // setCommentsButtonId(item.Discussion_id)
-    // if(commentsButton)
-    // {
-    //     setCommentsButton(!commentsButton);
-    //     setHeight(0)
-    // }
-    // else{
-    //     setCommentsButton(!commentsButton);
-    //     setHeight(item.Comments.length*30)
-    // }
-  };
+  const history = useHistory();
+
   const LikeDiscussion = (userId, discussionId) => {
     let handleDis = feedbackCards.filter((a) => a.FeedBack_id === discussionId);
     if (handleDis.Likes < 1) {
@@ -40,25 +22,19 @@ const FeedbackCard = ({ item, inProfile }) => {
   };
   const addAnswer = () => {};
 
-  const ClickEditPoll = (e) => {
-    alert("edit Click!");
-    setOnEdit(!onEdit);
+  const editPoll = (e) => {
+    console.log('item');
+    console.log(item);
+    setCurrentItem(item);
+    history.push("/profile/editFeedback");
   };
-  const updateFeedbackSubmit = async (e) => {
-    // setOnEdit(false);
-    setOnEdit(!onEdit);
 
-    alert("edit updated!");
-  };
   const deletePoll = async (e) => {
     setLoading(true);
     if (window.confirm("Are you sure you want to delete this account?")) {
-      await fetch(
-        `http://localhost:4000/api/delete_poll/${item.poll_id}`,
-        {
-          method: "DELETE",
-        }
-      )
+      await fetch(`http://localhost:4000/api/delete_poll/${item.poll_id}`, {
+        method: "DELETE",
+      })
         .then((res) => res.json())
         .catch((error) => console.error(error));
     }
@@ -73,7 +49,7 @@ const FeedbackCard = ({ item, inProfile }) => {
             style={{ height: (item.description.length / 2.5) * 40 + height }}>
             {inProfile && (
               <div>
-                <FaRegEdit onClick={(e) => ClickEditPoll(e)} />
+                <FaRegEdit onClick={(e) => editPoll(e)} />
                 <FaTrashAlt onClick={(e) => deletePoll(e)} />
               </div>
             )}
@@ -102,88 +78,7 @@ const FeedbackCard = ({ item, inProfile }) => {
             </div>
           </PollCard>
         )}
-        {onEdit && (
-          <div>
-            Edit {item.poll_id} {item.title} poll
-            <RegisterFormStyle>
-              <form onSubmit={(e) => updateFeedbackSubmit(e)}>
-                <label>title of the question:</label>
-                <input
-                  type='text'
-                  // pattern="[@]{1}[a-z][a-z]"
-                  // required
-                  placeholder='valid tags format!'
-                  value={question}
-                  onChange={(e) => setQuestion(e.target.value)}
-                />
-                <br />
-                {/* <small>@name1 @name2... requird Exmple:@israel israel @other person</small><br /> */}
-                {/* <label>how many answer?</label>
-                <input
-                    type="number"
-                    // pattern="[@]{1}[a-z][a-z]"
-                    // required
-                    placeholder='a valid number!'
-                    value={answerNum}
-                    onChange={(e) => setAnswerNum(e.target.value)}
-                /><br /> */}
-                <label>answer #1</label>
-                <input
-                  type='text'
-                  // pattern="[@]{1}[a-z][a-z]"
-                  // required
-                  placeholder='a valid answer!'
-                  value={answer1}
-                  onChange={(e) => setAnswer1(e.target.value)}
-                />
-                <br />
-                <label>answer #2</label>
-                <input
-                  type='text'
-                  // pattern="[@]{1}[a-z][a-z]"
-                  // required
-                  placeholder='a valid answer!'
-                  value={answer2}
-                  onChange={(e) => setAnswer2(e.target.value)}
-                />
-                <br />
-                <label>answer #3</label>
-                <input
-                  type='text'
-                  // pattern="[@]{1}[a-z][a-z]"
-                  // required
-                  placeholder='a valid answer!'
-                  value={answer3}
-                  onChange={(e) => setAnswer3(e.target.value)}
-                />
-                <br />
-
-                <label>write a description of the feedback:</label>
-                <input
-                  type='text'
-                  // pattern="[@]{1}[a-z][a-z]"
-                  // required
-                  multiline
-                  placeholder='valid description!'
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-                <br />
-                <label>enter a picture:</label>
-                <input
-                  type='text'
-                  // pattern="[@]{1}[a-z][a-z]"
-                  // required
-                  placeholder='valid picture!'
-                  value={picture}
-                  onChange={(e) => setPicture(e.target.value)}
-                />
-                <br />
-                <input type='submit' />
-              </form>
-            </RegisterFormStyle>
-          </div>
-        )}
+        {onEdit && <div></div>}
       </div>
     </div>
   );
