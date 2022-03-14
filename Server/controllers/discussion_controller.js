@@ -32,14 +32,13 @@ const createDiscussion = (req, res) => {
 
 const getDiscussion = (req, res) => {
   let getPostsWithCommentsSql = `SELECT discussion.post_id, discussion.user_id, discussion.title, discussion.description, discussion.tag, discussion.picture, 
-  discussion_response.comment_id, discussion_response.comment
+  discussion_response.comment_id, discussion_response.comment,  discussion_response.user_id as 'user_id_comment'
   FROM discussion left JOIN discussion_response      
   ON discussion.post_id = discussion_response.post_id
   where discussion.user_id = ${JSON.stringify(req.params.user_id)}
-  group by discussion_response.comment_id order by discussion.post_id`;
+  order by discussion.post_id`;
 
   let getPostLikesSql = `select * from discussion_like_approval order by post_id`;
-
   let allPostsWithComments = [];
   let post_id_hand = -1;
   connection.query(getPostsWithCommentsSql, function (err, posts) {
@@ -49,7 +48,11 @@ const getDiscussion = (req, res) => {
     let post;
     posts.forEach((p) => {
       if (p.post_id == post_id_hand) {
-        post.comments.push({ comment_id: p.comment_id, comment: p.comment });
+        post.comments.push({
+          comment_id: p.comment_id,
+          comment: p.comment,
+          user_id_comment: p.user_id_comment,
+        });
       } else {
         post_id_hand = p.post_id;
         post = {
@@ -57,11 +60,13 @@ const getDiscussion = (req, res) => {
           user_id: p.user_id,
           title: p.title,
           description: p.description,
+          tag: p.tag,
           picture: p.picture,
           comments: [
             {
               comment_id: p.comment_id,
               comment: p.comment,
+              user_id_comment: p.user_id_comment,
             },
           ],
           likes: [],
@@ -87,9 +92,8 @@ const getDiscussion = (req, res) => {
 };
 
 const updateDiscussion = (req, res) => {
-  let sqlUpdatePost = `update discussion set title=${JSON.stringify(
-    req.body.title
-  )},
+  let sqlUpdatePost = `update discussion set 
+                        title=${JSON.stringify(req.body.title)},
                         tag=${JSON.stringify(req.body.tag)}, 
                         description=${JSON.stringify(req.body.description)},
                         picture=${JSON.stringify(req.body.picture)} 
@@ -97,29 +101,12 @@ const updateDiscussion = (req, res) => {
   connection.query(sqlUpdatePost, function (err, result) {
     if (err) {
       throw err;
-    } else {
-      res.status(200).send({ message: `post updated!` });
     }
+    res.status(200).send({ message: `post updated successfully!` });
   });
 };
 
 const deleteDiscussion = (req, res) => {
-  //   deleteLikeFromDiscussion(req.params.post_id);
-
-  //   let sqlFindAllComments = `select * from discussion_response as dr join discussion as ds
-  //                             on dr.post_id = ds.post_id where ds.post_id=${req.params.post_id}`;
-
-  //   connection.query(sqlFindAllComments, function (err, result) {
-  //     if (err) {
-  //       throw err;
-  //     } else {
-  //       result.forEach((r) => {
-  //         deleteComment(r.comment_id);
-  //       });
-  //       res.status(200).send({ message: "post deleted successfully" });
-  //     }
-  //   });
-
   let deletePostSql = `delete from discussion where post_id = ${JSON.stringify(
     req.params.post_id
   )}`;
@@ -299,7 +286,7 @@ const deleteLikeFromComment = (req, res) => {
 
 const discussionsFollowing = (req, res) => {
   let getPostsWithCommentsSql = `SELECT discussion.post_id, discussion.user_id, discussion.title, discussion.description, discussion.tag, discussion.picture, 
-  discussion_response.comment_id, discussion_response.comment
+  discussion_response.comment_id, discussion_response.comment, discussion_response.user_id as 'user_id_comment'
   FROM discussion left JOIN discussion_response      
   ON discussion.post_id = discussion_response.post_id
   where discussion.user_id in (select user_following_id from follower where user_id=${JSON.stringify(
@@ -318,7 +305,11 @@ const discussionsFollowing = (req, res) => {
     let post;
     posts.forEach((p) => {
       if (p.post_id == post_id_hand) {
-        post.comments.push({ comment_id: p.comment_id, comment: p.comment });
+        post.comments.push({
+          comment_id: p.comment_id,
+          comment: p.comment,
+          user_id_comment: p.user_id_comment,
+        });
       } else {
         post_id_hand = p.post_id;
         post = {
@@ -326,11 +317,13 @@ const discussionsFollowing = (req, res) => {
           user_id: p.user_id,
           title: p.title,
           description: p.description,
+          tag: p.tag,
           picture: p.picture,
           comments: [
             {
               comment_id: p.comment_id,
               comment: p.comment,
+              user_id_comment: p.user_id_comment,
             },
           ],
           likes: [],

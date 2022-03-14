@@ -106,33 +106,31 @@ const getPoll = (req, res) => {
 // };
 
 const updatePoll = (req, res) => {
-  let sqlUpdatePoll = `update poll set title=${JSON.stringify(req.body.title)},
+  let sqlUpdatePoll = `update poll set 
+                        title=${JSON.stringify(req.body.title)},
                         description=${JSON.stringify(req.body.description)},
                         picture=${JSON.stringify(req.body.picture)}
-                        where user_id=${req.params.user_id} and poll_id=${
-    req.params.poll_id
-  }`;
+                        where poll_id=${JSON.stringify(req.params.poll_id)}`;
 
   connection.query(sqlUpdatePoll, function (err, result) {
     if (err) {
       throw err;
-    } else {
-      req.body.answer.forEach((ans) => {
-        connection.query(
-          `update poll_answer set answer=${JSON.stringify(ans)}
-                                where user_id=${req.params.user_id} and
-                                poll_id=${req.params.poll_id}`,
-          function (err, result) {
-            if (err) {
-              throw err;
-            } else {
-              res.status(200).send({ message: `answer updated!` });
-            }
-          }
-        );
-      });
-      res.status(200).send({ message: `poll updated!` });
     }
+    console.log(req.body.answers);
+    req.body.answers.forEach((ans) => {
+      connection.query(
+        `update poll_answer set answer=${JSON.stringify(ans.answer)}
+                                where answer_id=${JSON.stringify(
+                                  ans.answer_id
+                                )}`,
+        function (err, result) {
+          if (err) {
+            throw err;
+          }
+        }
+      );
+    });
+    res.status(200).send({ message: `poll updated successfully!` });
   });
 };
 
@@ -154,23 +152,22 @@ const deletePoll = (req, res) => {
         throw err;
       }
       res.status(200).send({ message: "poll deleted successfully!" });
-    })
-
+    });
   });
-
 };
 
 // support multipul chooses
 const answerPoll = (req, res) => {
-  let sqlInsertAnsApproval = `insert into poll_answer_approval(answer_id, user_id)
-                                values(${req.params.answer_id}, ${req.params.user_id})`;
+  let sqlInsertAnsApproval = `insert into poll_answer_approval (answer_id, user_id)
+                                values
+                                (${JSON.stringify(req.params.answer_id)},
+                                 ${JSON.stringify(req.params.user_id)})`;
 
   connection.query(sqlInsertAnsApproval, function (err, result) {
     if (err) {
       throw err;
-    } else {
-      res.status(200).send({ message: "answer approval added successfully!" });
     }
+    res.status(200).send({ message: "answer approval added successfully!" });
   });
 };
 

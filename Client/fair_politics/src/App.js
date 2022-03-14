@@ -15,6 +15,8 @@ import AboutMe from "./components/AboutMe";
 import { AppContext } from "./components/Context";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Search from "./components/Search";
+import EditDiscussionCard from "./components/EditDiscussionCard";
+import EditFeedbackCard from "./components/EditFeedbackCard";
 function App() {
   const [user_details, setUserDetails] = useState({});
   const [friend_details, setFriendDetails] = useState({});
@@ -29,13 +31,19 @@ function App() {
   const [followingDetails, setFollowingDetails] = useState([]);
   const [followerDetails, setFollowerDetails] = useState([]);
   const [usersSearch, setUsersSearch] = useState([]);
+  const [currentItem, setCurrentItem] = useState({
+    title: "",
+    description: "",
+    tag: "",
+    picture: "",
+  });
 
   return (
     <AppContext.Provider
       value={{
         user_details,
         setUserDetails,
-        friend_details, 
+        friend_details,
         setFriendDetails,
         is_connected,
         setIsConnected,
@@ -59,6 +67,8 @@ function App() {
         setFollowerDetails,
         usersSearch,
         setUsersSearch,
+        currentItem,
+        setCurrentItem,
       }}>
       <Router>
         <Switch>
@@ -93,6 +103,12 @@ function App() {
               </Route>
               <Route exact path='/profile/addFeedback'>
                 <AddFeedback />
+              </Route>
+              <Route exact path='/profile/editDiscussion'>
+                <EditDiscussionCard />
+              </Route>
+              <Route exact path='/profile/editFeedback'>
+                <EditFeedbackCard />
               </Route>
               <Route exact path='/profile/following'>
                 <Following />

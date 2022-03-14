@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NavLink as Link } from "react-router-dom";
 import Header from "./Header";
 import ProfileHeader from "./ProfileHeader";
@@ -9,6 +9,7 @@ import styled from "styled-components";
 import { AppContext } from "./Context";
 
 const Profile = () => {
+
   const {
     user_details,
     setLoading,
@@ -18,19 +19,6 @@ const Profile = () => {
     setProfileDiscussionCards,
   } = useContext(AppContext);
 
-  // const fetchSelfPolls = async () => {
-  //   setLoading(true);
-  //   const response = await fetch(`http://localhost:4000/api/get_polls/${user_details.user_id}`);
-  //   const data = await response.json();
-  //   // console.log(data.result);
-  //   console.log("fetchPolls");
-  //   console.log(data.result);
-
-  //   if (data !== undefined) {
-  //     await setFeedbackCards(data.result[0]);
-  //   }
-  //   setLoading(false);
-  // };
   const fetchSelfPolls = async () => {
     setLoading(true);
     const response = await fetch(
