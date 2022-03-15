@@ -3,6 +3,15 @@ import styled from "styled-components";
 import { AppContext } from "./Context";
 import { FaRegEdit, FaTrashAlt } from "react-icons/fa";
 import { useHistory } from "react-router-dom";
+import {
+  FormControl,
+  FormControlLabel,
+  Button,
+  Card,
+  CardContent,
+  TextField,
+  CardActions,
+} from "@mui/material";
 
 const DiscussionCard = ({ item, inProfile }) => {
   const [commentsButtonId, setCommentsButtonId] = useState(0);
@@ -55,64 +64,50 @@ const DiscussionCard = ({ item, inProfile }) => {
 
   return (
     <div style={styles.head}>
-      <div>
-        <DisCard
-          key={item.post_id}
-          style={{
-            height: (item.description.length / 3) * 32 + height + 35,
-          }}>
+        <Card style={{ height: 400, width: 600 }}>
           {inProfile && (
-            <div>
+            <CardContent>
               <FaRegEdit onClick={(e) => editDiscussion(e)} />
               <FaTrashAlt onClick={(e) => deleteDiscussion(e)} />
-            </div>
+            </CardContent>
           )}
-          <div style={styles.title}>
+          <CardContent style={styles.title}>
             {item.post_id} {item.title}{" "}
-          </div>
-          <div style={styles.text}>{item.description}</div>
-          <div style={styles.cardFooter}>
-            <button onClick={() => CommentsButton(item)}>Show Comments!</button>
-            <div style={styles.likes}>
-              {item.comments[0].comment_id !== null ? item.comments.length : 0}
-            </div>
-            <button onClick={() => LikeDiscussion(1, item.post_id)}>
+          </CardContent>
+          <CardContent style={styles.text}>{item.description}</CardContent>
+          <CardContent style={styles.cardFooter}>
+            <CardActions>
+            <Button variant='contained' color='primary' onClick={() => CommentsButton(item)}>Show Comments!</Button>
+            <CardContent>{item.comments[0].comment_id !== null ? item.comments.length : 0}</CardContent>
+            <Button variant='contained' color='primary' onClick={() => LikeDiscussion(1, item.post_id)}>
               Like!
-            </button>
-            <div style={styles.likes}>{item.likes.length}</div>
-          </div>
+            </Button>
+            </CardActions>
+            <CardContent style={styles.likes}>{item.likes.length}</CardContent>
+          </CardContent>
           {commentsButton && commentsButtonId === item.post_id && (
-            <div>
+            <CardContent>
               {item.comments.map((comment) => (
                 <div key={comment.comment_id} style={styles.comment}>
                   {comment.comment}
                 </div>
               ))}
-            </div>
+            </CardContent>
           )}
-          <form
-            // onSubmit={onSearch}
-            style={styles.formStyle}>
-            {/* <label onClick={onSearch}>Search:</label> */}
+          <CardContent style={styles.formStyle}>
             <input
-              // onKeyDown={handleKeyDown(onSearch)}
               style={{
-                height: "20px",
-                width: "150px",
-                position: "relative",
-                top: "22px",
-                borderRadius: 70,
+                // height: "20px",
+                // width: "150px",
+                // position: "relative",
+                left: "22px",
+                borderRadius: 2,
               }}
               type='text'
               placeholder='add comment'
-              // value={search}
-              // onChange={(e) => setSearch(e.target.value)}
             />
-
-            {/* <input type="submit" style={{ color: "white", backgroundColor: "black" }} /> */}
-          </form>
-        </DisCard>
-      </div>
+          </CardContent>
+        </Card>
     </div>
   );
 };
@@ -128,6 +123,8 @@ const styles = {
     display: "flex",
     // justifyContent: "space-around",
     flexDirection: "column",
+    marginBottom: 30,
+
   },
   title: {
     display: "flex",
@@ -140,26 +137,29 @@ const styles = {
     // right:150
   },
   text: {
-    display: "flex",
-    justifyContent: "space-around",
-    flexDirection: "colmun",
-    position: "relative",
-    // marginLeft:10,
-    top: 10,
-    left: -15,
+    // display: "flex",
+    // justifyContent: "space-around",
+    // flexDirection: "colmun",
+    // position: "relative",
+    // // marginLeft:10,
+    // top: 10,
+    // left: -15,
   },
   cardFooter: {
     display: "flex",
-    justifyContent: "space-around",
+    // justifyContent: "space-around",
     flexDirection: "row",
-    position: "relative",
+    // position: "relative",
     // marginLeft:10,
-    top: 15,
-    right: 20,
+    // top: 50,
+    // right: 20,
   },
   likes: {
-    position: "relative",
-    right: 70,
+    display: "flex",
+    flexDirection: "row",
+
+    // position: "relative",
+    // right: 70,
   },
   comment: {
     position: "relative",
@@ -197,7 +197,5 @@ const DisCard = styled.div`
   ${"" /* z-index: 10; */} /* Third Nav */
   /* justify-content: flex-start; */
 `;
-
-
 
 export default DiscussionCard;

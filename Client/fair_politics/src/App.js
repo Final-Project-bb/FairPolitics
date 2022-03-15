@@ -88,7 +88,7 @@ function App() {
             <ContactUs />
           </Route>
           {is_connected && (
-            <div>
+            <div style={{ backgroundColor: "whitesmoke" }}>
               <Route exact path='/home'>
                 <Home />
               </Route>

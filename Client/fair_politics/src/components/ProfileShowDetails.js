@@ -1,6 +1,15 @@
 import React, { useState, useContext } from "react";
 import { AppContext } from "./Context";
 import { useHistory } from "react-router-dom";
+import {
+  FormControl,
+  FormControlLabel,
+  Button,
+  Card,
+  CardContent,
+  TextField,
+  Avatar,
+} from "@mui/material";
 
 const ProfileShowDetails = ({inFriend}) => {
   const [picturePress, setPicturePress] = useState(false);
@@ -86,13 +95,14 @@ const ProfileShowDetails = ({inFriend}) => {
           left: 400,
           flex: 1,
           flexDirection: "row",
+          justifyContent: 'space-around'
         }}>
-        <button onClick={() => showFollowing()}>
+        <Button variant='outlined' color='primary' onClick={() => showFollowing()}>
           Following {followings.length}
-        </button>
-        <button onClick={() => showFollower()}>
+        </Button>
+        <Button variant='outlined' color='primary' onClick={() => showFollower()}>
           Follower {followers.length}
-        </button>
+        </Button>
       </div>
       {/* image profile will be here */}
       {/* about and more..  */}
@@ -130,6 +140,7 @@ const styles = {
     left: 150,
     margin: 0,
     top: -25,
+    // backgroundColor: 'whitesmoke'
   },
 };
 

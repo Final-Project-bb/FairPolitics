@@ -21,6 +21,7 @@ ProfileHeader.deafult = {
 const styles = {
   order: {
     flexDirection: 'row',
+    
   },
   card: {
     display: "flex",

@@ -105,6 +105,8 @@ const styles = {
     display: "flex",
     justifyContent: "space-around",
     flexDirection: "row",
+    backgroundColor: 'whitesmoke'
+
     // color:"yellow",
     //       flex: 1,
 
