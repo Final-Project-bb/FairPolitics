@@ -3,6 +3,15 @@ import styled from "styled-components";
 import { AppContext } from "./Context";
 import { FaRegEdit, FaTrashAlt } from "react-icons/fa";
 import { useHistory } from "react-router-dom";
+import {
+  FormControl,
+  FormControlLabel,
+  Button,
+  Card,
+  CardContent,
+  TextField,
+  CardActions,
+} from "@mui/material";
 
 const FeedbackCard = ({ item, inProfile }) => {
   const [onEdit, setOnEdit] = useState(false);
@@ -23,7 +32,7 @@ const FeedbackCard = ({ item, inProfile }) => {
   const addAnswer = () => {};
 
   const editPoll = (e) => {
-    console.log('item');
+    console.log("item");
     console.log(item);
     setCurrentItem(item);
     history.push("/profile/editFeedback");
@@ -42,44 +51,42 @@ const FeedbackCard = ({ item, inProfile }) => {
   };
   return (
     <div style={styles.head}>
-      <div>
         {!onEdit && (
-          <PollCard
-            key={item.poll_id}
-            style={{ height: (item.description.length / 2.5) * 40 + height }}>
+          <Card
+            style={{ height: 400, width: 600 }}>
             {inProfile && (
-              <div>
+              <CardContent>
                 <FaRegEdit onClick={(e) => editPoll(e)} />
                 <FaTrashAlt onClick={(e) => deletePoll(e)} />
-              </div>
+              </CardContent>
             )}
-            <div style={styles.title}>
+            <CardContent style={styles.title}>
               {item.poll_id} {item.title}{" "}
-            </div>
+            </CardContent>
 
-            <div style={styles.description}>{item.description}</div>
-            <div style={styles.cardFooter}>
+            <CardContent style={styles.description}>
+              {item.description}
+            </CardContent>
+            <CardContent style={styles.cardFooter}>
               <form>
-                <div style={styles.question}>
+                <CardContent style={styles.question}>
                   {item.answers.map((answer) => (
-                    <div key={answer.answer_id}>
+                    <CardContent key={answer.answer_id}>
                       {answer.title}
-                      <div>
                         <label>
                           <input type='checkbox' />
                           {answer.answer}
                         </label>
-                      </div>
-                    </div>
+                    </CardContent>
                   ))}
-                </div>
-                <button onClick={() => addAnswer(item)}>submit!</button>
+                </CardContent>
+                <CardActions>
+                  <Button variant='outlined' color='primary' onClick={() => addAnswer(item)}>submit!</Button>
+                </CardActions>
               </form>
-            </div>
-          </PollCard>
+            </CardContent>
+          </Card>
         )}
-        {onEdit && <div></div>}
-      </div>
     </div>
   );
 };
@@ -91,6 +98,7 @@ const styles = {
     display: "flex",
     // justifyContent: "space-around",
     flexDirection: "column",
+    marginBottom: 30,
   },
   title: {
     display: "flex",
@@ -123,7 +131,7 @@ const styles = {
   question: {
     display: "flex",
     justifyContent: "space-around",
-    flexDirection: "colmun",
+    // flexDirection: "column",
     position: "relative",
   },
   likes: {
