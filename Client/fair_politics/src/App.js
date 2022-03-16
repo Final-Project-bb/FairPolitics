@@ -70,11 +70,11 @@ function App() {
         currentItem,
         setCurrentItem,
       }}>
-      <Router>
+      <Router >
         <Switch>
           <Route exact path='/'>
             <InitialPage />
-          </Route>
+          </Route >
           <Route exact path='/connection/login'>
             <Login />
           </Route>
@@ -88,7 +88,7 @@ function App() {
             <ContactUs />
           </Route>
           {is_connected && (
-            <div style={{ backgroundColor: "whitesmoke" }}>
+            <div >
               <Route exact path='/home'>
                 <Home />
               </Route>
