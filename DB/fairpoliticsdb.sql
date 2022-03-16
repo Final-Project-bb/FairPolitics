@@ -79,7 +79,7 @@ CREATE TABLE `discussion` (
   `description` varchar(1000) DEFAULT NULL,
   `picture` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`post_id`,`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=344 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=348 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -88,7 +88,7 @@ CREATE TABLE `discussion` (
 
 LOCK TABLES `discussion` WRITE;
 /*!40000 ALTER TABLE `discussion` DISABLE KEYS */;
-INSERT INTO `discussion` VALUES (1,'222','sda','null','omer hu lo metachnet','null'),(2,'225','schebar',NULL,'shcebarrrr',NULL),(3,'222','dsad','null','omer hu shuv lo metahnet','null'),(4,'111','title','tag','description','null'),(5,'222','shchebar','shchebarist','shchebaron',NULL),(6,'444','tal','omer','lorem ipsum','a'),(343,'111','new new post','new new post','new new post','new new post');
+INSERT INTO `discussion` VALUES (1,'222','sda','null','omer hu lo metachnet','null'),(2,'225','schebar',NULL,'shcebarrrr',NULL),(3,'222','dsad','null','omer hu shuv lo metahnet','null'),(4,'111','title','tag','description','null'),(5,'222','shchebar','shchebarist','shchebaron',NULL),(6,'444','tal','omer','lorem ipsum','a'),(343,'111','new new post12','new new post12','new new post12','new new post12'),(344,'111','dfgfdgfd','fghsdg','sdfsggjfjgnbfv','dgdsgfd'),(345,'111','shchebar ','shchebar ',' shchebar',' shchebar'),(346,'111','qqq','qwq','www','eee');
 /*!40000 ALTER TABLE `discussion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -214,7 +214,7 @@ CREATE TABLE `poll` (
 
 LOCK TABLES `poll` WRITE;
 /*!40000 ALTER TABLE `poll` DISABLE KEYS */;
-INSERT INTO `poll` VALUES (1,'111','first Poll','first desc',NULL),(2,'111','first Poll','first desc',NULL),(3,'333','first Poll','first desc',NULL),(5,'222','first feedback','first desccasas',NULL);
+INSERT INTO `poll` VALUES (1,'111','first Poll','first desc',NULL),(2,'111','first Poll33','first desc33','2233'),(3,'333','first Poll','first desc',NULL),(5,'222','first feedback','first desccasas',NULL);
 /*!40000 ALTER TABLE `poll` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -240,7 +240,7 @@ CREATE TABLE `poll_answer` (
 
 LOCK TABLES `poll_answer` WRITE;
 /*!40000 ALTER TABLE `poll_answer` DISABLE KEYS */;
-INSERT INTO `poll_answer` VALUES (1,1,'111','test'),(2,1,'111','yes'),(3,1,'111','no'),(4,2,'111','not sure'),(5,2,'111','yes'),(6,2,'111','no'),(7,3,'111','not sure'),(8,3,'111','yes'),(10,5,'222','no');
+INSERT INTO `poll_answer` VALUES (1,1,'111','test'),(2,1,'111','yes'),(3,1,'111','no'),(4,2,'111','not sure14'),(5,2,'111','yes14'),(6,2,'111','no14'),(7,3,'111','not sure'),(8,3,'111','yes'),(10,5,'222','shcebaristeron');
 /*!40000 ALTER TABLE `poll_answer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -264,6 +264,7 @@ CREATE TABLE `poll_answer_approval` (
 
 LOCK TABLES `poll_answer_approval` WRITE;
 /*!40000 ALTER TABLE `poll_answer_approval` DISABLE KEYS */;
+INSERT INTO `poll_answer_approval` VALUES (1,'222'),(2,'222');
 /*!40000 ALTER TABLE `poll_answer_approval` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -318,4 +319,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-03-14 11:20:42
+-- Dump completed on 2022-03-16 14:12:14

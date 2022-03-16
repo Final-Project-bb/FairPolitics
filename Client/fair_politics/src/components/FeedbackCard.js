@@ -17,7 +17,8 @@ const FeedbackCard = ({ item, inProfile }) => {
   const [onEdit, setOnEdit] = useState(false);
   const [height, setHeight] = useState(0);
 
-  const { setLoading, feedbackCards, setCurrentItem } = useContext(AppContext);
+  const { user_details, setLoading, feedbackCards, setCurrentItem } =
+    useContext(AppContext);
 
   const history = useHistory();
 
@@ -29,11 +30,24 @@ const FeedbackCard = ({ item, inProfile }) => {
     // setCommentsButtonId()
     // setCommentsButton(!commentsButton);
   };
-  const addAnswer = () => {};
+  const answerPoll = async () => {
+    const details = {
+      answer_id: item.answer_id,
+      user_id: user_details.user_id,
+    };
+    console.log(details);
+    await fetch(`http://localhost:4000/api/answer_poll`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(details),
+    })
+      .then((res) => res.json())
+      .then((json) => console.log(json))
+      .catch((err) => console.error(err));
+  };
 
   const editPoll = (e) => {
-    console.log("item");
-    console.log(item);
+    // console.log(item);
     setCurrentItem(item);
     history.push("/profile/editFeedback");
   };
@@ -51,42 +65,46 @@ const FeedbackCard = ({ item, inProfile }) => {
   };
   return (
     <div style={styles.head}>
-        {!onEdit && (
-          <Card
-            style={{ height: 400, width: 600 }}>
-            {inProfile && (
-              <CardContent>
-                <FaRegEdit onClick={(e) => editPoll(e)} />
-                <FaTrashAlt onClick={(e) => deletePoll(e)} />
-              </CardContent>
-            )}
-            <CardContent style={styles.title}>
-              {item.poll_id} {item.title}{" "}
+      {!onEdit && (
+        <Card style={{ height: 400, width: 600 }}>
+          {inProfile && (
+            <CardContent>
+              <FaRegEdit onClick={(e) => editPoll(e)} />
+              <FaTrashAlt onClick={(e) => deletePoll(e)} />
             </CardContent>
+          )}
+          <CardContent style={styles.title}>
+            {item.poll_id} {item.title}{" "}
+          </CardContent>
 
-            <CardContent style={styles.description}>
-              {item.description}
-            </CardContent>
-            <CardContent style={styles.cardFooter}>
-              <form>
-                <CardContent style={styles.question}>
-                  {item.answers.map((answer) => (
-                    <CardContent key={answer.answer_id}>
-                      {answer.title}
-                        <label>
-                          <input type='checkbox' />
-                          {answer.answer}
-                        </label>
-                    </CardContent>
-                  ))}
-                </CardContent>
-                <CardActions>
-                  <Button variant='outlined' color='primary' onClick={() => addAnswer(item)}>submit!</Button>
-                </CardActions>
-              </form>
-            </CardContent>
-          </Card>
-        )}
+          <CardContent style={styles.description}>
+            {item.description}
+          </CardContent>
+          <CardContent style={styles.cardFooter}>
+            <form>
+              <CardContent style={styles.question}>
+                {item.answers.map((answer) => (
+                  <CardContent key={answer.answer_id}>
+                    {answer.title}
+                    <label>
+                      <input type='checkbox' />
+                      {answer.answer}
+                    </label>
+                  </CardContent>
+                ))}
+              </CardContent>
+              <CardActions>
+                <Button
+                  variant='outlined'
+                  color='primary'
+                  onClick={() => answerPoll()}>
+                  submit!
+                </Button>
+              </CardActions>
+            </form>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

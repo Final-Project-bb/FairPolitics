@@ -49,7 +49,7 @@ const Search = () => {
       <div style={styles.text}>
         {usersSearch.map((user) => (
           <div>
-            <UserCard key={user.user_id} user_info={user} inSearch={true}/>
+            <UserCard key={user.user_id} user_info={user} inSearch={true} />
           </div>
         ))}
       </div>
@@ -75,13 +75,12 @@ const styles = {
   },
   text: {
     display: "flex",
-    // justifyContent: 'space-around',
     flexDirection: "column",
     position: "relative",
-    // marginLeft:10,
     top: 0,
     fontSize: 25,
-    left: 335,
+    justifyContent: "center",
+    alignItems: "center",
   },
   cardFooter: {
     display: "flex",
