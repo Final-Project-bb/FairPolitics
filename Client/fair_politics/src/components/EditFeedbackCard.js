@@ -27,6 +27,10 @@ const EditFeedbackCard = () => {
   const history = useHistory();
 
   const editFeedbackSubmit = async (e) => {
+    if (title === "" || description === "") {
+      alert("Title or description can not be empty");
+      return;
+    }
     if (
       window.confirm("Are you sure you want to submit changes on this poll?")
     ) {
@@ -61,7 +65,7 @@ const EditFeedbackCard = () => {
     }
   };
   return (
-    <div>
+    <div style={{backgroundColor:'whitesmoke'}}>
       <Header title='Profile Page' />
       <ProfileHeader />
       <div style={styles.title}>
@@ -147,9 +151,7 @@ const EditFeedbackCard = () => {
               onChange={(e) => setPicture(e.target.value)}
             />
             <br />
-            <Button
-              variant='contained'
-              onClick={(e) => editFeedbackSubmit(e)}>
+            <Button variant='contained' onClick={(e) => editFeedbackSubmit(e)}>
               Submit
             </Button>
           </FormControl>
@@ -187,6 +189,5 @@ const styles = {
     left: -230,
   },
 };
-
 
 export default EditFeedbackCard;

@@ -57,7 +57,7 @@ const EditDiscussionCard = () => {
     }
   };
   return (
-    <div>
+    <div style={{backgroundColor:'whitesmoke'}}>
       <Header title='Profile Page' />
       <ProfileHeader />
       <div style={styles.title}>
