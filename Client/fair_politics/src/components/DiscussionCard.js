@@ -16,11 +16,17 @@ import {
 const DiscussionCard = ({ item, inProfile }) => {
   const [commentsButtonId, setCommentsButtonId] = useState(0);
   const [commentsButton, setCommentsButton] = useState(false);
-  const [height, setHeight] = useState(0);
-  const [onEdit, setOnEdit] = useState(false);
+  const [comment, setComment] = useState("");
+  // const [height, setHeight] = useState(0);
+  // const [onEdit, setOnEdit] = useState(false);
 
-  const { setLoading, discussionCards, setCurrentItem } =
-    useContext(AppContext);
+  const {
+    user_details,
+    setLoading,
+    discussionCards,
+    setCurrentItem,
+    currentItem,
+  } = useContext(AppContext);
 
   const history = useHistory();
 
@@ -28,20 +34,65 @@ const DiscussionCard = ({ item, inProfile }) => {
     setCommentsButtonId(item.post_id);
     if (commentsButton) {
       setCommentsButton(!commentsButton);
-      setHeight(0);
+      // setHeight(0);
     } else {
       setCommentsButton(!commentsButton);
-      setHeight(item.comments.length * 30);
+      // setHeight(item.comments.length * 30);
     }
   };
-  const LikeDiscussion = (userId, discussionId) => {
-    let handleDis = discussionCards.filter(
-      (a) => a.Discussion_id === discussionId
-    );
-    if (handleDis.Likes < 1) {
-      handleDis.Likes.push(userId);
-    }
+  const LikeDiscussion = async () => {
+    const details = {
+      post_id: item.post_id,
+      user_id: user_details.user_id,
+    };
+    console.log(details);
+    await fetch(`http://localhost:4000/api/add_like_to_discussion`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(details),
+    })
+      .then((res) => res.json())
+      .then((json) => console.log(json))
+      .catch((err) => console.error(err));
   };
+
+  const addComment = async (e) => {
+    console.log(comment);
+    const comment_details = {
+      post_id: item.post_id,
+      user_id: user_details.user_id,
+      comment: comment
+    };
+    console.log(comment_details);
+    await fetch(`http://localhost:4000/api/add_like_to_discussion`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(comment_details),
+    })
+      .then((res) => res.json())
+      .then((json) => console.log(json))
+      .catch((err) => console.error(err));
+    setComment('');
+  };
+
+  const deleteComment = async (e) => {
+    // const comment_details = {
+    //   post_id: item.post_id,
+    //   user_id: user_details.user_id,
+    //   comment: comment
+    // };
+    // console.log(comment_details);
+    await fetch(`http://localhost:4000/api/delete_comment/:comment_id`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(),
+    })
+      .then((res) => res.json())
+      .then((json) => console.log(json))
+      .catch((err) => console.error(err));
+    setComment('');
+  };
+
   const editDiscussion = (e) => {
     setCurrentItem(item);
     history.push("/profile/editDiscussion");
@@ -64,50 +115,62 @@ const DiscussionCard = ({ item, inProfile }) => {
 
   return (
     <div style={styles.head}>
-        <Card style={{ height: 400, width: 600 }}>
-          {inProfile && (
-            <CardContent>
-              <FaRegEdit onClick={(e) => editDiscussion(e)} />
-              <FaTrashAlt onClick={(e) => deleteDiscussion(e)} />
-            </CardContent>
-          )}
-          <CardContent style={styles.title}>
-            {item.post_id} {item.title}{" "}
+      <Card style={{ height: 400, width: 600 }}>
+        {inProfile && (
+          <CardContent>
+            <FaRegEdit onClick={(e) => editDiscussion(e)} />
+            <FaTrashAlt onClick={(e) => deleteDiscussion(e)} />
           </CardContent>
-          <CardContent style={styles.text}>{item.description}</CardContent>
-          <CardContent style={styles.cardFooter}>
-            <CardActions>
-            <Button variant='contained' color='primary' onClick={() => CommentsButton(item)}>Show Comments!</Button>
-            <CardContent>{item.comments[0].comment_id !== null ? item.comments.length : 0}</CardContent>
-            <Button variant='contained' color='primary' onClick={() => LikeDiscussion(1, item.post_id)}>
+        )}
+        <CardContent style={styles.title}>
+          {item.post_id} {item.title}{" "}
+        </CardContent>
+        <CardContent style={styles.text}>{item.description}</CardContent>
+        <CardContent style={styles.cardFooter}>
+          <CardActions>
+            <Button
+              variant='contained'
+              color='primary'
+              onClick={() => CommentsButton(item)}>
+              Show Comments!
+            </Button>
+            <CardContent>
+              {item.comments[0].comment_id !== null ? item.comments.length : 0}
+            </CardContent>
+            <Button
+              variant='contained'
+              color='primary'
+              onClick={() => LikeDiscussion()}>
               Like!
             </Button>
-            </CardActions>
-            <CardContent style={styles.likes}>{item.likes.length}</CardContent>
+          </CardActions>
+          <CardContent style={styles.likes}>{item.likes.length}</CardContent>
+        </CardContent>
+        {commentsButton && commentsButtonId === item.post_id && (
+          <CardContent>
+            {item.comments.map((comment) => (
+              <div key={comment.comment_id} style={styles.comment}>
+                {comment.comment}
+              </div>
+            ))}
           </CardContent>
-          {commentsButton && commentsButtonId === item.post_id && (
-            <CardContent>
-              {item.comments.map((comment) => (
-                <div key={comment.comment_id} style={styles.comment}>
-                  {comment.comment}
-                </div>
-              ))}
-            </CardContent>
-          )}
-          <CardContent style={styles.formStyle}>
-            <input
-              style={{
-                // height: "20px",
-                // width: "150px",
-                // position: "relative",
-                left: "22px",
-                borderRadius: 2,
-              }}
-              type='text'
-              placeholder='add comment'
-            />
-          </CardContent>
-        </Card>
+        )}
+        <CardContent style={styles.formStyle}>
+          <TextField
+            // helperText='Tagged elected officials - Example: @israel israel @other person'
+            id='standard-basic'
+            // variant='standard'
+            label='Add Comment'
+            type='text'
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            // placeholder='add comment'
+          />
+          <Button variant='contained' onClick={(e) => addComment()}>
+            Submit
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 };
@@ -124,7 +187,6 @@ const styles = {
     // justifyContent: "space-around",
     flexDirection: "column",
     marginBottom: 30,
-
   },
   title: {
     display: "flex",

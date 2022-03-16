@@ -136,93 +136,93 @@ const deleteDiscussion = (req, res) => {
 };
 
 const addComment = (req, res) => {
-  let sqlInsertComment = `insert into discussion_response(post_id,user_id,comment)
-                        values(${req.params.post_id}, ${JSON.stringify(
-    req.body.user_id
-  )}, 
+  let sqlInsertComment = `insert into discussion_response (post_id,user_id,comment)
+                        values(
+                        ${JSON.stringify(req.body.post_id)}, 
+                        ${JSON.stringify(req.body.user_id)}, 
                         ${JSON.stringify(req.body.comment)})`;
 
   connection.query(sqlInsertComment, function (err, result) {
     if (err) {
       throw err;
-    } else {
-      res.status(200).send({ message: "comment added successfully!" });
     }
+    res.status(200).send({ message: "comment added successfully!" });
   });
 };
 
-const getComment = (req, res) => {
-  let sqlGetComment = `select * from discussion_response where comment_id=${req.params.comment_id}`;
+// const getComment = (req, res) => {
+//   let sqlGetComment = `select * from discussion_response where comment_id=${req.params.comment_id}`;
 
-  connection.query(sqlGetComment, function (err, result) {
-    if (err) {
-      throw err;
-    }
-    if (result.length === 0) {
-      res.status(404).send({ message: "comment_id dosn't exists!" });
-    } else {
-      res.status(200).send({ result });
-    }
-  });
+//   connection.query(sqlGetComment, function (err, result) {
+//     if (err) {
+//       throw err;
+//     }
+//     if (result.length === 0) {
+//       res.status(404).send({ message: "comment_id dosn't exists!" });
+//     } else {
+//       res.status(200).send({ result });
+//     }
+//   });
 
-  getLikeOfComment(req.params.comment_id);
-};
+//   getLikeOfComment(req.params.comment_id);
+// };
 
 const updateComment = (req, res) => {
-  let sqlUpdateComment = `update discussion_response set commnet=${JSON.stringify(
-    req.body.comment
-  )}
-                            where comment_id=${req.params.comment_id}`;
+  let sqlUpdateComment = `update discussion_response set 
+                          comment=${JSON.stringify(req.body.comment)}
+                          where 
+                          comment_id=${JSON.stringify(req.params.comment_id)}`;
 
   connection.query(sqlUpdateComment, function (err, result) {
     if (err) {
       throw err;
-    } else {
-      res.status(200).send({ message: `comment updated!` });
     }
+    res.status(200).send({ message: `comment updated!` });
   });
 };
 
 const deleteComment = (req, res) => {
-  deleteLikeFromComment(req.params.comment_id);
-
   let sqlDelComment = `delete from discussion_response where comment_id = ${req.params.comment_id}`;
 
   connection.query(sqlDelComment, function (err, result) {
     if (err) {
       throw err;
-    } else {
-      res.status(200).send({ message: "comment deleted successfully!" });
     }
+    res.status(200).send({ message: "comment deleted successfully!" });
   });
 };
 
 const addLikeToDiscussion = (req, res) => {
+  let sqlLikeExists = `select * from discussion_like_approval 
+                      where post_id=${JSON.stringify(req.params.post_id)} 
+                      and user_id=${JSON.stringify(req.params.user_id)}`;
+
   let sqlInsertLikeDisc = `insert into discussion_like_approval(post_id,user_id)
-                            values(${req.params.post_id}, ${JSON.stringify(
-    req.params.user_id
-  )})`;
+                            values(${JSON.stringify(req.params.post_id)}, 
+                            ${JSON.stringify(req.params.user_id)})`;
 
-  connection.query(sqlInsertLikeDisc, function (err, result) {
+  let sqlDeleteLikeDisc = `delete from discussion_like_approval 
+                          where post_id=${JSON.stringify(req.params.post_id)} 
+                          and user_id=${JSON.stringify(req.params.user_id)}`;
+
+  connection.query(sqlLikeExists, function (err, likeExist) {
     if (err) {
       throw err;
-    } else {
-      res.status(200).send({ message: "like added successfully!" });
     }
-  });
-};
-
-const addLikeToComment = (req, res) => {
-  let sqlInsertLikeComment = `insert into comment_like_approval(comment_id,user_id)
-                            values(${req.params.comment_id}, ${JSON.stringify(
-    req.params.user_id
-  )})`;
-
-  connection.query(sqlInsertLikeComment, function (err, result) {
-    if (err) {
-      throw err;
+    if (likeExist.length === 0) {
+      connection.query(sqlInsertLikeDisc, function (err, result) {
+        if (err) {
+          throw err;
+        }
+        res.status(200).send({ message: "like added successfully!" });
+      });
     } else {
-      res.status(200).send({ message: "like added successfully!" });
+      connection.query(sqlDeleteLikeDisc, function (err, result) {
+        if (err) {
+          throw err;
+        }
+        res.status(200).send({ message: "like removed successfully!" });
+      });
     }
   });
 };
@@ -241,38 +241,10 @@ const getLikeOfDiscussion = (req, res) => {
   });
 };
 
-const getLikeOfComment = (req, res) => {
-  let sqlGetLikeByCommentId = `select user_id from comment_like_approval
-                            where comment_id=${req.params.comment_id}`;
-
-  connection.query(sqlGetLikeByCommentId, function (err, result) {
-    if (err) {
-      throw err;
-    } else {
-      res.status(200).send({ result });
-    }
-  });
-};
-
 const deleteLikeFromDiscussion = (req, res) => {
   let sqlDelLikeDisc = `delete from discussion_like_approval where post_id = ${req.params.post_id}`;
 
   connection.query(sqlDelLikeDisc, function (err, result) {
-    if (err) {
-      throw err;
-    }
-    if (result.length === 0) {
-      res.status(404).send({ message: "post_id or user_id dosn't exists!" });
-    } else {
-      res.status(200).send({ message: "like deleted successfully!" });
-    }
-  });
-};
-
-const deleteLikeFromComment = (req, res) => {
-  let sqlDelLikeComment = `delete from comment_like_approval where comment_id = ${req.params.comment_id}`;
-
-  connection.query(sqlDelLikeComment, function (err, result) {
     if (err) {
       throw err;
     }
@@ -354,13 +326,10 @@ module.exports = {
   updateDiscussion,
   deleteDiscussion,
   addComment,
-  getComment,
   updateComment,
   deleteComment,
   addLikeToDiscussion,
-  addLikeToComment,
   deleteLikeFromDiscussion,
-  deleteLikeFromComment,
   discussionsFollowing,
 };
 

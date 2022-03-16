@@ -164,21 +164,25 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
                 setPicturePress(!picturePress);
               }}
             />
-              {/* <div style={styles.semiDetails}> */}
-                <CardContent style={styles.name}>
-                  {user_info.first_name} {user_info.last_name}
-                </CardContent>
-                <div>
-                  {user_info.gender} , {user_info.age}
-                </div>
-                <div>
-                  Working in: {user_info.job_title} living in {user_info.city}
-                </div>
-                <div>{user_info.semi_description}</div>
-              {/* </div> */}
-              <div style={styles.profileHead}></div>
-              <br/>
-            <Button variant='contained' style={styles.follow} onClick={(e) => followUser(e)}>
+            {/* <div style={styles.semiDetails}> */}
+            <CardContent style={styles.name}>
+              {user_info.first_name} {user_info.last_name}
+            </CardContent>
+            <div style={{ position: "relative", top: -100 }}>
+              {user_info.gender} , {user_info.age}
+            </div>
+            <div style={{ position: "relative", top: -100 }}>
+              Working in: {user_info.job_title} living in {user_info.city}
+            </div>
+            <div style={{ position: "relative", top: -100 }}>
+              {user_info.semi_description}
+            </div>
+            <div style={styles.profileHead}></div>
+            <br />
+            <Button
+              variant='contained'
+              style={styles.follow}
+              onClick={(e) => followUser(e)}>
               {isFollow ? "unfollow" : "follow"}!
             </Button>
           </CardContent>
@@ -193,7 +197,7 @@ UserCard.defaultProps = {
 };
 const styles = {
   card: {
-    // height: 400,
+    height: 200,
     width: 600,
     top: 50,
     // left: "30%",
@@ -213,10 +217,10 @@ const styles = {
     // display: "flex",
     // justifyContent: 'space-around',
     // flexDirection: 'row',
-    // position: "absolute",
+    position: "relative",
     // marginLeft:10,
     fontSize: 25,
-    // top: -30,
+    top: -100,
     // left: -10,
   },
   all: {
@@ -245,7 +249,9 @@ const styles = {
     // top: 10,
   },
   follow: {
-    backgroundColor: 'steelblue'
+    backgroundColor: "steelblue",
+    position: "relative",
+    top: -100,
   },
 };
 

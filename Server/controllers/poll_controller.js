@@ -158,16 +158,49 @@ const deletePoll = (req, res) => {
 
 // support multipul chooses
 const answerPoll = (req, res) => {
-  let sqlInsertAnsApproval = `insert into poll_answer_approval (answer_id, user_id)
-                                values
-                                (${JSON.stringify(req.params.answer_id)},
-                                 ${JSON.stringify(req.params.user_id)})`;
+  // let sqlAnsExists = `select * from poll_answer_approval
+  //                     where answer_id in (${JSON.stringify(req.body.answers)})
+  //                     and user_id=${JSON.stringify(req.body.user_id)}`;
 
-  connection.query(sqlInsertAnsApproval, function (err, result) {
-    if (err) {
-      throw err;
-    }
-    res.status(200).send({ message: "answer approval added successfully!" });
+  // let sqlInsertAnsApproval = ;
+
+  // let sqlDeleteAnsDisc = `delete from poll_answer_approval
+  //                         where answer_id=${JSON.stringify(req.body.answers)}
+  //                         and user_id=${JSON.stringify(req.body.user_id)}`;
+
+  req.body.answers.forEach((ans) => {
+    connection.query(
+      `insert into poll_answer_approval (answer_id, user_id)
+    values
+    (${JSON.stringify(ans)},
+    ${JSON.stringify(req.body.user_id)})`,
+      function (err, likeExist) {
+        if (err) {
+          throw err;
+        }
+        console.log(likeExist);
+        // if (likeExist.length === 0) {
+        res.status(200).send({ message: "poll answered successfully!" });
+        //   connection.query(sqlInsertAnsApproval, function (err, result) {
+        //     if (err) {
+        //       throw err;
+        //     }
+        //     res
+        //       .status(200)
+        //       .send({ message: "answer approval added successfully!" });
+        //   });
+        // } else {
+        //   connection.query(sqlDeleteAnsDisc, function (err, result) {
+        //     if (err) {
+        //       throw err;
+        //     }
+        //     res
+        //       .status(200)
+        //       .send({ message: "answer approval removed successfully!" });
+        //   });
+        // }
+      }
+    );
   });
 };
 
