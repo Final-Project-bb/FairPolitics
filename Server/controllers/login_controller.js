@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const express = require('express');
+const nodemailer = require('nodemailer');
 const mysql = require('mysql');
 const connection  = require('../lib/db');
 
@@ -101,28 +102,33 @@ const deleteUser = (req, res) => {
     });
 };
 
-//Note: didn't check this function yet!
 const auth = (req, res) => {
 
-    var sqlFindUserId = `select * from login_details where user_id = ${JSON.stringify(req.body.user_id)}`;
+    var code = Math.floor(100000 + Math.random() * 900000);
 
-    var sqlInsert = `Insert into login_details(user_id,phone_number,password)
-    values(${JSON.stringify(req.body.user_id)},${JSON.stringify(req.body.phone_number)},${JSON.stringify(req.body.password)})`;
-    
-    connection.query(sqlFindUserId, function (err, result) {
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'fairpolitics5@gmail.com',
+            pass: 'fair1234'
+        }
+    });
+
+    var mailOptions = {
+        from: 'fairpolitics5@gmail.com',
+        to: 'shaibonfil500@gmail.com',
+        subject: 'fair politics sign up',
+        text: `your temporary password is ${code}`
+    };
+
+    transporter.sendMail(mailOptions, function(err, info){
         if (err) {
-			throw err;
-		} 
-        // if user not exist
-        if (result.length === 0) {
-            //Note: auth with sms temp code !!
-            connection.query(sqlInsert);
-            res.status(200).send({ message: "user auth successfully" });
+            res.status(404).send({ err });
         }
-        else { //Note: if user exist, need to check where it should be taking care of.
-			res.status(404).send({ message: "user already exists" });
+        else {
+            res.status(200).send({ message: 'Email sent: ' + info.response });
         }
-    })
+    });
 };
 
 const getFollowing = (req, res) => {
