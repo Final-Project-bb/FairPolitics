@@ -68,7 +68,7 @@ const Login = () => {
       body: JSON.stringify(login_details),
     });
     if (response.status == 404) {
-      // console.log(response)
+      console.log(response)
       setLoading(false);
       return;
     }
@@ -325,9 +325,10 @@ const styles = {
   iconsContainer: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-around",
     marginTop: 30,
   },
+  
 
   input: {
     position: "absolute",
