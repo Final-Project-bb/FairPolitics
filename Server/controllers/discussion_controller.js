@@ -194,16 +194,16 @@ const deleteComment = (req, res) => {
 
 const addLikeToDiscussion = (req, res) => {
   let sqlLikeExists = `select * from discussion_like_approval 
-                      where post_id=${JSON.stringify(req.params.post_id)} 
-                      and user_id=${JSON.stringify(req.params.user_id)}`;
+                      where post_id=${JSON.stringify(req.body.post_id)} 
+                      and user_id=${JSON.stringify(req.body.user_id)}`;
 
   let sqlInsertLikeDisc = `insert into discussion_like_approval(post_id,user_id)
-                            values(${JSON.stringify(req.params.post_id)}, 
-                            ${JSON.stringify(req.params.user_id)})`;
+                            values(${JSON.stringify(req.body.post_id)}, 
+                            ${JSON.stringify(req.body.user_id)})`;
 
   let sqlDeleteLikeDisc = `delete from discussion_like_approval 
-                          where post_id=${JSON.stringify(req.params.post_id)} 
-                          and user_id=${JSON.stringify(req.params.user_id)}`;
+                          where post_id=${JSON.stringify(req.body.post_id)} 
+                          and user_id=${JSON.stringify(req.body.user_id)}`;
 
   connection.query(sqlLikeExists, function (err, likeExist) {
     if (err) {

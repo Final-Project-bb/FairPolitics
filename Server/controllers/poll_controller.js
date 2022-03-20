@@ -206,10 +206,9 @@ const answerPoll = (req, res) => {
 
 const pollsFollowing = (req, res) => {
   let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer
-  FROM poll JOIN poll_answer join follower ON poll.poll_id=poll_answer.poll_id and 
-  poll.user_id in (select user_following_id from follower where user_id=${JSON.stringify(
-    req.params.user_id
-  )})
+  FROM poll JOIN poll_answer ON poll.poll_id=poll_answer.poll_id and 
+  poll.user_id in (select user_following_id from follower 
+  where user_id=${JSON.stringify(req.params.user_id)})
   group by poll_answer.answer_id order by poll.poll_id`;
 
   let allPollsWithAnswer = [];
@@ -241,97 +240,10 @@ const pollsFollowing = (req, res) => {
         allPollsWithAnswer.push(poll);
       }
     });
+    // allPollsWithAnswer.filter()
     res.status(200).send({ allPollsWithAnswer });
   });
 };
-
-// const pollsFollowing = (req, res) => {
-//   let sqlGetUserFollowingId = `select user_following_id from follower where user_id = ${req.params.user_id}`;
-//   let count = 0;
-//   let sumOfPull=0;
-//   let pollCount =0;
-//   console.log("pollCount");
-//   console.log(pollCount);
-
-//   console.log("sumOfPollsByUsers:");
-//   let allPolls = [];
-//   let countFollowing = 0;
-//   let allPollsWithAnswer = [];
-
-//   connection.query(sqlGetUserFollowingId, function (err, following) {
-//     if (err) {
-//       throw err;
-//     }
-//     let size = following.length;
-//     following.forEach((r) => {
-//       countFollowing++;
-//       let sqlGetPollByUserId = `select * from poll where user_id = ${JSON.stringify(
-//         r.user_following_id)}`;
-//       connection.query(sqlGetPollByUserId, function (err, polls) {
-//         let f=true;
-//         if (err) {
-//           throw err;
-//         }
-//         if (polls.length > 0) {
-//           allPolls.push(polls);
-//           polls.forEach((poll) => {
-//             let panswers = [];
-//             let sqlGetAnsOfPoll = `select * from poll_answer where poll_id=${JSON.stringify(
-//               poll.poll_id
-//             )}`;
-//             if(f){
-//               console.log("polls.length:"+polls.length)
-//               sumOfPull+=polls.length;
-//               console.log("sumOfPull:"+sumOfPull)
-//               f=false;
-//             }
-//             connection.query(sqlGetAnsOfPoll, function (err, answers) {
-//               if (err) {
-//                 throw err;
-//               }
-//               answers.forEach((answer) => {
-
-//                 panswers.push(answer);
-//               });
-
-//               allPollsWithAnswer.push(poll);
-//               pollCount++;
-//               console.log("poll pushed");
-//               // poll.push(answers);
-//               console.log("allpollswithanswer:\n" + JSON.stringify(allPollsWithAnswer));
-//               console.log(countFollowing == following.length)
-//               console.log(allPollsWithAnswer.length == pollCount)
-//               console.log("allPollsWithAnswer: " + allPollsWithAnswer.length)
-//               console.log("pollCount: " + pollCount)
-
-//               if (countFollowing == following.length && allPollsWithAnswer.length == sumOfPull) {
-//                 console.log("allpollswithanswer sent");
-//                 res.status(200).send({ allPollsWithAnswer });
-//                 return;
-//               }
-//             });
-
-//             poll.answers = panswers;
-//           });
-//         }
-//         // console.log("___asasdasda__"+pollCount);
-//         // if (allPollsWithAnswer.length === pollCount) {
-//         // console.log("___dddddddddddddddasasdasda__ sent"+pollCount);
-//         //   res.status(200).send({ allPollsWithAnswer });
-//         //   return;
-//         // }
-//         count++;
-//         console.log(count);
-//         console.log(size);
-//         if (count == size) {
-//           // console.log("aaaaaaaaaaaaaa sent"+pollCount);
-//           // res.status(200).send({allPollsWithAnswer:[]});
-//           // return;
-//         }
-//       });
-//     });
-//   });
-// };
 
 module.exports = {
   createPoll,

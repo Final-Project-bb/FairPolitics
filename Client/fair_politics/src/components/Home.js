@@ -60,13 +60,13 @@ const Home = () => {
         <div style={styles.card}>
           <div style={styles.title}>Discussions Card Side</div>
           {discussionCards.map((item) => {
-            return <DiscussionCard item={item} />;
+            return <DiscussionCard key={item.post_id} item={item} />;
           })}
         </div>
         <div style={styles.card}>
           <div style={styles.title}>Feedbacks Card Side</div>
           {feedbackCards.map((item) => {
-            return <FeedbackCard item={item} />;
+            return <FeedbackCard key={item.poll_id} item={item} />;
           })}
         </div>
       </div>
