@@ -70,7 +70,7 @@ const FriendProfile = () => {
   return (
     <div>
       <Header title='Profile Page' />
-      <ProfileHeader inFriend={true}/>
+      <ProfileHeader inFriend={true} />
       <br />
       <br />
       <div style={styles.head}>

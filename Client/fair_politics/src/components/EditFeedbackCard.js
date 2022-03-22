@@ -19,9 +19,9 @@ const EditFeedbackCard = () => {
 
   const [title, setQuestion] = useState(currentItem.title);
   const [picture, setPicture] = useState(currentItem.picture);
-  const [answer1, setAnswer1] = useState(currentItem.answers[0].answer);
-  const [answer2, setAnswer2] = useState(currentItem.answers[1].answer);
-  const [answer3, setAnswer3] = useState(currentItem.answers[2].answer);
+  const [answer1, setAnswer1] = useState(currentItem.answers[0]!=undefined?currentItem.answers[0].answer:"");
+  const [answer2, setAnswer2] = useState(currentItem.answers[1]!=undefined?currentItem.answers[1].answer:"");
+  const [answer3, setAnswer3] = useState(currentItem.answers[2]!=undefined?currentItem.answers[2].answer:"");
   const [description, setDescription] = useState(currentItem.description);
 
   const history = useHistory();
@@ -38,8 +38,8 @@ const EditFeedbackCard = () => {
       setLoading(true);
       const answers = [
         { answer_id: currentItem.answers[0].answer_id, answer: answer1 },
-        { answer_id: currentItem.answers[1].answer_id, answer: answer2 },
-        { answer_id: currentItem.answers[2].answer_id, answer: answer3 },
+        { answer_id: currentItem.answers[1]!=undefined?currentItem.answers[1].answer_id:"", answer: answer2 },
+        { answer_id: currentItem.answers[2]!=undefined?currentItem.answers[2].answer_id:"", answer: answer3 },
       ];
       const updatedFeedback = {
         title: title,
