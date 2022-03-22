@@ -116,13 +116,12 @@ const updatePoll = (req, res) => {
     if (err) {
       throw err;
     }
-    console.log(req.body.answers);
     req.body.answers.forEach((ans) => {
       connection.query(
-        `update poll_answer set answer=${JSON.stringify(ans.answer)}
-                                where answer_id=${JSON.stringify(
-                                  ans.answer_id
-                                )}`,
+        `update poll_answer 
+        set answer=${JSON.stringify(ans.answer)}
+        where 
+        answer_id=${JSON.stringify(ans.answer_id)}`,
         function (err, result) {
           if (err) {
             throw err;
@@ -135,7 +134,7 @@ const updatePoll = (req, res) => {
 };
 
 const deletePoll = (req, res) => {
-  console.log(req.params.poll_id);
+  // console.log(req.params.poll_id);
   let sqlDelPoll = `delete from poll where poll_id = ${JSON.stringify(
     req.params.poll_id
   )}`;
@@ -158,47 +157,17 @@ const deletePoll = (req, res) => {
 
 // support multipul chooses
 const answerPoll = (req, res) => {
-  // let sqlAnsExists = `select * from poll_answer_approval
-  //                     where answer_id in (${JSON.stringify(req.body.answers)})
-  //                     and user_id=${JSON.stringify(req.body.user_id)}`;
-
-  // let sqlInsertAnsApproval = ;
-
-  // let sqlDeleteAnsDisc = `delete from poll_answer_approval
-  //                         where answer_id=${JSON.stringify(req.body.answers)}
-  //                         and user_id=${JSON.stringify(req.body.user_id)}`;
-
   req.body.answers.forEach((ans) => {
     connection.query(
-      `insert into poll_answer_approval (answer_id, user_id)
-    values
-    (${JSON.stringify(ans)},
-    ${JSON.stringify(req.body.user_id)})`,
+      `insert into poll_answer_approval
+       (answer_id, user_id) values
+       (${JSON.stringify(ans)},
+        ${JSON.stringify(req.params.user_id)})`,
       function (err, likeExist) {
         if (err) {
           throw err;
         }
-        console.log(likeExist);
-        // if (likeExist.length === 0) {
         res.status(200).send({ message: "poll answered successfully!" });
-        //   connection.query(sqlInsertAnsApproval, function (err, result) {
-        //     if (err) {
-        //       throw err;
-        //     }
-        //     res
-        //       .status(200)
-        //       .send({ message: "answer approval added successfully!" });
-        //   });
-        // } else {
-        //   connection.query(sqlDeleteAnsDisc, function (err, result) {
-        //     if (err) {
-        //       throw err;
-        //     }
-        //     res
-        //       .status(200)
-        //       .send({ message: "answer approval removed successfully!" });
-        //   });
-        // }
       }
     );
   });
@@ -206,10 +175,21 @@ const answerPoll = (req, res) => {
 
 const pollsFollowing = (req, res) => {
   let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer
-  FROM poll JOIN poll_answer ON poll.poll_id=poll_answer.poll_id and 
+  FROM poll JOIN poll_answer 
+  ON poll.poll_id=poll_answer.poll_id and 
   poll.user_id in (select user_following_id from follower 
-  where user_id=${JSON.stringify(req.params.user_id)})
+  where user_id=${JSON.stringify(req.params.user_id)}) 
+  and poll_answer.answer_id not in 
+  (select poll_answer_approval.answer_id from poll_answer_approval join poll_answer 
+  on poll_answer_approval.answer_id = poll_answer.answer_id 
+  where poll_answer_approval.user_id=${JSON.stringify(req.params.user_id)})
+  and poll.poll_id not in 
+  (select poll_answer.poll_id from poll_answer_approval join poll_answer 
+  on poll_answer_approval.answer_id = poll_answer.answer_id 
+  where poll_answer_approval.user_id=${JSON.stringify(req.params.user_id)})
   group by poll_answer.answer_id order by poll.poll_id`;
+
+  // ${JSON.stringify(req.params.user_id)}
 
   let allPollsWithAnswer = [];
   let poll_id_hand = -1;
@@ -240,6 +220,7 @@ const pollsFollowing = (req, res) => {
         allPollsWithAnswer.push(poll);
       }
     });
+
     // allPollsWithAnswer.filter()
     res.status(200).send({ allPollsWithAnswer });
   });

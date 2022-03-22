@@ -11,6 +11,8 @@ import {
   CardContent,
   TextField,
   CardActions,
+  ButtonGroup,
+  Divider,
 } from "@mui/material";
 
 const DiscussionCard = ({ item, inProfile }) => {
@@ -20,6 +22,9 @@ const DiscussionCard = ({ item, inProfile }) => {
   const [commentEdit, setCommentEdit] = useState("");
   const [editCommentForm, setEditCommentForm] = useState(false);
   const [commentsEditButtonId, setCommentsEditButtonId] = useState(0);
+  // const [post, setPost] = useState(item);
+  const [likes, setLikes] = useState(item.likes);
+  const [comments, setComments] = useState(item.comments);
 
   // const [height, setHeight] = useState(0);
   // const [onEdit, setOnEdit] = useState(false);
@@ -34,7 +39,7 @@ const DiscussionCard = ({ item, inProfile }) => {
 
   const history = useHistory();
 
-  const CommentsButton = (item) => {
+  const toggleCommentsButton = () => {
     setCommentsButtonId(item.post_id);
     if (commentsButton) {
       setCommentsButton(!commentsButton);
@@ -46,11 +51,18 @@ const DiscussionCard = ({ item, inProfile }) => {
   };
 
   const LikeDiscussion = async () => {
+    // likes.push(user_details.user_id);
+
+    // setLikes([...likes, user_details.user_id]);
+
+    likes.filter((like) => like === user_details.user_id).length > 0
+      ? setLikes(likes.filter((like) => like !== user_details.user_id))
+      : setLikes([...likes, user_details.user_id]);
+
     const details = {
       post_id: item.post_id,
       user_id: user_details.user_id,
     };
-    console.log(details);
     await fetch(`http://localhost:4000/api/add_like_to_discussion`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -62,13 +74,13 @@ const DiscussionCard = ({ item, inProfile }) => {
   };
 
   const addComment = async (e) => {
-    console.log(comment);
     const comment_details = {
       post_id: item.post_id,
       user_id: user_details.user_id,
       comment: comment,
     };
-    console.log(comment_details);
+    setComments([...comments, comment_details]);
+
     await fetch(`http://localhost:4000/api/add_comment`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -98,6 +110,7 @@ const DiscussionCard = ({ item, inProfile }) => {
 
   const deleteComment = async (e, comment_id) => {
     if (window.confirm("Are you sure you want to delete this comment?")) {
+      setComments(comments.filter((comment) => comment_id !== comment_id));
       await fetch(`http://localhost:4000/api/delete_comment/${comment_id}`, {
         method: "DELETE",
       })
@@ -130,7 +143,7 @@ const DiscussionCard = ({ item, inProfile }) => {
 
   return (
     <div style={styles.head}>
-      <Card style={{ height: 1000, width: 600 }}>
+      <Card style={styles.card}>
         {inProfile && (
           <CardContent>
             <FaRegEdit onClick={(e) => editDiscussion(e)} />
@@ -143,86 +156,105 @@ const DiscussionCard = ({ item, inProfile }) => {
         <CardContent style={styles.text}>{item.description}</CardContent>
         <CardContent style={styles.cardFooter}>
           <CardActions>
-            <Button
-              variant='contained'
-              color='primary'
-              onClick={() => CommentsButton(item)}>
-              Show Comments!
-            </Button>
-            <CardContent>
-              {item.comments[0].comment_id !== null ? item.comments.length : 0}
-            </CardContent>
-            <Button
-              variant='contained'
-              color='primary'
-              onClick={() => LikeDiscussion()}>
-              Like!
-            </Button>
+            <ButtonGroup>
+              {/* variant={likes.filter(like => like === user_details.user_id).length > 0 ? 'contained' : 'outlined' } */}
+              <Button
+                variant={
+                  likes.filter((like) => like === user_details.user_id).length >
+                  0
+                    ? "contained"
+                    : "outlined"
+                }
+                color='primary'
+                onClick={() => LikeDiscussion()}>
+                Like ({likes.length})
+              </Button>
+              <Button
+                variant={
+                  commentsButton && commentsButtonId === item.post_id
+                    ? "contained"
+                    : "outlined"
+                }
+                color='primary'
+                onClick={() => toggleCommentsButton()}>
+                Show Comments (
+                {comments[0].comment_id !== null ? comments.length : 0})
+              </Button>
+            </ButtonGroup>
           </CardActions>
-          <CardContent style={styles.likes}>{item.likes.length}</CardContent>
         </CardContent>
         {commentsButton && commentsButtonId === item.post_id && (
           <CardContent>
-            {item.comments.map((comment) => {
+            {comments.map((comment) => {
               return (
-                <div key={comment.comment_id} style={styles.comment}>
-                  {comment.comment}
-                  {comment.user_id_comment === user_details.user_id && (
-                    <>
-                      <FaRegEdit
-                        onClick={(e) => {
-                          setEditCommentForm(!editCommentForm);
-                          setCommentsEditButtonId(comment.comment_id);
-                          setCommentEdit(comment.comment);
-                        }}
-                      />
-                      <FaTrashAlt
-                        onClick={(e) => deleteComment(e, comment.comment_id)}
-                      />
-                      {editCommentForm &&
-                        commentsEditButtonId === comment.comment_id && (
-                          <CardContent style={styles.formStyle}>
-                            <TextField
-                              // helperText='Tagged elected officials - Example: @israel israel @other person'
-                              id='standard-basic'
-                              // variant='standard'
-                              label='Update Comment'
-                              type='text'
-                              value={commentEdit}
-                              onChange={(e) => setCommentEdit(e.target.value)}
-                              // placeholder='add comment'
-                            />
-                            <Button
-                              variant='contained'
-                              onClick={(e) =>
-                                editComment(e, comment.comment_id)
-                              }>
-                              Submit
-                            </Button>
-                          </CardContent>
-                        )}
-                    </>
-                  )}
+                <div key={comment.comment_id}>
+                  <CardContent
+                    style={styles.commentContent}>
+                    <div style={{ display: "flex", flex: 8 }}>
+                      {comment.comment}
+                    </div>
+                    {comment.user_id_comment === user_details.user_id && (
+                      <>
+                        {editCommentForm &&
+                          commentsEditButtonId === comment.comment_id && (
+                            <CardContent style={styles.editCommentForm}>
+                              <TextField
+                                size='small'
+                                id='standard-basic'
+                                // variant='standard'
+                                label='Update Comment'
+                                type='text'
+                                value={commentEdit}
+                                onChange={(e) => setCommentEdit(e.target.value)}
+                              />
+                              <Button
+                                variant='contained'
+                                size='small'
+                                onClick={(e) =>
+                                  editComment(e, comment.comment_id)
+                                }>
+                                Update
+                              </Button>
+                            </CardContent>
+                          )}
+                        <FaRegEdit
+                          style={{ display: "flex", flex: 0.5 }}
+                          onClick={(e) => {
+                            setEditCommentForm(!editCommentForm);
+                            setCommentsEditButtonId(comment.comment_id);
+                            setCommentEdit(comment.comment);
+                          }}
+                        />
+                        <FaTrashAlt
+                          style={{ display: "flex", flex: 0.5 }}
+                          onClick={(e) => deleteComment(e, comment.comment_id)}
+                        />
+                      </>
+                    )}
+                  </CardContent>
+                  <Divider variant='middle' />
                 </div>
               );
             })}
           </CardContent>
         )}
-        <CardContent style={styles.formStyle}>
-          <TextField
-            // helperText='Tagged elected officials - Example: @israel israel @other person'
-            id='standard-basic'
-            // variant='standard'
-            label='Add Comment'
-            type='text'
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            // placeholder='add comment'
-          />
-          <Button variant='contained' onClick={(e) => addComment()}>
-            Submit
-          </Button>
-        </CardContent>
+        {commentsButton && commentsButtonId === item.post_id && (
+          <CardContent style={styles.formStyle}>
+            <TextField
+              // helperText='Tagged elected officials - Example: @israel israel @other person'
+              id='standard-basic'
+              // variant='standard'
+              label='Add Comment'
+              type='text'
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              // placeholder='add comment'
+            />
+            <Button variant='contained' onClick={(e) => addComment()}>
+              Submit
+            </Button>
+          </CardContent>
+        )}
       </Card>
     </div>
   );
@@ -235,6 +267,16 @@ DiscussionCard.deafult = {
 };
 
 const styles = {
+  card: {
+    // height: 400,
+    width: 600,
+  },
+  content: {
+    display: "flex",
+    // justifyContent: "space-around",
+    flexDirection: "column",
+    // marginBottom: 30,
+  },
   head: {
     display: "flex",
     // justifyContent: "space-around",
@@ -250,6 +292,10 @@ const styles = {
     fontSize: 25,
     // top: 100,
     // right:150
+  },
+  editCommentForm: {
+    display: "flex",
+    flex: 7,
   },
   text: {
     // display: "flex",
@@ -276,10 +322,11 @@ const styles = {
     // position: "relative",
     // right: 70,
   },
-  comment: {
-    // position: "relative",
-    // top: 20,
-    // // right:105,
+  commentContent: {
+    flex: 15,
+    display: "flex",
+    flexDirection: "row",
+    position: "relative",
   },
 };
 
