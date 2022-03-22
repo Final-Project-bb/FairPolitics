@@ -78,7 +78,7 @@ const styles = {
     flexDirection: "column",
     position: "relative",
     top: 0,
-    fontSize: 25,
+    // fontSize: 25,
     justifyContent: "center",
     alignItems: "center",
   },

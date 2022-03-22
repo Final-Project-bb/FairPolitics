@@ -25,6 +25,8 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
     setLoading,
     followings,
     followers,
+    friend_details,
+    setFriendDetails,
   } = useContext(AppContext);
   const history = useHistory();
 
@@ -145,6 +147,10 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
     const data = await response.json();
     console.log(data);
   };
+  const navigateToUserInfoProfile=()=>{
+    setFriendDetails(user_info)
+    history.push('/FriendProfile')
+  }
   return (
     <div>
       {flag && (
@@ -164,8 +170,9 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
                 setPicturePress(!picturePress);
               }}
             />
+
             {/* <div style={styles.semiDetails}> */}
-            <CardContent style={styles.name}>
+            <CardContent style={styles.name} onClickCapture={()=>navigateToUserInfoProfile()}>
               {user_info.first_name} {user_info.last_name}
             </CardContent>
             <div style={{ position: "relative", top: -100 }}>
@@ -175,7 +182,7 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
               Working in: {user_info.job_title} living in {user_info.city}
             </div>
             <div style={{ position: "relative", top: -100 }}>
-              {user_info.semi_description}
+              {user_info.semi_description} 
             </div>
             <div style={styles.profileHead}></div>
             <br />

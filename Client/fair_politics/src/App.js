@@ -12,6 +12,7 @@ import Profile from "./components/Profile";
 import AddDiscussion from "./components/AddDiscussion";
 import AddFeedback from "./components/AddFeedback";
 import AboutMe from "./components/AboutMe";
+import FriendProfile from "./components/FriendProfile";
 import { AppContext } from "./components/Context";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Search from "./components/Search";
@@ -118,6 +119,9 @@ function App() {
               </Route>
               <Route exact path='/search'>
                 <Search />
+              </Route>
+              <Route exact path='/FriendProfile'>
+                <FriendProfile />
               </Route>
             </>
           )}
