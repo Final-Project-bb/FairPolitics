@@ -66,13 +66,13 @@ const Profile = () => {
         <div style={styles.card}>
           <div style={styles.title}>Discussions Card Side</div>
           {profileDiscussionCards.map((item) => {
-            return <DiscussionCard item={item} inProfile={true} />;
+            return <DiscussionCard key={item.post_id} item={item} inProfile={true} />;
           })}
         </div>
         <div style={styles.card}>
           <div style={styles.title}>Feedbacks Card Side</div>
           {profileFeedbackCards.map((item) => {
-            return <FeedbackCard item={item} inProfile={true}/>;
+            return <FeedbackCard key={item.poll_id} item={item} inProfile={true}/>;
           })}
         </div>
       </div>
