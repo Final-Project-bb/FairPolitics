@@ -3,6 +3,12 @@ import Header from "./Header";
 import DiscussionCard from "./DiscussionCard";
 import FeedbackCard from "./FeedbackCard";
 import { AppContext } from "./Context";
+import Box from "@mui/material/Box";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
+import Grid from "@mui/material/Grid";
 
 const Home = () => {
   const {
@@ -13,6 +19,12 @@ const Home = () => {
     feedbackCards,
     discussionCards,
   } = useContext(AppContext);
+
+  const [value, setValue] = React.useState("1");
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   const fetchDiscussions = async () => {
     setLoading(true);
@@ -52,10 +64,44 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
-      {/* <a href=''>Login<a/> */}
+    <div style={{ backgroundColor: "whitesmoke" }}>
       <Header title='Home Page' />
-      <div style={styles.head}>
+      <Box sx={{ width: "100%", typography: "body1" }}>
+        <TabContext value={value}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <TabList onChange={handleChange} aria-label='lab API tabs example'>
+              <Tab label='Discussions' value='1' />
+              <Tab label='Polls' value='2' />
+            </TabList>
+          </Box>
+          <TabPanel value='1'>
+            <div style={styles.title}>Discussions Card Side</div>
+            <Box sx={{ flexGrow: 1 }}>
+              <Grid container spacing={0}>
+                {discussionCards.map((item) => {
+                  return (
+                      <DiscussionCard key={item.post_id} item={item} />
+                  );
+                })}
+              </Grid>
+            </Box>
+          </TabPanel>
+          <TabPanel value='2'>
+            <div style={styles.title}>Feedbacks Card Side</div>
+            <Box sx={{ flexGrow: 1 }}>
+              <Grid container spacing={0}>
+                {feedbackCards.map((item) => {
+                  return (
+                      <FeedbackCard key={item.poll_id} item={item} />
+                  );
+                })}
+              </Grid>
+            </Box>
+          </TabPanel>
+        </TabContext>
+      </Box>
+
+      {/* <div style={styles.head}>
         <br />
         <div style={styles.card}>
           <div style={styles.title}>Discussions Card Side</div>
@@ -69,7 +115,7 @@ const Home = () => {
             return <FeedbackCard key={item.poll_id} item={item} />;
           })}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
@@ -79,13 +125,7 @@ const styles = {
     display: "flex",
     justifyContent: "space-around",
     flexDirection: "row",
-    backgroundColor: 'whitesmoke'
-
-    // color:"yellow",
-    //       flex: 1,
-
-    //       padding: 24,
-    //       backgroundColor: "#eaeaea"
+    backgroundColor: "whitesmoke",
   },
   card: {
     display: "flex",
@@ -94,11 +134,12 @@ const styles = {
   },
   title: {
     display: "flex",
-    justifyContent: "space-around",
+    // justifyContent: "space-around",
     // flexDirection: 'row',
     // position: "relative",
     // marginLeft:10,
     fontSize: 25,
+    marginBottom: 50,
     // top: 100,
     // right:150
   },
