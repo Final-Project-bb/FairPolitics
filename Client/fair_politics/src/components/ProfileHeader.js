@@ -5,8 +5,10 @@ import styled from "styled-components";
 import { AppContext } from "./Context";
 
 const ProfileHeader = () => {
-  const { inFriend } = useContext(AppContext);
-  return (
+  const { inFriend ,friend_details } = useContext(AppContext);
+  const friendPath=`/FriendProfile/${friend_details.first_name}-${friend_details.last_name}`
+  
+  return (  
     <div style={styles.order}>
       <div style={styles.profileHead}>
         <ProfileShowDetails />
@@ -16,9 +18,12 @@ const ProfileHeader = () => {
         {!inFriend && (
           <NavLinkFeed to='/profile/addFeedback'>Add Feedback</NavLinkFeed>
         )}
-        {!inFriend && (
-          <NavLinkAbout to='/profile/aboutProfile'>About Me</NavLinkAbout>
-        )}
+        {/* {!inFriend && ( */}
+        <NavLinkAbout to='/profile/aboutProfile'>About Me</NavLinkAbout>
+        {/* )} */}
+        {inFriend &&
+           <NavLinkMyProfile to={friendPath}>My Profile</NavLinkMyProfile>
+        }
       </div>
     </div>
   );
@@ -103,6 +108,31 @@ const NavLinkFeed = styled(Link)`
   align-items: center;
   position: absolute;
   left: 270px;
+  ${"" /* fontSize:30px; */}
+  ${"" /* size:30px; */}
+  text-decoration: none;
+  ${"" /* margin-left: 30px; */}
+  top:-80px;
+  ${"" /* padding: 0 0.1rem; */}
+  height: 100%;
+  cursor: pointer;
+  &:hover {
+    color: grey;
+  }
+  &.active {
+    color: dodgerblue;
+  }
+`;
+const NavLinkMyProfile = styled(Link)`
+  color: #fff;
+  ${"" /* justify-content: space-between; */}
+  flex-direction:row;
+  color: black;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 140px;
   ${"" /* fontSize:30px; */}
   ${"" /* size:30px; */}
   text-decoration: none;
