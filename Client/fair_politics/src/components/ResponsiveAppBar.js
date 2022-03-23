@@ -23,7 +23,6 @@ const inActivePages = ["About", "Contact-Us"];
 const activeSettings = ["Profile", "Account", "Algorithms", "Logout"];
 const inActiveSettings = ["Login", "Sign-Up"];
 
-
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -100,8 +99,8 @@ const ResponsiveAppBar = () => {
         history.push("/connection/login");
         break;
       case "Algorithms":
-        alert("Algorithms press")  
-      // history.push("/connection/login");
+        alert("Algorithms press");
+        // history.push("/connection/login");
         break;
       case "Sign-Up":
         history.push("/connection/register");
@@ -164,19 +163,19 @@ const ResponsiveAppBar = () => {
               {/* left menu */}
               {is_connected
                 ? activePages.map((page) => (
-                  <MenuItem
-                    key={page}
-                    onClick={() => handleCloseNavMenu(page)}>
-                    <Typography textAlign='center'>{page}</Typography>
-                  </MenuItem>
-                ))
+                    <MenuItem
+                      key={page}
+                      onClick={() => handleCloseNavMenu(page)}>
+                      <Typography textAlign='center'>{page}</Typography>
+                    </MenuItem>
+                  ))
                 : inActivePages.map((page) => (
-                  <MenuItem
-                    key={page}
-                    onClick={() => handleCloseNavMenu(page)}>
-                    <Typography textAlign='center'>{page}</Typography>
-                  </MenuItem>
-                ))}
+                    <MenuItem
+                      key={page}
+                      onClick={() => handleCloseNavMenu(page)}>
+                      <Typography textAlign='center'>{page}</Typography>
+                    </MenuItem>
+                  ))}
             </Menu>
           </Box>
           <Typography
@@ -190,21 +189,21 @@ const ResponsiveAppBar = () => {
             {/* main menu */}
             {is_connected
               ? activePages.map((page) => (
-                <Button
-                  key={page}
-                  onClick={() => handleCloseNavMenu(page)}
-                  sx={{ my: 2, color: "white", display: "block" }}>
-                  {page}
-                </Button>
-              ))
+                  <Button
+                    key={page}
+                    onClick={() => handleCloseNavMenu(page)}
+                    sx={{ my: 2, color: "white", display: "block" }}>
+                    {page}
+                  </Button>
+                ))
               : inActivePages.map((page) => (
-                <Button
-                  key={page}
-                  onClick={() => handleCloseNavMenu(page)}
-                  sx={{ my: 2, color: "white", display: "block" }}>
-                  {page}
-                </Button>
-              ))}
+                  <Button
+                    key={page}
+                    onClick={() => handleCloseNavMenu(page)}
+                    sx={{ my: 2, color: "white", display: "block" }}>
+                    {page}
+                  </Button>
+                ))}
           </Box>
 
           <Search>
@@ -224,7 +223,13 @@ const ResponsiveAppBar = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title='Open settings'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
+                <Avatar
+                  alt='Remy Sharp'
+                  src={
+                    is_connected && require("../images/profilePicExmple.jpg")
+                    //user_details.profile_picture
+                  }
+                />
               </IconButton>
             </Tooltip>
             <Menu
@@ -245,19 +250,19 @@ const ResponsiveAppBar = () => {
               {/* right menu */}
               {is_connected
                 ? activeSettings.map((setting) => (
-                  <MenuItem
-                    key={setting}
-                    onClick={() => handleCloseUserMenu(setting)}>
-                    <Typography textAlign='center'>{setting}</Typography>
-                  </MenuItem>
-                ))
+                    <MenuItem
+                      key={setting}
+                      onClick={() => handleCloseUserMenu(setting)}>
+                      <Typography textAlign='center'>{setting}</Typography>
+                    </MenuItem>
+                  ))
                 : inActiveSettings.map((setting) => (
-                  <MenuItem
-                    key={setting}
-                    onClick={() => handleCloseUserMenu(setting)}>
-                    <Typography textAlign='center'>{setting}</Typography>
-                  </MenuItem>
-                ))}
+                    <MenuItem
+                      key={setting}
+                      onClick={() => handleCloseUserMenu(setting)}>
+                      <Typography textAlign='center'>{setting}</Typography>
+                    </MenuItem>
+                  ))}
             </Menu>
           </Box>
         </Toolbar>

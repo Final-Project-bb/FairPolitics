@@ -282,6 +282,7 @@ const styles = {
     // justifyContent: "space-around",
     flexDirection: "column",
     marginBottom: 30,
+    marginRight: 30,
   },
   title: {
     display: "flex",
