@@ -9,10 +9,12 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Grid from "@mui/material/Grid";
+import Loading from "./Loading";
 
 const Home = () => {
   const {
     user_details,
+    loading,
     setLoading,
     setFeedbackCards,
     setDiscussionCards,
@@ -66,41 +68,45 @@ const Home = () => {
   return (
     <div style={{ backgroundColor: "whitesmoke" }}>
       <Header title='Home Page' />
-      <Box sx={{ width: "100%", typography: "body1" }}>
-        <TabContext value={value}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <TabList onChange={handleChange} aria-label='lab API tabs example'>
-              <Tab label='Discussions' value='1' />
-              <Tab label='Polls' value='2' />
-            </TabList>
-          </Box>
-          <TabPanel value='1'>
-            <div style={styles.title}>Discussions Card Side</div>
-            <Box sx={{ flexGrow: 1 }}>
-              <Grid container spacing={0}>
-                {discussionCards.map((item) => {
-                  return (
+      {!loading ?
+        <Box sx={{ width: "100%", typography: "body1" }}>
+          <TabContext value={value}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <TabList onChange={handleChange} aria-label='lab API tabs example'>
+                <Tab label='Discussions' value='1' />
+                <Tab label='Polls' value='2' />
+              </TabList>
+            </Box>
+            <TabPanel value='1'>
+              <div style={styles.title}>Discussions Card Side</div>
+              <Box sx={{ flexGrow: 1 }}>
+                <Grid container spacing={0}>
+                  {discussionCards.map((item) => {
+                    return (
                       <DiscussionCard key={item.post_id} item={item} />
-                  );
-                })}
-              </Grid>
-            </Box>
-          </TabPanel>
-          <TabPanel value='2'>
-            <div style={styles.title}>Feedbacks Card Side</div>
-            <Box sx={{ flexGrow: 1 }}>
-              <Grid container spacing={0}>
-                {feedbackCards.map((item) => {
-                  return (
+                    );
+                  })}
+                </Grid>
+              </Box>
+            </TabPanel>
+            <TabPanel value='2'>
+              <div style={styles.title}>Feedbacks Card Side</div>
+              <Box sx={{ flexGrow: 1 }}>
+                <Grid container spacing={0}>
+                  {feedbackCards.map((item) => {
+                    return (
                       <FeedbackCard key={item.poll_id} item={item} />
-                  );
-                })}
-              </Grid>
-            </Box>
-          </TabPanel>
-        </TabContext>
-      </Box>
-
+                    );
+                  })}
+                </Grid>
+              </Box>
+            </TabPanel>
+          </TabContext>
+        </Box>
+      :<>
+        <Loading/>
+      </>
+      }
       {/* <div style={styles.head}>
         <br />
         <div style={styles.card}>

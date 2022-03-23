@@ -7,10 +7,11 @@ import DiscussionCard from "./DiscussionCard";
 import FeedbackCard from "./FeedbackCard";
 import styled from "styled-components";
 import { AppContext } from "./Context";
-
+import Loading from "./Loading";
 const FriendProfile = () => {
   const {
     friend_details,
+    loading,
     setLoading,
     profileFeedbackCards,
     profileDiscussionCards,
@@ -73,21 +74,24 @@ const FriendProfile = () => {
       <ProfileHeader />
       <br />
       <br />
-      <div style={styles.head}>
-        <br />
-        <div style={styles.card}>
-          <div style={styles.title}>Discussions Card Side</div>
-          {profileDiscussionCards.map((item) => {
-            return <DiscussionCard key={item.post_id} item={item} />;
-          })}
+      {!loading ? <>
+        <div style={styles.head}>
+          <br />
+          <div style={styles.card}>
+            <div style={styles.title}>Discussions Card Side</div>
+            {profileDiscussionCards.map((item) => {
+              return <DiscussionCard key={item.post_id} item={item} />;
+            })}
+          </div>
+          <div style={styles.card}>
+            <div style={styles.title}>Feedbacks Card Side</div>
+            {profileFeedbackCards.map((item) => {
+              return <FeedbackCard key={item.poll_id} item={item} />;
+            })}
+          </div>
         </div>
-        <div style={styles.card}>
-          <div style={styles.title}>Feedbacks Card Side</div>
-          {profileFeedbackCards.map((item) => {
-            return <FeedbackCard key={item.poll_id} item={item} />;
-          })}
-        </div>
-      </div>
+      </>
+        : <Loading />}
     </div>
   );
 };
