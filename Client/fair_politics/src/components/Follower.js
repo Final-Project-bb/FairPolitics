@@ -5,16 +5,19 @@ import UserCard from "./UserCard";
 import ProfileHeader from "./ProfileHeader";
 
 const Follower = () => {
-  const { loading, setLoading, followerDetails ,followers} = useContext(AppContext);
+  const { loading, setLoading, followers, inFriend, friendFollowers} = useContext(AppContext);
 
   return (
     <div>
       <Header title='Follower' />
       <ProfileHeader/>
       <br/>
-      {followers.map(user =>
+      {!inFriend ? followers.map(user =>
         <UserCard key={user.user_id} user_info={user}/>
-       )}
+       ) : friendFollowers.map(user =>
+        <UserCard key={user.user_id} user_info={user}/>
+       )
+       }
     </div>
   );
 };

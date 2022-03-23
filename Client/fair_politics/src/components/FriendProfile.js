@@ -70,7 +70,7 @@ const FriendProfile = () => {
   return (
     <div>
       <Header title='Profile Page' />
-      <ProfileHeader inFriend={true} />
+      <ProfileHeader />
       <br />
       <br />
       <div style={styles.head}>
@@ -78,13 +78,13 @@ const FriendProfile = () => {
         <div style={styles.card}>
           <div style={styles.title}>Discussions Card Side</div>
           {profileDiscussionCards.map((item) => {
-            return <DiscussionCard item={item} />;
+            return <DiscussionCard key={item.post_id} item={item} />;
           })}
         </div>
         <div style={styles.card}>
           <div style={styles.title}>Feedbacks Card Side</div>
           {profileFeedbackCards.map((item) => {
-            return <FeedbackCard item={item} />;
+            return <FeedbackCard key={item.poll_id} item={item} />;
           })}
         </div>
       </div>

@@ -29,8 +29,11 @@ function App() {
   const [profileFeedbackCards, setProfileFeedbackCards] = useState([]);
   const [followings, setFollowings] = useState([]);
   const [followers, setFollowers] = useState([]);
-  const [followingDetails, setFollowingDetails] = useState([]);
-  const [followerDetails, setFollowerDetails] = useState([]);
+  const [friendFollowings, setFriendFollowings] = useState([]);
+  const [friendFollowers, setFriendFollowers] = useState([]);
+  const [inFriend, setInFriend] = useState(false);
+  // const [followingDetails, setFollowingDetails] = useState([]);
+  // const [followerDetails, setFollowerDetails] = useState([]);
   const [usersSearch, setUsersSearch] = useState([]);
   const [currentItem, setCurrentItem] = useState({
     title: "",
@@ -62,10 +65,16 @@ function App() {
         setFollowings,
         followers,
         setFollowers,
-        followingDetails,
-        setFollowingDetails,
-        followerDetails,
-        setFollowerDetails,
+        inFriend,
+        setInFriend,
+        friendFollowings,
+        setFriendFollowings,
+        friendFollowers,
+        setFriendFollowers,
+        // followingDetails,
+        // setFollowingDetails,
+        // followerDetails,
+        // setFollowerDetails,
         usersSearch,
         setUsersSearch,
         currentItem,
@@ -74,7 +83,7 @@ function App() {
       <Router>
         <Switch>
           <Route exact path='/'>
-            <InitialPage />
+            <Login />
           </Route>
           <Route exact path='/connection/login'>
             <Login />

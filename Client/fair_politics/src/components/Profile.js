@@ -9,7 +9,6 @@ import styled from "styled-components";
 import { AppContext } from "./Context";
 
 const Profile = () => {
-
   const {
     user_details,
     setLoading,
@@ -17,6 +16,7 @@ const Profile = () => {
     profileDiscussionCards,
     setProfileFeedbackCards,
     setProfileDiscussionCards,
+    setInFriend,
   } = useContext(AppContext);
 
   const fetchSelfPolls = async () => {
@@ -50,6 +50,7 @@ const Profile = () => {
   };
 
   useEffect(() => {
+    setInFriend(false);
     fetchSelfDiscussions();
     console.log("Profile effected");
     fetchSelfPolls();
@@ -66,13 +67,17 @@ const Profile = () => {
         <div style={styles.card}>
           <div style={styles.title}>Discussions Card Side</div>
           {profileDiscussionCards.map((item) => {
-            return <DiscussionCard key={item.post_id} item={item} inProfile={true} />;
+            return (
+              <DiscussionCard key={item.post_id} item={item} inProfile={true} />
+            );
           })}
         </div>
         <div style={styles.card}>
           <div style={styles.title}>Feedbacks Card Side</div>
           {profileFeedbackCards.map((item) => {
-            return <FeedbackCard key={item.poll_id} item={item} inProfile={true}/>;
+            return (
+              <FeedbackCard key={item.poll_id} item={item} inProfile={true} />
+            );
           })}
         </div>
       </div>
@@ -93,7 +98,7 @@ const styles = {
     display: "flex",
     justifyContent: "space-around",
     flexDirection: "row",
-    backgroundColor: 'whitesmoke'
+    backgroundColor: "whitesmoke",
 
     // color:"yellow",
     //       flex: 1,

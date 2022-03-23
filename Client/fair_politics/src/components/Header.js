@@ -1,13 +1,21 @@
-import React from 'react'
+import React, { useContext } from "react";
 import Navbar from "./Navbar/Navbar"
 import styled from 'styled-components';
+import AppBar from './ResponsiveAppBar';
+
+import { AppContext } from "./Context";
+
 const Header = ({ title }) => {
+
+  const { user_details } = useContext(AppContext);
+
   return (
     <div style={styles.title} >
-      <Navbar />
+      {/* <Navbar /> */}
       <Nav>
-      <h3 style={styles.text}>Fair Politic's {title} social media</h3>
+      <h3 style={styles.text}>{user_details.first_name} {user_details.last_name} WellCome to Fair Politic's </h3>
       </Nav>
+      <AppBar/>
     </div>
   )
 }
@@ -42,11 +50,12 @@ const styles = {
     fontWeight: "bold"
   },
   text:{
-    textAlign: "center",
+    // textAlign: "center",
     display:"flex",
     position:"relative",
-    left:100,
-    top:-25,
+    color: 'whitesmoke'
+    // left:100,
+    // top:-25,
   },
 };
 const Nav = styled.nav`

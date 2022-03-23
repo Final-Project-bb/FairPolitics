@@ -24,6 +24,7 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
     loading,
     setLoading,
     followings,
+    setInFriend,
     followers,
     friend_details,
     setFriendDetails,
@@ -37,8 +38,6 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
   let followState = false;
   useEffect(() => {
     fetchFollow();
-    // let following_ids = followings.map((user) => user.user_following_id);
-    // fetchUserDetailsById(following_ids, true)
     const checkFollow = () => {
       followState = followings.some(
         (user) => user.user_id == user_info.user_id
@@ -74,25 +73,14 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
     } else {
       // add follow to db and update the usestate
       addFollowDb();
-      // setIsFollow(!isFollow);
     }
-    if (inFollowing) {
-      history.push("/profile/follower");
-      history.push("/profile/following");
-    } else {
-      if (inSearch) {
-        history.push("/profile/following");
-        history.push("/search");
-      } else {
-        history.push("/profile/following");
-        history.push("/profile/follower");
-      }
-    }
+
     setIsFollow(!isFollow);
     setLoading(false);
 
     //here should be following
   };
+  
   const fetchFollow = async () => {
     const response = await fetch(
       `http://localhost:4000/api/get_follow/${user_details.user_id}`
@@ -147,10 +135,11 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
     const data = await response.json();
     console.log(data);
   };
-  const navigateToUserInfoProfile=()=>{
-    setFriendDetails(user_info)
-    history.push('/FriendProfile')
-  }
+  const navigateToUserInfoProfile = () => {
+    setFriendDetails(user_info);
+    setInFriend(true);
+    history.push("/FriendProfile");
+  };
   return (
     <div>
       {flag && (
@@ -172,7 +161,9 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
             />
 
             {/* <div style={styles.semiDetails}> */}
-            <CardContent style={styles.name} onClickCapture={()=>navigateToUserInfoProfile()}>
+            <CardContent
+              style={styles.name}
+              onClickCapture={() => navigateToUserInfoProfile()}>
               {user_info.first_name} {user_info.last_name}
             </CardContent>
             <div style={{ position: "relative", top: -100 }}>
@@ -182,7 +173,7 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
               Working in: {user_info.job_title} living in {user_info.city}
             </div>
             <div style={{ position: "relative", top: -100 }}>
-              {user_info.semi_description} 
+              {user_info.semi_description}
             </div>
             <div style={styles.profileHead}></div>
             <br />
