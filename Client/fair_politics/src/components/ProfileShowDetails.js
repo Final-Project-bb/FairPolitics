@@ -60,7 +60,7 @@ const ProfileShowDetails = () => {
     history.push("/profile/follower");
   };
 
-  const updateFollow = async (e) => {
+  const updateFollow = (e) => {
     setLoading(true);
     followings.filter((user) => user.user_id === friend_details.user_id)
       .length > 0
@@ -71,11 +71,7 @@ const ProfileShowDetails = () => {
       .length > 0
       ? setFollowings(followings.filter((user) => user.user_id !== friend_details.user_id))
       : setFollowings([...followings, friend_details]);
-    // setIsFollow(!isFollow);
-    // await fetchFollow();
     setLoading(false);
-
-    //here should be following
   };
 
   const addFollowDb = async () => {
