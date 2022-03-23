@@ -6,6 +6,7 @@ import { AppContext } from "./Context";
 import UserCard from "./UserCard";
 const Search = () => {
   const {
+    loading,
     setLoading,
     usersSearch,
     setUserDetails,
@@ -47,11 +48,14 @@ const Search = () => {
     <div>
       <Header title='Search Page' />
       <div style={styles.text}>
+      {loading? <>
         {usersSearch.map((user) => (
           <div>
             <UserCard key={user.user_id} user_info={user} inSearch={true} />
           </div>
         ))}
+        </>
+        : <Loading/>}
       </div>
     </div>
   );
