@@ -137,8 +137,10 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
   };
   const navigateToUserInfoProfile = () => {
     setFriendDetails(user_info);
+    console.log(user_info)
     setInFriend(true);
-    history.push("/FriendProfile");
+  const friendPath=`/FriendProfile/${user_info.first_name}-${user_info.last_name}`
+    history.push(friendPath);
   };
   return (
     <div>
