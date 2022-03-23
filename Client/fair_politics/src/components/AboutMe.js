@@ -128,14 +128,14 @@ const AboutMe = () => {
             color='primary'
             style={styles.edit_info}
             onClick={() => editButton()}>
-            {onEdit ? "Cancle info" : "Edit info"}
+            {onEdit ? "Cancel info" : "Edit info"}
           </Button>
           <Button
             variant='outlined'
             color='primary'
             style={styles.delete_user}
             onClick={() => deleteUser()}>
-            {onDelete ? "Cancle Delete" : "Delete account"}
+            {onDelete ? "Cancel Delete" : "Delete account"}
           </Button>
           {/* <div className='delete-button' onClick={() => { if (window.confirm('Are you sure you wish to delete this item?')) this.onCancel() } } /> */}
           {onEdit && (

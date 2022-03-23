@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { AppContext } from "./Context";
 import { useHistory } from "react-router-dom";
 import {
@@ -9,9 +9,10 @@ import {
   CardContent,
   TextField,
   Avatar,
+  ButtonGroup,
 } from "@mui/material";
 
-const ProfileShowDetails = ({inFriend}) => {
+const ProfileShowDetails = () => {
   const [picturePress, setPicturePress] = useState(false);
   const {
     user_details,
@@ -20,29 +21,90 @@ const ProfileShowDetails = ({inFriend}) => {
     setLoading,
     followings,
     followers,
+    inFriend,
+    setFollowings,
+    setInFriend,
+    friendFollowings,
+    setFriendFollowings,
+    friendFollowers,
+    setFriendFollowers,
     setFollowingDetails,
     setFollowerDetails,
   } = useContext(AppContext);
   const history = useHistory();
 
+  const fetchFollow = async () => {
+    const response = await fetch(
+      `http://localhost:4000/api/get_follow/${friend_details.user_id}`
+    );
+    const data = await response.json();
+    console.log(data);
+    setFriendFollowings(data.following);
+    setFriendFollowers(data.follower);
+  };
+
   const showFollowing = () => {
     setLoading(true);
-    let following_ids = followings.map((user) => user.user_following_id);
-    fetchUserDetailsById(following_ids, true);
     setLoading(false);
     history.push("/profile/following");
   };
+
   const showFollower = () => {
     setLoading(true);
-    let follower_ids = followers.map((user) => user.user_id);
-    fetchUserDetailsById(follower_ids, false);
+    console.log("inFriend");
+    console.log(inFriend);
+    if (inFriend) {
+    }
+
     setLoading(false);
     history.push("/profile/follower");
   };
 
+  const updateFollow = (e) => {
+    setLoading(true);
+    followings.filter((user) => user.user_id === friend_details.user_id)
+      .length > 0
+      ? removeFollowDb()
+      : addFollowDb();
+
+    followings.filter((user) => user.user_id === friend_details.user_id)
+      .length > 0
+      ? setFollowings(followings.filter((user) => user.user_id !== friend_details.user_id))
+      : setFollowings([...followings, friend_details]);
+    setLoading(false);
+  };
+
+  const addFollowDb = async () => {
+    const ids = {
+      user_id: user_details.user_id,
+      user_following_id: friend_details.user_id,
+    };
+    const response = await fetch("http://localhost:4000/api/add_following", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(ids),
+    });
+    const data = await response.json();
+    console.log(data);
+  };
+
+  const removeFollowDb = async () => {
+    const ids = {
+      user_id: user_details.user_id,
+      user_following_id: friend_details.user_id,
+    };
+    const response = await fetch("http://localhost:4000/api/remove_following", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(ids),
+    });
+    const data = await response.json();
+    console.log(data);
+  };
+
   const fetchUserDetailsById = async (ids, isFollowing) => {
     if (ids.length === 0) {
-        return;
+      return;
     }
     const response = await fetch("http://localhost:4000/api/get_users_by_ids", {
       method: "PUT",
@@ -55,25 +117,37 @@ const ProfileShowDetails = ({inFriend}) => {
       // console.log(data.result);
     } else {
       setFollowerDetails(data.result);
-//      console.log(data.result);
+      //      console.log(data.result);
     }
   };
 
-  // const fetchFollowerDetails = () => {};
+  useEffect(() => {
+    {
+      inFriend && fetchFollow();
+    }
+  }, [inFriend]);
 
   return (
     <div>
       <div style={styles.semiDetails}>
-        <div style={styles.name}>   
-          {!inFriend?user_details.first_name:friend_details.first_name} {!inFriend?user_details.last_name:friend_details.last_name}
+        <div style={styles.name}>
+          {!inFriend ? user_details.first_name : friend_details.first_name}{" "}
+          {!inFriend ? user_details.last_name : friend_details.last_name}
         </div>
         <div>
-          {!inFriend?user_details.gender:friend_details.gender} , {!inFriend?user_details.age:friend_details.age}
+          {!inFriend ? user_details.gender : friend_details.gender} ,{" "}
+          {!inFriend ? user_details.age : friend_details.age}
         </div>
         <div>
-          Working it: {!inFriend?user_details.job_title:friend_details.job_title} living in {!inFriend?user_details.city:friend_details.city}
+          Working in:
+          {!inFriend ? user_details.job_title : friend_details.job_title} living
+          in {!inFriend ? user_details.city : friend_details.city}
         </div>
-        <div>{!inFriend?user_details.semi_description:friend_details.semi_description}</div>
+        <div>
+          {!inFriend
+            ? user_details.semi_description
+            : friend_details.semi_description}
+        </div>
       </div>
       <div style={styles.profileHead}>
         <img
@@ -89,30 +163,58 @@ const ProfileShowDetails = ({inFriend}) => {
           onClickCapture={() => setPicturePress(!picturePress)}
         />
       </div>
-      <div
+
+      <ButtonGroup
         style={{
           position: "absolute",
           left: 400,
           flex: 1,
+          top: -50,
           flexDirection: "row",
-          justifyContent: 'space-around'
+          justifyContent: "space-around",
         }}>
-        <Button variant='outlined' color='primary' onClick={() => showFollowing()}>
-          Following {followings.length}
+        {inFriend && (
+          <Button
+            variant={
+              followings.filter(
+                (user) => user.user_id === friend_details.user_id
+              ).length > 0
+                ? "contained"
+                : "outlined"
+            }
+            color='primary'
+            onClick={() => updateFollow()}>
+            {followings.filter(
+              (user) => user.user_id === friend_details.user_id
+            ).length > 0
+              ? "Unfollow"
+              : "Follow"}
+          </Button>
+        )}
+        <Button
+          variant='outlined'
+          color='primary'
+          onClick={() => showFollowing()}>
+          Following {!inFriend ? followings.length : friendFollowings.length}
         </Button>
-        <Button variant='outlined' color='primary' onClick={() => showFollower()}>
-          Follower {followers.length}
+        <Button
+          variant='outlined'
+          color='primary'
+          onClick={() => showFollower()}>
+          Follower {!inFriend ? followers.length : friendFollowers.length}
         </Button>
-      </div>
+      </ButtonGroup>
       {/* image profile will be here */}
       {/* about and more..  */}
       {/* <button style={styles.info}> more info</button> */}
     </div>
   );
 };
-ProfileShowDetails.deafult = {
-  inFriend: false,
-};
+
+// ProfileShowDetails.deafult = {
+//   inFriend: false,
+// };
+
 const styles = {
   name: {
     display: "flex",
@@ -143,6 +245,5 @@ const styles = {
     // backgroundColor: 'whitesmoke'
   },
 };
-
 
 export default ProfileShowDetails;

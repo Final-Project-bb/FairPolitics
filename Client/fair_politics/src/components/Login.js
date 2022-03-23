@@ -41,12 +41,12 @@ const Login = () => {
     history.push("/connection/register");
   };
   // this function made to check the first get fetch , just click on the gmail button
-  const click = async () => {
-    const response = await fetch("http://localhost:4000/api/get_user/222");
-    const data = await response.json();
-    console.log(data.result[0].user_id);
-    // setUserInfo(data);
-  };
+  // const click = async () => {
+  //   const response = await fetch("http://localhost:4000/api/get_user/222");
+  //   const data = await response.json();
+  //   console.log(data.result[0].user_id);
+  //   // setUserInfo(data);
+  // };
 
   const faceBook = () => {
     alert("facebook clicked");
