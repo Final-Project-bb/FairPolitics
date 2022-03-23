@@ -1,6 +1,16 @@
 <h1> FairPolitics project </h1><br>
-
-here we need to describe a little about who we are and what is our project working and so on
+ Many times we see an imbalance between the issues that the elected
+ offical focuses on and the issues that the electorate wanted to focus
+ on. This case carries with it a problem of not fulfilling the will of
+ the voters so we decided to fix this by developing a system called
+ <strong> Fair Politics</strong> that will help the elected offical who wants to get
+ feedback from his voter to know which issues to focus on in order to
+ divide his time more correctly. We intend to build the feedback and
+ implement Dynamic Proportional Rankings algorithm feedback so that the
+ results they get reflects the will of the voters. This system will be
+ conveniently and friendly to the electorate and elected by unique
+ identification, Including support for a variety of languages common to
+ the population.
 
 ## Initialize project: 
   * Basically can be executed by Linux Ubuntu/Windows.
