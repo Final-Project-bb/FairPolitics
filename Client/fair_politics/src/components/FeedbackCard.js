@@ -49,7 +49,9 @@ const FeedbackCard = ({ item, inProfile }) => {
       .then((json) => console.log(json))
       .catch((err) => console.error(err));
   };
-
+  const updateAnswerPoll = () => {
+    console.log(answers);
+  }
   const editPoll = (e) => {
     // console.log(item);
     setCurrentItem(item);
@@ -89,24 +91,55 @@ const FeedbackCard = ({ item, inProfile }) => {
             {item.description}
           </CardContent>
           <CardContent style={styles.answers}>
-            {item.answers.map((answer) => (
-              <CardContent key={answer.answer_id}>
-                <Checkbox
-                  label={answer.title}
-                  onClick={() => handleCheckbox(answer.answer_id)}
-                />
-                {answer.answer}
-              </CardContent>
-            ))}
-            <CardActions>
-              <Button
-                style={{ left: 450 }}
-                variant='outlined'
-                color='success'
-                onClick={() => answerPoll()}>
-                submit!
-              </Button>
-            </CardActions>
+
+            {item.is_answer_poll
+              ?
+              // if is_answer_poll true
+              <>
+                {item.answers.map((answer) => (
+                  <CardContent key={answer.answer_id}>
+                    <Checkbox
+                      label={answer.title}
+                      defaultChecked={answer.is_answer ? true : false}
+                      onClick={() => handleCheckbox(answer.answer_id)}
+                    />
+                    {answer.answer}
+                  </CardContent>
+
+                ))}
+                <CardActions>
+                  <Button
+                    style={{ left: 450 }}
+                    variant='outlined'
+                    color='success'
+                    onClick={() => updateAnswerPoll()}>
+                    resubmit!
+                  </Button>
+                </CardActions>
+              </>
+
+              //if is_answer_poll false
+              :
+              <>
+                {item.answers.map((answer) => (
+                  <CardContent key={answer.answer_id}>
+                    <Checkbox
+                      label={answer.title}
+                      onClick={() => handleCheckbox(answer.answer_id)}
+                    />
+                    {answer.answer}
+                  </CardContent>
+                ))}
+                <CardActions>
+                  <Button
+                    style={{ left: 450 }}
+                    variant='outlined'
+                    color='success'
+                    onClick={() => answerPoll()}>
+                    submit!
+                  </Button>
+                </CardActions>
+              </>}
           </CardContent>
         </Card>
       )}
