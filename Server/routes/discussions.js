@@ -31,7 +31,7 @@ router.put("/update_comment/:comment_id", updateComment); //works fine
 router.delete("/delete_comment/:comment_id", deleteComment); //works fine
 
 router.post("/add_like_to_discussion", addLikeToDiscussion); //works fine
-// router.post("/add_like_to_comment/:comment_id/:user_id", addLikeToComment); //unnecessary?
+router.post("/add_like_to_comment", addLikeToComment); //unnecessary?
 // router.delete("/delete_like_from_discussion/:post_id/:user_id", deleteLikeFromDiscussion); //unnecessary?
 // router.delete("/delete_like_from_comment/:comment_id", deleteLikeFromComment); //unnecessary?
 

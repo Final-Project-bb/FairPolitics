@@ -3,7 +3,7 @@ const router = express.Router();
 const connection = require('../lib/db');
 
 const { createUser, loginUser, updateUser, deleteUser, searchByName, getUsers, auth,
-        getFollowing, getFollowers, getFollow, addFollowing, removeFollowing} = require("../controllers/login_controller")
+        getFollowing, getFollowers, getFollow, addFollowing, removeFollowing, getUserById} = require("../controllers/login_controller")
 
 
 // const router = express.Router();
@@ -13,6 +13,7 @@ router.put("/login_user", loginUser); //works fine
 router.put("/update_user", updateUser); //works fine
 router.delete("/delete_user/:user_id", deleteUser); //works fine
 router.get("/search_by_name/:first_name/:user_id", searchByName); //works fine
+router.get("/get_user_by_id/:user_id", getUserById);
 // router.put("/get_users_by_ids", getUsers); //works fine //NOTE: need to DELETE it from client and server
 router.put("/add_user/", auth); 
 

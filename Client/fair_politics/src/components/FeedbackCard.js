@@ -13,6 +13,8 @@ import {
   CardActions,
   Checkbox,
 } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 const FeedbackCard = ({ item, inProfile }) => {
   const [onEdit, setOnEdit] = useState(false);
@@ -72,8 +74,8 @@ const FeedbackCard = ({ item, inProfile }) => {
         <Card style={styles.card}>
           {inProfile && (
             <CardContent style={{ display: "flex", flex: 3 }}>
-              <FaRegEdit style={{ flex: 0.1 }} onClick={(e) => editPoll(e)} />
-              <FaTrashAlt
+              <EditIcon style={{ flex: 0.1 }} onClick={(e) => editPoll(e)} />
+              <DeleteIcon
                 style={{ flex: 0.1 }}
                 onClick={(e) => deletePoll(e)}
               />

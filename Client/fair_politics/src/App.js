@@ -41,8 +41,8 @@ function App() {
     tag: "",
     picture: "",
   });
-  const friendPath=`/FriendProfile/${friend_details.first_name}-${friend_details.last_name}`
-  const aboutFriendPath=`/FriendProfile/${friend_details.first_name}-${friend_details.last_name}`
+  // const friendPath=`/FriendProfile/${friend_details.first_name}-${friend_details.last_name}`
+  // const aboutFriendPath=`/FriendProfile/${friend_details.first_name}-${friend_details.last_name}`
   return (
     <AppContext.Provider
       value={{
@@ -130,7 +130,7 @@ function App() {
               <Route exact path='/search'>
                 <Search />
               </Route>
-              <Route exact path={friendPath}>
+              <Route exact path='/FriendProfile'>
                 <FriendProfile />
               </Route>
             </>
