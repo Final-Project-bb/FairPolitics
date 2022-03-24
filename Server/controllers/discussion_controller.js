@@ -30,67 +30,6 @@ const createDiscussion = (req, res) => {
   });
 };
 
-const getDiscussion = (req, res) => {
-  let getPostsWithCommentsSql = `SELECT discussion.post_id, discussion.user_id, discussion.title, discussion.description, discussion.tag, discussion.picture, 
-  discussion_response.comment_id, discussion_response.comment,  discussion_response.user_id as 'user_id_comment'
-  FROM discussion left JOIN discussion_response      
-  ON discussion.post_id = discussion_response.post_id
-  where discussion.user_id = ${JSON.stringify(req.params.user_id)}
-  order by discussion.post_id`;
-
-  let getPostLikesSql = `select * from discussion_like_approval order by post_id`;
-  let allPostsWithComments = [];
-  let post_id_hand = -1;
-  connection.query(getPostsWithCommentsSql, function (err, posts) {
-    if (err) {
-      throw err;
-    }
-    let post;
-    posts.forEach((p) => {
-      if (p.post_id == post_id_hand) {
-        post.comments.push({
-          comment_id: p.comment_id,
-          comment: p.comment,
-          user_id_comment: p.user_id_comment,
-        });
-      } else {
-        post_id_hand = p.post_id;
-        post = {
-          post_id: p.post_id,
-          user_id: p.user_id,
-          title: p.title,
-          description: p.description,
-          tag: p.tag,
-          picture: p.picture,
-          comments: [
-            {
-              comment_id: p.comment_id,
-              comment: p.comment,
-              user_id_comment: p.user_id_comment,
-            },
-          ],
-          likes: [],
-        };
-        allPostsWithComments.push(post);
-      }
-    });
-
-    connection.query(getPostLikesSql, function (err, likes) {
-      if (err) {
-        throw err;
-      }
-      allPostsWithComments.forEach((post) => {
-        likes.forEach((like) => {
-          if (like.post_id == post.post_id) {
-            post.likes.push(like.user_id);
-          }
-        });
-      });
-      res.status(200).send({ allPostsWithComments });
-    });
-  });
-};
-
 const updateDiscussion = (req, res) => {
   let sqlUpdatePost = `update discussion set 
                         title=${JSON.stringify(req.body.title)},
@@ -149,23 +88,6 @@ const addComment = (req, res) => {
     res.status(200).send({ message: "comment added successfully!" });
   });
 };
-
-// const getComment = (req, res) => {
-//   let sqlGetComment = `select * from discussion_response where comment_id=${req.params.comment_id}`;
-
-//   connection.query(sqlGetComment, function (err, result) {
-//     if (err) {
-//       throw err;
-//     }
-//     if (result.length === 0) {
-//       res.status(404).send({ message: "comment_id dosn't exists!" });
-//     } else {
-//       res.status(200).send({ result });
-//     }
-//   });
-
-//   getLikeOfComment(req.params.comment_id);
-// };
 
 const updateComment = (req, res) => {
   let sqlUpdateComment = `update discussion_response set 
@@ -302,6 +224,84 @@ const discussionsFollowing = (req, res) => {
     req.params.user_id
   )})
   group by discussion_response.comment_id order by discussion.post_id`;
+
+  let getPostLikesSql = `select * from discussion_like_approval order by post_id`;
+
+  let getCommentLikesSql = `select * from comment_like_approval order by comment_id`;
+
+  let allPostsWithComments = [];
+  let post_id_hand = -1;
+  connection.query(getPostsWithCommentsSql, function (err, posts) {
+    if (err) {
+      throw err;
+    }
+    let post;
+    posts.forEach((p) => {
+      if (p.post_id == post_id_hand) {
+        post.comments.push({
+          comment_id: p.comment_id,
+          comment: p.comment,
+          user_id_comment: p.user_id_comment,
+        });
+      } else {
+        post_id_hand = p.post_id;
+        post = {
+          post_id: p.post_id,
+          user_id: p.user_id,
+          title: p.title,
+          description: p.description,
+          tag: p.tag,
+          picture: p.picture,
+          comments: [
+            {
+              comment_id: p.comment_id,
+              comment: p.comment,
+              user_id_comment: p.user_id_comment,
+            },
+          ],
+          likes: [],
+        };
+        allPostsWithComments.push(post);
+      }
+    });
+
+    connection.query(getPostLikesSql, function (err, likes) {
+      if (err) {
+        throw err;
+      }
+
+      connection.query(getCommentLikesSql, function (err, comment_likes) {
+        if (err) {
+          throw err;
+        }
+        allPostsWithComments.forEach((post) => {
+          likes.forEach((like) => {
+            if (like.post_id == post.post_id) {
+              post.likes.push(like.user_id);
+            }
+          });
+          post.comments.forEach((comment) => {
+            comment.comment_likes = [];
+            comment_likes.forEach((comment_like) => {
+              if (comment.comment_id == comment_like.comment_id) {
+                comment.comment_likes.push(comment_like.user_id);
+              }
+            });
+          });
+        });
+        return res.status(200).send({ allPostsWithComments });
+      });
+    });
+  });
+};
+
+const getDiscussion = (req, res) => {
+  let getPostsWithCommentsSql = `SELECT discussion.post_id, discussion.user_id, discussion.title, discussion.description, discussion.tag, discussion.picture, 
+  discussion_response.comment_id, discussion_response.comment,  discussion_response.user_id as 'user_id_comment'
+  FROM discussion left JOIN discussion_response      
+  ON discussion.post_id = discussion_response.post_id
+  where discussion.user_id = ${JSON.stringify(req.params.user_id)}
+  order by discussion.post_id`;
 
   let getPostLikesSql = `select * from discussion_like_approval order by post_id`;
 

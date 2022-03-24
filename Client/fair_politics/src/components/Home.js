@@ -78,7 +78,7 @@ const Home = () => {
               </TabList>
             </Box>
             <TabPanel value='1'>
-              <div style={styles.title}>Discussions Card Side</div>
+              <div style={styles.title}>Discussions Feed:</div>
               <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={0}>
                   {discussionCards.map((item) => {
