@@ -80,7 +80,7 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
 
     //here should be following
   };
-  
+
   const fetchFollow = async () => {
     const response = await fetch(
       `http://localhost:4000/api/get_follow/${user_details.user_id}`
@@ -139,8 +139,7 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
     setFriendDetails(user_info);
     console.log(user_info)
     setInFriend(true);
-  const friendPath=`/FriendProfile/${user_info.first_name}-${user_info.last_name}`
-    history.push(friendPath);
+    history.push('/FriendProfile');
   };
   return (
     <div>

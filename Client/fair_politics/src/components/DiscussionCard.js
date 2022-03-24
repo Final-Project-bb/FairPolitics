@@ -1,7 +1,5 @@
 import React, { useState, useContext } from "react";
-import styled from "styled-components";
 import { AppContext } from "./Context";
-import { FaRegEdit, FaTrashAlt } from "react-icons/fa";
 import { useHistory } from "react-router-dom";
 import {
   FormControl,
@@ -71,9 +69,32 @@ const DiscussionCard = ({ item, inProfile }) => {
   };
 
   const LikeComment = async (comment_id) => {
-    // comments.map(comment => comment.comment_likes).filter((like) => like === user_details.user_id).length > 0
-    //   ? setComments(likes.filter((like) => like !== user_details.user_id))
-    //   : setComments([...likes, user_details.user_id]);
+    // let newComments = comments;
+    // if (
+    //   comments
+    //     .filter((comment) => comment.comment_id === comment_id)[0]
+    //     .comment_likes.filter(
+    //       (like_user_id) => like_user_id === user_details.user_id
+    //     ).length > 0
+    // ) {
+    //   console.log("like exist");
+    //   console.log(newComments);
+    //   newComments.forEach((comment, index, object) => {
+    //     if (comment.comment_id === comment_id) {
+    //       // comment.comment_likes.splice(comment, 1);
+    //       object.splice(index, 1);
+    //     }
+    //   });
+    //   setComments(newComments);
+    // } else {
+    //   console.log("like unexist");
+    //   newComments.forEach((comment) => {
+    //     if (comment.comment_id === comment_id) {
+    //       comment.comment_likes.push(user_details.user_id);
+    //     }
+    //   });
+    //   setComments(newComments);
+    // }
 
     const details = {
       comment_id: comment_id,
@@ -209,6 +230,8 @@ const DiscussionCard = ({ item, inProfile }) => {
             {/* variant={likes.filter(like => like === user_details.user_id).length > 0 ? 'contained' : 'outlined' } */}
 
             <FavoriteBorderIcon
+              label={likes.length}
+              fontSize='large'
               style={{
                 display: "flex",
                 flex: 1,
@@ -219,9 +242,8 @@ const DiscussionCard = ({ item, inProfile }) => {
                   ? "error"
                   : "outlined"
               }
-              onClick={() => LikeDiscussion()}>
-              Like ({likes.length})
-            </FavoriteBorderIcon>
+              onClick={() => LikeDiscussion()}
+            />
             <Link
               component='button'
               variant='body2'
@@ -232,98 +254,108 @@ const DiscussionCard = ({ item, inProfile }) => {
               // }
               // color='primary'
               onClick={() => toggleCommentsButton()}>
-              {!commentsButton ? "Show Comments" : "Hide Comments"}(
-              {comments[0].comment_id !== null ? comments.length : 0})
+              {comments[0].comment_id !== null
+                ? !commentsButton
+                  ? `Show Comments`
+                  : `Hide Comments`
+                : "No Comments Yet! be the first"}
+              ({comments[0].comment_id !== null ? comments.length : 0})
             </Link>
             {/* </ButtonGroup> */}
           </CardActions>
         </CardContent>
         {commentsButton && commentsButtonId === item.post_id && (
           <CardContent>
-            {comments.map((comment) => {
-              return (
-                <div key={comment.comment_id}>
-                  <CardContent style={styles.commentContent}>
-                    <CardContent
-                      style={{ display: "block", verticalAlign: "middle" }}>
-                      <IconButton onClick={FriendProfileRef} sx={{ p: 0 }}>
-                        <Avatar
-                          alt='Remy Sharp'
-                          src={
-                            require("../images/profilePicExmple.jpg")
-                            //user_details.profile_picture
-                          }
-                        />
-                      </IconButton>
-                      <Link
-                        component='button'
-                        variant='body2'
-                        onClick={FriendProfileRef}>
-                        {comment.user_id_comment}
-                      </Link>
-                    </CardContent>
-                    <Divider orientation='vertical' flexItem />
+            {comments[0].comment_id !== null &&
+              comments.map((comment) => {
+                return (
+                  <div key={comment.comment_id}>
+                    <CardContent style={styles.commentContent}>
+                      <CardContent
+                        style={{ display: "block", verticalAlign: "middle" }}>
+                        <IconButton onClick={FriendProfileRef} sx={{ p: 0 }}>
+                          <Avatar
+                            alt='Remy Sharp'
+                            src={
+                              require("../images/profilePicExmple.jpg")
+                              //user_details.profile_picture
+                            }
+                          />
+                        </IconButton>
+                        <Link
+                          component='button'
+                          variant='body2'
+                          onClick={FriendProfileRef}>
+                          {comment.user_id_comment}
+                        </Link>
+                      </CardContent>
+                      <Divider orientation='vertical' flexItem />
 
-                    <div style={{ display: "flex", flex: 8, marginLeft: 20 }}>
-                      {comment.comment}
-                    </div>
-                    {comment.user_id_comment === user_details.user_id && (
-                      <>
-                        {editCommentForm &&
-                          commentsEditButtonId === comment.comment_id && (
-                            <CardContent style={styles.editCommentForm}>
-                              <TextField
-                                size='small'
-                                id='standard-basic'
-                                // variant='standard'
-                                label='Update Comment'
-                                type='text'
-                                value={commentEdit}
-                                onChange={(e) => setCommentEdit(e.target.value)}
-                              />
-                              <Button
-                                variant='contained'
-                                size='small'
-                                onClick={() => editComment(comment.comment_id)}>
-                                Update
-                              </Button>
-                            </CardContent>
-                          )}
-                        <EditIcon
-                          style={{ display: "flex", flex: 0.7 }}
-                          onClick={() => {
-                            setEditCommentForm(!editCommentForm);
-                            setCommentsEditButtonId(comment.comment_id);
-                            setCommentEdit(comment.comment);
-                          }}
-                        />
-                        <DeleteIcon
-                          style={{ display: "flex", flex: 0.7 }}
-                          onClick={() => deleteComment(comment.comment_id)}
-                        />
-                        <Divider orientation='vertical' flexItem />
-                      </>
-                    )}
-                    <FavoriteBorderIcon
-                      style={{
-                        display: "flex",
-                        flex: 1,
-                        marginRight: 20,
-                      }}
-                      color={
-                        comment.comment_likes.filter((like) => like === user_details.user_id)
-                          .length > 0
-                          ? "error"
-                          : "outlined"
-                      }
-                      onClick={() => LikeComment(comment.comment_id)}>
-                      Like ({comment.comment_likes.length})
-                    </FavoriteBorderIcon>
-                  </CardContent>
-                  <Divider variant='middle' />
-                </div>
-              );
-            })}
+                      <div style={{ display: "flex", flex: 8, marginLeft: 20 }}>
+                        {comment.comment}
+                      </div>
+                      {comment.user_id_comment === user_details.user_id && (
+                        <>
+                          {editCommentForm &&
+                            commentsEditButtonId === comment.comment_id && (
+                              <CardContent style={styles.editCommentForm}>
+                                <TextField
+                                  size='small'
+                                  id='standard-basic'
+                                  // variant='standard'
+                                  label='Update Comment'
+                                  type='text'
+                                  value={commentEdit}
+                                  onChange={(e) =>
+                                    setCommentEdit(e.target.value)
+                                  }
+                                />
+                                <Button
+                                  variant='contained'
+                                  size='small'
+                                  onClick={() =>
+                                    editComment(comment.comment_id)
+                                  }>
+                                  Update
+                                </Button>
+                              </CardContent>
+                            )}
+                          <EditIcon
+                            style={{ display: "flex", flex: 0.7 }}
+                            onClick={() => {
+                              setEditCommentForm(!editCommentForm);
+                              setCommentsEditButtonId(comment.comment_id);
+                              setCommentEdit(comment.comment);
+                            }}
+                          />
+                          <DeleteIcon
+                            style={{ display: "flex", flex: 0.7 }}
+                            onClick={() => deleteComment(comment.comment_id)}
+                          />
+                          <Divider orientation='vertical' flexItem />
+                        </>
+                      )}
+                      <FavoriteBorderIcon
+                        style={{
+                          display: "flex",
+                          flex: 1,
+                          marginRight: 20,
+                        }}
+                        color={
+                          comment.comment_likes.filter(
+                            (like) => like === user_details.user_id
+                          ).length > 0
+                            ? "error"
+                            : ""
+                        }
+                        onClick={() => LikeComment(comment.comment_id)}>
+                        {comment.comment_likes.length}
+                      </FavoriteBorderIcon>
+                    </CardContent>
+                    <Divider variant='middle' />
+                  </div>
+                );
+              })}
           </CardContent>
         )}
         {commentsButton && commentsButtonId === item.post_id && (
@@ -357,7 +389,7 @@ DiscussionCard.deafult = {
 const styles = {
   card: {
     // height: 400,
-    width: 700,
+    width: 600,
   },
   content: {
     display: "flex",
