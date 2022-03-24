@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext ,useEffect} from "react";
 import styled from "styled-components";
 import { AppContext } from "./Context";
 import { FaRegEdit, FaTrashAlt } from "react-icons/fa";
@@ -21,6 +21,15 @@ const FeedbackCard = ({ item, inProfile }) => {
   const [answers, setAnswers] = useState([]);
 
   // const [height, setHeight] = useState(0);
+useEffect(() => {
+  const answer_approval=[]
+  item.answers.map((answer)=>{
+    if(answer.is_answer){
+      answer_approval.push(answer.answer_id)
+    }
+  })
+  setAnswers(answer_approval);
+}, [])
 
   const { user_details, setLoading, feedbackCards, setCurrentItem } =
     useContext(AppContext);
