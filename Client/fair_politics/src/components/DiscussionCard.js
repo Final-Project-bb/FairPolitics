@@ -13,7 +13,13 @@ import {
   CardActions,
   ButtonGroup,
   Divider,
+  IconButton,
+  Avatar,
+  Link,
 } from "@mui/material";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 const DiscussionCard = ({ item, inProfile }) => {
   const [commentsButtonId, setCommentsButtonId] = useState(0);
@@ -26,35 +32,64 @@ const DiscussionCard = ({ item, inProfile }) => {
   const [likes, setLikes] = useState(item.likes);
   const [comments, setComments] = useState(item.comments);
 
-  // const [height, setHeight] = useState(0);
-  // const [onEdit, setOnEdit] = useState(false);
-
   const {
     user_details,
     setLoading,
     discussionCards,
     setCurrentItem,
     currentItem,
+    setFriendDetails,
+    setInFriend,
   } = useContext(AppContext);
 
   const history = useHistory();
+
+  const FriendProfileRef = async () => {
+    let id = item.user_id;
+    console.log(id);
+
+    await fetch(`http://localhost:4000/api/get_user_by_id/${id}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json.result[0]);
+        setFriendDetails(json.result[0]);
+      })
+      .catch((err) => console.error(err));
+    setInFriend(true);
+    history.push("/FriendProfile");
+  };
 
   const toggleCommentsButton = () => {
     setCommentsButtonId(item.post_id);
     if (commentsButton) {
       setCommentsButton(!commentsButton);
-      // setHeight(0);
     } else {
       setCommentsButton(!commentsButton);
-      // setHeight(item.comments.length * 30);
     }
   };
 
+  const LikeComment = async (comment_id) => {
+    // comments.map(comment => comment.comment_likes).filter((like) => like === user_details.user_id).length > 0
+    //   ? setComments(likes.filter((like) => like !== user_details.user_id))
+    //   : setComments([...likes, user_details.user_id]);
+
+    const details = {
+      comment_id: comment_id,
+      user_id: user_details.user_id,
+    };
+    await fetch(`http://localhost:4000/api/add_like_to_comment`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(details),
+    })
+      .then((res) => res.json())
+      .then((json) => console.log(json))
+      .catch((err) => console.error(err));
+  };
+
   const LikeDiscussion = async () => {
-    // likes.push(user_details.user_id);
-
-    // setLikes([...likes, user_details.user_id]);
-
     likes.filter((like) => like === user_details.user_id).length > 0
       ? setLikes(likes.filter((like) => like !== user_details.user_id))
       : setLikes([...likes, user_details.user_id]);
@@ -73,14 +108,13 @@ const DiscussionCard = ({ item, inProfile }) => {
       .catch((err) => console.error(err));
   };
 
-  const addComment = async (e) => {
+  const addComment = async () => {
     const comment_details = {
       post_id: item.post_id,
       user_id: user_details.user_id,
       comment: comment,
     };
     setComments([...comments, comment_details]);
-
     await fetch(`http://localhost:4000/api/add_comment`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -92,7 +126,7 @@ const DiscussionCard = ({ item, inProfile }) => {
     setComment("");
   };
 
-  const editComment = async (e, comment_id) => {
+  const editComment = async (comment_id) => {
     const newComment = {
       comment: commentEdit,
     };
@@ -108,7 +142,7 @@ const DiscussionCard = ({ item, inProfile }) => {
     setEditCommentForm(false);
   };
 
-  const deleteComment = async (e, comment_id) => {
+  const deleteComment = async (comment_id) => {
     if (window.confirm("Are you sure you want to delete this comment?")) {
       setComments(comments.filter((comment) => comment_id !== comment_id));
       await fetch(`http://localhost:4000/api/delete_comment/${comment_id}`, {
@@ -121,12 +155,12 @@ const DiscussionCard = ({ item, inProfile }) => {
     }
   };
 
-  const editDiscussion = (e) => {
+  const editDiscussion = () => {
     setCurrentItem(item);
     history.push("/profile/editDiscussion");
   };
 
-  const deleteDiscussion = async (e) => {
+  const deleteDiscussion = async () => {
     setLoading(true);
     if (window.confirm("Are you sure you want to delete this post?")) {
       await fetch(
@@ -146,41 +180,62 @@ const DiscussionCard = ({ item, inProfile }) => {
       <Card style={styles.card}>
         {inProfile && (
           <CardContent>
-            <FaRegEdit onClick={(e) => editDiscussion(e)} />
-            <FaTrashAlt onClick={(e) => deleteDiscussion(e)} />
+            <EditIcon onClick={(e) => editDiscussion(e)} />
+            <DeleteIcon onClick={(e) => deleteDiscussion(e)} />
           </CardContent>
         )}
+
+        <CardContent style={{ display: "block", verticalAlign: "middle" }}>
+          <IconButton onClick={FriendProfileRef} sx={{ p: 0 }}>
+            <Avatar
+              alt='Remy Sharp'
+              src={
+                require("../images/profilePicExmple.jpg")
+                //user_details.profile_picture
+              }
+            />
+          </IconButton>
+          <Link component='button' variant='body2' onClick={FriendProfileRef}>
+            {item.user_id}
+          </Link>
+        </CardContent>
         <CardContent style={styles.title}>
-          {item.post_id} {item.title}{" "}
+          {item.post_id} {item.title}
         </CardContent>
         <CardContent style={styles.text}>{item.description}</CardContent>
         <CardContent style={styles.cardFooter}>
           <CardActions>
-            <ButtonGroup>
-              {/* variant={likes.filter(like => like === user_details.user_id).length > 0 ? 'contained' : 'outlined' } */}
-              <Button
-                variant={
-                  likes.filter((like) => like === user_details.user_id).length >
-                  0
-                    ? "contained"
-                    : "outlined"
-                }
-                color='primary'
-                onClick={() => LikeDiscussion()}>
-                Like ({likes.length})
-              </Button>
-              <Button
-                variant={
-                  commentsButton && commentsButtonId === item.post_id
-                    ? "contained"
-                    : "outlined"
-                }
-                color='primary'
-                onClick={() => toggleCommentsButton()}>
-                Show Comments (
-                {comments[0].comment_id !== null ? comments.length : 0})
-              </Button>
-            </ButtonGroup>
+            {/* <ButtonGroup> */}
+            {/* variant={likes.filter(like => like === user_details.user_id).length > 0 ? 'contained' : 'outlined' } */}
+
+            <FavoriteBorderIcon
+              style={{
+                display: "flex",
+                flex: 1,
+                marginRight: 20,
+              }}
+              color={
+                likes.filter((like) => like === user_details.user_id).length > 0
+                  ? "error"
+                  : "outlined"
+              }
+              onClick={() => LikeDiscussion()}>
+              Like ({likes.length})
+            </FavoriteBorderIcon>
+            <Link
+              component='button'
+              variant='body2'
+              // variant={
+              //   commentsButton && commentsButtonId === item.post_id
+              //     ? "contained"
+              //     : "outlined"
+              // }
+              // color='primary'
+              onClick={() => toggleCommentsButton()}>
+              {!commentsButton ? "Show Comments" : "Hide Comments"}(
+              {comments[0].comment_id !== null ? comments.length : 0})
+            </Link>
+            {/* </ButtonGroup> */}
           </CardActions>
         </CardContent>
         {commentsButton && commentsButtonId === item.post_id && (
@@ -188,9 +243,28 @@ const DiscussionCard = ({ item, inProfile }) => {
             {comments.map((comment) => {
               return (
                 <div key={comment.comment_id}>
-                  <CardContent
-                    style={styles.commentContent}>
-                    <div style={{ display: "flex", flex: 8 }}>
+                  <CardContent style={styles.commentContent}>
+                    <CardContent
+                      style={{ display: "block", verticalAlign: "middle" }}>
+                      <IconButton onClick={FriendProfileRef} sx={{ p: 0 }}>
+                        <Avatar
+                          alt='Remy Sharp'
+                          src={
+                            require("../images/profilePicExmple.jpg")
+                            //user_details.profile_picture
+                          }
+                        />
+                      </IconButton>
+                      <Link
+                        component='button'
+                        variant='body2'
+                        onClick={FriendProfileRef}>
+                        {comment.user_id_comment}
+                      </Link>
+                    </CardContent>
+                    <Divider orientation='vertical' flexItem />
+
+                    <div style={{ display: "flex", flex: 8, marginLeft: 20 }}>
                       {comment.comment}
                     </div>
                     {comment.user_id_comment === user_details.user_id && (
@@ -210,27 +284,41 @@ const DiscussionCard = ({ item, inProfile }) => {
                               <Button
                                 variant='contained'
                                 size='small'
-                                onClick={(e) =>
-                                  editComment(e, comment.comment_id)
-                                }>
+                                onClick={() => editComment(comment.comment_id)}>
                                 Update
                               </Button>
                             </CardContent>
                           )}
-                        <FaRegEdit
-                          style={{ display: "flex", flex: 0.5 }}
-                          onClick={(e) => {
+                        <EditIcon
+                          style={{ display: "flex", flex: 0.7 }}
+                          onClick={() => {
                             setEditCommentForm(!editCommentForm);
                             setCommentsEditButtonId(comment.comment_id);
                             setCommentEdit(comment.comment);
                           }}
                         />
-                        <FaTrashAlt
-                          style={{ display: "flex", flex: 0.5 }}
-                          onClick={(e) => deleteComment(e, comment.comment_id)}
+                        <DeleteIcon
+                          style={{ display: "flex", flex: 0.7 }}
+                          onClick={() => deleteComment(comment.comment_id)}
                         />
+                        <Divider orientation='vertical' flexItem />
                       </>
                     )}
+                    <FavoriteBorderIcon
+                      style={{
+                        display: "flex",
+                        flex: 1,
+                        marginRight: 20,
+                      }}
+                      color={
+                        comment.comment_likes.filter((like) => like === user_details.user_id)
+                          .length > 0
+                          ? "error"
+                          : "outlined"
+                      }
+                      onClick={() => LikeComment(comment.comment_id)}>
+                      Like ({comment.comment_likes.length})
+                    </FavoriteBorderIcon>
                   </CardContent>
                   <Divider variant='middle' />
                 </div>
@@ -250,7 +338,7 @@ const DiscussionCard = ({ item, inProfile }) => {
               onChange={(e) => setComment(e.target.value)}
               // placeholder='add comment'
             />
-            <Button variant='contained' onClick={(e) => addComment()}>
+            <Button variant='contained' onClick={() => addComment()}>
               Submit
             </Button>
           </CardContent>
@@ -269,7 +357,7 @@ DiscussionCard.deafult = {
 const styles = {
   card: {
     // height: 400,
-    width: 600,
+    width: 700,
   },
   content: {
     display: "flex",
@@ -280,7 +368,7 @@ const styles = {
   head: {
     display: "flex",
     // justifyContent: "space-around",
-    flexDirection: "column",
+    // flexDirection: "column",
     marginBottom: 30,
     marginRight: 30,
   },

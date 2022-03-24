@@ -227,6 +227,43 @@ const addLikeToDiscussion = (req, res) => {
   });
 };
 
+const addLikeToComment = (req, res) => {
+  let sqlLikeExists = `select * from comment_like_approval 
+                      where comment_id=${JSON.stringify(req.body.comment_id)} 
+                      and user_id=${JSON.stringify(req.body.user_id)}`;
+
+  let sqlInsertLikeDisc = `insert into comment_like_approval(comment_id,user_id)
+                            values(${JSON.stringify(req.body.comment_id)}, 
+                            ${JSON.stringify(req.body.user_id)})`;
+
+  let sqlDeleteLikeDisc = `delete from comment_like_approval 
+                          where comment_id=${JSON.stringify(
+                            req.body.comment_id
+                          )} 
+                          and user_id=${JSON.stringify(req.body.user_id)}`;
+
+  connection.query(sqlLikeExists, function (err, likeExist) {
+    if (err) {
+      throw err;
+    }
+    if (likeExist.length === 0) {
+      connection.query(sqlInsertLikeDisc, function (err, result) {
+        if (err) {
+          throw err;
+        }
+        res.status(200).send({ message: "Comment liked successfully!" });
+      });
+    } else {
+      connection.query(sqlDeleteLikeDisc, function (err, result) {
+        if (err) {
+          throw err;
+        }
+        res.status(200).send({ message: "Comment unliked successfully!" });
+      });
+    }
+  });
+};
+
 const getLikeOfDiscussion = (req, res) => {
   let sqlGetLikeByPostId = `select user_id from discussion_like_approval
                             where post_id=${req}`;
@@ -257,9 +294,9 @@ const deleteLikeFromDiscussion = (req, res) => {
 };
 
 const discussionsFollowing = (req, res) => {
-  let getPostsWithCommentsSql = `SELECT discussion.post_id, discussion.user_id, discussion.title, discussion.description, discussion.tag, discussion.picture, 
+  let getPostsWithCommentsSql = `SELECT discussion.post_id, discussion.user_id, discussion.title, discussion.description, discussion.tag, discussion.picture,
   discussion_response.comment_id, discussion_response.comment, discussion_response.user_id as 'user_id_comment'
-  FROM discussion left JOIN discussion_response      
+  FROM discussion left JOIN discussion_response
   ON discussion.post_id = discussion_response.post_id
   where discussion.user_id in (select user_following_id from follower where user_id=${JSON.stringify(
     req.params.user_id
@@ -267,6 +304,8 @@ const discussionsFollowing = (req, res) => {
   group by discussion_response.comment_id order by discussion.post_id`;
 
   let getPostLikesSql = `select * from discussion_like_approval order by post_id`;
+
+  let getCommentLikesSql = `select * from comment_like_approval order by comment_id`;
 
   let allPostsWithComments = [];
   let post_id_hand = -1;
@@ -308,14 +347,28 @@ const discussionsFollowing = (req, res) => {
       if (err) {
         throw err;
       }
-      allPostsWithComments.forEach((post) => {
-        likes.forEach((like) => {
-          if (like.post_id == post.post_id) {
-            post.likes.push(like.user_id);
-          }
+
+      connection.query(getCommentLikesSql, function (err, comment_likes) {
+        if (err) {
+          throw err;
+        }
+        allPostsWithComments.forEach((post) => {
+          likes.forEach((like) => {
+            if (like.post_id == post.post_id) {
+              post.likes.push(like.user_id);
+            }
+          });
+          post.comments.forEach((comment) => {
+            comment.comment_likes = [];
+            comment_likes.forEach((comment_like) => {
+              if (comment.comment_id == comment_like.comment_id) {
+                comment.comment_likes.push(comment_like.user_id);
+              }
+            });
+          });
         });
+        return res.status(200).send({ allPostsWithComments });
       });
-      res.status(200).send({ allPostsWithComments });
     });
   });
 };
@@ -329,6 +382,7 @@ module.exports = {
   updateComment,
   deleteComment,
   addLikeToDiscussion,
+  addLikeToComment,
   deleteLikeFromDiscussion,
   discussionsFollowing,
 };
