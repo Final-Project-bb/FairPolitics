@@ -17,21 +17,42 @@ import {
 } from "@mui/material";
 
 const AboutMe = () => {
-  const { user_details, setUserDetails, setIsConnected, loading, setLoading, inFriend, friend_details } =
-    useContext(AppContext);
+  const {
+    user_details,
+    setUserDetails,
+    setIsConnected,
+    loading,
+    setLoading,
+    inFriend,
+    friend_details,
+  } = useContext(AppContext);
 
-  const [first_name, setFirstName] = useState(inFriend ? friend_details.first_name : user_details.first_name);
-  const [last_name, setLastName] = useState(inFriend ? friend_details.last_name : user_details.last_name);
-  const [city, setCity] = useState(inFriend ? friend_details.city : user_details.city);
-  const [job_title, setJobTitle] = useState(inFriend ? friend_details.job_title : user_details.job_title);
-  const [date, setDate] = useState(inFriend ? friend_details.birthdate : user_details.birthdate);
-  const [profile_picture, setProfilePicture] = useState(inFriend ? friend_details.profile_picture :
-    user_details.profile_picture
+  const [first_name, setFirstName] = useState(
+    inFriend ? friend_details.first_name : user_details.first_name
   );
-  const [gender, setGender] = useState(inFriend ? friend_details.gender : user_details.gender);
-  const [description, setDescription] = useState(inFriend ? friend_details.description : user_details.description);
-  const [semi_description, setSemiDescription] = useState(inFriend ? friend_details.semi_description :
-    user_details.semi_description
+  const [last_name, setLastName] = useState(
+    inFriend ? friend_details.last_name : user_details.last_name
+  );
+  const [city, setCity] = useState(
+    inFriend ? friend_details.city : user_details.city
+  );
+  const [job_title, setJobTitle] = useState(
+    inFriend ? friend_details.job_title : user_details.job_title
+  );
+  const [date, setDate] = useState(
+    inFriend ? friend_details.birthdate : user_details.birthdate
+  );
+  const [profile_picture, setProfilePicture] = useState(
+    inFriend ? friend_details.profile_picture : user_details.profile_picture
+  );
+  const [gender, setGender] = useState(
+    inFriend ? friend_details.gender : user_details.gender
+  );
+  const [description, setDescription] = useState(
+    inFriend ? friend_details.description : user_details.description
+  );
+  const [semi_description, setSemiDescription] = useState(
+    inFriend ? friend_details.semi_description : user_details.semi_description
   );
   const [onEdit, setOnEdit] = useState(false);
   const [onDelete, setOnDelete] = useState(false);
@@ -123,23 +144,27 @@ const AboutMe = () => {
       {!loading && (
         <div>
           <ProfileHeader />
-          {!inFriend && <>
-            <Button
-              variant='outlined'
-              color='primary'
-              style={styles.edit_info}
-              onClick={() => editButton()}>
-              {onEdit ? "Cancel info" : "Edit info"}
-            </Button>
-            <Button
-              variant='outlined'
-              color='primary'
-              style={styles.delete_user}
-              onClick={() => deleteUser()}>
-              {onDelete ? "Cancel Delete" : "Delete account"}
-            </Button>
-          </>
-          }
+          {!inFriend && (
+            <>
+              <Button
+                variant='contained'
+                color='error'
+                style={styles.delete_user}
+                onClick={() => deleteUser()}>
+                {onDelete ? "Cancel Delete" : "Delete account"}
+              </Button>
+              <Button
+                variant={!onEdit ? "out ed" : "contained"}
+                color='primary'
+                style={styles.edit_info}
+                onClick={() => editButton()}>
+                {onEdit ? "Cancel info" : "Edit info"}
+              </Button>
+            </>
+          )}
+          {!onEdit && (
+            <div style={styles.description}>{user_details.description}</div>
+          )}
           {/* <div className='delete-button' onClick={() => { if (window.confirm('Are you sure you wish to delete this item?')) this.onCancel() } } /> */}
           {onEdit && (
             <Card style={styles.card}>
@@ -263,10 +288,6 @@ const AboutMe = () => {
               </CardContent>
             </Card>
           )}
-
-          {!onEdit && (
-            <div style={styles.description}>{'user_details.description'}</div>
-          )}
         </div>
       )}
       {loading && <Loading />}
@@ -303,7 +324,7 @@ const styles = {
     flexDirection: "column",
     position: "relative",
     left: 180,
-    margin: 0,
+    margin: 10,
     top: 10,
   },
   delete_user: {
@@ -312,20 +333,19 @@ const styles = {
     flexDirection: "column",
     position: "relative",
     left: 180,
-    margin: 0,
+    margin: 10,
     top: 10,
-    color: "red",
+    // color: "red",
   },
   description: {
     display: "flex",
     justifyContent: "space-around",
     flexDirection: "column",
     position: "relative",
-    left: 280,
-    margin: 0,
-    top: 20,
-    backgroundColor: 'whitesmoke',
-
+    // left: 280,
+    margin: 10,
+    // top: 20,
+    textAlign: 'center'
   },
 };
 

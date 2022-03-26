@@ -15,7 +15,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 
-
 import { useHistory } from "react-router-dom";
 import { AppContext } from "./Context";
 
@@ -227,7 +226,9 @@ const ResponsiveAppBar = () => {
                 <Avatar
                   alt='Remy Sharp'
                   src={
-                    is_connected ? "../images/profilePicExmple.jpg" : ''
+                    is_connected
+                      ? require("../images/profilePicExmple.jpg")
+                      : ""
                     //user_details.profile_picture
                   }
                 />

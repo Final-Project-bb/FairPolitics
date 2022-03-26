@@ -3,6 +3,7 @@ import Header from "./Header";
 import { AppContext } from "./Context";
 import UserCard from "./UserCard";
 import ProfileHeader from "./ProfileHeader";
+import Grid from "@mui/material/Grid";
 
 const Following = () => {
   const { loading, setLoading, friendFollowings, followings, inFriend } =
@@ -14,13 +15,19 @@ const Following = () => {
       <Header title='Following' />
       <ProfileHeader />
       <br />
-      {!inFriend
-        ? followings.map((user) => (
-            <UserCard key={user.user_id} user_info={user} inFollowing={true} />
-          ))
-        : friendFollowings.map((user) => (
-            <UserCard key={user.user_id} user_info={user} />
-          ))}
+      <Grid container spacing={0}>
+        {!inFriend
+          ? followings.map((user) => (
+              <UserCard
+                key={user.user_id}
+                user_info={user}
+                inFollowing={true}
+              />
+            ))
+          : friendFollowings.map((user) => (
+              <UserCard key={user.user_id} user_info={user} />
+            ))}
+      </Grid>
     </div>
   );
 };

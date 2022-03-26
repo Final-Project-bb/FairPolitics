@@ -48,14 +48,17 @@ const Search = () => {
     <div>
       <Header title='Search Page' />
       <div style={styles.text}>
-      {loading? <>
-        {usersSearch.map((user) => (
-          <div>
-            <UserCard key={user.user_id} user_info={user} inSearch={true} />
-          </div>
-        ))}
-        </>
-        : <Loading/>}
+        {!loading ? (
+          <>
+            {usersSearch.map((user) => (
+              <div>
+                <UserCard key={user.user_id} user_info={user} inSearch={true} />
+              </div>
+            ))}
+          </>
+        ) : (
+          <Loading />
+        )}
       </div>
     </div>
   );

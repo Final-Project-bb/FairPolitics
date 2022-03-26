@@ -4,27 +4,14 @@ import { NavLink as Link } from "react-router-dom";
 import styled from "styled-components";
 import { AppContext } from "./Context";
 
+
 const ProfileHeader = () => {
-  const { inFriend ,friend_details } = useContext(AppContext);
-  const friendPath=`/FriendProfile/${friend_details.first_name}-${friend_details.last_name}`
-  
-  return (  
+  const { inFriend, friend_details } = useContext(AppContext);
+  const friendPath = `/FriendProfile`;
+
+  return (
     <div style={styles.order}>
-      <div style={styles.profileHead}>
-        <ProfileShowDetails />
-        {!inFriend && (
-          <NavLinkDis to='/profile/addDiscussion'>Add Discussion</NavLinkDis>
-        )}
-        {!inFriend && (
-          <NavLinkFeed to='/profile/addFeedback'>Add Feedback</NavLinkFeed>
-        )}
-        {/* {!inFriend && ( */}
-        <NavLinkAbout to='/profile/aboutProfile'>About Me</NavLinkAbout>
-        {/* )} */}
-        {inFriend &&
-           <NavLinkMyProfile to={friendPath}>My Profile</NavLinkMyProfile>
-        }
-      </div>
+      <ProfileShowDetails />
     </div>
   );
 };
@@ -36,16 +23,18 @@ const styles = {
   order: {
     flexDirection: "row",
     position: "relative",
-    left: 22,
+    // left: 22,
+    backgroundColor: 'whitesmoke',
+    justifyContent: 'space-around',
   },
 
   profileHead: {
     display: "flex",
     position: "relative",
     top: 10,
-    justifyContent: "space-around",
+    // justifyContent: "space-around",
     flexDirection: "column",
-    margin: 85,
+    // margin: 85,
   },
 };
 const NavLinkAbout = styled(Link)`
