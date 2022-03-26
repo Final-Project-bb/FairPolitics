@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { NavLink as Link } from "react-router-dom";
+// import { NavLink as Link } from "react-router-dom";
 import Header from "./Header";
 import ProfileHeader from "./ProfileHeader";
 import ProfileShowDetails from "./ProfileShowDetails";
@@ -8,6 +8,17 @@ import FeedbackCard from "./FeedbackCard";
 import styled from "styled-components";
 import { AppContext } from "./Context";
 import Loading from "./Loading";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
+import AddIcon from "@mui/icons-material/Add";
+import IconButton from "@mui/material/IconButton";
+
+import { useHistory } from "react-router-dom";
 
 const Profile = () => {
   const {
@@ -19,7 +30,15 @@ const Profile = () => {
     setProfileFeedbackCards,
     setProfileDiscussionCards,
     setInFriend,
+    inFriend,
   } = useContext(AppContext);
+
+  const [value, setValue] = React.useState("1");
+  const history = useHistory();
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   const fetchSelfPolls = async () => {
     setLoading(true);
@@ -61,31 +80,91 @@ const Profile = () => {
   return (
     <div>
       <Header title='Profile Page' />
-      {!loading ? <>
-        <ProfileHeader />
-        <br />
-        <br />
-        <div style={styles.head}>
-          <br />
-          <div style={styles.card}>
-            <div style={styles.title}>Discussions Card Side</div>
-            {profileDiscussionCards.map((item) => {
-              return (
-                <DiscussionCard key={item.post_id} item={item} inProfile={true} />
-              );
-            })}
-          </div>
-          <div style={styles.card}>
-            <div style={styles.title}>Feedbacks Card Side</div>
-            {profileFeedbackCards.map((item) => {
-              return (
-                <FeedbackCard key={item.poll_id} item={item} inProfile={true} />
-              );
-            })}
+      {!loading ? (
+        <div>
+          {/* <div style={{position:'relative',}}> */}
+          <ProfileHeader />
+          {/* </div> */}
+          <Box sx={{ width: "100%", typography: "body1" }}>
+            <TabContext value={value}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <TabList
+                  // indicatorColor='secondary'
+                  textColor='primary'
+                  variant='fullWidth'
+                  onChange={handleChange}
+                  aria-label='lab API tabs example'>
+                  <Tab label='My Posts' value='1' />
+                  <Tab label='My Polls' value='2' />
+                </TabList>
+              </Box>
+              <TabPanel value='1'>
+                <div style={styles.title}>Discussions Feed:</div>
+                <Box sx={{ flexGrow: 1 }}>
+                  {!inFriend && (
+                    <Grid container direction='row' alignItems='center'>
+                    <IconButton
+                    color="primary"
+                      style={{ marginBottom: 30 }}
+                      onClick={() => history.push("/profile/addFeedback")}>
+                      <Grid item>
+                        <AddIcon
+                          fontSize='large'
+                          // to='/profile/addFeedback'
+                        />
+                      </Grid>
+                      <Grid item>Add Discussion</Grid>
+                    </IconButton>
+                  </Grid>
+                  )}
+                  <Grid container spacing={0}>
+                    {profileDiscussionCards.map((item) => {
+                      return <DiscussionCard key={item.post_id} item={item} />;
+                    })}
+                  </Grid>
+                </Box>
+              </TabPanel>
+              <TabPanel value='2'>
+                <div style={styles.title}>Feedbacks Card Side</div>
+                <Box sx={{ flexGrow: 1 }}>
+                  {!inFriend && (
+                    <Grid container direction='row' alignItems='center'>
+                      <IconButton
+                      color="primary"
+                        style={{ marginBottom: 30 }}
+                        onClick={() => history.push("/profile/addFeedback")}>
+                        <Grid item>
+                          <AddIcon
+                            fontSize='large'
+                            // to='/profile/addFeedback'
+                          />
+                        </Grid>
+                        <Grid item>Add Feedback</Grid>
+                      </IconButton>
+                    </Grid>
+                  )}
+                  <Grid container spacing={0}>
+                    {profileFeedbackCards.map((item) => {
+                      return <FeedbackCard key={item.poll_id} item={item} />;
+                    })}
+                  </Grid>
+                </Box>
+              </TabPanel>
+            </TabContext>
+          </Box>
+          <div style={styles.profileHead}>
+            {/* {!inFriend && ( */}
+            {/* )} */}
+            {/* {inFriend && (
+          <NavLinkMyProfile to={friendPath}>My Profile</NavLinkMyProfile>
+        )} */}
           </div>
         </div>
-      </>
-        : <Loading />}
+      ) : (
+        <>
+          <Loading />
+        </>
+      )}
     </div>
   );
 };

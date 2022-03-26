@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AppContext } from "./Context";
 import { useHistory } from "react-router-dom";
+
 import {
   FormControl,
   FormControlLabel,
@@ -10,6 +11,8 @@ import {
   TextField,
   Avatar,
   ButtonGroup,
+  Link,
+  Box,
 } from "@mui/material";
 
 const ProfileShowDetails = () => {
@@ -69,7 +72,9 @@ const ProfileShowDetails = () => {
 
     followings.filter((user) => user.user_id === friend_details.user_id)
       .length > 0
-      ? setFollowings(followings.filter((user) => user.user_id !== friend_details.user_id))
+      ? setFollowings(
+          followings.filter((user) => user.user_id !== friend_details.user_id)
+        )
       : setFollowings([...followings, friend_details]);
     setLoading(false);
   };
@@ -128,86 +133,105 @@ const ProfileShowDetails = () => {
   }, [inFriend]);
 
   return (
-    <div>
-      <div style={styles.semiDetails}>
-        <div style={styles.name}>
-          {!inFriend ? user_details.first_name : friend_details.first_name}{" "}
-          {!inFriend ? user_details.last_name : friend_details.last_name}
-        </div>
-        <div>
-          {!inFriend ? user_details.gender : friend_details.gender} ,{" "}
-          {!inFriend ? user_details.age : friend_details.age}
-        </div>
-        <div>
-          Working in:
-          {!inFriend ? user_details.job_title : friend_details.job_title} living
-          in {!inFriend ? user_details.city : friend_details.city}
-        </div>
-        <div>
-          {!inFriend
-            ? user_details.semi_description
-            : friend_details.semi_description}
-        </div>
-      </div>
-      <div style={styles.profileHead}>
+    <Box sx={styles.container}>
+      <Box
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          margin: 10,
+          marginRight: 20,
+          justifyContent: "center",
+          textAlign: "center",
+        }}>
         <img
           src={require("../images/profilePicExmple.jpg")}
           alt='logo'
           style={{
             borderRadius: !picturePress ? 350 : 0,
-            position: !picturePress ? "relative" : "absolute",
-            left: 0,
+            // position: !picturePress ? "relative" : "absolute",
             height: !picturePress ? 150 : 400,
             width: !picturePress ? 150 : 400,
+            // marginRight: 20,
+            // marginLeft: 20,
+            marginBottom: 10,
           }}
           onClickCapture={() => setPicturePress(!picturePress)}
         />
+        <Button
+          color='primary'
+          onClick={() => {
+            history.push("/profile/aboutProfile");
+          }}>
+          About Me
+        </Button>
+      </Box>
+      <div style={styles.semiDetails}>
+        <h4 style={styles.name}>
+          {!inFriend ? user_details.first_name : friend_details.first_name}{" "}
+          {!inFriend ? user_details.last_name : friend_details.last_name}
+        </h4>
+        <h4>
+          {!inFriend ? user_details.gender : friend_details.gender} ,{" "}
+          {!inFriend ? user_details.age : friend_details.age}
+        </h4>
+        <h4>
+          Working in:{" "}
+          {!inFriend ? user_details.job_title : friend_details.job_title} 
+          Living in {!inFriend ? user_details.city : friend_details.city}
+        </h4>
+        <h4>
+          {!inFriend
+            ? user_details.semi_description
+            : friend_details.semi_description}
+        </h4>
       </div>
 
-      <ButtonGroup
-        style={{
-          position: "absolute",
-          left: 400,
-          flex: 1,
-          top: -50,
-          flexDirection: "row",
-          justifyContent: "space-around",
-        }}>
-        {inFriend && (
-          <Button
-            variant={
-              followings.filter(
+      <div style={styles.profileHead}>
+        <ButtonGroup
+          style={{
+            position: "absolute",
+            left: 400,
+            flex: 1,
+            top: -50,
+            flexDirection: "row",
+            justifyContent: "space-around",
+          }}>
+          {inFriend && (
+            <Button
+              variant={
+                followings.filter(
+                  (user) => user.user_id === friend_details.user_id
+                ).length > 0
+                  ? "contained"
+                  : "outlined"
+              }
+              color='primary'
+              onClick={() => updateFollow()}>
+              {followings.filter(
                 (user) => user.user_id === friend_details.user_id
               ).length > 0
-                ? "contained"
-                : "outlined"
-            }
+                ? "Unfollow"
+                : "Follow"}
+            </Button>
+          )}
+          <Button
+            variant='outlined'
             color='primary'
-            onClick={() => updateFollow()}>
-            {followings.filter(
-              (user) => user.user_id === friend_details.user_id
-            ).length > 0
-              ? "Unfollow"
-              : "Follow"}
+            onClick={() => showFollowing()}>
+            Following {!inFriend ? followings.length : friendFollowings.length}
           </Button>
-        )}
-        <Button
-          variant='outlined'
-          color='primary'
-          onClick={() => showFollowing()}>
-          Following {!inFriend ? followings.length : friendFollowings.length}
-        </Button>
-        <Button
-          variant='outlined'
-          color='primary'
-          onClick={() => showFollower()}>
-          Follower {!inFriend ? followers.length : friendFollowers.length}
-        </Button>
-      </ButtonGroup>
-      {/* image profile will be here */}
-      {/* about and more..  */}
-      {/* <button style={styles.info}> more info</button> */}
-    </div>
+          <Button
+            variant='outlined'
+            color='primary'
+            onClick={() => showFollower()}>
+            Follower {!inFriend ? followers.length : friendFollowers.length}
+          </Button>
+        </ButtonGroup>
+        {/* image profile will be here */}
+        {/* about and more..  */}
+        {/* <button style={styles.info}> more info</button> */}
+      </div>
+    </Box>
   );
 };
 
@@ -216,32 +240,36 @@ const ProfileShowDetails = () => {
 // };
 
 const styles = {
-  name: {
+  container: {
     display: "flex",
-    // justifyContent: 'space-around',
-    // flexDirection: 'row',
-    position: "absolute",
-    // marginLeft:10,
-    fontSize: 25,
-    top: -30,
-    left: -10,
+    flexDirection: "row",
   },
+  // name: {
+  //   display: "flex",
+  //   // justifyContent: 'space-around',
+  //   // flexDirection: 'row',
+  //   position: "absolute",
+  //   // marginLeft:10,
+  //   fontSize: 25,
+  //   top: -30,
+  //   left: -10,
+  // },
   profileHead: {
     display: "flex",
-    justifyContent: "space-around",
+    // justifyContent: "space-around",
     flexDirection: "column",
-    position: "absolute",
-    left: -50,
-    top: -70,
+    position: "relative",
+    //   left: -50,
+    top: 100,
   },
   semiDetails: {
     display: "flex",
     justifyContent: "space-around",
     flexDirection: "column",
-    position: "absolute",
-    left: 150,
-    margin: 0,
-    top: -25,
+    // position: "absolute",
+    // left: 150,
+    // margin: 0,
+    // top: -25,
     // backgroundColor: 'whitesmoke'
   },
 };

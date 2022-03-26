@@ -14,10 +14,14 @@ import {
   IconButton,
   Avatar,
   Link,
+  Grid,
+  Tooltip,
 } from "@mui/material";
+
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import SendIcon from "@mui/icons-material/Send";
 
 const DiscussionCard = ({ item, inProfile }) => {
   const [commentsButtonId, setCommentsButtonId] = useState(0);
@@ -200,25 +204,36 @@ const DiscussionCard = ({ item, inProfile }) => {
     <div style={styles.head}>
       <Card style={styles.card}>
         {inProfile && (
-          <CardContent>
-            <EditIcon onClick={(e) => editDiscussion(e)} />
-            <DeleteIcon onClick={(e) => deleteDiscussion(e)} />
+          <CardContent style={{ display: "flex", flex: 3 }}>
+            <EditIcon
+              style={{ flex: 0.1 }}
+              onClick={(e) => editDiscussion(e)}
+            />
+            <DeleteIcon
+              style={{ flex: 0.1 }}
+              onClick={(e) => deleteDiscussion(e)}
+            />
           </CardContent>
         )}
 
         <CardContent style={{ display: "block", verticalAlign: "middle" }}>
           <IconButton onClick={FriendProfileRef} sx={{ p: 0 }}>
-            <Avatar
-              alt='Remy Sharp'
-              src={
-                require("../images/profilePicExmple.jpg")
-                //user_details.profile_picture
-              }
-            />
+            <Grid container direction='column' alignItems='center'>
+              <Grid item>
+                <Avatar
+                  alt='Remy Sharp'
+                  src={
+                    require("../images/profilePicExmple.jpg")
+                    //user_details.profile_picture
+                  }
+                />
+              </Grid>
+              <Grid item fontSize='small' style={{ marginTop: 8 }}>
+                {item.user_id}
+              </Grid>
+            </Grid>
           </IconButton>
-          <Link component='button' variant='body2' onClick={FriendProfileRef}>
-            {item.user_id}
-          </Link>
+          <br />
         </CardContent>
         <CardContent style={styles.title}>
           {item.post_id} {item.title}
@@ -228,22 +243,31 @@ const DiscussionCard = ({ item, inProfile }) => {
           <CardActions>
             {/* <ButtonGroup> */}
             {/* variant={likes.filter(like => like === user_details.user_id).length > 0 ? 'contained' : 'outlined' } */}
-
-            <FavoriteBorderIcon
-              label={likes.length}
-              fontSize='large'
-              style={{
-                display: "flex",
-                flex: 1,
-                marginRight: 20,
-              }}
-              color={
-                likes.filter((like) => like === user_details.user_id).length > 0
-                  ? "error"
-                  : "outlined"
-              }
-              onClick={() => LikeDiscussion()}
-            />
+            <Tooltip
+              title={
+                item.likes.filter(
+                  (like) => like === user_details.user_id
+                ).length > 0
+                  ? "Unlike"
+                  : "Like"
+              }>
+              <FavoriteBorderIcon
+                label={likes.length}
+                fontSize='large'
+                style={{
+                  display: "flex",
+                  flex: 1,
+                  marginRight: 20,
+                }}
+                color={
+                  likes.filter((like) => like === user_details.user_id).length >
+                  0
+                    ? "error"
+                    : "outlined"
+                }
+                onClick={() => LikeDiscussion()}
+              />
+            </Tooltip>
             <Link
               component='button'
               variant='body2'
@@ -272,22 +296,30 @@ const DiscussionCard = ({ item, inProfile }) => {
                   <div key={comment.comment_id}>
                     <CardContent style={styles.commentContent}>
                       <CardContent
-                        style={{ display: "block", verticalAlign: "middle" }}>
+                      // style={{ display: "block", verticalAlign: "middle" }}
+                      >
                         <IconButton onClick={FriendProfileRef} sx={{ p: 0 }}>
-                          <Avatar
-                            alt='Remy Sharp'
-                            src={
-                              require("../images/profilePicExmple.jpg")
-                              //user_details.profile_picture
-                            }
-                          />
+                          <Grid
+                            container
+                            direction='column'
+                            alignItems='center'>
+                            <Grid item>
+                              <Avatar
+                                alt='Remy Sharp'
+                                src={
+                                  require("../images/profilePicExmple.jpg")
+                                  //user_details.profile_picture
+                                }
+                              />
+                            </Grid>
+                            <Grid
+                              item
+                              fontSize='small'
+                              style={{ marginTop: 8 }}>
+                              {item.user_id}
+                            </Grid>
+                          </Grid>
                         </IconButton>
-                        <Link
-                          component='button'
-                          variant='body2'
-                          onClick={FriendProfileRef}>
-                          {comment.user_id_comment}
-                        </Link>
                       </CardContent>
                       <Divider orientation='vertical' flexItem />
 
@@ -302,55 +334,70 @@ const DiscussionCard = ({ item, inProfile }) => {
                                 <TextField
                                   size='small'
                                   id='standard-basic'
-                                  // variant='standard'
-                                  label='Update Comment'
+                                  variant='standard'
+                                  label='Edit Comment'
                                   type='text'
                                   value={commentEdit}
                                   onChange={(e) =>
                                     setCommentEdit(e.target.value)
                                   }
                                 />
-                                <Button
+                                <SendIcon
                                   variant='contained'
                                   size='small'
                                   onClick={() =>
                                     editComment(comment.comment_id)
-                                  }>
-                                  Update
-                                </Button>
+                                  }
+                                />
                               </CardContent>
                             )}
-                          <EditIcon
-                            style={{ display: "flex", flex: 0.7 }}
-                            onClick={() => {
-                              setEditCommentForm(!editCommentForm);
-                              setCommentsEditButtonId(comment.comment_id);
-                              setCommentEdit(comment.comment);
-                            }}
-                          />
-                          <DeleteIcon
-                            style={{ display: "flex", flex: 0.7 }}
-                            onClick={() => deleteComment(comment.comment_id)}
-                          />
+                          <Tooltip title='Edit'>
+                            <EditIcon
+                              style={{ display: "flex", flex: 0.7 }}
+                              onClick={() => {
+                                setEditCommentForm(!editCommentForm);
+                                setCommentsEditButtonId(comment.comment_id);
+                                setCommentEdit(comment.comment);
+                              }}
+                            />
+                          </Tooltip>
+
+                          <Tooltip title='Delete'>
+                            <DeleteIcon
+                              style={{ display: "flex", flex: 0.7 }}
+                              onClick={() => deleteComment(comment.comment_id)}
+                            />
+                          </Tooltip>
+
                           <Divider orientation='vertical' flexItem />
                         </>
                       )}
-                      <FavoriteBorderIcon
-                        style={{
-                          display: "flex",
-                          flex: 1,
-                          marginRight: 20,
-                        }}
-                        color={
+                      <Tooltip
+                        title={
                           comment.comment_likes.filter(
                             (like) => like === user_details.user_id
                           ).length > 0
-                            ? "error"
-                            : ""
-                        }
-                        onClick={() => LikeComment(comment.comment_id)}>
-                        {comment.comment_likes.length}
-                      </FavoriteBorderIcon>
+                            ? "Unlike"
+                            : "Like"
+                        }>
+                        <FavoriteBorderIcon
+                          style={{
+                            display: "flex",
+                            flex: 1,
+                            marginRight: 20,
+                          }}
+                          color={
+                            comment.comment_likes.filter(
+                              (like) => like === user_details.user_id
+                            ).length > 0
+                              ? "error"
+                              : ""
+                          }
+                          onClick={() => LikeComment(comment.comment_id)}
+                        />
+                        {/* {comment.comment_likes.length} */}
+                        {/* </FavoriteBorderIcon> */}
+                      </Tooltip>
                     </CardContent>
                     <Divider variant='middle' />
                   </div>
@@ -363,16 +410,14 @@ const DiscussionCard = ({ item, inProfile }) => {
             <TextField
               // helperText='Tagged elected officials - Example: @israel israel @other person'
               id='standard-basic'
-              // variant='standard'
+              variant='standard'
               label='Add Comment'
               type='text'
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               // placeholder='add comment'
             />
-            <Button variant='contained' onClick={() => addComment()}>
-              Submit
-            </Button>
+            <SendIcon variant='contained' onClick={() => addComment()} />
           </CardContent>
         )}
       </Card>
@@ -399,6 +444,7 @@ const styles = {
   },
   head: {
     display: "flex",
+
     // justifyContent: "space-around",
     // flexDirection: "column",
     marginBottom: 30,

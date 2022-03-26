@@ -1,4 +1,4 @@
-import React, { useState, useContext ,useEffect} from "react";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 import { AppContext } from "./Context";
 import { FaRegEdit, FaTrashAlt } from "react-icons/fa";
@@ -12,29 +12,54 @@ import {
   TextField,
   CardActions,
   Checkbox,
+  IconButton,
+  Avatar,
+  Grid,
 } from "@mui/material";
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 const FeedbackCard = ({ item, inProfile }) => {
   const [onEdit, setOnEdit] = useState(false);
   const [answers, setAnswers] = useState([]);
 
   // const [height, setHeight] = useState(0);
-useEffect(() => {
-  const answer_approval=[]
-  item.answers.map((answer)=>{
-    if(answer.is_answer){
-      answer_approval.push(answer.answer_id)
-    }
-  })
-  setAnswers(answer_approval);
-}, [])
+  useEffect(() => {
+    const answer_approval = [];
+    item.answers.map((answer) => {
+      if (answer.is_answer) {
+        answer_approval.push(answer.answer_id);
+      }
+    });
+    setAnswers(answer_approval);
+  }, []);
 
-  const { user_details, setLoading, feedbackCards, setCurrentItem } =
-    useContext(AppContext);
+  const {
+    user_details,
+    setLoading,
+    setCurrentItem,
+    setFriendDetails,
+    setInFriend,
+  } = useContext(AppContext);
 
   const history = useHistory();
+
+  const FriendProfileRef = async () => {
+    let id = item.user_id;
+    console.log(id);
+
+    await fetch(`http://localhost:4000/api/get_user_by_id/${id}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json.result[0]);
+        setFriendDetails(json.result[0]);
+      })
+      .catch((err) => console.error(err));
+    setInFriend(true);
+    history.push("/FriendProfile");
+  };
 
   const handleCheckbox = (answer_id) => {
     answers.filter((answer) => answer === answer_id).length > 0
@@ -60,7 +85,7 @@ useEffect(() => {
   };
   const updateAnswerPoll = () => {
     console.log(answers);
-  }
+  };
   const editPoll = (e) => {
     // console.log(item);
     setCurrentItem(item);
@@ -92,6 +117,31 @@ useEffect(() => {
               />
             </CardContent>
           )}
+
+          <CardContent style={{ display: "block", verticalAlign: "middle" }}>
+            <IconButton onClick={FriendProfileRef} sx={{ p: 0 }}>
+              <Grid container direction='column' alignItems='center'>
+                <Grid item>
+                  <Avatar
+                    alt='Remy Sharp'
+                    src={
+                      require("../images/profilePicExmple.jpg")
+                      //user_details.profile_picture
+                    }
+                  />
+                </Grid>
+                <Grid
+                  item
+                  fontSize='small'
+                  // component='button'
+                  // variant='body2'
+                  // onClick={FriendProfileRef}
+                  style={{ marginTop: 8 }}>
+                  {item.user_id}
+                </Grid>
+              </Grid>
+            </IconButton>
+          </CardContent>
           <CardContent style={styles.title}>
             {item.poll_id} {item.title}
           </CardContent>
@@ -100,9 +150,7 @@ useEffect(() => {
             {item.description}
           </CardContent>
           <CardContent style={styles.answers}>
-
-            {item.is_answer_poll
-              ?
+            {item.is_answer_poll ? (
               // if is_answer_poll true
               <>
                 {item.answers.map((answer) => (
@@ -114,7 +162,6 @@ useEffect(() => {
                     />
                     {answer.answer}
                   </CardContent>
-
                 ))}
                 <CardActions>
                   <Button
@@ -126,9 +173,8 @@ useEffect(() => {
                   </Button>
                 </CardActions>
               </>
-
+            ) : (
               //if is_answer_poll false
-              :
               <>
                 {item.answers.map((answer) => (
                   <CardContent key={answer.answer_id}>
@@ -148,7 +194,8 @@ useEffect(() => {
                     submit!
                   </Button>
                 </CardActions>
-              </>}
+              </>
+            )}
           </CardContent>
         </Card>
       )}

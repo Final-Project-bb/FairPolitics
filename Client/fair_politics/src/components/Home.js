@@ -10,6 +10,10 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Grid from "@mui/material/Grid";
 import Loading from "./Loading";
+import AddIcon from "@mui/icons-material/Add";
+import IconButton from "@mui/material/IconButton";
+
+import { useHistory } from "react-router-dom";
 
 const Home = () => {
   const {
@@ -20,9 +24,12 @@ const Home = () => {
     setDiscussionCards,
     feedbackCards,
     discussionCards,
+    inFriend
   } = useContext(AppContext);
 
   const [value, setValue] = React.useState("1");
+
+  const history = useHistory();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -68,11 +75,14 @@ const Home = () => {
   return (
     <div style={{ backgroundColor: "whitesmoke" }}>
       <Header title='Home Page' />
-      {!loading ?
+      {!loading ? (
         <Box sx={{ width: "100%", typography: "body1" }}>
           <TabContext value={value}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <TabList onChange={handleChange} aria-label='lab API tabs example'>
+              <TabList
+                variant='fullWidth'
+                onChange={handleChange}
+                aria-label='lab API tabs example'>
                 <Tab label='Discussions' value='1' />
                 <Tab label='Polls' value='2' />
               </TabList>
@@ -80,11 +90,25 @@ const Home = () => {
             <TabPanel value='1'>
               <div style={styles.title}>Discussions Feed:</div>
               <Box sx={{ flexGrow: 1 }}>
+                {!inFriend && (
+                  <Grid container direction='row' alignItems='center'>
+                    <IconButton
+                      color='primary'
+                      style={{ marginBottom: 30 }}
+                      onClick={() => history.push("/profile/addFeedback")}>
+                      <Grid item>
+                        <AddIcon
+                          fontSize='large'
+                          // to='/profile/addFeedback'
+                        />
+                      </Grid>
+                      <Grid item>Add Discussion</Grid>
+                    </IconButton>
+                  </Grid>
+                )}
                 <Grid container spacing={0}>
                   {discussionCards.map((item) => {
-                    return (
-                      <DiscussionCard key={item.post_id} item={item} />
-                    );
+                    return <DiscussionCard key={item.post_id} item={item} />;
                   })}
                 </Grid>
               </Box>
@@ -92,21 +116,36 @@ const Home = () => {
             <TabPanel value='2'>
               <div style={styles.title}>Feedbacks Card Side</div>
               <Box sx={{ flexGrow: 1 }}>
+                {!inFriend && (
+                  <Grid container direction='row' alignItems='center'>
+                    <IconButton
+                      color='primary'
+                      style={{ marginBottom: 30 }}
+                      onClick={() => history.push("/profile/addFeedback")}>
+                      <Grid item>
+                        <AddIcon
+                          fontSize='large'
+                          // to='/profile/addFeedback'
+                        />
+                      </Grid>
+                      <Grid item>Add Feedback</Grid>
+                    </IconButton>
+                  </Grid>
+                )}
                 <Grid container spacing={0}>
                   {feedbackCards.map((item) => {
-                    return (
-                      <FeedbackCard key={item.poll_id} item={item} />
-                    );
+                    return <FeedbackCard key={item.poll_id} item={item} />;
                   })}
                 </Grid>
               </Box>
             </TabPanel>
           </TabContext>
         </Box>
-      :<>
-        <Loading/>
-      </>
-      }
+      ) : (
+        <>
+          <Loading />
+        </>
+      )}
       {/* <div style={styles.head}>
         <br />
         <div style={styles.card}>
