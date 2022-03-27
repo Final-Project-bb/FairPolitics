@@ -83,12 +83,12 @@ const Home = () => {
                 variant='fullWidth'
                 onChange={handleChange}
                 aria-label='lab API tabs example'>
-                <Tab label='Discussions' value='1' />
-                <Tab label='Polls' value='2' />
+                <Tab label='Posts Feed' value='1' />
+                <Tab label='Polls Feed' value='2' />
               </TabList>
             </Box>
             <TabPanel value='1'>
-              <div style={styles.title}>Discussions Feed:</div>
+              {/* <div style={styles.title}>Posts Feed:</div> */}
               <Box sx={{ flexGrow: 1 }}>
                 {!inFriend && (
                   <Grid container direction='row' alignItems='center'>
@@ -114,7 +114,7 @@ const Home = () => {
               </Box>
             </TabPanel>
             <TabPanel value='2'>
-              <div style={styles.title}>Feedbacks Card Side</div>
+              {/* <div style={styles.title}>Polls Feed</div> */}
               <Box sx={{ flexGrow: 1 }}>
                 {!inFriend && (
                   <Grid container direction='row' alignItems='center'>

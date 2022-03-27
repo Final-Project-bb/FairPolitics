@@ -25,7 +25,7 @@ const createPoll = (req, res) => {
         } else {
           let id = pollId[0].poll_id;
           //   console.log(id);
-          req.body.answer.forEach((ans) => {
+          req.body.answers.forEach((ans) => {
             connection.query(
               `insert into poll_answer(poll_id, user_id, answer) 
                 values(
@@ -46,10 +46,15 @@ const createPoll = (req, res) => {
   });
 };
 const getPoll = (req, res) => {
-  let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer
-  FROM poll JOIN poll_answer join follower ON poll.poll_id=poll_answer.poll_id and follower.user_following_id=poll.user_id
-  where poll.user_id = ${JSON.stringify(req.params.user_id)}
-  group by poll_answer.answer_id order by poll.poll_id`;
+  let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer 
+  ,IF((select count(*) from poll_answer_approval where
+         user_id=${JSON.stringify(
+           req.params.user_id
+         )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
+    FROM poll JOIN poll_answer 
+    ON poll.poll_id=poll_answer.poll_id and 
+    poll.user_id =${JSON.stringify(req.params.user_id)}
+    group by poll_answer.answer_id order by poll.poll_id`;
 
   let allPollsWithAnswer = [];
   let poll_id_hand = -1;
@@ -58,10 +63,16 @@ const getPoll = (req, res) => {
       throw err;
     }
     let poll;
-    // console.log(polls);
     polls.forEach((p) => {
       if (p.poll_id == poll_id_hand) {
-        poll.answers.push({ answer_id: p.answer_id, answer: p.answer });
+        if (p.is_answer === 1) {
+          poll.is_answer_poll = true;
+        }
+        poll.answers.push({
+          is_answer: p.is_answer === 1 ? true : false,
+          answer_id: p.answer_id,
+          answer: p.answer,
+        });
       } else {
         poll_id_hand = p.poll_id;
         poll = {
@@ -70,16 +81,22 @@ const getPoll = (req, res) => {
           title: p.title,
           description: p.description,
           picture: p.picture,
+          is_answer_poll: false,
           answers: [
             {
+              is_answer: p.is_answer === 1 ? true : false,
               answer_id: p.answer_id,
               answer: p.answer,
             },
           ],
         };
+        if (p.is_answer === 1) {
+          poll.is_answer_poll = true;
+        }
         allPollsWithAnswer.push(poll);
       }
     });
+
     res.status(200).send({ allPollsWithAnswer });
   });
 };
@@ -173,30 +190,44 @@ const answerPoll = (req, res) => {
   });
 };
 
+const updateAnswerPoll = (req, res) => {
+  req.body.oldAnswers.forEach((ans) => {
+    let deleteOldAnswersSql = `delete from poll_answer_approval 
+    where user_id = ${JSON.stringify(req.params.user_id)} 
+    and answer_id = ${JSON.stringify(ans)}`;
+    connection.query(deleteOldAnswersSql, function (err, deleteOldAnswers) {
+      if (err) {
+        throw err;
+      }
+    });
+  });
+
+  req.body.newAnswers.forEach((ans) => {
+    let insertNewAnswersSql = `insert into poll_answer_approval
+    (answer_id, user_id) values
+    (${JSON.stringify(ans)},
+     ${JSON.stringify(req.params.user_id)})`;
+    connection.query(insertNewAnswersSql, function (err, insertNewAnswers) {
+      if (err) {
+        throw err;
+      }
+    });
+  });
+  res.status(200).send({ message: "poll user answer updated successfully!" });
+
+};
+
 const pollsFollowing = (req, res) => {
-  // let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer
-  // FROM poll JOIN poll_answer 
-  // ON poll.poll_id=poll_answer.poll_id and 
-  // poll.user_id in (select user_following_id from follower 
-  // where user_id=${JSON.stringify(req.params.user_id)}) 
-  // and poll_answer.answer_id not in 
-  // (select poll_answer_approval.answer_id from poll_answer_approval join poll_answer 
-  // on poll_answer_approval.answer_id = poll_answer.answer_id 
-  // where poll_answer_approval.user_id=${JSON.stringify(req.params.user_id)})
-  // and poll.poll_id not in 
-  // (select poll_answer.poll_id from poll_answer_approval join poll_answer 
-  // on poll_answer_approval.answer_id = poll_answer.answer_id 
-  // where poll_answer_approval.user_id=${JSON.stringify(req.params.user_id)})
-  // group by poll_answer.answer_id order by poll.poll_id`;
-  let query= `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer 
+  let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer 
   ,IF((select count(*) from poll_answer_approval where
-         user_id=${JSON.stringify(req.params.user_id)} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
+         user_id=${JSON.stringify(
+           req.params.user_id
+         )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
     FROM poll JOIN poll_answer 
     ON poll.poll_id=poll_answer.poll_id and 
     poll.user_id in (select user_following_id from follower 
     where user_id=${JSON.stringify(req.params.user_id)}) 
-    group by poll_answer.answer_id order by poll.poll_id`
-  // ${JSON.stringify(req.params.user_id)}
+    group by poll_answer.answer_id order by poll.poll_id`;
 
   let allPollsWithAnswer = [];
   let poll_id_hand = -1;
@@ -205,13 +236,16 @@ const pollsFollowing = (req, res) => {
       throw err;
     }
     let poll;
-    // console.log(polls);
     polls.forEach((p) => {
       if (p.poll_id == poll_id_hand) {
-        if(p.is_answer===1){
-          poll.is_answer=true;
+        if (p.is_answer === 1) {
+          poll.is_answer_poll = true;
         }
-        poll.answers.push({ is_answer: p.is_answer===1?true:false, answer_id: p.answer_id, answer: p.answer });
+        poll.answers.push({
+          is_answer: p.is_answer === 1 ? true : false,
+          answer_id: p.answer_id,
+          answer: p.answer,
+        });
       } else {
         poll_id_hand = p.poll_id;
         poll = {
@@ -220,23 +254,22 @@ const pollsFollowing = (req, res) => {
           title: p.title,
           description: p.description,
           picture: p.picture,
-          is_answer_poll:false,
+          is_answer_poll: false,
           answers: [
             {
-              is_answer:p.is_answer===1?true:false,
+              is_answer: p.is_answer === 1 ? true : false,
               answer_id: p.answer_id,
               answer: p.answer,
             },
           ],
         };
-        if(p.is_answer===1){
-          poll.is_answer_poll=true;
+        if (p.is_answer === 1) {
+          poll.is_answer_poll = true;
         }
         allPollsWithAnswer.push(poll);
       }
     });
 
-    // allPollsWithAnswer.filter()
     res.status(200).send({ allPollsWithAnswer });
   });
 };
@@ -247,5 +280,6 @@ module.exports = {
   updatePoll,
   deletePoll,
   answerPoll,
+  updateAnswerPoll,
   pollsFollowing,
 };
