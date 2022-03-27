@@ -99,7 +99,7 @@ const Profile = () => {
                 </TabList>
               </Box>
               <TabPanel value='1'>
-                <div style={styles.title}>Discussions Feed:</div>
+                {/* <div style={styles.title}>Discussions Feed:</div> */}
                 <Box sx={{ flexGrow: 1 }}>
                   {!inFriend && (
                     <Grid container direction='row' alignItems='center'>
@@ -119,13 +119,13 @@ const Profile = () => {
                   )}
                   <Grid container spacing={0}>
                     {profileDiscussionCards.map((item) => {
-                      return <DiscussionCard key={item.post_id} item={item} />;
+                      return <DiscussionCard key={item.post_id} item={item} inProfile={true} />;
                     })}
                   </Grid>
                 </Box>
               </TabPanel>
               <TabPanel value='2'>
-                <div style={styles.title}>Feedbacks Card Side</div>
+                {/* <div style={styles.title}>Feedbacks Card Side</div> */}
                 <Box sx={{ flexGrow: 1 }}>
                   {!inFriend && (
                     <Grid container direction='row' alignItems='center'>
@@ -145,7 +145,7 @@ const Profile = () => {
                   )}
                   <Grid container spacing={0}>
                     {profileFeedbackCards.map((item) => {
-                      return <FeedbackCard key={item.poll_id} item={item} />;
+                      return <FeedbackCard key={item.poll_id} item={item} inProfile={true}/>;
                     })}
                   </Grid>
                 </Box>
@@ -192,7 +192,7 @@ const styles = {
   },
   title: {
     display: "flex",
-    justifyContent: "space-around",
+    // justifyContent: "space-around",
     // flexDirection: 'row',
     // position: "relative",
     // marginLeft:10,

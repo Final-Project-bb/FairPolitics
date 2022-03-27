@@ -21,17 +21,21 @@ import EditIcon from "@mui/icons-material/Edit";
 
 const FeedbackCard = ({ item, inProfile }) => {
   const [onEdit, setOnEdit] = useState(false);
-  const [answers, setAnswers] = useState([]);
+  const [oldAnswers, setOldAnswers] = useState([]);
+  const [newAnswers, setNewAnswers] = useState([]);
+  const [userName, setUserName] = useState("");
 
   // const [height, setHeight] = useState(0);
   useEffect(() => {
+    getUserDetails();
     const answer_approval = [];
     item.answers.map((answer) => {
       if (answer.is_answer) {
         answer_approval.push(answer.answer_id);
       }
     });
-    setAnswers(answer_approval);
+    setNewAnswers(answer_approval);
+    setOldAnswers(answer_approval);
   }, []);
 
   const {
@@ -46,7 +50,7 @@ const FeedbackCard = ({ item, inProfile }) => {
 
   const FriendProfileRef = async () => {
     let id = item.user_id;
-    console.log(id);
+    // console.log(id);
 
     await fetch(`http://localhost:4000/api/get_user_by_id/${id}`, {
       method: "GET",
@@ -61,15 +65,34 @@ const FeedbackCard = ({ item, inProfile }) => {
     history.push("/FriendProfile");
   };
 
+  const getUserDetails = async () => {
+    let id = item.user_id;
+
+    await fetch(`http://localhost:4000/api/get_user_by_id/${id}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        // console.log(json.result[0]);
+        setUserName({
+          first_name: json.result[0].first_name,
+          last_name: json.result[0].last_name,
+        });
+        return json.result[0];
+      })
+      .catch((err) => console.error(err));
+  };
+
   const handleCheckbox = (answer_id) => {
-    answers.filter((answer) => answer === answer_id).length > 0
-      ? setAnswers(answers.filter((answer) => answer !== answer_id))
-      : setAnswers([...answers, answer_id]);
+    // console.log(answers);
+    newAnswers.filter((answer) => answer === answer_id).length > 0
+      ? setNewAnswers(newAnswers.filter((answer) => answer !== answer_id))
+      : setNewAnswers([...newAnswers, answer_id]);
   };
 
   const answerPoll = async () => {
     const ans = {
-      answers: answers,
+      answers: newAnswers,
     };
     await fetch(
       `http://localhost:4000/api/answer_poll/${user_details.user_id}`,
@@ -83,9 +106,29 @@ const FeedbackCard = ({ item, inProfile }) => {
       .then((json) => console.log(json))
       .catch((err) => console.error(err));
   };
-  const updateAnswerPoll = () => {
-    console.log(answers);
+
+  const updateAnswerPoll = async () => {
+    setLoading(true);
+    console.log(newAnswers);
+    const ans = {
+      newAnswers: newAnswers,
+      oldAnswers: oldAnswers,
+    };
+    await fetch(
+      `http://localhost:4000/api/update_answer_poll/${user_details.user_id}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(ans),
+      }
+    )
+      .then((res) => res.json())
+      .then((json) => console.log(json))
+      .catch((err) => console.error(err));
+    setLoading(false);
+
   };
+
   const editPoll = (e) => {
     // console.log(item);
     setCurrentItem(item);
@@ -130,14 +173,9 @@ const FeedbackCard = ({ item, inProfile }) => {
                     }
                   />
                 </Grid>
-                <Grid
-                  item
-                  fontSize='small'
-                  // component='button'
-                  // variant='body2'
-                  // onClick={FriendProfileRef}
-                  style={{ marginTop: 8 }}>
-                  {item.user_id}
+                <Grid item fontSize='small' style={{ marginTop: 8 }}>
+                  {/* {item.user_id} */}
+                  {userName.first_name} {userName.last_name}
                 </Grid>
               </Grid>
             </IconButton>
@@ -161,6 +199,7 @@ const FeedbackCard = ({ item, inProfile }) => {
                       onClick={() => handleCheckbox(answer.answer_id)}
                     />
                     {answer.answer}
+                    {answer.is_answer}
                   </CardContent>
                 ))}
                 <CardActions>

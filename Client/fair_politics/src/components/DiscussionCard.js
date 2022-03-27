@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { AppContext } from "./Context";
 import { useHistory } from "react-router-dom";
 import {
@@ -22,17 +22,17 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import SendIcon from "@mui/icons-material/Send";
+import Comments from "./Comments";
 
 const DiscussionCard = ({ item, inProfile }) => {
   const [commentsButtonId, setCommentsButtonId] = useState(0);
   const [commentsButton, setCommentsButton] = useState(false);
   const [comment, setComment] = useState("");
-  const [commentEdit, setCommentEdit] = useState("");
-  const [editCommentForm, setEditCommentForm] = useState(false);
-  const [commentsEditButtonId, setCommentsEditButtonId] = useState(0);
+
   // const [post, setPost] = useState(item);
   const [likes, setLikes] = useState(item.likes);
   const [comments, setComments] = useState(item.comments);
+  const [userName, setUserName] = useState("");
 
   const {
     user_details,
@@ -46,16 +46,20 @@ const DiscussionCard = ({ item, inProfile }) => {
 
   const history = useHistory();
 
+  useEffect(() => {
+    getUserDetails();
+  }, []);
+
   const FriendProfileRef = async () => {
     let id = item.user_id;
-    console.log(id);
+    // console.log(id);
 
     await fetch(`http://localhost:4000/api/get_user_by_id/${id}`, {
       method: "GET",
     })
       .then((res) => res.json())
       .then((json) => {
-        console.log(json.result[0]);
+        // console.log(json.result[0]);
         setFriendDetails(json.result[0]);
       })
       .catch((err) => console.error(err));
@@ -72,45 +76,21 @@ const DiscussionCard = ({ item, inProfile }) => {
     }
   };
 
-  const LikeComment = async (comment_id) => {
-    // let newComments = comments;
-    // if (
-    //   comments
-    //     .filter((comment) => comment.comment_id === comment_id)[0]
-    //     .comment_likes.filter(
-    //       (like_user_id) => like_user_id === user_details.user_id
-    //     ).length > 0
-    // ) {
-    //   console.log("like exist");
-    //   console.log(newComments);
-    //   newComments.forEach((comment, index, object) => {
-    //     if (comment.comment_id === comment_id) {
-    //       // comment.comment_likes.splice(comment, 1);
-    //       object.splice(index, 1);
-    //     }
-    //   });
-    //   setComments(newComments);
-    // } else {
-    //   console.log("like unexist");
-    //   newComments.forEach((comment) => {
-    //     if (comment.comment_id === comment_id) {
-    //       comment.comment_likes.push(user_details.user_id);
-    //     }
-    //   });
-    //   setComments(newComments);
-    // }
+  const getUserDetails = async () => {
+    let id = item.user_id;
 
-    const details = {
-      comment_id: comment_id,
-      user_id: user_details.user_id,
-    };
-    await fetch(`http://localhost:4000/api/add_like_to_comment`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(details),
+    await fetch(`http://localhost:4000/api/get_user_by_id/${id}`, {
+      method: "GET",
     })
       .then((res) => res.json())
-      .then((json) => console.log(json))
+      .then((json) => {
+        // console.log(json.result[0]);
+        setUserName({
+          first_name: json.result[0].first_name,
+          last_name: json.result[0].last_name,
+        });
+        return json.result[0];
+      })
       .catch((err) => console.error(err));
   };
 
@@ -149,35 +129,6 @@ const DiscussionCard = ({ item, inProfile }) => {
       .then((json) => console.log(json))
       .catch((err) => console.error(err));
     setComment("");
-  };
-
-  const editComment = async (comment_id) => {
-    const newComment = {
-      comment: commentEdit,
-    };
-    await fetch(`http://localhost:4000/api/update_comment/${comment_id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newComment),
-    })
-      .then((res) => res.json())
-      .then((json) => console.log(json))
-      .catch((err) => console.error(err));
-    setComment("");
-    setEditCommentForm(false);
-  };
-
-  const deleteComment = async (comment_id) => {
-    if (window.confirm("Are you sure you want to delete this comment?")) {
-      setComments(comments.filter((comment) => comment_id !== comment_id));
-      await fetch(`http://localhost:4000/api/delete_comment/${comment_id}`, {
-        method: "DELETE",
-      })
-        .then((res) => res.json())
-        .then((json) => console.log(json))
-        .catch((err) => console.error(err));
-      setComment("");
-    }
   };
 
   const editDiscussion = () => {
@@ -229,7 +180,8 @@ const DiscussionCard = ({ item, inProfile }) => {
                 />
               </Grid>
               <Grid item fontSize='small' style={{ marginTop: 8 }}>
-                {item.user_id}
+                {/* {item.user_id} */}
+                {userName.first_name} {userName.last_name}
               </Grid>
             </Grid>
           </IconButton>
@@ -245,9 +197,8 @@ const DiscussionCard = ({ item, inProfile }) => {
             {/* variant={likes.filter(like => like === user_details.user_id).length > 0 ? 'contained' : 'outlined' } */}
             <Tooltip
               title={
-                item.likes.filter(
-                  (like) => like === user_details.user_id
-                ).length > 0
+                item.likes.filter((like) => like === user_details.user_id)
+                  .length > 0
                   ? "Unlike"
                   : "Like"
               }>
@@ -293,114 +244,14 @@ const DiscussionCard = ({ item, inProfile }) => {
             {comments[0].comment_id !== null &&
               comments.map((comment) => {
                 return (
-                  <div key={comment.comment_id}>
-                    <CardContent style={styles.commentContent}>
-                      <CardContent
-                      // style={{ display: "block", verticalAlign: "middle" }}
-                      >
-                        <IconButton onClick={FriendProfileRef} sx={{ p: 0 }}>
-                          <Grid
-                            container
-                            direction='column'
-                            alignItems='center'>
-                            <Grid item>
-                              <Avatar
-                                alt='Remy Sharp'
-                                src={
-                                  require("../images/profilePicExmple.jpg")
-                                  //user_details.profile_picture
-                                }
-                              />
-                            </Grid>
-                            <Grid
-                              item
-                              fontSize='small'
-                              style={{ marginTop: 8 }}>
-                              {item.user_id}
-                            </Grid>
-                          </Grid>
-                        </IconButton>
-                      </CardContent>
-                      <Divider orientation='vertical' flexItem />
-
-                      <div style={{ display: "flex", flex: 8, marginLeft: 20 }}>
-                        {comment.comment}
-                      </div>
-                      {comment.user_id_comment === user_details.user_id && (
-                        <>
-                          {editCommentForm &&
-                            commentsEditButtonId === comment.comment_id && (
-                              <CardContent style={styles.editCommentForm}>
-                                <TextField
-                                  size='small'
-                                  id='standard-basic'
-                                  variant='standard'
-                                  label='Edit Comment'
-                                  type='text'
-                                  value={commentEdit}
-                                  onChange={(e) =>
-                                    setCommentEdit(e.target.value)
-                                  }
-                                />
-                                <SendIcon
-                                  variant='contained'
-                                  size='small'
-                                  onClick={() =>
-                                    editComment(comment.comment_id)
-                                  }
-                                />
-                              </CardContent>
-                            )}
-                          <Tooltip title='Edit'>
-                            <EditIcon
-                              style={{ display: "flex", flex: 0.7 }}
-                              onClick={() => {
-                                setEditCommentForm(!editCommentForm);
-                                setCommentsEditButtonId(comment.comment_id);
-                                setCommentEdit(comment.comment);
-                              }}
-                            />
-                          </Tooltip>
-
-                          <Tooltip title='Delete'>
-                            <DeleteIcon
-                              style={{ display: "flex", flex: 0.7 }}
-                              onClick={() => deleteComment(comment.comment_id)}
-                            />
-                          </Tooltip>
-
-                          <Divider orientation='vertical' flexItem />
-                        </>
-                      )}
-                      <Tooltip
-                        title={
-                          comment.comment_likes.filter(
-                            (like) => like === user_details.user_id
-                          ).length > 0
-                            ? "Unlike"
-                            : "Like"
-                        }>
-                        <FavoriteBorderIcon
-                          style={{
-                            display: "flex",
-                            flex: 1,
-                            marginRight: 20,
-                          }}
-                          color={
-                            comment.comment_likes.filter(
-                              (like) => like === user_details.user_id
-                            ).length > 0
-                              ? "error"
-                              : ""
-                          }
-                          onClick={() => LikeComment(comment.comment_id)}
-                        />
-                        {/* {comment.comment_likes.length} */}
-                        {/* </FavoriteBorderIcon> */}
-                      </Tooltip>
-                    </CardContent>
-                    <Divider variant='middle' />
-                  </div>
+                  <Comments
+                    key={comment.comment_id}
+                    item={item}
+                    comment={comment}
+                    setComment={setComment}
+                    setComments={setComments}
+                    comments={comments}
+                  />
                 );
               })}
           </CardContent>

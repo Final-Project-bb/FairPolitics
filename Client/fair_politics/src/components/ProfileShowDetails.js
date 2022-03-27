@@ -257,7 +257,7 @@ const styles = {
   profileHead: {
     display: "flex",
     // justifyContent: "space-around",
-    flexDirection: "column",
+    flexDirection: "row",
     position: "relative",
     //   left: -50,
     top: 100,
