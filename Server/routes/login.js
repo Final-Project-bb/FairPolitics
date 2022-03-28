@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-// const passport = require("passport");
+const passport = require("passport");
 const connection = require("../lib/db");
 
 const {
@@ -42,7 +42,7 @@ router.post("/choose_algorithm/:user_id/:algorithm_id", chooseAlgorithm); //work
 router.get("/get_algorithm/:user_id", getChosenAlgorithm); //works fine
 
 
-// const CLIENT_URL = "http://localhost:4000/";
+const CLIENT_URL = "http://localhost:3000/";
 // router.get("/login/success", (req, res) => {
 //   if (req.user) {
 //     res.status(200).json({
@@ -66,15 +66,15 @@ router.get("/get_algorithm/:user_id", getChosenAlgorithm); //works fine
 //   res.redirect(CLIENT_URL);
 // });
 
-// router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
+router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
 
-// router.get(
-//   "/google/callback",
-//   passport.authenticate("google", {
-//     successRedirect: CLIENT_URL,
-//     failureRedirect: "/login/failed",
-//   })
-// );
+router.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    successRedirect: CLIENT_URL,
+    failureRedirect: "/login/failed",
+  })
+);
 
 // router.get("/facebook", passport.authenticate("facebook", { scope: ["profile"] }));
 
