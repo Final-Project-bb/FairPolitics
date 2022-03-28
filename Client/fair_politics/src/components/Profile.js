@@ -27,10 +27,10 @@ const Profile = () => {
     user_details,
     loading,
     setLoading,
-    profileFeedbackCards,
-    profileDiscussionCards,
-    setProfileFeedbackCards,
-    setProfileDiscussionCards,
+    profilePostCards, 
+    setProfilePostCards,
+    profilePollCards, 
+    setProfilePollCards,
     setInFriend,
     inFriend,
   } = useContext(AppContext);
@@ -52,7 +52,7 @@ const Profile = () => {
     console.log("fetchSelfPolls");
 
     if (data !== undefined) {
-      await setProfileFeedbackCards(data.allPollsWithAnswer);
+      await setProfilePollCards(data.allPollsWithAnswer);
     }
     setLoading(false);
   };
@@ -67,7 +67,7 @@ const Profile = () => {
     console.log("fetchSelfDiscussions");
 
     if (data !== undefined) {
-      await setProfileDiscussionCards(data.allPostsWithComments);
+      await setProfilePostCards(data.allPostsWithComments);
     }
     setLoading(false);
   };
@@ -119,7 +119,7 @@ const Profile = () => {
                       </IconButton>
                     </Grid>
                   <Grid container spacing={0}>
-                    {profileDiscussionCards.map((item) => {
+                    {profilePostCards.map((item) => {
                       return (
                         <DiscussionCard
                           key={item.post_id}
@@ -149,7 +149,7 @@ const Profile = () => {
                       </IconButton>
                     </Grid>
                   <Grid container spacing={0}>
-                    {profileFeedbackCards.map((item) => {
+                    {profilePollCards.map((item) => {
                       return (
                         <FeedbackCard
                           key={item.poll_id}

@@ -22,10 +22,10 @@ const Home = () => {
     user_details,
     loading,
     setLoading,
-    setFeedbackCards,
-    setDiscussionCards,
-    feedbackCards,
-    discussionCards,
+    pollCards,
+    setPollCards,
+    postCards,
+    setPostCards,
     inFriend,
     setInFriend,
   } = useContext(AppContext);
@@ -48,7 +48,7 @@ const Home = () => {
     console.log(data.allPostsWithComments);
 
     if (data != undefined) {
-      await setDiscussionCards(data.allPostsWithComments);
+      await setPostCards(data.allPostsWithComments);
     }
     setLoading(false);
   };
@@ -64,7 +64,7 @@ const Home = () => {
     // console.log(data.allPollsWithAnswer);
 
     if (data !== undefined) {
-      await setFeedbackCards(data.allPollsWithAnswer);
+      await setPollCards(data.allPollsWithAnswer);
     }
     setLoading(false);
   };
@@ -107,7 +107,7 @@ const Home = () => {
                   </IconButton>
                 </Grid>
                 <Grid container spacing={0}>
-                  {discussionCards.map((item) => {
+                  {postCards.map((item) => {
                     return <DiscussionCard key={item.post_id} item={item} />;
                   })}
                 </Grid>
@@ -127,7 +127,7 @@ const Home = () => {
                   </IconButton>
                 </Grid>
                 <Grid container spacing={0}>
-                  {feedbackCards.map((item) => {
+                  {pollCards.map((item) => {
                     return <FeedbackCard key={item.poll_id} item={item} />;
                   })}
                 </Grid>
