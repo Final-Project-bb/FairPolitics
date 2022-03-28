@@ -18,6 +18,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Search from "./components/Search";
 import EditDiscussionCard from "./components/EditDiscussionCard";
 import EditFeedbackCard from "./components/EditFeedbackCard";
+import Algorithms from "./components/Algorithms";
 function App() {
   const [user_details, setUserDetails] = useState({});
   const [friend_details, setFriendDetails] = useState({});
@@ -132,6 +133,9 @@ function App() {
               </Route>
               <Route exact path='/FriendProfile'>
                 <FriendProfile />
+              </Route>
+              <Route exact path='/algorithms'>
+                <Algorithms />
               </Route>
             </>
           )}

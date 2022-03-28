@@ -15,6 +15,7 @@ import {
   IconButton,
   Avatar,
   Grid,
+  Tooltip,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -126,7 +127,6 @@ const FeedbackCard = ({ item, inProfile }) => {
       .then((json) => console.log(json))
       .catch((err) => console.error(err));
     setLoading(false);
-
   };
 
   const editPoll = (e) => {
@@ -153,32 +153,43 @@ const FeedbackCard = ({ item, inProfile }) => {
         <Card style={styles.card}>
           {inProfile && (
             <CardContent style={{ display: "flex", flex: 3 }}>
-              <EditIcon style={{ flex: 0.1 }} onClick={(e) => editPoll(e)} />
-              <DeleteIcon
-                style={{ flex: 0.1 }}
-                onClick={(e) => deletePoll(e)}
-              />
+              <Tooltip title='Edit'>
+                <EditIcon
+                  sx={[{ "&:hover": { color: "#2196f3" }, cursor: 'pointer' }]}
+                  style={{ flex: 0.1 }}
+                  onClick={(e) => editPoll(e)}
+                />
+              </Tooltip>
+              <Tooltip title='Delete'>
+                <DeleteIcon
+                  sx={[{ "&:hover": { color: "#2196f3" }, cursor: 'pointer' }]}
+                  style={{ flex: 0.1 }}
+                  onClick={(e) => deletePoll(e)}
+                />
+              </Tooltip>
             </CardContent>
           )}
 
           <CardContent style={{ display: "block", verticalAlign: "middle" }}>
-            <IconButton onClick={FriendProfileRef} sx={{ p: 0 }}>
-              <Grid container direction='column' alignItems='center'>
-                <Grid item>
-                  <Avatar
-                    alt='Remy Sharp'
-                    src={
-                      require("../images/profilePicExmple.jpg")
-                      //user_details.profile_picture
-                    }
-                  />
+            <Tooltip title='Go To Profile'>
+              <IconButton onClick={FriendProfileRef} sx={{ p: 0 }}>
+                <Grid container direction='column' alignItems='center'>
+                  <Grid item>
+                    <Avatar
+                      alt='Remy Sharp'
+                      src={
+                        require("../images/profilePicExmple.jpg")
+                        //user_details.profile_picture
+                      }
+                    />
+                  </Grid>
+                  <Grid item fontSize='small' style={{ marginTop: 8 }}>
+                    {/* {item.user_id} */}
+                    {userName.first_name} {userName.last_name}
+                  </Grid>
                 </Grid>
-                <Grid item fontSize='small' style={{ marginTop: 8 }}>
-                  {/* {item.user_id} */}
-                  {userName.first_name} {userName.last_name}
-                </Grid>
-              </Grid>
-            </IconButton>
+              </IconButton>
+            </Tooltip>
           </CardContent>
           <CardContent style={styles.title}>
             {item.poll_id} {item.title}

@@ -7,8 +7,24 @@ import DiscussionCard from "./DiscussionCard";
 import FeedbackCard from "./FeedbackCard";
 import styled from "styled-components";
 import { AppContext } from "./Context";
+import Box from "@mui/material/Box";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
+import Grid from "@mui/material/Grid";
 import Loading from "./Loading";
+import AddIcon from "@mui/icons-material/Add";
+import IconButton from "@mui/material/IconButton";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useHistory } from "react-router-dom";
+import { Backdrop } from "@mui/material";
+
 const FriendProfile = () => {
+  const [value, setValue] = React.useState("1");
+
+  const history = useHistory();
+
   const {
     friend_details,
     loading,
@@ -17,21 +33,12 @@ const FriendProfile = () => {
     profileDiscussionCards,
     setProfileFeedbackCards,
     setProfileDiscussionCards,
+    inFriend,
   } = useContext(AppContext);
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
-  // const fetchSelfPolls = async () => {
-  //   setLoading(true);
-  //   const response = await fetch(`http://localhost:4000/api/get_polls/${user_details.user_id}`);
-  //   const data = await response.json();
-  //   // console.log(data.result);
-  //   console.log("fetchPolls");
-  //   console.log(data.result);
-
-  //   if (data !== undefined) {
-  //     await setFeedbackCards(data.result[0]);
-  //   }
-  //   setLoading(false);
-  // };
   const fetchSelfPolls = async () => {
     setLoading(true);
     const response = await fetch(
@@ -69,29 +76,54 @@ const FriendProfile = () => {
   }, []);
 
   return (
-    <div>
-      <Header title='Profile Page' />
+    <div style={{ backgroundColor: "whitesmoke" }}>
+      <Header title='Home Page' />
       <ProfileHeader />
-      <br />
-      <br />
-      {!loading ? <>
-        <div style={styles.head}>
-          <br />
-          <div style={styles.card}>
-            <div style={styles.title}>Discussions Card Side</div>
-            {profileDiscussionCards.map((item) => {
-              return <DiscussionCard key={item.post_id} item={item} />;
-            })}
-          </div>
-          <div style={styles.card}>
-            <div style={styles.title}>Feedbacks Card Side</div>
-            {profileFeedbackCards.map((item) => {
-              return <FeedbackCard key={item.poll_id} item={item} />;
-            })}
-          </div>
-        </div>
-      </>
-        : <Loading />}
+
+      {!loading ? (
+        <Box sx={{ width: "100%", typography: "body1" }}>
+          <TabContext value={value}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <TabList
+                variant='fullWidth'
+                onChange={handleChange}
+                aria-label='lab API tabs example'>
+                <Tab label={`${friend_details.first_name}'S Posts`} value='1' />
+                <Tab label={`${friend_details.first_name}'S Polls`} value='2' />
+              </TabList>
+            </Box>
+            <TabPanel value='1'>
+              {/* <div style={styles.title}>Posts Feed:</div> */}
+              <Box sx={{ flexGrow: 1 }}>
+                <Grid container spacing={0}>
+                  {profileDiscussionCards.map((item) => {
+                    return <DiscussionCard key={item.post_id} item={item} />;
+                  })}
+                </Grid>
+              </Box>
+            </TabPanel>
+            <TabPanel value='2'>
+              {/* <div style={styles.title}>Polls Feed</div> */}
+              <Box sx={{ flexGrow: 1 }}>
+                <Grid container spacing={0}>
+                  {profileFeedbackCards.map((item) => {
+                    return <FeedbackCard key={item.poll_id} item={item} />;
+                  })}
+                </Grid>
+              </Box>
+            </TabPanel>
+          </TabContext>
+        </Box>
+      ) : (
+        <>
+          <Backdrop
+            sx={{ color: "#fff" }}
+            open={loading}
+            onClick={() => setLoading(false)}>
+            <CircularProgress color='inherit' />
+          </Backdrop>
+        </>
+      )}
     </div>
   );
 };
