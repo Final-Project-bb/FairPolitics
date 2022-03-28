@@ -156,35 +156,43 @@ const DiscussionCard = ({ item, inProfile }) => {
       <Card style={styles.card}>
         {inProfile && (
           <CardContent style={{ display: "flex", flex: 3 }}>
-            <EditIcon
-              style={{ flex: 0.1 }}
-              onClick={(e) => editDiscussion(e)}
-            />
-            <DeleteIcon
-              style={{ flex: 0.1 }}
-              onClick={(e) => deleteDiscussion(e)}
-            />
+            <Tooltip title='Edit'>
+              <EditIcon
+                sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
+                style={{ flex: 0.1 }}
+                onClick={(e) => editDiscussion(e)}
+              />
+            </Tooltip>
+            <Tooltip title='Delete'>
+              <DeleteIcon
+                sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
+                style={{ flex: 0.1 }}
+                onClick={(e) => deleteDiscussion(e)}
+              />
+            </Tooltip>
           </CardContent>
         )}
 
         <CardContent style={{ display: "block", verticalAlign: "middle" }}>
-          <IconButton onClick={FriendProfileRef} sx={{ p: 0 }}>
-            <Grid container direction='column' alignItems='center'>
-              <Grid item>
-                <Avatar
-                  alt='Remy Sharp'
-                  src={
-                    require("../images/profilePicExmple.jpg")
-                    //user_details.profile_picture
-                  }
-                />
+          <Tooltip title='Go To Profile'>
+            <IconButton onClick={FriendProfileRef} sx={{ p: 0 }}>
+              <Grid container direction='column' alignItems='center'>
+                <Grid item>
+                  <Avatar
+                    alt='Remy Sharp'
+                    src={
+                      require("../images/profilePicExmple.jpg")
+                      //user_details.profile_picture
+                    }
+                  />
+                </Grid>
+                <Grid item fontSize='small' style={{ marginTop: 8 }}>
+                  {/* {item.user_id} */}
+                  {userName.first_name} {userName.last_name}
+                </Grid>
               </Grid>
-              <Grid item fontSize='small' style={{ marginTop: 8 }}>
-                {/* {item.user_id} */}
-                {userName.first_name} {userName.last_name}
-              </Grid>
-            </Grid>
-          </IconButton>
+            </IconButton>
+          </Tooltip>
           <br />
         </CardContent>
         <CardContent style={styles.title}>
@@ -205,6 +213,7 @@ const DiscussionCard = ({ item, inProfile }) => {
               <FavoriteBorderIcon
                 label={likes.length}
                 fontSize='large'
+                sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
                 style={{
                   display: "flex",
                   flex: 1,
@@ -257,18 +266,25 @@ const DiscussionCard = ({ item, inProfile }) => {
           </CardContent>
         )}
         {commentsButton && commentsButtonId === item.post_id && (
-          <CardContent style={styles.formStyle}>
+          <CardContent>
             <TextField
+              sx={{ width: "80%" }}
               // helperText='Tagged elected officials - Example: @israel israel @other person'
               id='standard-basic'
               variant='standard'
-              label='Add Comment'
+              // label='Add Comment'
               type='text'
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              // placeholder='add comment'
+              placeholder='Add comment'
             />
-            <SendIcon variant='contained' onClick={() => addComment()} />
+            <Tooltip title='Send'>
+              <SendIcon
+                sx={styles.sendButton}
+                variant='contained'
+                onClick={() => addComment()}
+              />
+            </Tooltip>
           </CardContent>
         )}
       </Card>
@@ -346,6 +362,20 @@ const styles = {
     flexDirection: "row",
     position: "relative",
   },
+  sendButton: [
+    {
+      "&:hover": {
+        color: "#2196f3",
+        backgroundColor: "white",
+      },
+      "&:active": {
+        color: "#1769aa",
+        backgroundColor: "white",
+      },
+      cursor: "pointer",
+      width: "20%",
+    },
+  ],
 };
 
 export default DiscussionCard;

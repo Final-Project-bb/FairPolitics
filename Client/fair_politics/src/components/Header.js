@@ -12,12 +12,10 @@ const Header = ({ title }) => {
     <div style={styles.title}>
       {/* <Navbar /> */}
       <AppBar />
-
       <Nav>
-        <h3 style={styles.text}>
-          {user_details.first_name} {user_details.last_name} WellCome to Fair
-          Politic's
-        </h3>
+        <label style={styles.text}>
+          Wellcome, {user_details.first_name} {user_details.last_name}
+        </label>
       </Nav>
     </div>
   );
@@ -57,6 +55,11 @@ const styles = {
     display: "flex",
     position: "relative",
     color: "whitesmoke",
+    fontWeight: "20",
+    fontSize: 20,
+    justifyContent: "center",
+    left: 10,
+    top: 10,
     // left:100,
     // top:-25,
   },

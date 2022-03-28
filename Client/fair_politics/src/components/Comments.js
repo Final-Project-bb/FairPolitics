@@ -174,24 +174,26 @@ const Comments = ({
     <div>
       <CardContent style={styles.commentContent}>
         <CardContent
-        // style={{ display: "block", verticalAlign: "middle" }}
-        >
-          <IconButton onClick={FriendProfileRef} sx={{ p: 0 }}>
-            <Grid container direction='column' alignItems='center'>
-              <Grid item>
-                <Avatar
-                  alt='Remy Sharp'
-                  src={
-                    require("../images/profilePicExmple.jpg")
-                    //user_details.profile_picture
-                  }
-                />
+          // style={{ display: "block", verticalAlign: "middle" }}
+          sx={{ width: "15%", padding: 0 }}>
+          <Tooltip title='Go To Profile'>
+            <IconButton onClick={FriendProfileRef}>
+              <Grid container direction='column' alignItems='center'>
+                <Grid item>
+                  <Avatar
+                    alt='Remy Sharp'
+                    src={
+                      require("../images/profilePicExmple.jpg")
+                      //user_details.profile_picture
+                    }
+                  />
+                </Grid>
+                <Grid item fontSize='small' style={{ marginTop: 8 }}>
+                  {userName.first_name} {userName.last_name}
+                </Grid>
               </Grid>
-              <Grid item fontSize='small' style={{ marginTop: 8 }}>
-                {userName.first_name} {userName.last_name}
-              </Grid>
-            </Grid>
-          </IconButton>
+            </IconButton>
+          </Tooltip>
         </CardContent>
         <Divider orientation='vertical' flexItem />
 
@@ -206,13 +208,13 @@ const Comments = ({
                   size='small'
                   id='standard-basic'
                   variant='standard'
-                  label='Edit Comment'
+                  placeholder='Edit Comment'
                   type='text'
                   value={commentEdit}
                   onChange={(e) => setCommentEdit(e.target.value)}
                 />
                 <SendIcon
-                  variant='contained'
+                  sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
                   size='small'
                   onClick={() => editComment(comment.comment_id)}
                 />
@@ -220,7 +222,8 @@ const Comments = ({
             )}
             <Tooltip title='Edit'>
               <EditIcon
-                style={{ display: "flex", flex: 0.7 }}
+                // style={{ display: "flex", flex: 0.7 }}
+                sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
                 onClick={() => {
                   setEditCommentForm(!editCommentForm);
                   setCommentsEditButtonId(comment.comment_id);
@@ -231,7 +234,8 @@ const Comments = ({
 
             <Tooltip title='Delete'>
               <DeleteIcon
-                style={{ display: "flex", flex: 0.7 }}
+                // style={{ display: "flex", flex: 0.7 }}
+                sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
                 onClick={() => deleteComment(comment.comment_id)}
               />
             </Tooltip>
@@ -241,22 +245,21 @@ const Comments = ({
         )}
         <Tooltip
           title={
-            commentLikes.filter(
-              (like) => like === user_details.user_id
-            ).length > 0
+            commentLikes.filter((like) => like === user_details.user_id)
+              .length > 0
               ? "Unlike"
               : "Like"
           }>
           <FavoriteBorderIcon
-            style={{
-              display: "flex",
-              flex: 1,
-              marginRight: 20,
-            }}
+            sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
+            // style={{
+            //   display: "flex",
+            //   flex: 1,
+            //   marginRight: 20,
+            // }}
             color={
-              commentLikes.filter(
-                (like) => like === user_details.user_id
-              ).length > 0
+              commentLikes.filter((like) => like === user_details.user_id)
+                .length > 0
                 ? "error"
                 : ""
             }

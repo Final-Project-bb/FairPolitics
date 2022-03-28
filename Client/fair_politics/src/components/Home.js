@@ -12,8 +12,10 @@ import Grid from "@mui/material/Grid";
 import Loading from "./Loading";
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { useHistory } from "react-router-dom";
+import { Backdrop } from "@mui/material";
 
 const Home = () => {
   const {
@@ -24,7 +26,8 @@ const Home = () => {
     setDiscussionCards,
     feedbackCards,
     discussionCards,
-    inFriend
+    inFriend,
+    setInFriend,
   } = useContext(AppContext);
 
   const [value, setValue] = React.useState("1");
@@ -90,22 +93,19 @@ const Home = () => {
             <TabPanel value='1'>
               {/* <div style={styles.title}>Posts Feed:</div> */}
               <Box sx={{ flexGrow: 1 }}>
-                {!inFriend && (
-                  <Grid container direction='row' alignItems='center'>
-                    <IconButton
-                      color='primary'
-                      style={{ marginBottom: 30 }}
-                      onClick={() => history.push("/profile/addFeedback")}>
-                      <Grid item>
-                        <AddIcon
-                          fontSize='large'
-                          // to='/profile/addFeedback'
-                        />
-                      </Grid>
-                      <Grid item>Add Discussion</Grid>
-                    </IconButton>
-                  </Grid>
-                )}
+                <Grid container direction='row' alignItems='center'>
+                  <IconButton
+                    sx={[{ "&:hover": { color: "#2196f3" }, marginBottom: 5 }]}
+                    onClick={() => history.push("/profile/addFeedback")}>
+                    <Grid item>
+                      <AddIcon
+                        fontSize='large'
+                        // to='/profile/addFeedback'
+                      />
+                    </Grid>
+                    <Grid item>Add New Post</Grid>
+                  </IconButton>
+                </Grid>
                 <Grid container spacing={0}>
                   {discussionCards.map((item) => {
                     return <DiscussionCard key={item.post_id} item={item} />;
@@ -116,22 +116,16 @@ const Home = () => {
             <TabPanel value='2'>
               {/* <div style={styles.title}>Polls Feed</div> */}
               <Box sx={{ flexGrow: 1 }}>
-                {!inFriend && (
-                  <Grid container direction='row' alignItems='center'>
-                    <IconButton
-                      color='primary'
-                      style={{ marginBottom: 30 }}
-                      onClick={() => history.push("/profile/addFeedback")}>
-                      <Grid item>
-                        <AddIcon
-                          fontSize='large'
-                          // to='/profile/addFeedback'
-                        />
-                      </Grid>
-                      <Grid item>Add Feedback</Grid>
-                    </IconButton>
-                  </Grid>
-                )}
+                <Grid container direction='row' alignItems='center'>
+                  <IconButton
+                    sx={[{ "&:hover": { color: "#2196f3" }, marginBottom: 5 }]}
+                    onClick={() => history.push("/profile/addFeedback")}>
+                    <Grid item>
+                      <AddIcon fontSize='large' />
+                    </Grid>
+                    <Grid item>Add New Poll</Grid>
+                  </IconButton>
+                </Grid>
                 <Grid container spacing={0}>
                   {feedbackCards.map((item) => {
                     return <FeedbackCard key={item.poll_id} item={item} />;
@@ -143,24 +137,14 @@ const Home = () => {
         </Box>
       ) : (
         <>
-          <Loading />
+          <Backdrop
+            sx={{ color: "#fff" }}
+            open={loading}
+            onClick={() => setLoading(false)}>
+            <CircularProgress color='inherit' />
+          </Backdrop>
         </>
       )}
-      {/* <div style={styles.head}>
-        <br />
-        <div style={styles.card}>
-          <div style={styles.title}>Discussions Card Side</div>
-          {discussionCards.map((item) => {
-            return <DiscussionCard key={item.post_id} item={item} />;
-          })}
-        </div>
-        <div style={styles.card}>
-          <div style={styles.title}>Feedbacks Card Side</div>
-          {feedbackCards.map((item) => {
-            return <FeedbackCard key={item.poll_id} item={item} />;
-          })}
-        </div>
-      </div> */}
     </div>
   );
 };

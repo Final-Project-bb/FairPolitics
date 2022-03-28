@@ -18,7 +18,7 @@ import InputBase from "@mui/material/InputBase";
 import { useHistory } from "react-router-dom";
 import { AppContext } from "./Context";
 
-const activePages = ["Home", "About", "Contact-Us"];
+const activePages = ["Home", "Profile", "Algorithms", "About", "Contact-Us"];
 const inActivePages = ["About", "Contact-Us"];
 const activeSettings = ["Profile", "Account", "Algorithms", "Logout"];
 const inActiveSettings = ["Login", "Sign-Up"];
@@ -108,8 +108,8 @@ const ResponsiveAppBar = () => {
       case "Logout":
         setIsConnected(false);
         setUserDetails({});
-        setFollowerDetails([]);
-        setFollowingDetails([]);
+        // setFollowerDetails([]);
+        // setFollowingDetails([]);
         setFollowers([]);
         setFollowings([]);
         setLoading(false);
@@ -192,7 +192,7 @@ const ResponsiveAppBar = () => {
                   <Button
                     key={page}
                     onClick={() => handleCloseNavMenu(page)}
-                    sx={{ my: 2, color: "white", display: "block" }}>
+                    sx={styles.NavButton}>
                     {page}
                   </Button>
                 ))
@@ -273,6 +273,25 @@ const ResponsiveAppBar = () => {
   );
 };
 
+const styles = {
+  NavButton: [
+    {
+      "&:hover": {
+        color: "#2196f3",
+        backgroundColor: "white",
+      },
+      // "&:active": {
+      //   color: "#1769aa",
+      //   backgroundColor: "white",
+      // },
+      // width: "10%",
+      my: 2,
+      color: "white",
+      display: "block",
+      marginLeft: 2,
+    },
+  ],
+};
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,

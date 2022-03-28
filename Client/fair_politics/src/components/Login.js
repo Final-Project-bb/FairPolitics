@@ -7,6 +7,9 @@ import { AppContext } from "./Context";
 import Loading from "./Loading";
 import { FaFacebook, FaSms } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
+import IconButton from "@mui/material/IconButton";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 import {
   FormControl,
   FormControlLabel,
@@ -68,7 +71,7 @@ const Login = () => {
       body: JSON.stringify(login_details),
     });
     if (response.status == 404) {
-      console.log(response)
+      console.log(response);
       setLoading(false);
       return;
     }
@@ -134,7 +137,7 @@ const Login = () => {
                     id='standard-basic'
                     variant='standard'
                     label='ID'
-                    pattern="[0-9]{9}"
+                    pattern='[0-9]{9}'
                     required
                     placeholder='valid id number!'
                     value={id}
@@ -279,7 +282,7 @@ const Login = () => {
                     type='submit'>
                     submit
                   </Button>
-                  <br/>
+                  <br />
                   <Button
                     // style={styles.cancelForgotButton}
                     onClick={() => setOnReset(!onReset)}>
@@ -291,7 +294,14 @@ const Login = () => {
           )}
         </div>
       )}
-      {loading && <Loading />}
+
+      <Backdrop
+        sx={{ color: "#fff" }}
+        open={loading}
+        // onClick={() => setLoading(false)}
+      >
+        <CircularProgress color='inherit' />
+      </Backdrop>
     </div>
   );
 };
@@ -328,7 +338,6 @@ const styles = {
     justifyContent: "space-around",
     marginTop: 30,
   },
-  
 
   input: {
     position: "absolute",

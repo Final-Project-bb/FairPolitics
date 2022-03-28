@@ -315,6 +315,50 @@ const getUsers = (req, res) => {
   });
 };
 
+const chooseAlgorithm = (req, res) => {
+  let checkChosen = `select user_id from algorithm_user_chosen 
+  where user_id = ${JSON.stringify(req.params.user_id)}`;
+
+  let deleteUserAlgo = `delete from algorithm_user_chosen
+  where user_id = ${JSON.stringify(req.params.user_id)}`;
+
+  let insertUserAlgo = `Insert into algorithm_user_chosen (algorithm_id, user_id)
+  values (${JSON.stringify(req.params.algorithm_id)} ,
+  ${JSON.stringify(req.params.user_id)})`;
+
+  connection.query(checkChosen, function (err, result) {
+    if (err) {
+      throw err;
+    }
+    if (result.length > 0) {
+      connection.query(deleteUserAlgo, function (err, update) {
+        if (err) {
+          throw err;
+        }
+        // res.status(200).send({ message: "Algorithm updated succesfully" });
+      });
+    }
+    connection.query(insertUserAlgo, function (err, insert) {
+      if (err) {
+        throw err;
+      }
+      res.status(200).send({ message: "Algorithm chosen succesfully" });
+    });
+  });
+};
+
+const getChosenAlgorithm = (req, res) => {
+  let getAlgorithmChosen = `select algorithm_id from algorithm_user_chosen 
+  where user_id = ${JSON.stringify(req.params.user_id)}`;
+
+  connection.query(getAlgorithmChosen, function (err, result) {
+    if (err) {
+      throw err;
+    }
+    res.status(200).send({ result });
+  });
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -329,4 +373,6 @@ module.exports = {
   getFollow,
   addFollowing,
   removeFollowing,
+  chooseAlgorithm,
+  getChosenAlgorithm,
 };

@@ -7,7 +7,7 @@ import { AppContext } from "./Context";
 
 const ProfileHeader = () => {
   const { inFriend, friend_details } = useContext(AppContext);
-  const friendPath = `/FriendProfile`;
+  // const friendPath = `/FriendProfile`;
 
   return (
     <div style={styles.order}>

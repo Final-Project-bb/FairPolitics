@@ -143,9 +143,9 @@ const ProfileShowDetails = () => {
           justifyContent: "center",
           textAlign: "center",
         }}>
-        <img
-          src={require("../images/profilePicExmple.jpg")}
-          alt='logo'
+        <Avatar
+          src={`${JSON.stringify(user_details.profile_picture)}`}
+          // alt='Remy Sharp'
           style={{
             borderRadius: !picturePress ? 350 : 0,
             // position: !picturePress ? "relative" : "absolute",
@@ -176,7 +176,7 @@ const ProfileShowDetails = () => {
         </h4>
         <h4>
           Working in:{" "}
-          {!inFriend ? user_details.job_title : friend_details.job_title} 
+          {!inFriend ? user_details.job_title : friend_details.job_title}
           Living in {!inFriend ? user_details.city : friend_details.city}
         </h4>
         <h4>
