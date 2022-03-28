@@ -143,10 +143,9 @@ const auth = (req, res) => {
 
   transporter.sendMail(mailOptions, function (err, info) {
     if (err) {
-      res.status(404).send({ err });
-    } else {
-      res.status(200).send({ message: "Email sent: " + info.response });
+      throw res.status(404).send({ err });
     }
+    res.status(200).send({ code });
   });
 };
 
@@ -156,9 +155,8 @@ const getFollowing = (req, res) => {
   connection.query(sqlGetUserFollowingId, function (err, result) {
     if (err) {
       throw err;
-    } else {
-      res.status(200).send({ result });
-    }
+    } 
+    res.status(200).send({ result });
   });
 };
 

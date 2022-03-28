@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const cookieSession = require('cockie-session');
+const cookieSession = require('cookie-session');
 const passport = require('passport');
 const bodyParser = require('body-parser');
 const loginRoutes = require('./routes/login');
