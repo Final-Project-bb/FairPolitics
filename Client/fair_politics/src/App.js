@@ -24,10 +24,10 @@ function App() {
   const [friend_details, setFriendDetails] = useState({});
   const [is_connected, setIsConnected] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [discussionCards, setDiscussionCards] = useState([]);
-  const [feedbackCards, setFeedbackCards] = useState([]);
-  const [profileDiscussionCards, setProfileDiscussionCards] = useState([]);
-  const [profileFeedbackCards, setProfileFeedbackCards] = useState([]);
+  const [postCards, setPostCards] = useState([]);
+  const [pollCards, setPollCards] = useState([]);
+  const [profilePostCards, setProfilePostCards] = useState([]);
+  const [profilePollCards, setProfilePollCards] = useState([]);
   const [followings, setFollowings] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [friendFollowings, setFriendFollowings] = useState([]);
@@ -55,14 +55,14 @@ function App() {
         setIsConnected,
         loading,
         setLoading,
-        discussionCards,
-        setDiscussionCards,
-        feedbackCards,
-        setFeedbackCards,
-        profileDiscussionCards,
-        setProfileDiscussionCards,
-        profileFeedbackCards,
-        setProfileFeedbackCards,
+        postCards,
+        setPostCards,
+        pollCards,
+        setPollCards,
+        profilePostCards, 
+        setProfilePostCards,
+        profilePollCards, 
+        setProfilePollCards,
         followings,
         setFollowings,
         followers,

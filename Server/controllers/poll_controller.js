@@ -2,6 +2,7 @@ const Poll = require("../models/poll");
 const express = require("express");
 const mysql = require("mysql");
 const connection = require("../lib/db");
+const algo = require("../../Algorithms/dprsequence")
 // const { getFollowing } = require("./login_controller")
 
 const createPoll = (req, res) => {
@@ -274,6 +275,21 @@ const pollsFollowing = (req, res) => {
   });
 };
 
+const pollAlgo = (req, res) => {
+  var names = ['0','1','2','3'];
+  var num_cand = 4;
+  var ballotts = [[0],[0,1],[0,1],[2],[2,3],[2,3]];
+  var profile = [names, num_cand, ballotts];
+var election = new algo(profile,"av");
+var outcomes = election.run_by_name([1]);
+var result1=outcomes[outcomes.length-1][0];
+var result2=outcomes[outcomes.length-1][1];
+var result=result1.concat(result2);
+res.status(200).send({result  });
+
+}
+
+
 module.exports = {
   createPoll,
   getPoll,
@@ -282,4 +298,5 @@ module.exports = {
   answerPoll,
   updateAnswerPoll,
   pollsFollowing,
+  pollAlgo,
 };

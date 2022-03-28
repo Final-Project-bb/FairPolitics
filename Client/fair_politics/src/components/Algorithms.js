@@ -70,8 +70,7 @@ const Algorithms = () => {
           return (
             <Card key={algo.id} sx={{ width: 400, margin: 3 }}>
               <CardContent sx={{ fontWeight: "bold", fontSize: 30 }}>
-                {algo.id}
-                {algo.title}
+                id: {algo.id}, title {algo.title}
               </CardContent>
               <Button
                 variant={chosenAlgorithm === algo.id && "contained"}
