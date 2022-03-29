@@ -133,17 +133,16 @@ const FeedbackCard = ({ item, inProfile }) => {
   };
   const getResult = async () => {
     let id = item.user_id;
-    // console.log(id);
-    console.log(algorithms)
-    var algo=algorithms.filter(item=>item.id==algo_id)[0].code
-    console.log(algo)
+    console.log(algo_id);
+    console.log(algorithms.filter((item) => item.id == algo_id));
+    var algo = algorithms.filter((item) => item.id == algo_id)[0].code;
+    console.log(algo);
     await fetch(`http://localhost:4000/api/poll_algo/${item.poll_id}/${algo}`, {
       method: "GET",
     })
       .then((res) => res.json())
       .then((json) => {
         alert(json.answers);
-        
       })
       .catch((err) => console.error(err));
   };
@@ -174,14 +173,14 @@ const FeedbackCard = ({ item, inProfile }) => {
             <CardContent style={{ display: "flex", flex: 3 }}>
               <Tooltip title='Edit'>
                 <EditIcon
-                  sx={[{ "&:hover": { color: "#2196f3" }, cursor: 'pointer' }]}
+                  sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
                   style={{ flex: 0.1 }}
                   onClick={(e) => editPoll(e)}
                 />
               </Tooltip>
               <Tooltip title='Delete'>
                 <DeleteIcon
-                  sx={[{ "&:hover": { color: "#2196f3" }, cursor: 'pointer' }]}
+                  sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
                   style={{ flex: 0.1 }}
                   onClick={(e) => deletePoll(e)}
                 />
@@ -228,8 +227,10 @@ const FeedbackCard = ({ item, inProfile }) => {
                       defaultChecked={answer.is_answer ? true : false}
                       onClick={() => handleCheckbox(answer.answer_id)}
                     />
-                    {answer.answer}
-                    {answer.is_answer}
+                    <div>
+                      {answer.answer}
+                      {answer.is_answer}
+                    </div>
                   </CardContent>
                 ))}
                 <CardActions>
