@@ -20,7 +20,7 @@ import { algorithms } from "./algorithmDetails";
 
 const Algorithms = () => {
   const [chosenAlgorithm, setChosenAlgorithm] = useState(-1);
-  const { user_details,algo_id, setAlgoId } = useContext(AppContext);
+  const { user_details, algo_id, setAlgoId } = useContext(AppContext);
 
   const getAlgorithmChosen = async () => {
     await fetch(
@@ -29,15 +29,15 @@ const Algorithms = () => {
       .then((res) => res.json())
       .then((json) => {
         // console.log(json.result[0].algorithm_id);
-        json.result[0] !== undefined && (
-          setChosenAlgorithm(json.result[0].algorithm_id));
+        json.result[0] !== undefined &&
+          setChosenAlgorithm(json.result[0].algorithm_id);
       })
       .catch((err) => console.error(err));
   };
 
   const setAlgorithmChosen = async (algoID) => {
     setChosenAlgorithm(algoID);
-    console.log(algoID)
+    console.log(algoID);
     setAlgoId(algoID);
     await fetch(
       `http://localhost:4000/api/choose_algorithm/${user_details.user_id}/${algoID}`,
@@ -60,7 +60,7 @@ const Algorithms = () => {
   }, []);
 
   return (
-    <div>
+    <div style={{ backgroundColor: "whitesmoke" }}>
       <Header />
       {chosenAlgorithm === -1 && (
         <div style={{ color: "red" }}>
@@ -72,10 +72,14 @@ const Algorithms = () => {
           return (
             <Card key={algo.id} sx={{ width: 400, margin: 3 }}>
               <CardContent sx={{ fontWeight: "bold", fontSize: 30 }}>
-                id: {algo.id}, title {algo.title}
+                id: {algo.id}
               </CardContent>
+              <CardContent sx={{ fontWeight: "bold", fontSize: 30 }}>
+                {algo.title}
+              </CardContent>
+
               <Button
-                variant={chosenAlgorithm === algo.id && "contained"}
+                variant={chosenAlgorithm === algo.id ? "contained" : "raised"}
                 color='primary'
                 sx={{ justifyContent: "flex-end" }}
                 onClick={() => setAlgorithmChosen(algo.id)}>

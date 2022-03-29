@@ -72,22 +72,25 @@ const ResponsiveAppBar = () => {
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
-    console.log("button clicked from openNav menu");
+    // console.log("button clicked from openNav menu");
   };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
-    console.log("button clicked from openUser menu");
+    // console.log("button clicked from openUser menu");
   };
 
   const handleCloseNavMenu = (page) => {
     setAnchorElNav(null);
-    console.log("button clicked from closeNav menu");
+    // console.log("button clicked from closeNav menu");
+    if (typeof page === 'object') {
+      return;
+    }
     history.push(`/${page}`);
   };
 
   const handleCloseUserMenu = (setting) => {
     setAnchorElUser(null);
-    console.log("button clicked from closeUser menu");
+    // console.log("button clicked from closeUser menu");
     switch (setting) {
       case "Account":
         history.push("/profile/aboutProfile");
@@ -99,7 +102,8 @@ const ResponsiveAppBar = () => {
         history.push("/connection/login");
         break;
       case "Algorithms":
-        alert("Algorithms press");
+        history.push("/algorithms");
+
         // history.push("/connection/login");
         break;
       case "Sign-Up":
@@ -205,21 +209,23 @@ const ResponsiveAppBar = () => {
                   </Button>
                 ))}
           </Box>
+          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <form onSubmit={onSearch}>
+                <StyledInputBase
+                  placeholder='Search…'
+                  // inputProps={{ 'aria-label': 'search' }}
+                  onKeyDown={handleKeyDown(onSearch)}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </form>
+            </Search>
+          </Box>
 
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <form onSubmit={onSearch}>
-              <StyledInputBase
-                placeholder='Search…'
-                // inputProps={{ 'aria-label': 'search' }}
-                onKeyDown={handleKeyDown(onSearch)}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </form>
-          </Search>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title='Open settings'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
