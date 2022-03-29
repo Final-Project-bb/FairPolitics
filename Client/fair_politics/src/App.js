@@ -21,6 +21,7 @@ import EditFeedbackCard from "./components/EditFeedbackCard";
 import Algorithms from "./components/Algorithms";
 function App() {
   const [user_details, setUserDetails] = useState({});
+  const [algo_id, setAlgoId] = useState();
   const [friend_details, setFriendDetails] = useState({});
   const [is_connected, setIsConnected] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -49,6 +50,8 @@ function App() {
       value={{
         user_details,
         setUserDetails,
+        algo_id,
+        setAlgoId,
         friend_details,
         setFriendDetails,
         is_connected,
