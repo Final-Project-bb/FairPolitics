@@ -20,7 +20,7 @@ import { algorithms } from "./algorithmDetails";
 
 const Algorithms = () => {
   const [chosenAlgorithm, setChosenAlgorithm] = useState(-1);
-  const { user_details } = useContext(AppContext);
+  const { user_details,algo_id, setAlgoId } = useContext(AppContext);
 
   const getAlgorithmChosen = async () => {
     await fetch(
@@ -37,6 +37,8 @@ const Algorithms = () => {
 
   const setAlgorithmChosen = async (algoID) => {
     setChosenAlgorithm(algoID);
+    console.log(algoID)
+    setAlgoId(algoID);
     await fetch(
       `http://localhost:4000/api/choose_algorithm/${user_details.user_id}/${algoID}`,
       {

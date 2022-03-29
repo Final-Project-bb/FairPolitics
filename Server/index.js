@@ -14,7 +14,7 @@ app.use(cookieSession({ name:"session", keys:["shai"], maxAge:24*60*60*100 }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());
-app.use(cors({ origin:"http://localhost:4000", methods: "GET,POST,PUT,DELETE", credentials: true }));
+app.use(cors({ origin:"http://localhost:3000", methods: "GET,POST,PUT,DELETE", credentials: true }));
 app.use(bodyParser.json());
 
 app.use('/api', loginRoutes.routes);

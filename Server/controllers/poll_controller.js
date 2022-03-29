@@ -277,37 +277,60 @@ const pollsFollowing = (req, res) => {
 
 const pollAlgo = (req, res) => {
   var ballotts = [];
-  var getNumCand = `select answer_id from poll_answer where poll_id=${JSON.stringify(req.params.poll_id)}`
+  var getNumCand = `select answer_id from poll_answer where poll_id=${JSON.stringify(req.params.poll_id)}`;
   var getVoters = `select distinct user_id from poll_answer_approval where answer_id in 
-  (select answer_id from poll_answer where poll_id=${JSON.stringify(req.params.poll_id)})`
+  (select answer_id from poll_answer where poll_id=${JSON.stringify(req.params.poll_id)})`;
   connection.query(getNumCand, function (err, answers_id) {
     if (err) {
       throw err;
     }
-    var names = answers_id.map(id=> id.answer_id)
-    var num_cand = names.length;
+    var c = 0;
+    var namesOriginal = answers_id.map(id => id.answer_id);
+    var names = {};
+    var namesKeys = [];
+    for (const x of namesOriginal) {
+      names[c++] = x;
+    }
+    for (const key in names) {
+      namesKeys.push(Number(key));
+    }
+    var num_cand = namesOriginal.length;
     connection.query(getVoters, function (err, voters) {
       if (err) {
         throw err;
       }
       var count = 0;
       voters.forEach((voter) => {
-        var getAnswerByUser = `select answer_id from poll_answer_approval where user_id=${JSON.stringify(voter.user_id)}`
+        var getAnswerByUser = `select answer_id from poll_answer_approval where user_id=${JSON.stringify(voter.user_id)}`;
         connection.query(getAnswerByUser, function (err, answersByVoter) {
           if (err) {
             throw err;
           }
           count++;
-          var temp = answersByVoter.map(id=> id.answer_id)
-          ballotts.push(temp)
+          var temp = answersByVoter.map(id => id.answer_id);
+          var temp1 = [];
+          for (const key in names) {
+            for (const x of temp) {
+              if (names[key] == x) {
+                temp1.push(Number(key));
+              }
+            }
+          }
+          ballotts.push(temp1);
           if (count === voters.length) {
-            var profile = [names, num_cand, ballotts];
+            var profile = [namesKeys, num_cand, ballotts];
+            console.log(profile);
             var election = new algo(profile, req.params.algo);
-            var outcomes = election.run_by_name([1]);
-            var result1 = outcomes[outcomes.length - 1][0];
-            var result2 = outcomes[outcomes.length - 1][1];
-            var result = result1.concat(result2);
-            res.status(200).send({ result });
+            var outcomes = election.run_by_name([-1]);
+            var result = outcomes[outcomes.length - 1][1];
+            var answers = [];
+            console.log(outcomes);
+            console.log(result);
+            for (const x of result) {
+                  answers.push(names[x]);
+            }
+            console.log(answers);
+            res.status(200).send({ answers });
           }
         }
         );

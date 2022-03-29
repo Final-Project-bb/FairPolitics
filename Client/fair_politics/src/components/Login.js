@@ -78,7 +78,7 @@ const Login = () => {
     const data = await response.json();
     if (data.result !== undefined) {
       if (data.result[0] !== undefined) {
-        // console.log(data.result[0]);
+        console.log(data.result[0]);
         setUserDetails(data.result[0]);
         setIsConnected(true);
         history.push("/home");

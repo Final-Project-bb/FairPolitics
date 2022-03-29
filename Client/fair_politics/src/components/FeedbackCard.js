@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { AppContext } from "./Context";
 import { FaRegEdit, FaTrashAlt } from "react-icons/fa";
 import { useHistory } from "react-router-dom";
+import { algorithms } from "./algorithmDetails";
 import {
   FormControl,
   FormControlLabel,
@@ -16,6 +17,7 @@ import {
   Avatar,
   Grid,
   Tooltip,
+  Alert,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -41,6 +43,7 @@ const FeedbackCard = ({ item, inProfile }) => {
 
   const {
     user_details,
+    algo_id,
     setLoading,
     setCurrentItem,
     setFriendDetails,
@@ -127,6 +130,22 @@ const FeedbackCard = ({ item, inProfile }) => {
       .then((json) => console.log(json))
       .catch((err) => console.error(err));
     setLoading(false);
+  };
+  const getResult = async () => {
+    let id = item.user_id;
+    // console.log(id);
+    console.log(algorithms)
+    var algo=algorithms.filter(item=>item.id==algo_id)[0].code
+    console.log(algo)
+    await fetch(`http://localhost:4000/api/poll_algo/${item.poll_id}/${algo}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        alert(json.answers);
+        
+      })
+      .catch((err) => console.error(err));
   };
 
   const editPoll = (e) => {
@@ -220,6 +239,13 @@ const FeedbackCard = ({ item, inProfile }) => {
                     color='success'
                     onClick={() => updateAnswerPoll()}>
                     resubmit!
+                  </Button>
+                  <Button
+                    style={{ left: 170 }}
+                    variant='outlined'
+                    color='success'
+                    onClick={() => getResult()}>
+                    Show result!
                   </Button>
                 </CardActions>
               </>
