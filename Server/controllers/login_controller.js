@@ -137,7 +137,7 @@ const auth = (req, res) => {
   var mailOptions = {
     from: "fairpolitics5@gmail.com",
     to: req.body.email,
-    subject: "fair politics sign up",
+    subject: "Fair politics sign up",
     text: `your temporary password is ${code}`,
   };
 
