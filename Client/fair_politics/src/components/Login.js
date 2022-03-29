@@ -32,6 +32,7 @@ const Login = () => {
 
   const {
     setUserDetails,
+    setAlgoId,
     setIsConnected,
     loading,
     setLoading,
@@ -84,6 +85,7 @@ const Login = () => {
         history.push("/home");
       }
     }
+    fetchAlgoId();
     fetchFollow();
     setLoading(false);
   };
@@ -95,7 +97,12 @@ const Login = () => {
     setFollowings(data.following);
     setFollowers(data.follower);
   };
-
+  
+  const fetchAlgoId = async () => {
+    const response = await fetch(`http://localhost:4000/api/get_algorithm/${id}`);
+    const data = await response.json();
+    setAlgoId(data.result[0].algorithm_id)
+  };
   const phoneSubmit = (event) => {
     event.preventDefault();
     setTempPassFromDB("1225"); // here should get the temp pass from server
