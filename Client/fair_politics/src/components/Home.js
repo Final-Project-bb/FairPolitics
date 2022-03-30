@@ -13,9 +13,9 @@ import Loading from "./Loading";
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
+import { Backdrop } from "@mui/material";
 
 import { useHistory } from "react-router-dom";
-import { Backdrop } from "@mui/material";
 
 const Home = () => {
   const {
@@ -96,7 +96,7 @@ const Home = () => {
                 <Grid container direction='row' alignItems='center'>
                   <IconButton
                     sx={[{ "&:hover": { color: "#2196f3" }, marginBottom: 5 }]}
-                    onClick={() => history.push("/profile/addPoll")}>
+                    onClick={() => history.push("/profile/addPost")}>
                     <Grid item>
                       <AddIcon
                         fontSize='large'

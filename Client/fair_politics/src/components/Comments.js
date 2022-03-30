@@ -54,7 +54,6 @@ const Comments = ({
 
   const getUserDetails = async () => {
     let id = comment.user_id_comment;
-
     await fetch(`http://localhost:4000/api/get_user_by_id/${id}`, {
       method: "GET",
     })
@@ -105,7 +104,7 @@ const Comments = ({
 
   const deleteComment = async (comment_id) => {
     if (window.confirm("Are you sure you want to delete this comment?")) {
-      setComments(item.comments.filter((comment) => comment_id !== comment_id));
+      setComments(item.comments.filter((comment) => comment.comment_id !== comment_id));
       await fetch(`http://localhost:4000/api/delete_comment/${comment_id}`, {
         method: "DELETE",
       })

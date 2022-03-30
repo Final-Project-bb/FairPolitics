@@ -4,7 +4,7 @@ const cookieSession = require('cookie-session');
 const passport = require('passport');
 const bodyParser = require('body-parser');
 const loginRoutes = require('./routes/login');
-const discussionsRoutes = require('./routes/discussions');
+const postsRoutes = require('./routes/posts');
 const pollsRoutes = require('./routes/polls');
 const PORT = 4000;
 
@@ -18,7 +18,7 @@ app.use(cors({ origin:"http://localhost:3000", methods: "GET,POST,PUT,DELETE", c
 app.use(bodyParser.json());
 
 app.use('/api', loginRoutes.routes);
-app.use('/api', discussionsRoutes.routes);
+app.use('/api', postsRoutes.routes);
 app.use('/api', pollsRoutes.routes);
 
 

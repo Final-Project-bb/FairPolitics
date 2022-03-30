@@ -108,7 +108,7 @@ const Profile = () => {
                         sx={[
                           { "&:hover": { color: "#2196f3" }, marginBottom: 5 },
                         ]}
-                        onClick={() => history.push("/profile/addPoll")}>
+                        onClick={() => history.push("/profile/addPost")}>
                         <Grid item>
                           <AddIcon
                             fontSize='large'

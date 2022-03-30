@@ -5,9 +5,12 @@ import { useHistory } from "react-router-dom";
 import Loading from "./Loading";
 import styled from "styled-components";
 import { FaFacebook, FaSms } from "react-icons/fa";
-import { BiMailSend } from 'react-icons/bi'
+import { BiMailSend } from "react-icons/bi";
 import { SiGmail } from "react-icons/si";
 import { FcGoogle, FcOk } from "react-icons/fc";
+import CircularProgress from "@mui/material/CircularProgress";
+import { Backdrop } from "@mui/material";
+
 import {
   FormControl,
   FormControlLabel,
@@ -42,7 +45,6 @@ const Register = () => {
   const [passFlag, setPassFlag] = useState(false);
   const [otherFlag, setOtherFlag] = useState(false);
 
-
   const { setUserDetails, setIsConnected, loading, setLoading, setAlgoId } =
     useContext(AppContext);
 
@@ -65,15 +67,14 @@ const Register = () => {
         .then((json) => {
           console.log(json.code);
           if (json.code == undefined) {
-            alert("email not found!")
-          }
-          else {
-            setTempPassFromDB(Number(json.code))
+            alert("email not found!");
+          } else {
+            setTempPassFromDB(Number(json.code));
             setTempPassFlag(true);
           }
         });
     } else {
-      alert("id alread exist!")
+      alert("id alread exist!");
     }
 
     setLoading(false);
@@ -86,7 +87,6 @@ const Register = () => {
       return false;
     }
     return true;
-
   };
   const approveSubmit = (event) => {
     event.preventDefault();
@@ -105,13 +105,11 @@ const Register = () => {
     }
     if (pass2 === pass) {
       alert(`Password approved`);
-      setOtherFlag(true)
+      setOtherFlag(true);
     } else {
       alert(`Password failed`);
     }
   };
-
-
 
   const registerSubmit = (e) => {
     e.preventDefault();
@@ -149,9 +147,9 @@ const Register = () => {
         }
         // if(json.status===400){
         else {
-          alert(json.message)
+          alert(json.message);
           console.log(JSON.stringify(json.message));
-          setAlgorithmChosen(0)
+          setAlgorithmChosen(0);
           setTempPassFlag(false);
           setPassFlag(false);
           setOtherFlag(false);
@@ -162,14 +160,11 @@ const Register = () => {
   };
   const setAlgorithmChosen = async (algoID) => {
     setAlgoId(algoID);
-    await fetch(
-      `http://localhost:4000/api/choose_algorithm/${id}/${algoID}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        // body: JSON.stringify(newPost),
-      }
-    )
+    await fetch(`http://localhost:4000/api/choose_algorithm/${id}/${algoID}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      // body: JSON.stringify(newPost),
+    })
       .then((res) => res.json())
       .then((json) => {
         console.log(json);
@@ -201,7 +196,7 @@ const Register = () => {
           <Card style={styles.cardLeft}>
             <CardContent style={styles.content}>
               <FormControl>
-                {!tempPassFlag && !passFlag &&
+                {!tempPassFlag && !passFlag && (
                   <>
                     <TextField
                       // helperText='Enter your id:'
@@ -234,8 +229,9 @@ const Register = () => {
                     <BiMailSend onClick={(e) => emailSubmit(e)} size={30} />
                     {/* <input type='submit' /> */}
                     <br />
-                  </>}
-                {tempPassFlag && !passFlag &&
+                  </>
+                )}
+                {tempPassFlag && !passFlag && (
                   <>
                     <TextField
                       // helperText='Enter a temporary password'
@@ -244,7 +240,7 @@ const Register = () => {
                       label='Temporary Password'
                       // pattern="[0]{1}[5]{1}[0-9]{8}"
                       // required
-                      placeholder='password from sms!'
+                      placeholder='Password from Email!'
                       value={Number(tempPass)}
                       onChange={(e) => setTempPass(Number(e.target.value))}
                     />
@@ -258,8 +254,8 @@ const Register = () => {
                       submit
                     </Button>
                   </>
-                }
-                {passFlag && !otherFlag &&
+                )}
+                {passFlag && !otherFlag && (
                   <>
                     <br />
                     <TextField
@@ -295,19 +291,21 @@ const Register = () => {
                       type='submit'>
                       submit
                     </Button>
-                  </>}
-                {passFlag && otherFlag &&
+                  </>
+                )}
+                {passFlag && otherFlag && (
                   <>
                     <div>Successful initial verification! </div>
-                    <FcOk style={{ position: "relative", left: 205, top: -17}} />
+                    <FcOk
+                      style={{ position: "relative", left: 205, top: -17 }}
+                    />
                     <div>Please fill in the following details correctly.</div>
                   </>
-                }
+                )}
               </FormControl>
             </CardContent>
           </Card>
-          {otherFlag &&
-
+          {otherFlag && (
             <Card style={styles.cardRight}>
               <CardContent style={styles.content}>
                 <FormControl>
@@ -469,11 +467,17 @@ const Register = () => {
                 </FormControl>
               </CardContent>
             </Card>
-          }
-
+          )}
         </div>
       )}
-      {loading && <Loading />}
+      {loading && (
+        <Backdrop
+          sx={{ color: "#fff" }}
+          open={loading}
+          onClick={() => setLoading(false)}>
+          <CircularProgress color='inherit' />
+        </Backdrop>
+      )}
     </div>
   );
 };

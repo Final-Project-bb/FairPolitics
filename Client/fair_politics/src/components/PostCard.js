@@ -47,6 +47,9 @@ const PostCard = ({ item, inProfile }) => {
   const history = useHistory();
 
   useEffect(() => {
+    // console.log(item);
+    console.log('comments');
+    console.log(comments);
     getUserDetails();
   }, []);
 
@@ -78,7 +81,6 @@ const PostCard = ({ item, inProfile }) => {
 
   const getUserDetails = async () => {
     let id = item.user_id;
-
     await fetch(`http://localhost:4000/api/get_user_by_id/${id}`, {
       method: "GET",
     })
@@ -89,7 +91,7 @@ const PostCard = ({ item, inProfile }) => {
           first_name: json.result[0].first_name,
           last_name: json.result[0].last_name,
         });
-        return json.result[0];
+        // return json.result[0];
       })
       .catch((err) => console.error(err));
   };
@@ -114,12 +116,13 @@ const PostCard = ({ item, inProfile }) => {
   };
 
   const addComment = async () => {
+    // console.log(comments);
     const comment_details = {
       post_id: item.post_id,
       user_id: user_details.user_id,
       comment: comment,
     };
-    setComments([...comments, comment_details]);
+    // setComments([...comments, comment_details]);
     await fetch(`http://localhost:4000/api/add_comment`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -130,6 +133,7 @@ const PostCard = ({ item, inProfile }) => {
       .catch((err) => console.error(err));
     setComment("");
   };
+  
 
   const editPost = () => {
     setCurrentItem(item);
