@@ -277,6 +277,13 @@ const pollsFollowing = (req, res) => {
 
 const pollAlgo = (req, res) => {
   var ballotts = [];
+  // Should be use
+  var erelSegalKing =`select poll_answer_approval.user_id,poll_answer_approval.answer_id 
+  from poll_answer_approval join poll_answer on poll_answer_approval.answer_id=poll_answer.answer_id
+  where poll_answer.poll_id=1
+  order by poll_answer_approval.user_id`
+  // Should be use
+
   var getNumCand = `select answer_id from poll_answer where poll_id=${JSON.stringify(req.params.poll_id)}`;
   var getVoters = `select distinct user_id from poll_answer_approval where answer_id in 
   (select answer_id from poll_answer where poll_id=${JSON.stringify(req.params.poll_id)})`;
@@ -327,7 +334,7 @@ const pollAlgo = (req, res) => {
             console.log(outcomes);
             console.log(result);
             for (const x of result) {
-                  answers.push(names[x]);
+              answers.push(names[x]);
             }
             console.log(answers);
             res.status(200).send({ answers });

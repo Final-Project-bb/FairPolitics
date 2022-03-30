@@ -122,8 +122,12 @@ const PostCard = ({ item, inProfile }) => {
       user_id: user_details.user_id,
       comment: comment,
     };
-    comments.push(comment_details)
-    console.log(comments)
+    // console.log("comment_details")
+    
+    // console.log(comment_details)
+    // // comments.push(comment_details)
+    // console.log(comments)
+    // console.log("comments")
       // the problems has accured due that we can't set commend into the
       // usestate until we don't know what is the command_id that the db decide
       // Solution: so we need the add_comment fetch function to bring us the command_id that 
