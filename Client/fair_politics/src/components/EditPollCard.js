@@ -14,37 +14,45 @@ import {
   Avatar,
 } from "@mui/material";
 
-const EditDiscussionCard = () => {
+const EditPollCard = () => {
   const { currentItem, setLoading } = useContext(AppContext);
 
-  const [title, setTitle] = useState(currentItem.title);
-  const [tag, setTag] = useState(currentItem.tag);
-  const [description, setDescription] = useState(currentItem.description);
+  const [title, setQuestion] = useState(currentItem.title);
   const [picture, setPicture] = useState(currentItem.picture);
+  const [answer1, setAnswer1] = useState(currentItem.answers[0]!=undefined?currentItem.answers[0].answer:"");
+  const [answer2, setAnswer2] = useState(currentItem.answers[1]!=undefined?currentItem.answers[1].answer:"");
+  const [answer3, setAnswer3] = useState(currentItem.answers[2]!=undefined?currentItem.answers[2].answer:"");
+  const [description, setDescription] = useState(currentItem.description);
+
   const history = useHistory();
 
-  const editDiscussionSubmit = async (e) => {
+  const editPollSubmit = async (e) => {
     if (title === "" || description === "") {
       alert("Title or description can not be empty");
       return;
     }
     if (
-      window.confirm("Are you sure you want to submit changes on this post?")
+      window.confirm("Are you sure you want to submit changes on this poll?")
     ) {
       e.preventDefault();
       setLoading(true);
-      const updatedDiscussion = {
+      const answers = [
+        { answer_id: currentItem.answers[0].answer_id, answer: answer1 },
+        { answer_id: currentItem.answers[1]!=undefined?currentItem.answers[1].answer_id:"", answer: answer2 },
+        { answer_id: currentItem.answers[2]!=undefined?currentItem.answers[2].answer_id:"", answer: answer3 },
+      ];
+      const updatedPoll = {
         title: title,
         description: description,
-        tag: tag,
+        answers: answers,
         picture: picture,
       };
       await fetch(
-        `http://localhost:4000/api/update_discussion/${currentItem.post_id}`,
+        `http://localhost:4000/api/update_poll/${currentItem.poll_id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updatedDiscussion),
+          body: JSON.stringify(updatedPoll),
         }
       )
         .then((res) => res.json())
@@ -61,33 +69,63 @@ const EditDiscussionCard = () => {
       <Header title='Profile Page' />
       <ProfileHeader />
       <div style={styles.title}>
-        Edit {currentItem.post_id} {currentItem.title} discussion
+        Edit {currentItem.poll_id} {currentItem.title} poll
       </div>
       <Card style={styles.card}>
         <CardContent style={styles.content}>
-          <FormControl>
+          <FormControl onSubmit={(e) => editPollSubmit(e)}>
             <TextField
-              helperText='Tagged elected officials - Example: @israel israel @other person'
               id='standard-basic'
               variant='standard'
-              label='Tags'
-              // pattern="[@]{1}[a-z]"
+              label='Question'
+              // pattern="[@]{1}[a-z][a-z]"
               // required
-              // placeholder='valid tag format!'
-              // className='tagInput'
-              value={tag}
-              onChange={(e) => setTag(e.target.value)}
+              placeholder='valid tags format!'
+              value={title}
+              onChange={(e) => setQuestion(e.target.value)}
+            />
+            <br />
+            {/* <small>@name1 @name2... requird Exmple:@israel israel @other person</small><br /> */}
+            {/* <label>how many answer?</label>
+                <input
+                    type="number"
+                    // pattern="[@]{1}[a-z][a-z]"
+                    // required
+                    placeholder='a valid number!'
+                    value={answerNum}
+                    onChange={(e) => setAnswerNum(e.target.value)}
+                /><br /> */}
+            <TextField
+              id='standard-basic'
+              variant='standard'
+              label='Answer #1'
+              // pattern="[@]{1}[a-z][a-z]"
+              // required
+              placeholder='a valid answer!'
+              value={answer1}
+              onChange={(e) => setAnswer1(e.target.value)}
             />
             <br />
             <TextField
               id='standard-basic'
               variant='standard'
-              label='Title'
+              label='Answer #2'
               // pattern="[@]{1}[a-z][a-z]"
               // required
-              placeholder='a valid title!'
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              placeholder='a valid answer!'
+              value={answer2}
+              onChange={(e) => setAnswer2(e.target.value)}
+            />
+            <br />
+            <TextField
+              id='standard-basic'
+              variant='standard'
+              label='Answer #3'
+              // pattern="[@]{1}[a-z][a-z]"
+              // required
+              placeholder='a valid answer!'
+              value={answer3}
+              onChange={(e) => setAnswer3(e.target.value)}
             />
             <br />
             <TextField
@@ -96,7 +134,7 @@ const EditDiscussionCard = () => {
               label='Description'
               // pattern="[@]{1}[a-z][a-z]"
               // required
-              aria-multiline
+              multiline
               placeholder='valid description!'
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -113,9 +151,7 @@ const EditDiscussionCard = () => {
               onChange={(e) => setPicture(e.target.value)}
             />
             <br />
-            <Button
-              variant='contained'
-              onClick={(e) => editDiscussionSubmit(e)}>
+            <Button variant='contained' onClick={(e) => editPollSubmit(e)}>
               Submit
             </Button>
           </FormControl>
@@ -154,4 +190,4 @@ const styles = {
   },
 };
 
-export default EditDiscussionCard;
+export default EditPollCard;

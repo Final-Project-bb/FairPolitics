@@ -3,8 +3,8 @@ import { NavLink as Link } from "react-router-dom";
 import Header from "./Header";
 import ProfileHeader from "./ProfileHeader";
 import ProfileShowDetails from "./ProfileShowDetails";
-import DiscussionCard from "./DiscussionCard";
-import FeedbackCard from "./FeedbackCard";
+import PostCard from "./PostCard";
+import PollCard from "./PollCard";
 import styled from "styled-components";
 import { AppContext } from "./Context";
 import Box from "@mui/material/Box";
@@ -57,7 +57,7 @@ const FriendProfile = () => {
   const fetchSelfPosts = async () => {
     setLoading(true);
     const response = await fetch(
-      `http://localhost:4000/api/get_discussions/${friend_details.user_id}`
+      `http://localhost:4000/api/get_Posts/${friend_details.user_id}`
     );
     const data = await response.json();
     console.log(data.allPostsWithComments);
@@ -97,7 +97,7 @@ const FriendProfile = () => {
               <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={0}>
                   {profilePostCards.map((item) => {
-                    return <DiscussionCard key={item.post_id} item={item} />;
+                    return <PostCard key={item.post_id} item={item} />;
                   })}
                 </Grid>
               </Box>
@@ -107,7 +107,7 @@ const FriendProfile = () => {
               <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={0}>
                   {profilePollCards.map((item) => {
-                    return <FeedbackCard key={item.poll_id} item={item} />;
+                    return <PollCard key={item.poll_id} item={item} />;
                   })}
                 </Grid>
               </Box>

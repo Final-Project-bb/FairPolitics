@@ -13,7 +13,7 @@ import {
   TextField,
   CardActions,
 } from "@mui/material";
-const AddFeedback = () => {
+const AddPoll = () => {
   const [title, setTitle] = useState("");
   const [picture, setPicture] = useState("");
   const [answer1, setAnswer1] = useState("");
@@ -30,7 +30,7 @@ const AddFeedback = () => {
     history.push("/profile");
   };
 
-  const addFeedbackSubmit = async (e) => {
+  const addPollSubmit = async (e) => {
     if (title === "" || description === "") {
       alert("Title or description can not be empty");
       return;
@@ -55,7 +55,7 @@ const AddFeedback = () => {
       .then((res) => res.json())
       .then((json) => {
         console.log(json);
-        alert(`feedback added successfully`);
+        alert(`Poll added successfully`);
       })
       .catch((err) => console.error(err));
     setTitle("");
@@ -68,7 +68,7 @@ const AddFeedback = () => {
   };
   return (
     <div style={{ backgroundColor: "whitesmoke" }}>
-      <Header title='Add Feedback page' />
+      <Header title='Add Poll page' />
       <ProfileHeader />
       <Card style={styles.card}>
         <CardContent style={styles.content}>
@@ -118,7 +118,7 @@ const AddFeedback = () => {
               onChange={(e) => setAnswer3(e.target.value)}
             />
             <TextField
-              helperText='Write a description of the feedback:'
+              helperText='Write a description of the Poll:'
               id='standard-basic'
               variant='standard'
               label='Description'
@@ -141,7 +141,7 @@ const AddFeedback = () => {
               onChange={(e) => setPicture(e.target.value)}
             />
             <br />
-            <Button variant='contained' onClick={(e) => addFeedbackSubmit(e)}>
+            <Button variant='contained' onClick={(e) => addPollSubmit(e)}>
               Submit
             </Button>
           </FormControl>
@@ -170,4 +170,4 @@ const styles = {
   },
 };
 
-export default AddFeedback;
+export default AddPoll;

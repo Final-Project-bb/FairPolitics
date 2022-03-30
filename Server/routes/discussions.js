@@ -1,38 +1,38 @@
 const express = require("express");
 const {
-  createDiscussion,
-  getDiscussion,
-  updateDiscussion,
-  deleteDiscussion,
+  createPost,
+  getPost,
+  updatePost,
+  deletePost,
   addComment,
   getComment,
   updateComment,
   deleteComment,
-  addLikeToDiscussion,
+  addLikeToPost,
   addLikeToComment,
-  getLikeOfDiscussion,
+  getLikeOfPost,
   getLikeOfComment,
-  deleteLikeFromDiscussion,
+  deleteLikeFromPost,
   deleteLikeFromComment,
-  discussionsFollowing,
-} = require("../controllers/discussion_controller");
+  PostsFollowing,
+} = require("../controllers/Post_controller");
 
 const router = express.Router();
 
-router.post("/create_discussion", createDiscussion); //works fine
-router.get("/get_discussions/:user_id", getDiscussion); //works fine
-router.get("/discussion_feed/:user_id", discussionsFollowing); //works fine
-router.put("/update_discussion/:post_id", updateDiscussion); //works fine
-router.delete("/delete_discussion/:post_id", deleteDiscussion); //works fine
+router.post("/create_Post", createPost); //works fine
+router.get("/get_Posts/:user_id", getPost); //works fine
+router.get("/Post_feed/:user_id", PostsFollowing); //works fine
+router.put("/update_Post/:post_id", updatePost); //works fine
+router.delete("/delete_Post/:post_id", deletePost); //works fine
 
 router.post("/add_comment", addComment); //works fine
 // router.get("/get_comment/:comment_id", getComment);
 router.put("/update_comment/:comment_id", updateComment); //works fine
 router.delete("/delete_comment/:comment_id", deleteComment); //works fine
 
-router.post("/add_like_to_discussion", addLikeToDiscussion); //works fine
+router.post("/add_like_to_Post", addLikeToPost); //works fine
 router.post("/add_like_to_comment", addLikeToComment); //unnecessary?
-// router.delete("/delete_like_from_discussion/:post_id/:user_id", deleteLikeFromDiscussion); //unnecessary?
+// router.delete("/delete_like_from_Post/:post_id/:user_id", deleteLikeFromPost); //unnecessary?
 // router.delete("/delete_like_from_comment/:comment_id", deleteLikeFromComment); //unnecessary?
 
 module.exports = {
