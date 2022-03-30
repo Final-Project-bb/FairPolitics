@@ -122,7 +122,14 @@ const PostCard = ({ item, inProfile }) => {
       user_id: user_details.user_id,
       comment: comment,
     };
-    // setComments([...comments, comment_details]);
+    comments.push(comment_details)
+    console.log(comments)
+      // the problems has accured due that we can't set commend into the
+      // usestate until we don't know what is the command_id that the db decide
+      // Solution: so we need the add_comment fetch function to bring us the command_id that 
+      // set into the db and the set our new command into the usestate
+      
+      // setComments([...comments, comment_details]);
     await fetch(`http://localhost:4000/api/add_comment`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
