@@ -24,7 +24,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import SendIcon from "@mui/icons-material/Send";
 import Comments from "./Comments";
 
-const DiscussionCard = ({ item, inProfile }) => {
+const PostCard = ({ item, inProfile }) => {
   const [commentsButtonId, setCommentsButtonId] = useState(0);
   const [commentsButton, setCommentsButton] = useState(false);
   const [comment, setComment] = useState("");
@@ -37,7 +37,7 @@ const DiscussionCard = ({ item, inProfile }) => {
   const {
     user_details,
     setLoading,
-    discussionCards,
+    PostCards,
     setCurrentItem,
     currentItem,
     setFriendDetails,
@@ -94,7 +94,7 @@ const DiscussionCard = ({ item, inProfile }) => {
       .catch((err) => console.error(err));
   };
 
-  const LikeDiscussion = async () => {
+  const LikePost = async () => {
     likes.filter((like) => like === user_details.user_id).length > 0
       ? setLikes(likes.filter((like) => like !== user_details.user_id))
       : setLikes([...likes, user_details.user_id]);
@@ -103,7 +103,7 @@ const DiscussionCard = ({ item, inProfile }) => {
       post_id: item.post_id,
       user_id: user_details.user_id,
     };
-    await fetch(`http://localhost:4000/api/add_like_to_discussion`, {
+    await fetch(`http://localhost:4000/api/add_like_to_Post`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(details),
@@ -131,16 +131,16 @@ const DiscussionCard = ({ item, inProfile }) => {
     setComment("");
   };
 
-  const editDiscussion = () => {
+  const editPost = () => {
     setCurrentItem(item);
-    history.push("/profile/editDiscussion");
+    history.push("/profile/editPost");
   };
 
-  const deleteDiscussion = async () => {
+  const deletePost = async () => {
     setLoading(true);
     if (window.confirm("Are you sure you want to delete this post?")) {
       await fetch(
-        `http://localhost:4000/api/delete_discussion/${item.post_id}`,
+        `http://localhost:4000/api/delete_Post/${item.post_id}`,
         {
           method: "DELETE",
         }
@@ -160,14 +160,14 @@ const DiscussionCard = ({ item, inProfile }) => {
               <EditIcon
                 sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
                 style={{ flex: 0.1 }}
-                onClick={(e) => editDiscussion(e)}
+                onClick={(e) => editPost(e)}
               />
             </Tooltip>
             <Tooltip title='Delete'>
               <DeleteIcon
                 sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
                 style={{ flex: 0.1 }}
-                onClick={(e) => deleteDiscussion(e)}
+                onClick={(e) => deletePost(e)}
               />
             </Tooltip>
           </CardContent>
@@ -225,7 +225,7 @@ const DiscussionCard = ({ item, inProfile }) => {
                     ? "error"
                     : "outlined"
                 }
-                onClick={() => LikeDiscussion()}
+                onClick={() => LikePost()}
               />
             </Tooltip>
             <Link
@@ -292,7 +292,7 @@ const DiscussionCard = ({ item, inProfile }) => {
   );
 };
 
-DiscussionCard.deafult = {
+PostCard.deafult = {
   inProfile: false,
   // onEdit: false,
   // setOnEdit: () => {},
@@ -378,4 +378,4 @@ const styles = {
   ],
 };
 
-export default DiscussionCard;
+export default PostCard;

@@ -3,8 +3,8 @@ import React, { useContext, useEffect, useState } from "react";
 import Header from "./Header";
 import ProfileHeader from "./ProfileHeader";
 import ProfileShowDetails from "./ProfileShowDetails";
-import DiscussionCard from "./DiscussionCard";
-import FeedbackCard from "./FeedbackCard";
+import PostCard from "./PostCard";
+import PollCard from "./PollCard";
 import styled from "styled-components";
 import { AppContext } from "./Context";
 import Loading from "./Loading";
@@ -57,14 +57,14 @@ const Profile = () => {
     setLoading(false);
   };
 
-  const fetchSelfDiscussions = async () => {
+  const fetchSelfPosts = async () => {
     setLoading(true);
     const response = await fetch(
-      `http://localhost:4000/api/get_discussions/${user_details.user_id}`
+      `http://localhost:4000/api/get_Posts/${user_details.user_id}`
     );
     const data = await response.json();
     console.log(data.allPostsWithComments);
-    console.log("fetchSelfDiscussions");
+    console.log("fetchSelfPosts");
 
     if (data !== undefined) {
       await setProfilePostCards(data.allPostsWithComments);
@@ -74,7 +74,7 @@ const Profile = () => {
 
   useEffect(() => {
     setInFriend(false);
-    fetchSelfDiscussions();
+    fetchSelfPosts();
     console.log("Profile effected");
     fetchSelfPolls();
   }, []);
@@ -101,18 +101,18 @@ const Profile = () => {
                 </TabList>
               </Box>
               <TabPanel value='1'>
-                {/* <div style={styles.title}>Discussions Feed:</div> */}
+                {/* <div style={styles.title}>Posts Feed:</div> */}
                 <Box sx={{ flexGrow: 1 }}>
                     <Grid container direction='row' alignItems='center'>
                       <IconButton
                         sx={[
                           { "&:hover": { color: "#2196f3" }, marginBottom: 5 },
                         ]}
-                        onClick={() => history.push("/profile/addFeedback")}>
+                        onClick={() => history.push("/profile/addPoll")}>
                         <Grid item>
                           <AddIcon
                             fontSize='large'
-                            // to='/profile/addFeedback'
+                            // to='/profile/addPoll'
                           />
                         </Grid>
                         <Grid item>Add New Post</Grid>
@@ -121,7 +121,7 @@ const Profile = () => {
                   <Grid container spacing={0}>
                     {profilePostCards.map((item) => {
                       return (
-                        <DiscussionCard
+                        <PostCard
                           key={item.post_id}
                           item={item}
                           inProfile={true}
@@ -138,11 +138,11 @@ const Profile = () => {
                         sx={[
                           { "&:hover": { color: "#2196f3" }, marginBottom: 5 },
                         ]}
-                        onClick={() => history.push("/profile/addFeedback")}>
+                        onClick={() => history.push("/profile/addPoll")}>
                         <Grid item>
                           <AddIcon
                             fontSize='large'
-                            // to='/profile/addFeedback'
+                            // to='/profile/addPoll'
                           />
                         </Grid>
                         <Grid item>Add New Poll</Grid>
@@ -151,7 +151,7 @@ const Profile = () => {
                   <Grid container spacing={0}>
                     {profilePollCards.map((item) => {
                       return (
-                        <FeedbackCard
+                        <PollCard
                           key={item.poll_id}
                           item={item}
                           inProfile={true}

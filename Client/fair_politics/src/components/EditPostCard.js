@@ -14,45 +14,37 @@ import {
   Avatar,
 } from "@mui/material";
 
-const EditFeedbackCard = () => {
+const EditPostCard = () => {
   const { currentItem, setLoading } = useContext(AppContext);
 
-  const [title, setQuestion] = useState(currentItem.title);
-  const [picture, setPicture] = useState(currentItem.picture);
-  const [answer1, setAnswer1] = useState(currentItem.answers[0]!=undefined?currentItem.answers[0].answer:"");
-  const [answer2, setAnswer2] = useState(currentItem.answers[1]!=undefined?currentItem.answers[1].answer:"");
-  const [answer3, setAnswer3] = useState(currentItem.answers[2]!=undefined?currentItem.answers[2].answer:"");
+  const [title, setTitle] = useState(currentItem.title);
+  const [tag, setTag] = useState(currentItem.tag);
   const [description, setDescription] = useState(currentItem.description);
-
+  const [picture, setPicture] = useState(currentItem.picture);
   const history = useHistory();
 
-  const editFeedbackSubmit = async (e) => {
+  const editPostSubmit = async (e) => {
     if (title === "" || description === "") {
       alert("Title or description can not be empty");
       return;
     }
     if (
-      window.confirm("Are you sure you want to submit changes on this poll?")
+      window.confirm("Are you sure you want to submit changes on this post?")
     ) {
       e.preventDefault();
       setLoading(true);
-      const answers = [
-        { answer_id: currentItem.answers[0].answer_id, answer: answer1 },
-        { answer_id: currentItem.answers[1]!=undefined?currentItem.answers[1].answer_id:"", answer: answer2 },
-        { answer_id: currentItem.answers[2]!=undefined?currentItem.answers[2].answer_id:"", answer: answer3 },
-      ];
-      const updatedFeedback = {
+      const updatedPost = {
         title: title,
         description: description,
-        answers: answers,
+        tag: tag,
         picture: picture,
       };
       await fetch(
-        `http://localhost:4000/api/update_poll/${currentItem.poll_id}`,
+        `http://localhost:4000/api/update_Post/${currentItem.post_id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updatedFeedback),
+          body: JSON.stringify(updatedPost),
         }
       )
         .then((res) => res.json())
@@ -69,63 +61,33 @@ const EditFeedbackCard = () => {
       <Header title='Profile Page' />
       <ProfileHeader />
       <div style={styles.title}>
-        Edit {currentItem.poll_id} {currentItem.title} poll
+        Edit {currentItem.post_id} {currentItem.title} Post
       </div>
       <Card style={styles.card}>
         <CardContent style={styles.content}>
-          <FormControl onSubmit={(e) => editFeedbackSubmit(e)}>
+          <FormControl>
+            <TextField
+              helperText='Tagged elected officials - Example: @israel israel @other person'
+              id='standard-basic'
+              variant='standard'
+              label='Tags'
+              // pattern="[@]{1}[a-z]"
+              // required
+              // placeholder='valid tag format!'
+              // className='tagInput'
+              value={tag}
+              onChange={(e) => setTag(e.target.value)}
+            />
+            <br />
             <TextField
               id='standard-basic'
               variant='standard'
-              label='Question'
+              label='Title'
               // pattern="[@]{1}[a-z][a-z]"
               // required
-              placeholder='valid tags format!'
+              placeholder='a valid title!'
               value={title}
-              onChange={(e) => setQuestion(e.target.value)}
-            />
-            <br />
-            {/* <small>@name1 @name2... requird Exmple:@israel israel @other person</small><br /> */}
-            {/* <label>how many answer?</label>
-                <input
-                    type="number"
-                    // pattern="[@]{1}[a-z][a-z]"
-                    // required
-                    placeholder='a valid number!'
-                    value={answerNum}
-                    onChange={(e) => setAnswerNum(e.target.value)}
-                /><br /> */}
-            <TextField
-              id='standard-basic'
-              variant='standard'
-              label='Answer #1'
-              // pattern="[@]{1}[a-z][a-z]"
-              // required
-              placeholder='a valid answer!'
-              value={answer1}
-              onChange={(e) => setAnswer1(e.target.value)}
-            />
-            <br />
-            <TextField
-              id='standard-basic'
-              variant='standard'
-              label='Answer #2'
-              // pattern="[@]{1}[a-z][a-z]"
-              // required
-              placeholder='a valid answer!'
-              value={answer2}
-              onChange={(e) => setAnswer2(e.target.value)}
-            />
-            <br />
-            <TextField
-              id='standard-basic'
-              variant='standard'
-              label='Answer #3'
-              // pattern="[@]{1}[a-z][a-z]"
-              // required
-              placeholder='a valid answer!'
-              value={answer3}
-              onChange={(e) => setAnswer3(e.target.value)}
+              onChange={(e) => setTitle(e.target.value)}
             />
             <br />
             <TextField
@@ -134,7 +96,7 @@ const EditFeedbackCard = () => {
               label='Description'
               // pattern="[@]{1}[a-z][a-z]"
               // required
-              multiline
+              aria-multiline
               placeholder='valid description!'
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -151,7 +113,9 @@ const EditFeedbackCard = () => {
               onChange={(e) => setPicture(e.target.value)}
             />
             <br />
-            <Button variant='contained' onClick={(e) => editFeedbackSubmit(e)}>
+            <Button
+              variant='contained'
+              onClick={(e) => editPostSubmit(e)}>
               Submit
             </Button>
           </FormControl>
@@ -190,4 +154,4 @@ const styles = {
   },
 };
 
-export default EditFeedbackCard;
+export default EditPostCard;

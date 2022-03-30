@@ -14,7 +14,7 @@ import {
   CardActions,
 } from "@mui/material";
 
-const AddDiscussion = () => {
+const AddPost = () => {
   const [title, setTitle] = useState("");
   const [tags, setTags] = useState("");
   const [description, setDescription] = useState("");
@@ -28,14 +28,14 @@ const AddDiscussion = () => {
     history.push("/profile");
   };
 
-  const addDiscussionSubmit = async (e) => {
+  const addPostSubmit = async (e) => {
     if (title === "" || description === "") {
       alert("Title or description can not be empty");
       return;
     }
     e.preventDefault();
     // setTempPassFromDB("1225") // here should get the temp pass from server
-    // alert(`Add discussion submit works!`); // here should send pass to phone in sms
+    // alert(`Add Post submit works!`); // here should send pass to phone in sms
     handleClick();
     // if(tempPassFromDB===tempPass){
     //     alert(`Password approved`)
@@ -50,7 +50,7 @@ const AddDiscussion = () => {
       description: description,
       picture: picture,
     };
-    await fetch("http://localhost:4000/api/create_discussion", {
+    await fetch("http://localhost:4000/api/create_Post", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newPost),
@@ -69,7 +69,7 @@ const AddDiscussion = () => {
   };
   return (
     <div style={{backgroundColor: 'whitesmoke'}}>
-      <Header title='Add Discussion page' />
+      <Header title='Add Post page' />
       <ProfileHeader />
       <Card style={styles.card}>
         <CardContent style={styles.content}>
@@ -115,7 +115,7 @@ const AddDiscussion = () => {
               onChange={(e) => setPicture(e.target.value)}
             />
             <br />
-            <Button variant='contained' onClick={(e) => addDiscussionSubmit(e)}>
+            <Button variant='contained' onClick={(e) => addPostSubmit(e)}>
               Submit
             </Button>
           </FormControl>
@@ -172,4 +172,4 @@ const styles = {
 // /* justify-content: flex-start; */
 // `;
 
-export default AddDiscussion;
+export default AddPost;

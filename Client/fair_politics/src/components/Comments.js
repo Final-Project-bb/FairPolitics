@@ -39,7 +39,7 @@ const Comments = ({
   const {
     user_details,
     setLoading,
-    discussionCards,
+    PostCards,
     setCurrentItem,
     currentItem,
     setFriendDetails,

@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from "react";
 import Header from "./Header";
-import DiscussionCard from "./DiscussionCard";
-import FeedbackCard from "./FeedbackCard";
+import PostCard from "./PostCard";
+import PollCard from "./PollCard";
 import { AppContext } from "./Context";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
@@ -38,13 +38,13 @@ const Home = () => {
     setValue(newValue);
   };
 
-  const fetchDiscussions = async () => {
+  const fetchPosts = async () => {
     setLoading(true);
     const response = await fetch(
-      `http://localhost:4000/api/discussion_feed/${user_details.user_id}`
+      `http://localhost:4000/api/Post_feed/${user_details.user_id}`
     );
     const data = await response.json();
-    console.log("fetchDiscussions");
+    console.log("fetchPosts");
     console.log(data.allPostsWithComments);
 
     if (data != undefined) {
@@ -70,7 +70,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchDiscussions();
+    fetchPosts();
     console.log("Home effected");
     fetchPolls();
   }, []);
@@ -96,11 +96,11 @@ const Home = () => {
                 <Grid container direction='row' alignItems='center'>
                   <IconButton
                     sx={[{ "&:hover": { color: "#2196f3" }, marginBottom: 5 }]}
-                    onClick={() => history.push("/profile/addFeedback")}>
+                    onClick={() => history.push("/profile/addPoll")}>
                     <Grid item>
                       <AddIcon
                         fontSize='large'
-                        // to='/profile/addFeedback'
+                        // to='/profile/addPoll'
                       />
                     </Grid>
                     <Grid item>Add New Post</Grid>
@@ -108,7 +108,7 @@ const Home = () => {
                 </Grid>
                 <Grid container spacing={0}>
                   {postCards.map((item) => {
-                    return <DiscussionCard key={item.post_id} item={item} />;
+                    return <PostCard key={item.post_id} item={item} />;
                   })}
                 </Grid>
               </Box>
@@ -119,7 +119,7 @@ const Home = () => {
                 <Grid container direction='row' alignItems='center'>
                   <IconButton
                     sx={[{ "&:hover": { color: "#2196f3" }, marginBottom: 5 }]}
-                    onClick={() => history.push("/profile/addFeedback")}>
+                    onClick={() => history.push("/profile/addPoll")}>
                     <Grid item>
                       <AddIcon fontSize='large' />
                     </Grid>
@@ -128,7 +128,7 @@ const Home = () => {
                 </Grid>
                 <Grid container spacing={0}>
                   {pollCards.map((item) => {
-                    return <FeedbackCard key={item.poll_id} item={item} />;
+                    return <PollCard key={item.poll_id} item={item} />;
                   })}
                 </Grid>
               </Box>

@@ -31,12 +31,12 @@ const About = () => {
               This case carries with it a problem of not fulfilling the will of
               the voters so we decided to fix this by developing a system called
               Fair Politic that will help the elected offical who wants to get
-              feedback from his voter to know which issues to focus on in order
+              Poll from his voter to know which issues to focus on in order
               to divide his time more correctly.
             </CardContent>
             <CardContent style={styles.content}>
-              We intend to build the feedback and implement Dynamic Proportional
-              Rankings algorithm feedback so that the results they get reflects
+              We intend to build the Poll and implement Dynamic Proportional
+              Rankings algorithm Poll so that the results they get reflects
               the will of the voters. This system will be conveniently and
               friendly to the electorate and elected by unique identification,
               Including support for a variety of languages common to the

@@ -9,15 +9,15 @@ import Home from "./components/Home";
 import Following from "./components/Following";
 import Follower from "./components/Follower";
 import Profile from "./components/Profile";
-import AddDiscussion from "./components/AddDiscussion";
-import AddFeedback from "./components/AddFeedback";
+import AddPost from "./components/AddPost";
+import AddPoll from "./components/AddPoll";
 import AboutMe from "./components/AboutMe";
 import FriendProfile from "./components/FriendProfile";
 import { AppContext } from "./components/Context";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Search from "./components/Search";
-import EditDiscussionCard from "./components/EditDiscussionCard";
-import EditFeedbackCard from "./components/EditFeedbackCard";
+import EditPostCard from "./components/EditPostCard";
+import EditPollCard from "./components/EditPollCard";
 import Algorithms from "./components/Algorithms";
 function App() {
   const [user_details, setUserDetails] = useState({});
@@ -113,17 +113,17 @@ function App() {
               <Route exact path='/profile/aboutProfile'>
                 <AboutMe />
               </Route>
-              <Route exact path='/profile/addDiscussion'>
-                <AddDiscussion />
+              <Route exact path='/profile/addPost'>
+                <AddPost />
               </Route>
-              <Route exact path='/profile/addFeedback'>
-                <AddFeedback />
+              <Route exact path='/profile/addPoll'>
+                <AddPoll />
               </Route>
-              <Route exact path='/profile/editDiscussion'>
-                <EditDiscussionCard />
+              <Route exact path='/profile/editPost'>
+                <EditPostCard />
               </Route>
-              <Route exact path='/profile/editFeedback'>
-                <EditFeedbackCard />
+              <Route exact path='/profile/editPoll'>
+                <EditPollCard />
               </Route>
               <Route exact path='/profile/following'>
                 <Following />

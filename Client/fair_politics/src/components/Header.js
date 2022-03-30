@@ -6,7 +6,7 @@ import AppBar from "./ResponsiveAppBar";
 import { AppContext } from "./Context";
 
 const Header = ({ title }) => {
-  const { user_details } = useContext(AppContext);
+  const { user_details,is_connected } = useContext(AppContext);
 
   return (
     <div style={styles.title}>
@@ -14,7 +14,7 @@ const Header = ({ title }) => {
       <AppBar />
       <Nav>
         <label style={styles.text}>
-          Wellcome, {user_details.first_name} {user_details.last_name}
+          Welcome{is_connected? `, ${user_details.first_name} ${user_details.last_name}!` :" Guest, please join us!" }
         </label>
       </Nav>
     </div>

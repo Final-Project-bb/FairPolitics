@@ -22,7 +22,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
-const FeedbackCard = ({ item, inProfile }) => {
+const PollCard = ({ item, inProfile }) => {
   const [onEdit, setOnEdit] = useState(false);
   const [oldAnswers, setOldAnswers] = useState([]);
   const [newAnswers, setNewAnswers] = useState([]);
@@ -151,7 +151,7 @@ const FeedbackCard = ({ item, inProfile }) => {
   const editPoll = (e) => {
     // console.log(item);
     setCurrentItem(item);
-    history.push("/profile/editFeedback");
+    history.push("/profile/editPoll");
   };
 
   const deletePoll = async (e) => {
@@ -280,7 +280,7 @@ const FeedbackCard = ({ item, inProfile }) => {
     </div>
   );
 };
-FeedbackCard.deafult = {
+PollCard.deafult = {
   inProfile: false,
 };
 const styles = {
@@ -329,4 +329,4 @@ const styles = {
   },
 };
 
-export default FeedbackCard;
+export default PollCard;

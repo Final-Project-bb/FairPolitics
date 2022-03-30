@@ -38,9 +38,9 @@ const Register = () => {
   const [is_public_elected, setIsPublicElected] = useState(0);
   const [description, setDescription] = useState("");
   const [semi_description, setSemiDescription] = useState("");
-  const [tempPassFlag, setTempPassFlag] = useState(true);
-  const [passFlag, setPassFlag] = useState(true);
-  const [otherFlag, setOtherFlag] = useState(true);
+  const [tempPassFlag, setTempPassFlag] = useState(false);
+  const [passFlag, setPassFlag] = useState(false);
+  const [otherFlag, setOtherFlag] = useState(false);
 
 
   const { setUserDetails, setIsConnected, loading, setLoading, setAlgoId } =

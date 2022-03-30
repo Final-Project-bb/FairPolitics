@@ -1,10 +1,10 @@
-const Discussion = require("../models/discussion");
+const Post = require("../models/post");
 const express = require("express");
 const mysql = require("mysql");
 const connection = require("../lib/db");
 
-const createDiscussion = (req, res) => {
-  let sqlInsertDiscussion = `insert into discussion(user_id,title,tag,description,picture)
+const createPost = (req, res) => {
+  let sqlInsertPost = `insert into Post(user_id,title,tag,description,picture)
     values(
     ${JSON.stringify(req.body.user_id)}, 
     ${JSON.stringify(req.body.title)},
@@ -12,9 +12,9 @@ const createDiscussion = (req, res) => {
     ${JSON.stringify(req.body.description)},
     ${JSON.stringify(req.body.picture)})`;
   let sqlGetPostId =
-    "select LAST_INSERT_ID() as post_id from discussion limit 1";
+    "select LAST_INSERT_ID() as post_id from Post limit 1";
 
-  connection.query(sqlInsertDiscussion, function (err, result) {
+  connection.query(sqlInsertPost, function (err, result) {
     if (err) {
       throw err;
     } else {
@@ -30,8 +30,8 @@ const createDiscussion = (req, res) => {
   });
 };
 
-const updateDiscussion = (req, res) => {
-  let sqlUpdatePost = `update discussion set 
+const updatePost = (req, res) => {
+  let sqlUpdatePost = `update Post set 
                         title=${JSON.stringify(req.body.title)},
                         tag=${JSON.stringify(req.body.tag)}, 
                         description=${JSON.stringify(req.body.description)},
@@ -45,14 +45,14 @@ const updateDiscussion = (req, res) => {
   });
 };
 
-const deleteDiscussion = (req, res) => {
-  let deletePostSql = `delete from discussion where post_id = ${JSON.stringify(
+const deletePost = (req, res) => {
+  let deletePostSql = `delete from Post where post_id = ${JSON.stringify(
     req.params.post_id
   )}`;
-  let deleteAllCommentsSql = `delete from discussion_response where post_id = ${JSON.stringify(
+  let deleteAllCommentsSql = `delete from Post_response where post_id = ${JSON.stringify(
     req.params.post_id
   )}`;
-  let deleteAllLikesSql = `delete from discussion_like_approval where post_id = ${JSON.stringify(
+  let deleteAllLikesSql = `delete from Post_like_approval where post_id = ${JSON.stringify(
     req.params.post_id
   )}`;
 
@@ -75,7 +75,7 @@ const deleteDiscussion = (req, res) => {
 };
 
 const addComment = (req, res) => {
-  let sqlInsertComment = `insert into discussion_response (post_id,user_id,comment)
+  let sqlInsertComment = `insert into Post_response (post_id,user_id,comment)
                         values(
                         ${JSON.stringify(req.body.post_id)}, 
                         ${JSON.stringify(req.body.user_id)}, 
@@ -90,7 +90,7 @@ const addComment = (req, res) => {
 };
 
 const updateComment = (req, res) => {
-  let sqlUpdateComment = `update discussion_response set 
+  let sqlUpdateComment = `update Post_response set 
                           comment=${JSON.stringify(req.body.comment)}
                           where 
                           comment_id=${JSON.stringify(req.params.comment_id)}`;
@@ -104,7 +104,7 @@ const updateComment = (req, res) => {
 };
 
 const deleteComment = (req, res) => {
-  let sqlDelComment = `delete from discussion_response where comment_id = ${req.params.comment_id}`;
+  let sqlDelComment = `delete from Post_response where comment_id = ${req.params.comment_id}`;
 
   connection.query(sqlDelComment, function (err, result) {
     if (err) {
@@ -114,16 +114,16 @@ const deleteComment = (req, res) => {
   });
 };
 
-const addLikeToDiscussion = (req, res) => {
-  let sqlLikeExists = `select * from discussion_like_approval 
+const addLikeToPost = (req, res) => {
+  let sqlLikeExists = `select * from Post_like_approval 
                       where post_id=${JSON.stringify(req.body.post_id)} 
                       and user_id=${JSON.stringify(req.body.user_id)}`;
 
-  let sqlInsertLikeDisc = `insert into discussion_like_approval(post_id,user_id)
+  let sqlInsertLikeDisc = `insert into Post_like_approval(post_id,user_id)
                             values(${JSON.stringify(req.body.post_id)}, 
                             ${JSON.stringify(req.body.user_id)})`;
 
-  let sqlDeleteLikeDisc = `delete from discussion_like_approval 
+  let sqlDeleteLikeDisc = `delete from Post_like_approval 
                           where post_id=${JSON.stringify(req.body.post_id)} 
                           and user_id=${JSON.stringify(req.body.user_id)}`;
 
@@ -186,8 +186,8 @@ const addLikeToComment = (req, res) => {
   });
 };
 
-const getLikeOfDiscussion = (req, res) => {
-  let sqlGetLikeByPostId = `select user_id from discussion_like_approval
+const getLikeOfPost = (req, res) => {
+  let sqlGetLikeByPostId = `select user_id from Post_like_approval
                             where post_id=${req}`;
 
   connection.query(sqlGetLikeByPostId, function (err, result) {
@@ -200,8 +200,8 @@ const getLikeOfDiscussion = (req, res) => {
   });
 };
 
-const deleteLikeFromDiscussion = (req, res) => {
-  let sqlDelLikeDisc = `delete from discussion_like_approval where post_id = ${req.params.post_id}`;
+const deleteLikeFromPost = (req, res) => {
+  let sqlDelLikeDisc = `delete from Post_like_approval where post_id = ${req.params.post_id}`;
 
   connection.query(sqlDelLikeDisc, function (err, result) {
     if (err) {
@@ -215,17 +215,17 @@ const deleteLikeFromDiscussion = (req, res) => {
   });
 };
 
-const discussionsFollowing = (req, res) => {
-  let getPostsWithCommentsSql = `SELECT discussion.post_id, discussion.user_id, discussion.title, discussion.description, discussion.tag, discussion.picture,
-  discussion_response.comment_id, discussion_response.comment, discussion_response.user_id as 'user_id_comment'
-  FROM discussion left JOIN discussion_response
-  ON discussion.post_id = discussion_response.post_id
-  where discussion.user_id in (select user_following_id from follower where user_id=${JSON.stringify(
+const PostsFollowing = (req, res) => {
+  let getPostsWithCommentsSql = `SELECT Post.post_id, Post.user_id, Post.title, Post.description, Post.tag, Post.picture,
+  Post_response.comment_id, Post_response.comment, Post_response.user_id as 'user_id_comment'
+  FROM Post left JOIN Post_response
+  ON Post.post_id = Post_response.post_id
+  where Post.user_id in (select user_following_id from follower where user_id=${JSON.stringify(
     req.params.user_id
   )})
-  group by discussion_response.comment_id order by discussion.post_id`;
+  group by Post_response.comment_id order by Post.post_id`;
 
-  let getPostLikesSql = `select * from discussion_like_approval order by post_id`;
+  let getPostLikesSql = `select * from Post_like_approval order by post_id`;
 
   let getCommentLikesSql = `select * from comment_like_approval order by comment_id`;
 
@@ -295,15 +295,15 @@ const discussionsFollowing = (req, res) => {
   });
 };
 
-const getDiscussion = (req, res) => {
-  let getPostsWithCommentsSql = `SELECT discussion.post_id, discussion.user_id, discussion.title, discussion.description, discussion.tag, discussion.picture, 
-  discussion_response.comment_id, discussion_response.comment,  discussion_response.user_id as 'user_id_comment'
-  FROM discussion left JOIN discussion_response      
-  ON discussion.post_id = discussion_response.post_id
-  where discussion.user_id = ${JSON.stringify(req.params.user_id)}
-  order by discussion.post_id`;
+const getPost = (req, res) => {
+  let getPostsWithCommentsSql = `SELECT Post.post_id, Post.user_id, Post.title, Post.description, Post.tag, Post.picture, 
+  Post_response.comment_id, Post_response.comment,  Post_response.user_id as 'user_id_comment'
+  FROM Post left JOIN Post_response      
+  ON Post.post_id = Post_response.post_id
+  where Post.user_id = ${JSON.stringify(req.params.user_id)}
+  order by Post.post_id`;
 
-  let getPostLikesSql = `select * from discussion_like_approval order by post_id`;
+  let getPostLikesSql = `select * from Post_like_approval order by post_id`;
 
   let getCommentLikesSql = `select * from comment_like_approval order by comment_id`;
 
@@ -374,18 +374,18 @@ const getDiscussion = (req, res) => {
 };
 
 module.exports = {
-  createDiscussion,
-  getDiscussion,
-  updateDiscussion,
-  deleteDiscussion,
+  createPost,
+  getPost,
+  updatePost,
+  deletePost,
   addComment,
   updateComment,
   deleteComment,
-  addLikeToDiscussion,
+  addLikeToPost,
   addLikeToComment,
-  deleteLikeFromDiscussion,
-  discussionsFollowing,
+  deleteLikeFromPost,
+  PostsFollowing,
 };
 
-// getLikeOfDiscussion,
+// getLikeOfPost,
 //     getLikeOfComment,
