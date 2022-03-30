@@ -133,7 +133,7 @@ const PollCard = ({ item, inProfile }) => {
   };
   const getResult = async () => {
     let id = item.user_id;
-    console.log(item)
+    console.log(item);
     console.log(algo_id);
     console.log(algorithms.filter((item) => item.id == algo_id));
     var algo = algorithms.filter((item) => item.id == algo_id)[0].code;
@@ -174,14 +174,26 @@ const PollCard = ({ item, inProfile }) => {
             <CardContent style={{ display: "flex", flex: 3 }}>
               <Tooltip title='Edit'>
                 <EditIcon
-                  sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
+                  sx={[
+                    {
+                      "&:hover": { color: "black" },
+                      cursor: "pointer",
+                      color: "#616161",
+                    },
+                  ]}
                   style={{ flex: 0.1 }}
                   onClick={(e) => editPoll(e)}
                 />
               </Tooltip>
               <Tooltip title='Delete'>
                 <DeleteIcon
-                  sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
+                  sx={[
+                    {
+                      "&:hover": { color: "black" },
+                      cursor: "pointer",
+                      color: "#616161",
+                    },
+                  ]}
                   style={{ flex: 0.1 }}
                   onClick={(e) => deletePoll(e)}
                 />

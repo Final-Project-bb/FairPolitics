@@ -11,8 +11,7 @@ const createPost = (req, res) => {
     ${JSON.stringify(req.body.tag)}, 
     ${JSON.stringify(req.body.description)},
     ${JSON.stringify(req.body.picture)})`;
-  let sqlGetPostId =
-    "select LAST_INSERT_ID() as post_id from Post limit 1";
+  let sqlGetPostId = "select LAST_INSERT_ID() as post_id from Post limit 1";
 
   connection.query(sqlInsertPost, function (err, result) {
     if (err) {
@@ -81,11 +80,18 @@ const addComment = (req, res) => {
                         ${JSON.stringify(req.body.user_id)}, 
                         ${JSON.stringify(req.body.comment)})`;
 
+  let sqlGetPostId = "select LAST_INSERT_ID() as comment_id from Post_response limit 1";
+
   connection.query(sqlInsertComment, function (err, result) {
     if (err) {
       throw err;
     }
-    res.status(200).send({ message: "comment added successfully!" });
+    connection.query(sqlGetPostId, function (err, result) {
+      if (err) {
+        throw err;
+      }
+      res.status(200).send({ message: "comment added successfully!", id: result });
+    });
   });
 };
 
