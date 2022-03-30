@@ -133,6 +133,7 @@ const FeedbackCard = ({ item, inProfile }) => {
   };
   const getResult = async () => {
     let id = item.user_id;
+    console.log(item)
     console.log(algo_id);
     console.log(algorithms.filter((item) => item.id == algo_id));
     var algo = algorithms.filter((item) => item.id == algo_id)[0].code;
