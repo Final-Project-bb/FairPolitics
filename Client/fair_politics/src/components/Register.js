@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { FaFacebook, FaSms } from "react-icons/fa";
 import { BiMailSend } from 'react-icons/bi'
 import { SiGmail } from "react-icons/si";
-import { FcGoogle } from "react-icons/fc";
+import { FcGoogle, FcOk } from "react-icons/fc";
 import {
   FormControl,
   FormControlLabel,
@@ -38,12 +38,12 @@ const Register = () => {
   const [is_public_elected, setIsPublicElected] = useState(0);
   const [description, setDescription] = useState("");
   const [semi_description, setSemiDescription] = useState("");
-  const [tempPassFlag, setTempPassFlag] = useState(false);
-  const [passFlag, setPassFlag] = useState(false);
-  const [otherFlag, setOtherFlag] = useState(false);
+  const [tempPassFlag, setTempPassFlag] = useState(true);
+  const [passFlag, setPassFlag] = useState(true);
+  const [otherFlag, setOtherFlag] = useState(true);
 
 
-  const { setUserDetails, setIsConnected, loading, setLoading,setAlgoId } =
+  const { setUserDetails, setIsConnected, loading, setLoading, setAlgoId } =
     useContext(AppContext);
 
   const current = new Date().toISOString().split("T")[0];
@@ -64,15 +64,15 @@ const Register = () => {
         .then((res) => res.json())
         .then((json) => {
           console.log(json.code);
-          if (json.code == undefined ) {
+          if (json.code == undefined) {
             alert("email not found!")
           }
-          else{
+          else {
             setTempPassFromDB(Number(json.code))
             setTempPassFlag(true);
           }
         });
-    }else{
+    } else {
       alert("id alread exist!")
     }
 
@@ -297,7 +297,12 @@ const Register = () => {
                     </Button>
                   </>}
                 {passFlag && otherFlag &&
-                  <>great!</>}
+                  <>
+                    <div>Successful initial verification! </div>
+                    <FcOk style={{ position: "relative", left: 205, top: -17}} />
+                    <div>Please fill in the following details correctly.</div>
+                  </>
+                }
               </FormControl>
             </CardContent>
           </Card>
@@ -487,7 +492,7 @@ const styles = {
   cardRight: {
     // height: 400,
     width: 600,
-    top: 10,
+    top: -45,
     left: "50%",
     position: "relative",
     // alignItems: "center",
