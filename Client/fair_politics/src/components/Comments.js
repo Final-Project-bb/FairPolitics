@@ -99,12 +99,27 @@ const Comments = ({
       .then((json) => console.log(json))
       .catch((err) => console.error(err));
     setComment("");
+
+    setComments((prevComments) => {
+      let newcomment = prevComments.filter(
+        (comment) => comment.comment_id === comment_id
+      )[0];
+      newcomment.comment = commentEdit;
+      let newComments = prevComments.filter(
+        (comment) => comment.comment_id !== comment_id
+      );
+      newComments.push(newcomment);
+      return newComments;
+    });
+
     setEditCommentForm(false);
   };
 
   const deleteComment = async (comment_id) => {
     if (window.confirm("Are you sure you want to delete this comment?")) {
-      setComments(item.comments.filter((comment) => comment.comment_id !== comment_id));
+      setComments(
+        comments.filter((comment) => comment.comment_id !== comment_id)
+      );
       await fetch(`http://localhost:4000/api/delete_comment/${comment_id}`, {
         method: "DELETE",
       })
@@ -116,40 +131,7 @@ const Comments = ({
   };
 
   const LikeComment = async (comment_id) => {
-    console.log(comment_id);
-    // let newComments = comments;
-    // if (
-    //   comments
-    //     .filter((comment) => comment.comment_id === comment_id)[0]
-    //     .comment_likes.filter(
-    //       (like_user_id) => like_user_id === user_details.user_id
-    //     ).length > 0
-    // ) {
-    //   console.log("like exist");
-    //   console.log(newComments);
-    //   newComments.forEach((comment, index, object) => {
-    //     if (comment.comment_id === comment_id) {
-    //       // comment.comment_likes.splice(comment, 1);
-    //       comment.comment_likes.splice(index, 1);
-    //     }
-    //   });
-    //   console.log("newComments - if");
-    //   console.log(newComments);
-    //   setComments(newComments);
-    // } else {
-    //   console.log("like unexist");
-    //   newComments.forEach((comment) => {
-    //     if (comment.comment_id === comment_id) {
-    //       comment.comment_likes.push(user_details.user_id);
-    //     }
-    //   });
-    //   console.log("newComments - else");
-    //   console.log(newComments);
-    //   setComments(newComments);
-    // }
-
-    comment.comment_likes.filter((like) => like === user_details.user_id)
-      .length > 0
+    commentLikes.filter((like) => like === user_details.user_id).length > 0
       ? setCommentLikes(
           commentLikes.filter((like) => like !== user_details.user_id)
         )
@@ -222,7 +204,13 @@ const Comments = ({
             <Tooltip title='Edit'>
               <EditIcon
                 // style={{ display: "flex", flex: 0.7 }}
-                sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
+                sx={[
+                  {
+                    "&:hover": { color: "black" },
+                    cursor: "pointer",
+                    color: "#616161",
+                  },
+                ]}
                 onClick={() => {
                   setEditCommentForm(!editCommentForm);
                   setCommentsEditButtonId(comment.comment_id);
@@ -234,12 +222,18 @@ const Comments = ({
             <Tooltip title='Delete'>
               <DeleteIcon
                 // style={{ display: "flex", flex: 0.7 }}
-                sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
+                sx={[
+                  {
+                    "&:hover": { color: "black" },
+                    cursor: "pointer",
+                    color: "#616161",
+                  },
+                ]}
                 onClick={() => deleteComment(comment.comment_id)}
               />
             </Tooltip>
 
-            <Divider orientation='vertical' flexItem />
+            <Divider orientation='vertical' flexItem sx={{ mx: 1 }} />
           </>
         )}
         <Tooltip
@@ -250,18 +244,23 @@ const Comments = ({
               : "Like"
           }>
           <FavoriteBorderIcon
-            sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
-            // style={{
-            //   display: "flex",
-            //   flex: 1,
-            //   marginRight: 20,
-            // }}
-            color={
-              commentLikes.filter((like) => like === user_details.user_id)
-                .length > 0
-                ? "error"
-                : ""
-            }
+            sx={[
+              {
+                "&:hover": {
+                  color:
+                    commentLikes.filter((like) => like === user_details.user_id)
+                      .length > 0
+                      ? "#616161"
+                      : "black",
+                },
+                cursor: "pointer",
+                color:
+                  commentLikes.filter((like) => like === user_details.user_id)
+                    .length > 0
+                    ? "#e53935"
+                    : "#616161",
+              },
+            ]}
             onClick={() => LikeComment(comment.comment_id)}
           />
           {/* {comment.comment_likes.length} */}

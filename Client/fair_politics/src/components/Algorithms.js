@@ -37,7 +37,7 @@ const Algorithms = () => {
 
   const setAlgorithmChosen = async (algoID) => {
     setChosenAlgorithm(algoID);
-    console.log(algoID);
+    // console.log(algoID);
     setAlgoId(algoID);
     await fetch(
       `http://localhost:4000/api/choose_algorithm/${user_details.user_id}/${algoID}`,
@@ -63,34 +63,63 @@ const Algorithms = () => {
     <div style={{ backgroundColor: "whitesmoke" }}>
       <Header />
       {chosenAlgorithm === -1 && (
-        <div style={{ color: "red" }}>
+        <CardContent sx={{ color: "red" }}>
           Please Choose Algorithm to use for the haluka hogenet{" "}
-        </div>
+        </CardContent>
       )}
+      <CardContent sx={{ color: "#616161" }}>
+        THE CHOSEN ALGORITHM HERE IS USED TO COMPUTE THE RESULTS ON YOUR POLLS
+        AND POSTS.
+      </CardContent>
       <Grid container spacing={0} direction='row' alignItems='center'>
         {algorithms.map((algo) => {
           return (
-            <Card key={algo.id} sx={{ width: 400, margin: 3 }}>
-              {/* <CardContent sx={{ fontWeight: "bold", fontSize: 30 }}>
+            <Box
+              key={algo.id}
+              sx={{
+                boxShadow: 3,
+                width: 500,
+                margin: 3,
+                border: chosenAlgorithm === algo.id ? "2px solid #1769aa" : 0,
+                borderRadius: "2%",
+              }}>
+              <Card>
+                {/* <CardContent sx={{ fontWeight: "bold", fontSize: 30 }}>
                 id: {algo.id}
               </CardContent> */}
-              <CardContent sx={{ fontWeight: "bold", fontSize: 30 }}>
-                {algo.title}
-              </CardContent>
+                <CardContent
+                  sx={{
+                    display: "flex",
+                    fontWeight: "bold",
+                    fontSize: 22,
+                    flexDirection: "row",
+                    // flex: 4,
+                  }}>
+                  <label>{algo.title}</label>
+                  <Button
+                    variant={
+                      chosenAlgorithm === algo.id ? "contained" : "text"
+                    }
+                    color='primary'
+                    sx={{
+                      position: "relative",
+                      alignContent: "flex-end",
+                      justifyContent: "flex-end",
+                      textAlign: "flex-end",
+                      alignSelf: "flex-end",
+                      justifyContent: "flex-end",
+                      marginLeft: "auto",
+                    }}
+                    onClick={() => setAlgorithmChosen(algo.id)}>
+                    {chosenAlgorithm === algo.id ? "Chosen" : "Choose"}
+                  </Button>
+                </CardContent>
 
-              <Button
-                variant={chosenAlgorithm === algo.id ? "contained" : "outlined"}
-                color='primary'
-                sx={{ justifyContent: "flex-end" }}
-                onClick={() => setAlgorithmChosen(algo.id)}>
-                {chosenAlgorithm === algo.id ? "Chosen" : "Choose"}
-              </Button>
-
-              <CardContent sx={{ fontWeight: "light", fontSize: 17 }}>
-                {" "}
-                {algo.description}{" "}
-              </CardContent>
-            </Card>
+                <CardContent sx={{ fontWeight: "light", fontSize: 17 }}>
+                  {algo.description}
+                </CardContent>
+              </Card>
+            </Box>
           );
         })}
       </Grid>

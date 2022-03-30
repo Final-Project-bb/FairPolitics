@@ -47,9 +47,6 @@ const PostCard = ({ item, inProfile }) => {
   const history = useHistory();
 
   useEffect(() => {
-    // console.log(item);
-    console.log('comments');
-    console.log(comments);
     getUserDetails();
   }, []);
 
@@ -116,31 +113,30 @@ const PostCard = ({ item, inProfile }) => {
   };
 
   const addComment = async () => {
-    // console.log(comments);
-    const comment_details = {
+    const comment_details_to_server = {
       post_id: item.post_id,
       user_id: user_details.user_id,
       comment: comment,
     };
-    comments.push(comment_details)
-    console.log(comments)
-      // the problems has accured due that we can't set commend into the
-      // usestate until we don't know what is the command_id that the db decide
-      // Solution: so we need the add_comment fetch function to bring us the command_id that 
-      // set into the db and the set our new command into the usestate
-      
-      // setComments([...comments, comment_details]);
     await fetch(`http://localhost:4000/api/add_comment`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(comment_details),
+      body: JSON.stringify(comment_details_to_server),
     })
       .then((res) => res.json())
-      .then((json) => console.log(json))
+      .then((json) => {
+        console.log(json);
+        const comment_details = {
+          comment_id: json.id[0].comment_id,
+          user_id_comment: user_details.user_id,
+          comment: comment,
+          comment_likes: [],
+        };
+        setComments([...comments, comment_details]);
+        setComment("");
+      })
       .catch((err) => console.error(err));
-    setComment("");
   };
-  
 
   const editPost = () => {
     setCurrentItem(item);
@@ -150,12 +146,9 @@ const PostCard = ({ item, inProfile }) => {
   const deletePost = async () => {
     setLoading(true);
     if (window.confirm("Are you sure you want to delete this post?")) {
-      await fetch(
-        `http://localhost:4000/api/delete_Post/${item.post_id}`,
-        {
-          method: "DELETE",
-        }
-      )
+      await fetch(`http://localhost:4000/api/delete_Post/${item.post_id}`, {
+        method: "DELETE",
+      })
         .then((res) => res.json())
         .catch((error) => console.error(error));
     }
@@ -169,14 +162,14 @@ const PostCard = ({ item, inProfile }) => {
           <CardContent style={{ display: "flex", flex: 3 }}>
             <Tooltip title='Edit'>
               <EditIcon
-                sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
+                sx={[{ "&:hover": { color: "black" }, cursor: "pointer", color: "#616161" }]}
                 style={{ flex: 0.1 }}
                 onClick={(e) => editPost(e)}
               />
             </Tooltip>
             <Tooltip title='Delete'>
               <DeleteIcon
-                sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
+                sx={[{ "&:hover": { color: "black" }, cursor: "pointer", color: "#616161" }]}
                 style={{ flex: 0.1 }}
                 onClick={(e) => deletePost(e)}
               />
@@ -216,26 +209,36 @@ const PostCard = ({ item, inProfile }) => {
             {/* variant={likes.filter(like => like === user_details.user_id).length > 0 ? 'contained' : 'outlined' } */}
             <Tooltip
               title={
-                item.likes.filter((like) => like === user_details.user_id)
-                  .length > 0
+                likes.filter((like) => like === user_details.user_id).length > 0
                   ? "Unlike"
                   : "Like"
               }>
               <FavoriteBorderIcon
                 label={likes.length}
                 fontSize='large'
-                sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
+                sx={[
+                  {
+                    "&:hover": {
+                      color:
+                        likes.filter((like) => like === user_details.user_id)
+                          .length > 0
+                          ? "#616161"
+                          : "#2196f3",
+                    },
+                    cursor: "pointer",
+                    color:
+                      likes.filter(
+                        (like) => like === user_details.user_id
+                      ).length > 0
+                        ? "#e53935"
+                        : "#616161",
+                  },
+                ]}
                 style={{
                   display: "flex",
                   flex: 1,
                   marginRight: 20,
                 }}
-                color={
-                  likes.filter((like) => like === user_details.user_id).length >
-                  0
-                    ? "error"
-                    : "outlined"
-                }
                 onClick={() => LikePost()}
               />
             </Tooltip>
