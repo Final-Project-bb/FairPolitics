@@ -29,10 +29,10 @@ const FriendProfile = () => {
     friend_details,
     loading,
     setLoading,
-    profileFeedbackCards,
-    profileDiscussionCards,
-    setProfileFeedbackCards,
-    setProfileDiscussionCards,
+    profilePollCards,
+    profilePostCards,
+    setProfilePollCards,
+    setProfilePostCards,
     inFriend,
   } = useContext(AppContext);
   const handleChange = (event, newValue) => {
@@ -49,28 +49,28 @@ const FriendProfile = () => {
     console.log("fetchSelfPolls");
 
     if (data !== undefined) {
-      await setProfileFeedbackCards(data.allPollsWithAnswer);
+      await setProfilePollCards(data.allPollsWithAnswer);
     }
     setLoading(false);
   };
 
-  const fetchSelfDiscussions = async () => {
+  const fetchSelfPosts = async () => {
     setLoading(true);
     const response = await fetch(
       `http://localhost:4000/api/get_discussions/${friend_details.user_id}`
     );
     const data = await response.json();
     console.log(data.allPostsWithComments);
-    console.log("fetchSelfDiscussions");
+    console.log("fetchSelfPosts");
 
     if (data !== undefined) {
-      await setProfileDiscussionCards(data.allPostsWithComments);
+      await setProfilePostCards(data.allPostsWithComments);
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchSelfDiscussions();
+    fetchSelfPosts();
     console.log("Profile effected");
     fetchSelfPolls();
   }, []);
@@ -96,7 +96,7 @@ const FriendProfile = () => {
               {/* <div style={styles.title}>Posts Feed:</div> */}
               <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={0}>
-                  {profileDiscussionCards.map((item) => {
+                  {profilePostCards.map((item) => {
                     return <DiscussionCard key={item.post_id} item={item} />;
                   })}
                 </Grid>
@@ -106,7 +106,7 @@ const FriendProfile = () => {
               {/* <div style={styles.title}>Polls Feed</div> */}
               <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={0}>
-                  {profileFeedbackCards.map((item) => {
+                  {profilePollCards.map((item) => {
                     return <FeedbackCard key={item.poll_id} item={item} />;
                   })}
                 </Grid>
@@ -191,79 +191,5 @@ const styles = {
     // // margin:100,
   },
 };
-const NavLinkAbout = styled(Link)`
-  color: #fff;
-  ${"" /* justify-content: space-between; */}
-  flex-direction:row;
-  color: white;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  position: absolute;
-  left: 50px;
-  ${"" /* fontSize:30px; */}
-  ${"" /* size:30px; */}
-  text-decoration: none;
-  ${"" /* margin-left: 30px; */}
-  top:-100px;
-  ${"" /* padding: 0 0.1rem; */}
-  height: 100%;
-  cursor: pointer;
-  &:hover {
-    color: green;
-  }
-  &.active {
-    color: #15cdfc;
-  }
-`;
-const NavLinkDis = styled(Link)`
-  color: #fff;
-  ${"" /* justify-content: space-between; */}
-  flex-direction:row;
-  color: white;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  position: absolute;
-  left: 140px;
-  ${"" /* fontSize:30px; */}
-  ${"" /* size:30px; */}
-  text-decoration: none;
-  ${"" /* margin-left: 30px; */}
-  top:-100px;
-  ${"" /* padding: 0 0.1rem; */}
-  height: 100%;
-  cursor: pointer;
-  &:hover {
-    color: green;
-  }
-  &.active {
-    color: #15cdfc;
-  }
-`;
-const NavLinkFeed = styled(Link)`
-  color: #fff;
-  ${"" /* justify-content: space-between; */}
-  flex-direction:row;
-  color: white;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  position: absolute;
-  left: 270px;
-  ${"" /* fontSize:30px; */}
-  ${"" /* size:30px; */}
-  text-decoration: none;
-  ${"" /* margin-left: 30px; */}
-  top:-100px;
-  ${"" /* padding: 0 0.1rem; */}
-  height: 100%;
-  cursor: pointer;
-  &:hover {
-    color: green;
-  }
-  &.active {
-    color: #15cdfc;
-  }
-`;
+
 export default FriendProfile;

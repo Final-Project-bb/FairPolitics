@@ -11,8 +11,7 @@ router.delete("/delete_poll/:poll_id", deletePoll); //works fine
 router.post("/answer_poll/:user_id", answerPoll); //works fine
 router.post("/update_answer_poll/:user_id", updateAnswerPoll); 
 router.get("/poll_feed/:user_id", pollsFollowing); //works fine
-router.post("/poll_algo/:poll_id", pollAlgo); //works fine
-
+router.get("/poll_algo/:poll_id/:algo", pollAlgo); 
 
 module.exports = {
     routes: router

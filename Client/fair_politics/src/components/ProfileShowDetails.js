@@ -166,24 +166,24 @@ const ProfileShowDetails = () => {
         </Button>
       </Box>
       <div style={styles.semiDetails}>
-        <h4 style={styles.name}>
+        <div style={{ fontWeight: "light", fontSize: 17 }}>
           {!inFriend ? user_details.first_name : friend_details.first_name}{" "}
           {!inFriend ? user_details.last_name : friend_details.last_name}
-        </h4>
-        <h4>
+        </div>
+        <div style={{ fontWeight: "light", fontSize: 17 }}>
           {!inFriend ? user_details.gender : friend_details.gender} ,{" "}
           {!inFriend ? user_details.age : friend_details.age}
-        </h4>
-        <h4>
+        </div>
+        <div style={{ fontWeight: "light", fontSize: 17 }}>
           Working in:{" "}
           {!inFriend ? user_details.job_title : friend_details.job_title}
           Living in {!inFriend ? user_details.city : friend_details.city}
-        </h4>
-        <h4>
+        </div>
+        <div style={{ fontWeight: "light", fontSize: 17 }}>
           {!inFriend
             ? user_details.semi_description
             : friend_details.semi_description}
-        </h4>
+        </div>
       </div>
 
       <div style={styles.profileHead}>

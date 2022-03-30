@@ -125,7 +125,7 @@ const deleteUser = (req, res) => {
 
 const auth = (req, res) => {
   var code = Math.floor(100000 + Math.random() * 900000);
-
+  
   var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -137,28 +137,26 @@ const auth = (req, res) => {
   var mailOptions = {
     from: "fairpolitics5@gmail.com",
     to: req.body.email,
-    subject: "fair politics sign up",
+    subject: "Fair politics sign up",
     text: `your temporary password is ${code}`,
   };
 
   transporter.sendMail(mailOptions, function (err, info) {
     if (err) {
       res.status(404).send({ err });
-    } else {
-      res.status(200).send({ message: "Email sent: " + info.response });
+    }else{
+      res.status(200).send({ code });
     }
   });
 };
-
 const getFollowing = (req, res) => {
   var sqlGetUserFollowingId = `select user_following_id from follower where user_id= ${req.params.user_id}`;
 
   connection.query(sqlGetUserFollowingId, function (err, result) {
     if (err) {
       throw err;
-    } else {
-      res.status(200).send({ result });
-    }
+    } 
+    res.status(200).send({ result });
   });
 };
 
@@ -296,7 +294,11 @@ const getUserById = (req, res) => {
     if (err) {
       throw err;
     }
-    res.status(200).send({ result });
+    if(result.length==0){
+      res.status(404).send({ message: "user_id not exists!" });
+    }else{
+      res.status(200).send({ result });
+    }
   });
 };
 

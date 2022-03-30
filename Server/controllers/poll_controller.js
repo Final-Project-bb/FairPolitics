@@ -8,11 +8,11 @@ const algo = require("../../Algorithms/dprsequence")
 const createPoll = (req, res) => {
   let sqlInsertPoll = `insert into poll(user_id,title,description,picture)
                         values(${JSON.stringify(
-                          req.body.user_id
-                        )},${JSON.stringify(req.body.title)},
+    req.body.user_id
+  )},${JSON.stringify(req.body.title)},
                         ${JSON.stringify(
-                          req.body.description
-                        )},${JSON.stringify(req.body.picture)})`;
+    req.body.description
+  )},${JSON.stringify(req.body.picture)})`;
 
   let sqlGetPollId = "select LAST_INSERT_ID() as poll_id from poll limit 1";
 
@@ -50,8 +50,8 @@ const getPoll = (req, res) => {
   let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer 
   ,IF((select count(*) from poll_answer_approval where
          user_id=${JSON.stringify(
-           req.params.user_id
-         )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
+    req.params.user_id
+  )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
     FROM poll JOIN poll_answer 
     ON poll.poll_id=poll_answer.poll_id and 
     poll.user_id =${JSON.stringify(req.params.user_id)}
@@ -222,8 +222,8 @@ const pollsFollowing = (req, res) => {
   let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer 
   ,IF((select count(*) from poll_answer_approval where
          user_id=${JSON.stringify(
-           req.params.user_id
-         )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
+    req.params.user_id
+  )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
     FROM poll JOIN poll_answer 
     ON poll.poll_id=poll_answer.poll_id and 
     poll.user_id in (select user_following_id from follower 
@@ -276,16 +276,67 @@ const pollsFollowing = (req, res) => {
 };
 
 const pollAlgo = (req, res) => {
-  var names = ['0','1','2','3'];
-  var num_cand = 4;
-  var ballotts = [[0],[0,1],[0,1],[2],[2,3],[2,3]];
-  var profile = [names, num_cand, ballotts];
-var election = new algo(profile,"av");
-var outcomes = election.run_by_name([1]);
-var result1=outcomes[outcomes.length-1][0];
-var result2=outcomes[outcomes.length-1][1];
-var result=result1.concat(result2);
-res.status(200).send({result  });
+  var ballotts = [];
+  var getNumCand = `select answer_id from poll_answer where poll_id=${JSON.stringify(req.params.poll_id)}`;
+  var getVoters = `select distinct user_id from poll_answer_approval where answer_id in 
+  (select answer_id from poll_answer where poll_id=${JSON.stringify(req.params.poll_id)})`;
+  connection.query(getNumCand, function (err, answers_id) {
+    if (err) {
+      throw err;
+    }
+    var c = 0;
+    var namesOriginal = answers_id.map(id => id.answer_id);
+    var names = {};
+    var namesKeys = [];
+    for (const x of namesOriginal) {
+      names[c++] = x;
+    }
+    for (const key in names) {
+      namesKeys.push(Number(key));
+    }
+    var num_cand = namesOriginal.length;
+    connection.query(getVoters, function (err, voters) {
+      if (err) {
+        throw err;
+      }
+      var count = 0;
+      voters.forEach((voter) => {
+        var getAnswerByUser = `select answer_id from poll_answer_approval where user_id=${JSON.stringify(voter.user_id)}`;
+        connection.query(getAnswerByUser, function (err, answersByVoter) {
+          if (err) {
+            throw err;
+          }
+          count++;
+          var temp = answersByVoter.map(id => id.answer_id);
+          var temp1 = [];
+          for (const key in names) {
+            for (const x of temp) {
+              if (names[key] == x) {
+                temp1.push(Number(key));
+              }
+            }
+          }
+          ballotts.push(temp1);
+          if (count === voters.length) {
+            var profile = [namesKeys, num_cand, ballotts];
+            console.log(profile);
+            var election = new algo(profile, req.params.algo);
+            var outcomes = election.run_by_name([-1]);
+            var result = outcomes[outcomes.length - 1][1];
+            var answers = [];
+            console.log(outcomes);
+            console.log(result);
+            for (const x of result) {
+                  answers.push(names[x]);
+            }
+            console.log(answers);
+            res.status(200).send({ answers });
+          }
+        }
+        );
+      });
+    });
+  });
 
 }
 
