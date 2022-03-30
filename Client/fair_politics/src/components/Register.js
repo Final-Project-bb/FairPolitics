@@ -32,7 +32,7 @@ const Register = () => {
   const [last_name, setLastName] = useState("");
   const [city, setCity] = useState("");
   const [job_title, setJobTitle] = useState("");
-  const [date, setDate] = useState();
+  const [date, setDate] = useState("");
   const [profile_picture, setProfilePicture] = useState("");
   const [gender, setGender] = useState("");
   const [is_public_elected, setIsPublicElected] = useState(0);
@@ -43,38 +43,56 @@ const Register = () => {
   const [otherFlag, setOtherFlag] = useState(false);
 
 
-  const { setUserDetails, setIsConnected, loading, setLoading } =
+  const { setUserDetails, setIsConnected, loading, setLoading,setAlgoId } =
     useContext(AppContext);
 
   const current = new Date().toISOString().split("T")[0];
   const emailSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const emailField = {
-      email: email,
-    };
+    if (await checkId()) {
+      console.log(true);
+      const emailField = {
+        email: email,
+      };
 
-    await fetch("http://localhost:4000/api/add_user", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(emailField),
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        console.log(json.code);
-        setTempPassFromDB(Number(json.code))
-        // if (json.status === 200) {
-          console.log("200")
-          setTempPassFlag(true);
-        // }
-      });
+      await fetch("http://localhost:4000/api/add_user", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(emailField),
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          console.log(json.code);
+          if (json.code == undefined ) {
+            alert("email not found!")
+          }
+          else{
+            setTempPassFromDB(Number(json.code))
+            setTempPassFlag(true);
+          }
+        });
+    }else{
+      alert("id alread exist!")
+    }
+
     setLoading(false);
+  };
+  const checkId = async (e) => {
+    const response = await fetch(
+      `http://localhost:4000/api/get_user_by_id/${id}`
+    );
+    if (response.status === 200) {
+      return false;
+    }
+    return true;
+
   };
   const approveSubmit = (event) => {
     event.preventDefault();
     if (tempPassFromDB == tempPass) {
       alert(`Password approved ${tempPassFromDB}=${tempPass}`);
-        setPassFlag(true);
+      setPassFlag(true);
     } else {
       alert(`Password failed ${tempPassFromDB}!=${tempPass}`);
     }
@@ -93,27 +111,7 @@ const Register = () => {
     }
   };
 
-  //   const authUsers = async (e) => {   
-  //   setLoading(true);
-  //     const emailField = {
-  //       email: email,
-  //     }; 
 
-  //     await fetch("http://localhost:4000/api/add_user", {
-  //     method: "PUT",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify(emailField),
-  //   })
-  //     .then((res) => res.json())
-  //     .then((json) => {
-  //       console.log(json);
-  //       setTempPassFromDB(json.code)
-  //       // if (json.status === 200) {
-  //       //   // history.push("/connection/login");
-  //       // }
-  //     });
-  //   setLoading(false);
-  // };
 
   const registerSubmit = (e) => {
     e.preventDefault();
@@ -150,14 +148,34 @@ const Register = () => {
           history.push("/connection/login");
         }
         // if(json.status===400){
-         else{ alert(json.message)
+        else {
+          alert(json.message)
           console.log(JSON.stringify(json.message));
+          setAlgorithmChosen(0)
           setTempPassFlag(false);
           setPassFlag(false);
           setOtherFlag(false);
+          handleClick();
         }
       });
     setLoading(false);
+  };
+  const setAlgorithmChosen = async (algoID) => {
+    setAlgoId(algoID);
+    await fetch(
+      `http://localhost:4000/api/choose_algorithm/${id}/${algoID}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        // body: JSON.stringify(newPost),
+      }
+    )
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        // setChosenAlgorithm(json);
+      })
+      .catch((err) => console.error(err));
   };
   const faceBook = () => {
     alert("facebook clicked");
@@ -278,7 +296,7 @@ const Register = () => {
                       submit
                     </Button>
                   </>}
-                  {passFlag && otherFlag &&
+                {passFlag && otherFlag &&
                   <>great!</>}
               </FormControl>
             </CardContent>

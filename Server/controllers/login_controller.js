@@ -125,7 +125,7 @@ const deleteUser = (req, res) => {
 
 const auth = (req, res) => {
   var code = Math.floor(100000 + Math.random() * 900000);
-
+  
   var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -143,12 +143,12 @@ const auth = (req, res) => {
 
   transporter.sendMail(mailOptions, function (err, info) {
     if (err) {
-      throw res.status(404).send({ err });
+      res.status(404).send({ err });
+    }else{
+      res.status(200).send({ code });
     }
-    res.status(200).send({ code });
   });
 };
-
 const getFollowing = (req, res) => {
   var sqlGetUserFollowingId = `select user_following_id from follower where user_id= ${req.params.user_id}`;
 
@@ -294,7 +294,11 @@ const getUserById = (req, res) => {
     if (err) {
       throw err;
     }
-    res.status(200).send({ result });
+    if(result.length==0){
+      res.status(404).send({ message: "user_id not exists!" });
+    }else{
+      res.status(200).send({ result });
+    }
   });
 };
 
