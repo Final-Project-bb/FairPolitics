@@ -71,15 +71,15 @@ const Algorithms = () => {
         {algorithms.map((algo) => {
           return (
             <Card key={algo.id} sx={{ width: 400, margin: 3 }}>
-              <CardContent sx={{ fontWeight: "bold", fontSize: 30 }}>
+              {/* <CardContent sx={{ fontWeight: "bold", fontSize: 30 }}>
                 id: {algo.id}
-              </CardContent>
+              </CardContent> */}
               <CardContent sx={{ fontWeight: "bold", fontSize: 30 }}>
                 {algo.title}
               </CardContent>
 
               <Button
-                variant={chosenAlgorithm === algo.id ? "contained" : "raised"}
+                variant={chosenAlgorithm === algo.id ? "contained" : "outlined"}
                 color='primary'
                 sx={{ justifyContent: "flex-end" }}
                 onClick={() => setAlgorithmChosen(algo.id)}>
