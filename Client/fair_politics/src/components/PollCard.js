@@ -26,11 +26,13 @@ const PollCard = ({ item, inProfile }) => {
   const [onEdit, setOnEdit] = useState(false);
   const [oldAnswers, setOldAnswers] = useState([]);
   const [newAnswers, setNewAnswers] = useState([]);
+  const [orderAnswer, setOrderAnswer] = useState([]);
   const [userName, setUserName] = useState("");
   const [poll_algo, setPollAlgo] = useState("");
-
+  const [sortingAnswers, setSortingAnswers] = useState(item.answers);
   // const [height, setHeight] = useState(0);
   useEffect(() => {
+    // sort();
     getUserDetails();
     const answer_approval = [];
     item.answers.map((answer) => {
@@ -134,7 +136,8 @@ const PollCard = ({ item, inProfile }) => {
       .catch((err) => console.error(err));
     setLoading(false);
   };
-  const getResult = async () => {
+  const getResult = async (e) => {
+    // e.preventDefault()
     setLoading(true)
     if(!inProfile){
       getFriendAlgo();
@@ -147,7 +150,8 @@ const PollCard = ({ item, inProfile }) => {
     })
       .then((res) => res.json())
       .then((json) => {
-        alert(json.answers);
+        setOrderAnswer(json.answers)
+        // alert(json.answers);
       })
       .catch((err) => console.error(err));
     setLoading(false)
@@ -181,6 +185,20 @@ const PollCard = ({ item, inProfile }) => {
     }
     setLoading(false);
   };
+  const sort=()=>{
+    getResult()
+    console.log(item.answers)
+    var sorting= [2,3,1];
+    console.log(sorting)
+    // console.log(item)
+    var result = item.answers.map(function(item) {
+      var n = sorting.indexOf(item.answer_id);
+      sorting[n] = '';
+      return [n, item]
+  }).sort().map(function(j) { return j[1] })
+  setSortingAnswers(result);
+  console.log(result)
+  }
 
   return (
     <div style={styles.head}>
@@ -249,7 +267,7 @@ const PollCard = ({ item, inProfile }) => {
             {item.is_answer_poll ? (
               // if is_answer_poll true
               <>
-                {item.answers.map((answer) => (
+                {sortingAnswers.map((answer) => (
                   <CardContent key={answer.answer_id}>
                     <Checkbox
                       label={answer.title}
@@ -271,10 +289,17 @@ const PollCard = ({ item, inProfile }) => {
                     resubmit!
                   </Button>
                   <Button
+                    style={{ left: 50 }}
+                    variant='outlined'
+                    color='success'
+                    onClick={() => sort()}>
+                    sort!
+                  </Button>
+                  <Button
                     style={{ left: 170 }}
                     variant='outlined'
                     color='success'
-                    onClick={() => getResult()}>
+                    onClick={(e) => getResult(e)}>
                     Show result!
                   </Button>
                 </CardActions>
