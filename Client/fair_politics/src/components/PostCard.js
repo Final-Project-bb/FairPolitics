@@ -1,6 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AppContext } from "./Context";
 import { useHistory } from "react-router-dom";
+import { styled } from "@mui/material/styles";
+
 import {
   FormControl,
   FormControlLabel,
@@ -16,9 +18,11 @@ import {
   Link,
   Grid,
   Tooltip,
+  Box,
+  Collapse,
 } from "@mui/material";
-
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import SendIcon from "@mui/icons-material/Send";
@@ -161,22 +165,31 @@ const PostCard = ({ item, inProfile }) => {
         {inProfile && (
           <CardContent style={{ display: "flex", flex: 3 }}>
             <Tooltip title='Edit'>
-              <EditIcon
-                sx={[{ "&:hover": { color: "black" }, cursor: "pointer", color: "#616161" }]}
-                style={{ flex: 0.1 }}
-                onClick={(e) => editPost(e)}
-              />
+              <IconButton
+                sx={[
+                  {
+                    "&:hover": { color: "black" },
+                    cursor: "pointer",
+                    color: "#616161",
+                  },
+                ]}>
+                <EditIcon onClick={(e) => editPost(e)} />
+              </IconButton>
             </Tooltip>
             <Tooltip title='Delete'>
-              <DeleteIcon
-                sx={[{ "&:hover": { color: "black" }, cursor: "pointer", color: "#616161" }]}
-                style={{ flex: 0.1 }}
-                onClick={(e) => deletePost(e)}
-              />
+              <IconButton
+                sx={[
+                  {
+                    "&:hover": { color: "black" },
+                    cursor: "pointer",
+                    color: "#616161",
+                  },
+                ]}>
+                <DeleteIcon onClick={(e) => deletePost(e)} />
+              </IconButton>
             </Tooltip>
           </CardContent>
         )}
-
         <CardContent style={{ display: "block", verticalAlign: "middle" }}>
           <Tooltip title='Go To Profile'>
             <IconButton onClick={FriendProfileRef} sx={{ p: 0 }}>
@@ -203,66 +216,53 @@ const PostCard = ({ item, inProfile }) => {
           {item.post_id} {item.title}
         </CardContent>
         <CardContent style={styles.text}>{item.description}</CardContent>
-        <CardContent style={styles.cardFooter}>
-          <CardActions>
-            {/* <ButtonGroup> */}
-            {/* variant={likes.filter(like => like === user_details.user_id).length > 0 ? 'contained' : 'outlined' } */}
-            <Tooltip
-              title={
-                likes.filter((like) => like === user_details.user_id).length > 0
-                  ? "Unlike"
-                  : "Like"
-              }>
-              <FavoriteBorderIcon
+        <CardActions>
+          <Tooltip
+            title={
+              likes.filter((like) => like === user_details.user_id).length > 0
+                ? "Unlike"
+                : "Like"
+            }>
+            <IconButton sx={{ marginRight: "auto" }} onClick={() => LikePost()}>
+              <FavoriteIcon
                 label={likes.length}
-                fontSize='large'
+                fontSize='medium'
                 sx={[
                   {
-                    "&:hover": {
-                      color:
-                        likes.filter((like) => like === user_details.user_id)
-                          .length > 0
-                          ? "#616161"
-                          : "#2196f3",
-                    },
                     cursor: "pointer",
                     color:
-                      likes.filter(
-                        (like) => like === user_details.user_id
-                      ).length > 0
+                      likes.filter((like) => like === user_details.user_id)
+                        .length > 0
                         ? "#e53935"
                         : "#616161",
+                    marginRight: 1,
                   },
                 ]}
-                style={{
-                  display: "flex",
-                  flex: 1,
-                  marginRight: 20,
-                }}
-                onClick={() => LikePost()}
               />
+              {likes.length}
+            </IconButton>
+          </Tooltip>
+          {/* <CardContent> */}
+          <ExpandMore
+            expand={commentsButton}
+            onClick={() => toggleCommentsButton()}
+            aria-expanded={commentsButton}
+            aria-label='show more'>
+            <Tooltip
+              title={
+                comments[0].comment_id !== null
+                  ? !commentsButton
+                    ? `Show Comments`
+                    : `Hide Comments`
+                  : "No Comments Yet! be the first"
+              }>
+              <ExpandMoreIcon />
             </Tooltip>
-            <Link
-              component='button'
-              variant='body2'
-              // variant={
-              //   commentsButton && commentsButtonId === item.post_id
-              //     ? "contained"
-              //     : "outlined"
-              // }
-              // color='primary'
-              onClick={() => toggleCommentsButton()}>
-              {comments[0].comment_id !== null
-                ? !commentsButton
-                  ? `Show Comments`
-                  : `Hide Comments`
-                : "No Comments Yet! be the first"}
-              ({comments[0].comment_id !== null ? comments.length : 0})
-            </Link>
-            {/* </ButtonGroup> */}
-          </CardActions>
-        </CardContent>
-        {commentsButton && commentsButtonId === item.post_id && (
+          </ExpandMore>
+          ({comments[0].comment_id !== null ? comments.length : 0})
+          {/* </CardContent> */}
+        </CardActions>
+        <Collapse in={commentsButton} timeout='auto' unmountOnExit>
           <CardContent>
             {comments[0].comment_id !== null &&
               comments.map((comment) => {
@@ -277,10 +277,7 @@ const PostCard = ({ item, inProfile }) => {
                   />
                 );
               })}
-          </CardContent>
-        )}
-        {commentsButton && commentsButtonId === item.post_id && (
-          <CardContent>
+
             <TextField
               sx={{ width: "80%" }}
               // helperText='Tagged elected officials - Example: @israel israel @other person'
@@ -300,7 +297,7 @@ const PostCard = ({ item, inProfile }) => {
               />
             </Tooltip>
           </CardContent>
-        )}
+        </Collapse>
       </Card>
     </div>
   );
@@ -391,5 +388,16 @@ const styles = {
     },
   ],
 };
+
+const ExpandMore = styled((props) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
+  marginLeft: "auto",
+  transition: theme.transitions.create("transform", {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
 
 export default PostCard;
