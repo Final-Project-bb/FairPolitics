@@ -27,6 +27,7 @@ const PollCard = ({ item, inProfile }) => {
   const [oldAnswers, setOldAnswers] = useState([]);
   const [newAnswers, setNewAnswers] = useState([]);
   const [userName, setUserName] = useState("");
+  const [poll_algo, setPollAlgo] = useState("");
 
   // const [height, setHeight] = useState(0);
   useEffect(() => {
@@ -95,6 +96,7 @@ const PollCard = ({ item, inProfile }) => {
   };
 
   const answerPoll = async () => {
+    setLoading(true)
     const ans = {
       answers: newAnswers,
     };
@@ -109,6 +111,7 @@ const PollCard = ({ item, inProfile }) => {
       .then((res) => res.json())
       .then((json) => console.log(json))
       .catch((err) => console.error(err));
+    setLoading(false)
   };
 
   const updateAnswerPoll = async () => {
@@ -132,18 +135,32 @@ const PollCard = ({ item, inProfile }) => {
     setLoading(false);
   };
   const getResult = async () => {
-    let id = item.user_id;
-    console.log(item);
-    console.log(algo_id);
-    console.log(algorithms.filter((item) => item.id == algo_id));
-    var algo = algorithms.filter((item) => item.id == algo_id)[0].code;
-    console.log(algo);
+    setLoading(true)
+    if(!inProfile){
+      getFriendAlgo();
+    }
+    let algo = !inProfile? algorithms.filter((item) => item.id == poll_algo)[0].code :
+                algorithms.filter((item) => item.id == algo_id)[0].code 
+    console.log(`Poll algorithm: ${algo}`);
     await fetch(`http://localhost:4000/api/poll_algo/${item.poll_id}/${algo}`, {
       method: "GET",
     })
       .then((res) => res.json())
       .then((json) => {
         alert(json.answers);
+      })
+      .catch((err) => console.error(err));
+    setLoading(false)
+  };
+
+
+  const getFriendAlgo = async ()=>{
+    await fetch(`http://localhost:4000/api/get_algorithm/${item.user_id}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        setPollAlgo(json.result[0].algorithm_id)
       })
       .catch((err) => console.error(err));
   };
@@ -153,7 +170,6 @@ const PollCard = ({ item, inProfile }) => {
     setCurrentItem(item);
     history.push("/profile/editPoll");
   };
-
   const deletePoll = async (e) => {
     setLoading(true);
     if (window.confirm("Are you sure you want to delete this poll?")) {
