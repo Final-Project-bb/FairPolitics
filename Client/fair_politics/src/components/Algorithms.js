@@ -68,8 +68,7 @@ const Algorithms = () => {
         </CardContent>
       )}
       <CardContent sx={{ color: "#616161" }}>
-        THE CHOSEN ALGORITHM HERE IS USED TO COMPUTE THE RESULTS ON YOUR POLLS
-        AND POSTS.
+       NOTE: THE CHOSEN ALGORITHM HERE IS USED TO COMPUTE THE RESULTS ON YOUR POLLS , POSTS AND COMMENTS.
       </CardContent>
       <Grid container spacing={0} direction='row' alignItems='center'>
         {algorithms.map((algo) => {
@@ -117,6 +116,9 @@ const Algorithms = () => {
 
                 <CardContent sx={{ fontWeight: "light", fontSize: 17 }}>
                   {algo.description}
+                </CardContent>
+                <CardContent sx={{ fontWeight: "light", fontSize: 16  }}>
+                  Example: {algo.example}
                 </CardContent>
               </Card>
             </Box>
