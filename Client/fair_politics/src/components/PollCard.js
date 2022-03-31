@@ -98,7 +98,7 @@ const PollCard = ({ item, inProfile }) => {
   };
 
   const answerPoll = async () => {
-    setLoading(true)
+    setLoading(true);
     const ans = {
       answers: newAnswers,
     };
@@ -113,7 +113,7 @@ const PollCard = ({ item, inProfile }) => {
       .then((res) => res.json())
       .then((json) => console.log(json))
       .catch((err) => console.error(err));
-    setLoading(false)
+    setLoading(false);
   };
 
   const updateAnswerPoll = async () => {
@@ -138,33 +138,37 @@ const PollCard = ({ item, inProfile }) => {
   };
   const getResult = async (e) => {
     // e.preventDefault()
-    setLoading(true)
-    if(!inProfile){
+    setLoading(true);
+    if (!inProfile) {
       getFriendAlgo();
     }
-    let algo = !inProfile? algorithms.filter((item) => item.id == poll_algo)[0].code :
-                algorithms.filter((item) => item.id == algo_id)[0].code 
+    let algo = !inProfile
+      ? algorithms.filter((item) => item.id == poll_algo)[0].code
+      : algorithms.filter((item) => item.id == algo_id)[0].code;
     console.log(`Poll algorithm: ${algo}`);
-    await fetch(`http://localhost:4000/api/poll_algo/${item.poll_id}/${algo}`, {
-      method: "GET",
-    })
+    return await fetch(
+      `http://localhost:4000/api/poll_algo/${item.poll_id}/${algo}`,
+      {
+        method: "GET",
+      }
+    )
       .then((res) => res.json())
       .then((json) => {
-        setOrderAnswer(json.answers)
+        setOrderAnswer(json.answers);
         // alert(json.answers);
+        return json.answers;
       })
       .catch((err) => console.error(err));
-    setLoading(false)
+    setLoading(false);
   };
 
-
-  const getFriendAlgo = async ()=>{
+  const getFriendAlgo = async () => {
     await fetch(`http://localhost:4000/api/get_algorithm/${item.user_id}`, {
       method: "GET",
     })
       .then((res) => res.json())
       .then((json) => {
-        setPollAlgo(json.result[0].algorithm_id)
+        setPollAlgo(json.result[0].algorithm_id);
       })
       .catch((err) => console.error(err));
   };
@@ -185,20 +189,27 @@ const PollCard = ({ item, inProfile }) => {
     }
     setLoading(false);
   };
-  const sort=()=>{
-    getResult()
-    console.log(item.answers)
-    var sorting= [2,3,1];
-    console.log(sorting)
+  const sort = () => {
+    console.log('getResult()');
+    console.log(getResult());
+    console.log(item.answers);
+
+    var sorting = [2, 3, 1];
+    console.log(sorting);
     // console.log(item)
-    var result = item.answers.map(function(item) {
-      var n = sorting.indexOf(item.answer_id);
-      sorting[n] = '';
-      return [n, item]
-  }).sort().map(function(j) { return j[1] })
-  setSortingAnswers(result);
-  console.log(result)
-  }
+    var result = item.answers
+      .map(function (item) {
+        var n = sorting.indexOf(item.answer_id);
+        sorting[n] = "";
+        return [n, item];
+      })
+      .sort()
+      .map(function (j) {
+        return j[1];
+      });
+    setSortingAnswers(result);
+    console.log(result);
+  };
 
   return (
     <div style={styles.head}>
@@ -207,30 +218,28 @@ const PollCard = ({ item, inProfile }) => {
           {inProfile && (
             <CardContent style={{ display: "flex", flex: 3 }}>
               <Tooltip title='Edit'>
-                <EditIcon
+                <IconButton
                   sx={[
                     {
                       "&:hover": { color: "black" },
                       cursor: "pointer",
                       color: "#616161",
                     },
-                  ]}
-                  style={{ flex: 0.1 }}
-                  onClick={(e) => editPoll(e)}
-                />
+                  ]}>
+                  <EditIcon onClick={(e) => editPoll(e)} />
+                </IconButton>
               </Tooltip>
               <Tooltip title='Delete'>
-                <DeleteIcon
+                <IconButton
                   sx={[
                     {
                       "&:hover": { color: "black" },
                       cursor: "pointer",
                       color: "#616161",
                     },
-                  ]}
-                  style={{ flex: 0.1 }}
-                  onClick={(e) => deletePoll(e)}
-                />
+                  ]}>
+                  <DeleteIcon onClick={(e) => deletePoll(e)} />
+                </IconButton>
               </Tooltip>
             </CardContent>
           )}

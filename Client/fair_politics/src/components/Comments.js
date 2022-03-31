@@ -70,7 +70,7 @@ const Comments = ({
   };
 
   const FriendProfileRef = async () => {
-    let id = item.user_id;
+    let id = comment.user_id_comment;
     // console.log(id);
 
     await fetch(`http://localhost:4000/api/get_user_by_id/${id}`, {
@@ -202,8 +202,7 @@ const Comments = ({
               </CardContent>
             )}
             <Tooltip title='Edit'>
-              <EditIcon
-                // style={{ display: "flex", flex: 0.7 }}
+              <IconButton
                 sx={[
                   {
                     "&:hover": { color: "black" },
@@ -215,13 +214,13 @@ const Comments = ({
                   setEditCommentForm(!editCommentForm);
                   setCommentsEditButtonId(comment.comment_id);
                   setCommentEdit(comment.comment);
-                }}
-              />
+                }}>
+                <EditIcon />
+              </IconButton>
             </Tooltip>
 
             <Tooltip title='Delete'>
-              <DeleteIcon
-                // style={{ display: "flex", flex: 0.7 }}
+              <IconButton
                 sx={[
                   {
                     "&:hover": { color: "black" },
@@ -229,13 +228,15 @@ const Comments = ({
                     color: "#616161",
                   },
                 ]}
-                onClick={() => deleteComment(comment.comment_id)}
-              />
+                onClick={() => deleteComment(comment.comment_id)}>
+                <DeleteIcon />
+              </IconButton>
             </Tooltip>
 
             <Divider orientation='vertical' flexItem sx={{ mx: 1 }} />
           </>
         )}
+        
         <Tooltip
           title={
             commentLikes.filter((like) => like === user_details.user_id)
@@ -243,29 +244,24 @@ const Comments = ({
               ? "Unlike"
               : "Like"
           }>
-          <FavoriteBorderIcon
-            sx={[
-              {
-                "&:hover": {
-                  color:
-                    commentLikes.filter((like) => like === user_details.user_id)
-                      .length > 0
-                      ? "#616161"
-                      : "black",
-                },
-                cursor: "pointer",
+          <IconButton onClick={() => LikeComment(comment.comment_id)}>
+            <FavoriteBorderIcon
+              sx={{
                 color:
                   commentLikes.filter((like) => like === user_details.user_id)
                     .length > 0
                     ? "#e53935"
                     : "#616161",
-              },
-            ]}
-            onClick={() => LikeComment(comment.comment_id)}
-          />
+              }}
+            />
+        
+            <div style={{marginLeft: 10, fontSize: 15}}>{commentLikes.length}</div>
+          </IconButton>
+
           {/* {comment.comment_likes.length} */}
           {/* </FavoriteBorderIcon> */}
         </Tooltip>
+
       </CardContent>
       <Divider variant='middle' />
     </div>

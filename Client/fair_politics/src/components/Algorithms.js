@@ -102,11 +102,6 @@ const Algorithms = () => {
                     color='primary'
                     sx={{
                       position: "relative",
-                      alignContent: "flex-end",
-                      justifyContent: "flex-end",
-                      textAlign: "flex-end",
-                      alignSelf: "flex-end",
-                      justifyContent: "flex-end",
                       marginLeft: "auto",
                     }}
                     onClick={() => setAlgorithmChosen(algo.id)}>
