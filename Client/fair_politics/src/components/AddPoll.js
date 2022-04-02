@@ -12,6 +12,7 @@ import {
   CardContent,
   TextField,
   CardActions,
+  ButtonGroup,
 } from "@mui/material";
 const AddPoll = () => {
   const [title, setTitle] = useState("");
@@ -21,6 +22,8 @@ const AddPoll = () => {
   const [answer3, setAnswer3] = useState("");
   const [answers, setAnswers] = useState([]);
   const [description, setDescription] = useState("");
+
+  const [inputList, setInputList] = useState([""]);
 
   const { user_details } = useContext(AppContext);
 
@@ -44,7 +47,7 @@ const AddPoll = () => {
       title: title,
       description: description,
       picture: picture,
-      answers: answers,
+      answers: inputList,
       user_id: user_details.user_id,
     };
     await fetch("http://localhost:4000/api/create_poll", {
@@ -66,6 +69,27 @@ const AddPoll = () => {
     setAnswers([]);
     setDescription("");
   };
+
+  // handle input change
+  const handleInputChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...inputList];
+    list[index] = value;
+    setInputList(list);
+  };
+
+  // handle click event of the Remove button
+  const handleRemoveClick = (index) => {
+    const list = [...inputList];
+    list.splice(index, 1);
+    setInputList(list);
+  };
+
+  // handle click event of the Add button
+  const handleAddClick = () => {
+    setInputList([...inputList, ""]);
+  };
+
   return (
     <div style={{ backgroundColor: "whitesmoke" }}>
       <Header title='Add Poll page' />
@@ -84,7 +108,36 @@ const AddPoll = () => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
-            <TextField
+            {/* <div style={{ marginTop: 20 }}>{JSON.stringify(inputList)}</div> */}
+
+            {inputList.map((x, i) => {
+              return (
+                <>
+                  <TextField
+                    // helperText='Answer'
+                    id='standard-basic'
+                    variant='standard'
+                    placeholder='Enter Answer'
+                    label='Answer'
+                    value={x}
+                    onChange={(e) => handleInputChange(e, i)}
+                  />
+                  {/* <ButtonGroup> */}
+                    {inputList.length !== 1 && (
+                      <Button
+                        // className='mr10'
+                        onClick={() => handleRemoveClick(i)}>
+                        Remove
+                      </Button>
+                    )}
+                    {inputList.length - 1 === i && (
+                      <Button onClick={handleAddClick}>Add Another Answer</Button>
+                    )}
+                  {/* </ButtonGroup> */}
+                </>
+              );
+            })}
+            {/* <TextField
               helperText='Answer'
               id='standard-basic'
               variant='standard'
@@ -116,7 +169,7 @@ const AddPoll = () => {
               placeholder='a valid answer!'
               value={answer3}
               onChange={(e) => setAnswer3(e.target.value)}
-            />
+            /> */}
             <TextField
               helperText='Write a description of the Poll:'
               id='standard-basic'
