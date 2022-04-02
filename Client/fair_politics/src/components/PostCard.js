@@ -166,6 +166,7 @@ const PostCard = ({ item, inProfile }) => {
           <CardContent style={{ display: "flex", flex: 3 }}>
             <Tooltip title='Edit'>
               <IconButton
+                onClick={(e) => editPost(e)}
                 sx={[
                   {
                     "&:hover": { color: "black" },
@@ -173,11 +174,12 @@ const PostCard = ({ item, inProfile }) => {
                     color: "#616161",
                   },
                 ]}>
-                <EditIcon onClick={(e) => editPost(e)} />
+                <EditIcon />
               </IconButton>
             </Tooltip>
             <Tooltip title='Delete'>
               <IconButton
+                onClick={(e) => deletePost(e)}
                 sx={[
                   {
                     "&:hover": { color: "black" },
@@ -185,7 +187,7 @@ const PostCard = ({ item, inProfile }) => {
                     color: "#616161",
                   },
                 ]}>
-                <DeleteIcon onClick={(e) => deletePost(e)} />
+                <DeleteIcon />
               </IconButton>
             </Tooltip>
           </CardContent>

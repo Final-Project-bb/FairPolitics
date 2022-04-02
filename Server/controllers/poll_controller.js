@@ -2,17 +2,17 @@ const Poll = require("../models/poll");
 const express = require("express");
 const mysql = require("mysql");
 const connection = require("../lib/db");
-const algo = require("../../Algorithms/dprsequence")
+const algo = require("../../Algorithms/dprsequence");
 // const { getFollowing } = require("./login_controller")
 
 const createPoll = (req, res) => {
   let sqlInsertPoll = `insert into poll(user_id,title,description,picture)
                         values(${JSON.stringify(
-    req.body.user_id
-  )},${JSON.stringify(req.body.title)},
+                          req.body.user_id
+                        )},${JSON.stringify(req.body.title)},
                         ${JSON.stringify(
-    req.body.description
-  )},${JSON.stringify(req.body.picture)})`;
+                          req.body.description
+                        )},${JSON.stringify(req.body.picture)})`;
 
   let sqlGetPollId = "select LAST_INSERT_ID() as poll_id from poll limit 1";
 
@@ -50,8 +50,8 @@ const getPoll = (req, res) => {
   let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer 
   ,IF((select count(*) from poll_answer_approval where
          user_id=${JSON.stringify(
-    req.params.user_id
-  )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
+           req.params.user_id
+         )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
     FROM poll JOIN poll_answer 
     ON poll.poll_id=poll_answer.poll_id and 
     poll.user_id =${JSON.stringify(req.params.user_id)}
@@ -101,27 +101,6 @@ const getPoll = (req, res) => {
     res.status(200).send({ allPollsWithAnswer });
   });
 };
-// const getPoll = (req, res) => {
-//   let sqlGetPollByUserId = `select * from poll where user_id=${req.params.user_id}`;
-//   let sqlGetAnsOfPoll = `select * from poll_answer where user_id=${req.params.user_id}`;
-
-//   connection.query(sqlGetPollByUserId, function (err, result) {
-//     if (err) {
-//       throw err;
-//     }
-//     if (result.length === 0) {
-//       res.status(404).send({ message: "poll_id or user_id dosn't exists!" });
-//     } else {
-//       connection.query(sqlGetAnsOfPoll, function (err, res1) {
-//         if (err) {
-//           throw err;
-//         } else {
-//           res.status(200).send({ result, res1 });
-//         }
-//       });
-//     }
-//   });
-// };
 
 const updatePoll = (req, res) => {
   let sqlUpdatePoll = `update poll set 
@@ -130,22 +109,48 @@ const updatePoll = (req, res) => {
                         picture=${JSON.stringify(req.body.picture)}
                         where poll_id=${JSON.stringify(req.params.poll_id)}`;
 
+  let answers_id = req.body.answers.map((answer) => answer.answer_id);
+
+  
+
+  //select answer_id from poll_answer where poll_id = req.params.poll_id and answer_id != answers_id (array above)
+  //
+
+  let deleteUserRemovenAnswersSql = `delete from poll_answer 
+  where 
+  poll_id = ${JSON.stringify(req.params.poll_id)} 
+  and answer_id not in != ans`;
+
   connection.query(sqlUpdatePoll, function (err, result) {
     if (err) {
       throw err;
     }
     req.body.answers.forEach((ans) => {
-      connection.query(
-        `update poll_answer 
+      if (ans.hasOwnProperty("answer_id")) {
+        connection.query(
+          `update poll_answer 
         set answer=${JSON.stringify(ans.answer)}
         where 
         answer_id=${JSON.stringify(ans.answer_id)}`,
-        function (err, result) {
-          if (err) {
-            throw err;
+          function (err, result) {
+            if (err) {
+              throw err;
+            }
           }
-        }
-      );
+        );
+      } else {
+        connection.query(
+          `insert into poll_answer (poll_id, user_id, answer)
+        values (${JSON.stringify(req.params.poll_id)} 
+        ,${JSON.stringify(req.body.user_id)} 
+        ,${JSON.stringify(ans.answer)})`,
+          function (err, result) {
+            if (err) {
+              throw err;
+            }
+          }
+        );
+      }
     });
     res.status(200).send({ message: `poll updated successfully!` });
   });
@@ -215,15 +220,14 @@ const updateAnswerPoll = (req, res) => {
     });
   });
   res.status(200).send({ message: "poll user answer updated successfully!" });
-
 };
 
 const pollsFollowing = (req, res) => {
   let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer 
   ,IF((select count(*) from poll_answer_approval where
          user_id=${JSON.stringify(
-    req.params.user_id
-  )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
+           req.params.user_id
+         )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
     FROM poll JOIN poll_answer 
     ON poll.poll_id=poll_answer.poll_id and 
     poll.user_id in (select user_following_id from follower 
@@ -278,21 +282,25 @@ const pollsFollowing = (req, res) => {
 const pollAlgo = (req, res) => {
   var ballotts = [];
   // Should be use
-  var erelSegalKing =`select poll_answer_approval.user_id,poll_answer_approval.answer_id 
+  var erelSegalKing = `select poll_answer_approval.user_id,poll_answer_approval.answer_id 
   from poll_answer_approval join poll_answer on poll_answer_approval.answer_id=poll_answer.answer_id
   where poll_answer.poll_id=1
-  order by poll_answer_approval.user_id`
+  order by poll_answer_approval.user_id`;
   // Should be use
 
-  var getNumCand = `select answer_id from poll_answer where poll_id=${JSON.stringify(req.params.poll_id)}`;
+  var getNumCand = `select answer_id from poll_answer where poll_id=${JSON.stringify(
+    req.params.poll_id
+  )}`;
   var getVoters = `select distinct user_id from poll_answer_approval where answer_id in 
-  (select answer_id from poll_answer where poll_id=${JSON.stringify(req.params.poll_id)})`;
+  (select answer_id from poll_answer where poll_id=${JSON.stringify(
+    req.params.poll_id
+  )})`;
   connection.query(getNumCand, function (err, answers_id) {
     if (err) {
       throw err;
     }
     var c = 0;
-    var namesOriginal = answers_id.map(id => id.answer_id);
+    var namesOriginal = answers_id.map((id) => id.answer_id);
     var names = {};
     var namesKeys = [];
     for (const x of namesOriginal) {
@@ -308,13 +316,15 @@ const pollAlgo = (req, res) => {
       }
       var count = 0;
       voters.forEach((voter) => {
-        var getAnswerByUser = `select answer_id from poll_answer_approval where user_id=${JSON.stringify(voter.user_id)}`;
+        var getAnswerByUser = `select answer_id from poll_answer_approval where user_id=${JSON.stringify(
+          voter.user_id
+        )}`;
         connection.query(getAnswerByUser, function (err, answersByVoter) {
           if (err) {
             throw err;
           }
           count++;
-          var temp = answersByVoter.map(id => id.answer_id);
+          var temp = answersByVoter.map((id) => id.answer_id);
           var temp1 = [];
           for (const key in names) {
             for (const x of temp) {
@@ -339,14 +349,11 @@ const pollAlgo = (req, res) => {
             console.log(answers);
             res.status(200).send({ answers });
           }
-        }
-        );
+        });
       });
     });
   });
-
-}
-
+};
 
 module.exports = {
   createPoll,

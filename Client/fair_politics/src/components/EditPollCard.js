@@ -13,15 +13,24 @@ import {
   TextField,
   Avatar,
 } from "@mui/material";
+import DynamicTextField from "./DynamicTextField";
 
 const EditPollCard = () => {
-  const { currentItem, setLoading } = useContext(AppContext);
+  const { user_details, currentItem, setLoading } = useContext(AppContext);
+
+  const [inputList, setInputList] = useState(currentItem.answers);
 
   const [title, setQuestion] = useState(currentItem.title);
   const [picture, setPicture] = useState(currentItem.picture);
-  const [answer1, setAnswer1] = useState(currentItem.answers[0]!=undefined?currentItem.answers[0].answer:"");
-  const [answer2, setAnswer2] = useState(currentItem.answers[1]!=undefined?currentItem.answers[1].answer:"");
-  const [answer3, setAnswer3] = useState(currentItem.answers[2]!=undefined?currentItem.answers[2].answer:"");
+  const [answer1, setAnswer1] = useState(
+    currentItem.answers[0] != undefined ? currentItem.answers[0].answer : ""
+  );
+  const [answer2, setAnswer2] = useState(
+    currentItem.answers[1] != undefined ? currentItem.answers[1].answer : ""
+  );
+  const [answer3, setAnswer3] = useState(
+    currentItem.answers[2] != undefined ? currentItem.answers[2].answer : ""
+  );
   const [description, setDescription] = useState(currentItem.description);
 
   const history = useHistory();
@@ -38,13 +47,28 @@ const EditPollCard = () => {
       setLoading(true);
       const answers = [
         { answer_id: currentItem.answers[0].answer_id, answer: answer1 },
-        { answer_id: currentItem.answers[1]!=undefined?currentItem.answers[1].answer_id:"", answer: answer2 },
-        { answer_id: currentItem.answers[2]!=undefined?currentItem.answers[2].answer_id:"", answer: answer3 },
+        {
+          answer_id:
+            currentItem.answers[1] != undefined
+              ? currentItem.answers[1].answer_id
+              : "",
+          answer: answer2,
+        },
+        {
+          answer_id:
+            currentItem.answers[2] != undefined
+              ? currentItem.answers[2].answer_id
+              : "",
+          answer: answer3,
+        },
       ];
+      // const Answers = inputList.map(input => input.answer);
+      // console.log(Answers)
       const updatedPoll = {
+        user_id: user_details.user_id,
         title: title,
         description: description,
-        answers: answers,
+        answers: inputList,
         picture: picture,
       };
       await fetch(
@@ -64,8 +88,29 @@ const EditPollCard = () => {
       setLoading(false);
     }
   };
+
+  // handle input change
+  const handleInputChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...inputList];
+    list[index].answer = value;
+    setInputList(list);
+  };
+
+  // handle click event of the Remove button
+  const handleRemoveClick = (index) => {
+    const list = [...inputList];
+    list.splice(index, 1);
+    setInputList(list);
+  };
+
+  // handle click event of the Add button
+  const handleAddClick = () => {
+    setInputList([...inputList, { answer: "" }]);
+  };
+
   return (
-    <div style={{backgroundColor:'whitesmoke'}}>
+    <div style={{ backgroundColor: "whitesmoke" }}>
       <Header title='Profile Page' />
       <ProfileHeader />
       <div style={styles.title}>
@@ -85,17 +130,8 @@ const EditPollCard = () => {
               onChange={(e) => setQuestion(e.target.value)}
             />
             <br />
-            {/* <small>@name1 @name2... requird Exmple:@israel israel @other person</small><br /> */}
-            {/* <label>how many answer?</label>
-                <input
-                    type="number"
-                    // pattern="[@]{1}[a-z][a-z]"
-                    // required
-                    placeholder='a valid number!'
-                    value={answerNum}
-                    onChange={(e) => setAnswerNum(e.target.value)}
-                /><br /> */}
-            <TextField
+
+            {/* <TextField
               id='standard-basic'
               variant='standard'
               label='Answer #1'
@@ -126,7 +162,37 @@ const EditPollCard = () => {
               placeholder='a valid answer!'
               value={answer3}
               onChange={(e) => setAnswer3(e.target.value)}
-            />
+            /> */}
+            {inputList
+              .map((answer) => answer.answer)
+              .map((x, i) => {
+                return (
+                  <>
+                    <TextField
+                      id='standard-basic'
+                      variant='standard'
+                      label='Answer'
+                      placeholder='Enter Answer'
+                      value={x}
+                      onChange={(e) => handleInputChange(e, i)}
+                    />
+                    <div className='btn-box'>
+                      {inputList.length !== 1 && (
+                        <Button
+                          className='mr10'
+                          onClick={() => handleRemoveClick(i)}>
+                          Remove
+                        </Button>
+                      )}
+                      {inputList.length - 1 === i && (
+                        <Button onClick={handleAddClick}>
+                          Add Another Answer
+                        </Button>
+                      )}
+                    </div>
+                  </>
+                );
+              })}
             <br />
             <TextField
               id='standard-basic'

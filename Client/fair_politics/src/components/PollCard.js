@@ -190,7 +190,7 @@ const PollCard = ({ item, inProfile }) => {
     setLoading(false);
   };
   const sort = () => {
-    console.log('getResult()');
+    console.log("getResult()");
     console.log(getResult());
     console.log(item.answers);
 
@@ -225,12 +225,14 @@ const PollCard = ({ item, inProfile }) => {
                       cursor: "pointer",
                       color: "#616161",
                     },
-                  ]}>
-                  <EditIcon onClick={(e) => editPoll(e)} />
+                  ]}
+                  onClick={(e) => editPoll(e)}>
+                  <EditIcon />
                 </IconButton>
               </Tooltip>
               <Tooltip title='Delete'>
                 <IconButton
+                  onClick={(e) => deletePoll(e)}
                   sx={[
                     {
                       "&:hover": { color: "black" },
@@ -238,7 +240,7 @@ const PollCard = ({ item, inProfile }) => {
                       color: "#616161",
                     },
                   ]}>
-                  <DeleteIcon onClick={(e) => deletePoll(e)} />
+                  <DeleteIcon />
                 </IconButton>
               </Tooltip>
             </CardContent>
