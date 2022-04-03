@@ -103,23 +103,27 @@ const getPoll = (req, res) => {
 };
 
 const updatePoll = (req, res) => {
-  let sqlUpdatePoll = `update poll set 
+  let sqlUpdatePoll = `update poll set
                         title=${JSON.stringify(req.body.title)},
                         description=${JSON.stringify(req.body.description)},
                         picture=${JSON.stringify(req.body.picture)}
                         where poll_id=${JSON.stringify(req.params.poll_id)}`;
 
   let answers_id = req.body.answers.map((answer) => answer.answer_id);
+  answers_id = JSON.stringify(
+    answers_id.filter((answer) => answer !== undefined)
+  );
 
-  
+  answers_id = answers_id.substring(1, answers_id.length - 1);
+  let deleteUserRemovenAnswersSql = `delete from poll_answer
+  where poll_id = ${JSON.stringify(req.params.poll_id)}
+  and answer_id not in (${answers_id})`;
 
-  //select answer_id from poll_answer where poll_id = req.params.poll_id and answer_id != answers_id (array above)
-  //
-
-  let deleteUserRemovenAnswersSql = `delete from poll_answer 
-  where 
-  poll_id = ${JSON.stringify(req.params.poll_id)} 
-  and answer_id not in != ans`;
+  connection.query(deleteUserRemovenAnswersSql, function (err, result) {
+    if (err) {
+      throw err;
+    }
+  });
 
   connection.query(sqlUpdatePoll, function (err, result) {
     if (err) {
@@ -128,9 +132,9 @@ const updatePoll = (req, res) => {
     req.body.answers.forEach((ans) => {
       if (ans.hasOwnProperty("answer_id")) {
         connection.query(
-          `update poll_answer 
+          `update poll_answer
         set answer=${JSON.stringify(ans.answer)}
-        where 
+        where
         answer_id=${JSON.stringify(ans.answer_id)}`,
           function (err, result) {
             if (err) {
@@ -141,8 +145,8 @@ const updatePoll = (req, res) => {
       } else {
         connection.query(
           `insert into poll_answer (poll_id, user_id, answer)
-        values (${JSON.stringify(req.params.poll_id)} 
-        ,${JSON.stringify(req.body.user_id)} 
+        values (${JSON.stringify(req.params.poll_id)}
+        ,${JSON.stringify(req.body.user_id)}
         ,${JSON.stringify(ans.answer)})`,
           function (err, result) {
             if (err) {
