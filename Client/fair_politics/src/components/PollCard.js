@@ -24,6 +24,7 @@ import EditIcon from "@mui/icons-material/Edit";
 
 const PollCard = ({ item, inProfile }) => {
   const [onEdit, setOnEdit] = useState(false);
+  const [isSortingpRress, setIsSortingPress] = useState(false);
   const [oldAnswers, setOldAnswers] = useState([]);
   const [newAnswers, setNewAnswers] = useState([]);
   const [orderAnswer, setOrderAnswer] = useState([]);
@@ -31,8 +32,14 @@ const PollCard = ({ item, inProfile }) => {
   const [poll_algo, setPollAlgo] = useState("");
   const [sortingAnswers, setSortingAnswers] = useState(item.answers);
   // const [height, setHeight] = useState(0);
+  let algoName = !inProfile
+  ? algorithms.filter((item) => item.id == poll_algo)[0].title
+  : algorithms.filter((item) => item.id == algo_id)[0].title;
   useEffect(() => {
     // sort();
+    algoName = !inProfile
+  ? algorithms.filter((item) => item.id == poll_algo)[0].title
+  : algorithms.filter((item) => item.id == algo_id)[0].title;
     getUserDetails();
     const answer_approval = [];
     item.answers.map((answer) => {
@@ -136,16 +143,16 @@ const PollCard = ({ item, inProfile }) => {
       .catch((err) => console.error(err));
     setLoading(false);
   };
-  const getResult = async (e) => {
+  const sort = async (e) => {
     // e.preventDefault()
-    setLoading(true);
+    // setLoading(true);
     if (!inProfile) {
       getFriendAlgo();
     }
     let algo = !inProfile
       ? algorithms.filter((item) => item.id == poll_algo)[0].code
       : algorithms.filter((item) => item.id == algo_id)[0].code;
-    console.log(`Poll algorithm: ${algo}`);
+    // console.log(`Poll algorithm: ${algo}`);
     return await fetch(
       `http://localhost:4000/api/poll_algo/${item.poll_id}/${algo}`,
       {
@@ -156,7 +163,10 @@ const PollCard = ({ item, inProfile }) => {
       .then((json) => {
         setOrderAnswer(json.answers);
         // alert(json.answers);
-        return json.answers;
+        console.log(json);
+        console.log("json.orderAnswer");
+        console.log(json.orderAnswer);
+        return json;
       })
       .catch((err) => console.error(err));
     setLoading(false);
@@ -189,13 +199,21 @@ const PollCard = ({ item, inProfile }) => {
     }
     setLoading(false);
   };
-  const sort = () => {
-    console.log("getResult()");
-    console.log(getResult());
+  const getResult = async () => {
+    // console.log("getResult()");
+    // console.log(await getResult());
+    // console.log(orderAnswer);
+    console.log("item.answers");
     console.log(item.answers);
-
-    var sorting = [2, 3, 1];
+    let data = await sort();
+    let sorting = data.answers;
+    let order = data.orderAnswer;
+    let count= data.answersCount;
+    let sumOfUsers= data.sumOfUsers;
+    console.log("sorting");
     console.log(sorting);
+    console.log("order");
+    console.log(order);
     // console.log(item)
     var result = item.answers
       .map(function (item) {
@@ -207,8 +225,25 @@ const PollCard = ({ item, inProfile }) => {
       .map(function (j) {
         return j[1];
       });
-    setSortingAnswers(result);
+    // setIsSortingPress(true);
+    result.forEach(e => {
+      e.percents = order[e.answer_id] == undefined ? 0 : order[e.answer_id];
+      e.answerCount=count[e.answer_id] == undefined? 0 :count[e.answer_id];
+      e.sumOfUsers=sumOfUsers;
+    });
+    // result.press=true;
+    console.log("result");
     console.log(result);
+    setSortingAnswers(result);
+    item.answers = result
+    item.press=true;
+    // console.log(orderAnswer);
+    console.log("new item.answers");
+    console.log(item.answers);
+    console.log("new item.press");
+    console.log(item.press);
+    setLoading(false);
+
   };
 
   return (
@@ -289,6 +324,15 @@ const PollCard = ({ item, inProfile }) => {
                       {answer.answer}
                       {answer.is_answer}
                     </div>
+                    <div style={{ color: "green" }}>
+                      {answer.percents == undefined ? "" :
+                        `Answered: ${answer.percents}%`
+                      }
+                      {answer.answerCount==undefined? "" :
+                        ` sum: ${answer.answerCount} users out of ${answer.sumOfUsers}`
+                      }
+                     
+                    </div>
                   </CardContent>
                 ))}
                 <CardActions>
@@ -300,19 +344,14 @@ const PollCard = ({ item, inProfile }) => {
                     resubmit!
                   </Button>
                   <Button
-                    style={{ left: 50 }}
-                    variant='outlined'
-                    color='success'
-                    onClick={() => sort()}>
-                    sort!
-                  </Button>
-                  <Button
                     style={{ left: 170 }}
                     variant='outlined'
                     color='success'
                     onClick={(e) => getResult(e)}>
-                    Show result!
-                  </Button>
+                    Show result! 
+                  </Button> 
+                   {item.press != undefined && 
+                  <div style={{ position:"relative",left: -280 ,color:"red"}}> {`By ${algoName}` }</div>}
                 </CardActions>
               </>
             ) : (
