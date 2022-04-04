@@ -13,7 +13,6 @@ import {
   TextField,
   Avatar,
 } from "@mui/material";
-import DynamicTextField from "./DynamicTextField";
 
 const EditPollCard = () => {
   const { user_details, currentItem, setLoading } = useContext(AppContext);
