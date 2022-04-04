@@ -35,7 +35,6 @@ const PollCard = ({ item, inProfile }) => {
   } = useContext(AppContext);
 
   const [showResults, setShowResults] = useState(item.is_answer_poll);
-  const [oldAnswers, setOldAnswers] = useState([]);
   const [newAnswers, setNewAnswers] = useState([]);
   const [userName, setUserName] = useState("");
   const [poll_algo, setPollAlgo] = useState(1);
@@ -59,7 +58,6 @@ const PollCard = ({ item, inProfile }) => {
       }
     });
     setNewAnswers(answer_approval);
-    setOldAnswers(answer_approval);
   }, []);
 
   const history = useHistory();
@@ -229,6 +227,8 @@ const PollCard = ({ item, inProfile }) => {
     newAnswers.filter((answer) => answer === answer_id).length > 0
       ? setNewAnswers(newAnswers.filter((answer) => answer !== answer_id))
       : setNewAnswers([...newAnswers, answer_id]);
+
+   
   };
 
   const updateAnswerPoll = async () => {
@@ -236,10 +236,9 @@ const PollCard = ({ item, inProfile }) => {
     // console.log(newAnswers);
     const ans = {
       newAnswers: newAnswers,
-      oldAnswers: oldAnswers,
     };
     await fetch(
-      `http://localhost:4000/api/update_answer_poll/${user_details.user_id}`,
+      `http://localhost:4000/api/update_answer_poll/${user_details.user_id}/${item.poll_id}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -254,8 +253,6 @@ const PollCard = ({ item, inProfile }) => {
     console.log(sortedAnswers);
     console.log("newAnswers");
     console.log(newAnswers);
-    console.log("oldAnswers");
-    console.log(oldAnswers);
 
     let updateAnswers = sortedAnswers.map((answer) => {
       if (newAnswers.includes(answer.answer_id)) {
@@ -265,10 +262,23 @@ const PollCard = ({ item, inProfile }) => {
       }
       return answer;
     });
-
+    console.log("before");
+    // item.answers= updateAnswers;
+    // console.log("before1");
     setSortedAnswers(updateAnswers);
-
-
+    // console.log()
+    // console.log("after");
+    fetchPolls();
+    const answer_approval = [];
+    item.answers.map((answer) => {
+      if (answer.is_answer) {
+        answer_approval.push(answer.answer_id);
+      }
+    });
+    setNewAnswers(answer_approval);
+    // let data = updateAnswers.map(ans=>{if(ans.is_answer){ans.answer_id}})
+    // console.log("data"+data)
+    // // setNewAnswers([])
     console.log("updateAnswers");
     console.log(updateAnswers);
 
@@ -283,6 +293,21 @@ const PollCard = ({ item, inProfile }) => {
     //   newAnswers.push(newanswer);
     //   return newAnswers;
     // });
+  };
+  const fetchPolls = async () => {
+    setLoading(true);
+    const response = await fetch(
+      `http://localhost:4000/api/poll_feed/${user_details.user_id}`
+    );
+    const data = await response.json();
+    console.log(data.allPollsWithAnswer);
+    console.log("fetchPolls");
+    // console.log(data.allPollsWithAnswer);
+
+    if (data !== undefined) {
+      await setPollCards(data.allPollsWithAnswer);
+    }
+    setLoading(false);
   };
 
   return (
@@ -389,7 +414,8 @@ const PollCard = ({ item, inProfile }) => {
                   style={{ left: 170 }}
                   // variant='outlined'
                   color='success'
-                  onClick={(e) => setShowResults(!showResults)}>
+                  onClick={(e) => {setShowResults(!showResults)
+                                  console.log("newanswers: "+newAnswers)}}>
                   {!showResults ? "Show Results" : "Reanswer Poll"}
                 </Button>
               )}
