@@ -176,7 +176,8 @@ const Register = () => {
     alert("facebook clicked");
   };
   const gMail = () => {
-    alert("Gmail clicked");
+    window.open(`http://localhost:4000/api/google`);
+    // alert("Gmail clicked");
   };
   const history = useHistory();
   const handleClick = () => {
