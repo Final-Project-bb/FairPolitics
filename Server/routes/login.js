@@ -43,36 +43,41 @@ router.get("/get_algorithm/:user_id", getChosenAlgorithm); //works fine
 
 
 const CLIENT_URL = "http://localhost:3000/";
-// router.get("/login/success", (req, res) => {
-//   if (req.user) {
-//     res.status(200).json({
-//       success: true,
-//       message: "successfull",
-//       user: req.user,
-//       //   cookies: req.cookies
-//     });
-//   }
-// });
 
-// router.get("/login/failed", (req, res) => {
-//   res.status(401).json({
-//     success: false,
-//     message: "failure",
-//   });
-// });
+router.get("/connection/login/success", (req, res) => {
+  if (req.user) {
+    res.status(200).json({
+      success: true,
+      message: "successfull",
+      user: req.user,
+      // user_id:req.params.user_id
+      //   cookies: req.cookies
+    });
+    console.log("aaaaa")
+  }
+});
 
-// router.get("/logout", (req, res) => {
-//   req.logout();
-//   res.redirect(CLIENT_URL);
-// });
+router.get("/connection/login/failed", (req, res) => {
+  res.status(401).json({
+    success: false,
+    message: "failure",
+  });
+  console.log("sads")
+});
+
+router.get("/logout", (req, res) => {
+  req.logout();
+  res.redirect(CLIENT_URL);
+});
 
 router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
 
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    successRedirect: CLIENT_URL,
-    failureRedirect: "/login/failed",
+    successRedirect: `${CLIENT_URL}`,
+    failureRedirect: "/connection/login/failed",
+    
   })
 );
 

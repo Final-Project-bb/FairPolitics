@@ -1,47 +1,85 @@
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
 const passport = require("passport");
-
-const GOOGLE_CLIENT_ID = "1060396216026-4ko36g5jjjs6bqa8m27gvi4qhkoqrnp3.apps.googleusercontent.com";
-const GOOGLE_CLIENT_SECRET = "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";
-
-FACEBOOK_APP_ID = "your id";
-FACEBOOK_APP_SECRET = "your id";
+const dotenv = require('dotenv');
+dotenv.config({ path: './.env' });
+const connection = require("./lib/db");
 
 passport.use(
   new GoogleStrategy(
     {
-      clientID: GOOGLE_CLIENT_ID,
-      clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: "/auth/google/callback", 
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: "/api/google/callback",
+      passReqToCallback: true
+
     },
-    function(accessToken, refreshToken, profile, cb) {
-        User.findOrCreate({ googleId: profile.id }, function (err, user) {
-          return cb(err, user);
+    // function(accessToken, refreshToken, profile, cb) {
+    function (req, accessToken, refreshToken, profile, done) {
+      // console.log("########## req ###########################")
+      // console.log(req.params.user_id)
+      // console.log("################### end req #######")
+      process.nextTick(function () {
+        connection.query("SELECT * FROM social_media WHERE google_id = "+ profile.id, (err, user) => {
+          if (err) {
+            return done(err);
+          } else if (user) {
+            // connection query that return the user_details by social_media's user_id
+            console.log("exist")
+            return done(null, user);
+          } else {
+            let newUser = {
+              user_id: req.params.user_id,
+              google_id: profile.id,
+            };
+
+            connection.query("INSERT INTO social_media (user_id,google_id) VALUES (?, ?)",
+              [newUser.user_id,newUser.google_id], (err, rows) => {
+                if (err) {
+                  console.log(err);
+                }
+
+                return done(null, newUser);
+              })
+          }
+          
         });
+
+      })
+      // done(null, user);
     }
   )
 );
 
-passport.use(
-  new FacebookStrategy(
-    {
-      clientID: FACEBOOK_APP_ID,
-      clientSecret: FACEBOOK_APP_SECRET,
-      callbackURL: "/auth/facebook/callback", // need to change
-    },
-    function(accessToken, refreshToken, profile, cb) {
-        User.findOrCreate({ facebookId: profile.id }, function (err, user) {
-          return cb(err, user);
-        });
-    }
-  )
-);
+// passport.use(
+//   new FacebookStrategy(
+//     {
+//       clientID: process.env.FACEBOOK_APP_ID,
+//       clientSecret: process.env.FACEBOOK_APP_SECRET,
+//       callbackURL: "/api/facebook/callback", // need to change
+//     },
+//     function(accessToken, refreshToken, profile, cb) {
+//         User.findOrCreate({ facebookId: profile.id }, function (err, user) {
+//           return cb(err, user);
+//         });
+//     }
+//   )
+// );
 
 passport.serializeUser((user, done) => {
   done(null, user);
 });
 
 passport.deserializeUser((user, done) => {
-  done(null, user);
+  // console.log("#############user");
+  // console.log(user);
+
+  connection.query("SELECT * FROM social_media WHERE google_id = "+user[0].google_id, (err, rows) => {
+    if (err) {
+      console.log(err);
+      return done(null, err);
+    }
+    // console.log(rows);
+    done(null, user);
+  });
 });
