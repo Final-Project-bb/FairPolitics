@@ -8,11 +8,11 @@ const algo = require("../../Algorithms/dprsequence");
 const createPoll = (req, res) => {
   let sqlInsertPoll = `insert into poll(user_id,title,description,picture)
                         values(${JSON.stringify(
-    req.body.user_id
-  )},${JSON.stringify(req.body.title)},
+                          req.body.user_id
+                        )},${JSON.stringify(req.body.title)},
                         ${JSON.stringify(
-    req.body.description
-  )},${JSON.stringify(req.body.picture)})`;
+                          req.body.description
+                        )},${JSON.stringify(req.body.picture)})`;
 
   let sqlGetPollId = "select LAST_INSERT_ID() as poll_id from poll limit 1";
 
@@ -50,8 +50,8 @@ const getPoll = (req, res) => {
   let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer 
   ,IF((select count(*) from poll_answer_approval where
          user_id=${JSON.stringify(
-    req.params.user_id
-  )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
+           req.params.user_id
+         )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
     FROM poll JOIN poll_answer 
     ON poll.poll_id=poll_answer.poll_id and 
     poll.user_id =${JSON.stringify(req.params.user_id)}
@@ -190,7 +190,7 @@ const answerPoll = (req, res) => {
        (answer_id, user_id) values
        (${JSON.stringify(ans)},
         ${JSON.stringify(req.params.user_id)})`,
-      function (err, likeExist) {
+      function (err, result) {
         if (err) {
           throw err;
         }
@@ -201,18 +201,29 @@ const answerPoll = (req, res) => {
 };
 
 const updateAnswerPoll = (req, res) => {
-  req.body.oldAnswers.forEach((ans) => {
+  console.log("req.body.oldAnswers");
+  console.log(req.body.oldAnswers);
+  let old = req.body.oldAnswers.toString();
+  console.log(old);
+  // old = old.substring(1, req.body.oldAnswers.length - 1);
+  console.log("old");
+  console.log(old);
+  if (old !== "") {
     let deleteOldAnswersSql = `delete from poll_answer_approval 
     where user_id = ${JSON.stringify(req.params.user_id)} 
-    and answer_id = ${JSON.stringify(ans)}`;
+    and answer_id in (${old})`;
     connection.query(deleteOldAnswersSql, function (err, deleteOldAnswers) {
       if (err) {
         throw err;
       }
     });
-  });
-
+  }
+  console.log(newAnswers);
+  console.log("217");
+  let count = 0;
   req.body.newAnswers.forEach((ans) => {
+    count++;
+    console.log("220");
     let insertNewAnswersSql = `insert into poll_answer_approval
     (answer_id, user_id) values
     (${JSON.stringify(ans)}, ${JSON.stringify(req.params.user_id)})`;
@@ -229,8 +240,8 @@ const pollsFollowing = (req, res) => {
   let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer 
   ,IF((select count(*) from poll_answer_approval where
          user_id=${JSON.stringify(
-    req.params.user_id
-  )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
+           req.params.user_id
+         )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
     FROM poll JOIN poll_answer 
     ON poll.poll_id=poll_answer.poll_id and 
     poll.user_id in (select user_following_id from follower 
@@ -339,20 +350,20 @@ const pollAlgo = (req, res) => {
           ballotts.push(temp1);
           if (count === voters.length) {
             var profile = [namesKeys, num_cand, ballotts];
-            console.log(profile);
+            // console.log(profile);
             var election = new algo(profile, req.params.algo);
             var outcomes = election.run_by_name([-1]);
             var result = outcomes[outcomes.length - 1][1];
             var answers = [];
-            console.log(outcomes);
-            console.log(result);
+            // console.log(outcomes);
+            // console.log(result);
             for (const x of result) {
               answers.push(names[x]);
             }
-            console.log("ballotts")
-            console.log(ballotts)
+            // console.log("ballotts");
+            // console.log(ballotts);
 
-            let v = []
+            let v = [];
 
             for (const x of ballotts) {
               for (const i of x) {
@@ -361,17 +372,23 @@ const pollAlgo = (req, res) => {
             }
 
             const orderAnswer = {};
-            let sumOfUsers=ballotts.length
-            const answersCount={};
-            v.forEach((x) => { orderAnswer[x] = (orderAnswer[x] || 0) + 1; });
-            v.forEach((x) => { answersCount[x] = (answersCount[x] || 0) + 1; });
+            let sumOfUsers = ballotts.length;
+            const answersCount = {};
+            v.forEach((x) => {
+              orderAnswer[x] = (orderAnswer[x] || 0) + 1;
+            });
+            v.forEach((x) => {
+              answersCount[x] = (answersCount[x] || 0) + 1;
+            });
             for (const [key, value] of Object.entries(orderAnswer)) {
-              orderAnswer[key]=(value/sumOfUsers)*100;
+              orderAnswer[key] = (value / sumOfUsers) * 100;
             }
-            console.log(answersCount)
-            console.log(orderAnswer)
+            // console.log(answersCount);
+            // console.log(orderAnswer);
             // console.log(counts.keys())
-            res.status(200).send({ answers, orderAnswer,answersCount,sumOfUsers });
+            res
+              .status(200)
+              .send({ answers, orderAnswer, answersCount, sumOfUsers });
           }
         });
       });
