@@ -12,35 +12,29 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: "/api/google/callback",
       passReqToCallback: true
-
     },
     // function(accessToken, refreshToken, profile, cb) {
-    function (req, accessToken, refreshToken, profile, done) {
-      // console.log("########## req ###########################")
-      // console.log(req.params.user_id)
-      // console.log("################### end req #######")
+    function ( req , res, accessToken, refreshToken, profile, done) {
+      console.log(req)
       process.nextTick(function () {
-        connection.query("SELECT * FROM social_media WHERE google_id = "+ profile.id, (err, user) => {
+        connection.query("SELECT * FROM social_media WHERE gmail = "+ JSON.stringify(profile.emails[0].value), (err, user) => {
           if (err) {
             return done(err);
           } else if (user) {
             // connection query that return the user_details by social_media's user_id
             console.log("exist")
+            console.log({ gmail: profile.emails[0].value })
+            // res.status(200).send({ gmail: profile.emails[0].value });
             return done(null, user);
           } else {
+            console.log("not exist")
             let newUser = {
-              user_id: req.params.user_id,
+              gmail: profile.emails[0].value,
               google_id: profile.id,
             };
-
-            connection.query("INSERT INTO social_media (user_id,google_id) VALUES (?, ?)",
-              [newUser.user_id,newUser.google_id], (err, rows) => {
-                if (err) {
-                  console.log(err);
-                }
-
-                return done(null, newUser);
-              })
+            console.log(newUser)
+              // res.status(200).send({ newUser });
+              return done(null, user);
           }
           
         });
