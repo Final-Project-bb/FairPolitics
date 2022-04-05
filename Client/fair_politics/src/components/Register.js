@@ -175,8 +175,17 @@ const Register = () => {
   const faceBook = () => {
     alert("facebook clicked");
   };
-  const gMail = () => {
+  const gMail =async () => {
     window.open(`http://localhost:4000/api/google`);
+    const response = await fetch(
+      `http://localhost:4000/api/google/callback`
+    ).then((res) => res.json())
+    .then((json) => {
+      console.log("gmail here:")
+      console.log(json);
+      // setChosenAlgorithm(json);
+    })
+
     // alert("Gmail clicked");
   };
   const history = useHistory();
