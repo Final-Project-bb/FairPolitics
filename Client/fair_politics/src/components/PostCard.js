@@ -45,6 +45,7 @@ const PostCard = ({ item, inProfile }) => {
     setLoading,
     PostCards,
     setCurrentItem,
+    algo_id,
     currentItem,
     setFriendDetails,
     setInFriend,
@@ -244,7 +245,7 @@ const PostCard = ({ item, inProfile }) => {
     setCurrentItem(item);
     history.push("/profile/editPost");
   };
-
+  
   const deletePost = async () => {
     setLoading(true);
     if (window.confirm("Are you sure you want to delete this post?")) {
