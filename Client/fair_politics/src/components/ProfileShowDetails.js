@@ -143,6 +143,7 @@ const ProfileShowDetails = () => {
           justifyContent: "center",
           textAlign: "center",
         }}>
+        
         <Avatar
           src={`${JSON.stringify(user_details.profile_picture)}`}
           // alt='Remy Sharp'
