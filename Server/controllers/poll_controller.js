@@ -8,11 +8,11 @@ const algo = require("../../Algorithms/dprsequence");
 const createPoll = (req, res) => {
   let sqlInsertPoll = `insert into poll(user_id,title,description,picture)
                         values(${JSON.stringify(
-    req.body.user_id
-  )},${JSON.stringify(req.body.title)},
+                          req.body.user_id
+                        )},${JSON.stringify(req.body.title)},
                         ${JSON.stringify(
-    req.body.description
-  )},${JSON.stringify(req.body.picture)})`;
+                          req.body.description
+                        )},${JSON.stringify(req.body.picture)})`;
 
   let sqlGetPollId = "select LAST_INSERT_ID() as poll_id from poll limit 1";
 
@@ -50,8 +50,8 @@ const getPoll = (req, res) => {
   let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer 
   ,IF((select count(*) from poll_answer_approval where
          user_id=${JSON.stringify(
-    req.params.user_id
-  )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
+           req.params.user_id
+         )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
     FROM poll JOIN poll_answer 
     ON poll.poll_id=poll_answer.poll_id and 
     poll.user_id =${JSON.stringify(req.params.user_id)}
@@ -212,7 +212,9 @@ const updateAnswerPoll = (req, res) => {
   // console.log("dsad")
   let deleteOldAnswersSql = `delete from poll_answer_approval 
     where user_id = ${JSON.stringify(req.params.user_id)} 
-    and answer_id in (select answer_id from poll_answer where poll_id=${req.params.poll_id})`;
+    and answer_id in (select answer_id from poll_answer where poll_id=${
+      req.params.poll_id
+    })`;
   connection.query(deleteOldAnswersSql, function (err, deleteOldAnswers) {
     if (err) {
       throw err;
@@ -242,8 +244,8 @@ const pollsFollowing = (req, res) => {
   let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer 
   ,IF((select count(*) from poll_answer_approval where
          user_id=${JSON.stringify(
-    req.params.user_id
-  )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
+           req.params.user_id
+         )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
     FROM poll JOIN poll_answer 
     ON poll.poll_id=poll_answer.poll_id and 
     poll.user_id in (select user_following_id from follower 
@@ -300,9 +302,9 @@ const pollAlgo = (req, res) => {
   // Should be use
   var erelSegalKing = `select poll_answer_approval.user_id,poll_answer_approval.answer_id 
   from poll_answer_approval join poll_answer on poll_answer_approval.answer_id=poll_answer.answer_id
-  where poll_answer.poll_id=1
+  where poll_answer.poll_id=${req.params.poll_id}
   order by poll_answer_approval.user_id`;
-  
+
   // Should be use
 
   var getNumCand = `select answer_id from poll_answer where poll_id=${JSON.stringify(

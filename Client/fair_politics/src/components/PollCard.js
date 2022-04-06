@@ -227,8 +227,6 @@ const PollCard = ({ item, inProfile }) => {
     newAnswers.filter((answer) => answer === answer_id).length > 0
       ? setNewAnswers(newAnswers.filter((answer) => answer !== answer_id))
       : setNewAnswers([...newAnswers, answer_id]);
-
-   
   };
 
   const updateAnswerPoll = async () => {
@@ -268,7 +266,7 @@ const PollCard = ({ item, inProfile }) => {
     setSortedAnswers(updateAnswers);
     // console.log()
     // console.log("after");
-    fetchPolls();
+    // fetchPolls();
     const answer_approval = [];
     item.answers.map((answer) => {
       if (answer.is_answer) {
@@ -294,21 +292,21 @@ const PollCard = ({ item, inProfile }) => {
     //   return newAnswers;
     // });
   };
-  const fetchPolls = async () => {
-    setLoading(true);
-    const response = await fetch(
-      `http://localhost:4000/api/poll_feed/${user_details.user_id}`
-    );
-    const data = await response.json();
-    console.log(data.allPollsWithAnswer);
-    console.log("fetchPolls");
-    // console.log(data.allPollsWithAnswer);
+  // const fetchPolls = async () => {
+  //   setLoading(true);
+  //   const response = await fetch(
+  //     `http://localhost:4000/api/poll_feed/${user_details.user_id}`
+  //   );
+  //   const data = await response.json();
+  //   console.log(data.allPollsWithAnswer);
+  //   console.log("fetchPolls");
+  //   // console.log(data.allPollsWithAnswer);
 
-    if (data !== undefined) {
-      await setPollCards(data.allPollsWithAnswer);
-    }
-    setLoading(false);
-  };
+  //   if (data !== undefined) {
+  //     await setPollCards(data.allPollsWithAnswer);
+  //   }
+  //   setLoading(false);
+  // };
 
   return (
     <div style={styles.head}>
@@ -402,34 +400,36 @@ const PollCard = ({ item, inProfile }) => {
               </CardContent>
             ))}
             <CardActions>
-              <Button
-                style={{ left: 450 }}
-                variant='outlined'
-                color='success'
-                onClick={() => updateAnswerPoll()}>
-                Submit!
-              </Button>
-              {item.is_answer_poll && (
-                <Button
-                  style={{ left: 170 }}
-                  // variant='outlined'
-                  color='success'
-                  onClick={(e) => {setShowResults(!showResults)
-                                  console.log("newanswers: "+newAnswers)}}>
-                  {!showResults ? "Show Results" : "Reanswer Poll"}
-                </Button>
-              )}
               {showResults && (
                 <div
                   style={{
                     position: "relative",
-                    left: -200,
+                    marginRight: "auto",
                     color: "red",
                   }}>
                   {" "}
                   {`By ${algoName}`}
                 </div>
               )}
+              {item.is_answer_poll && (
+                <Button
+                  sx={{ marginLeft: "auto" }}
+                  // variant='outlined'
+                  color='success'
+                  onClick={(e) => {
+                    setShowResults(!showResults);
+                    console.log("newanswers: " + newAnswers);
+                  }}>
+                  {!showResults ? "Show Results" : "Reanswer Poll"}
+                </Button>
+              )}
+              {!showResults && <Button
+                sx={{ marginLeft: "auto" }}
+                variant='outlined'
+                color='success'
+                onClick={() => updateAnswerPoll()}>
+                Submit!
+              </Button>}
             </CardActions>
           </>
         </CardContent>

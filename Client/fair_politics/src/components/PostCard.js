@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { AppContext } from "./Context";
 import { useHistory } from "react-router-dom";
 import { styled } from "@mui/material/styles";
+import { algorithms } from "./algorithmDetails";
 
 import {
   FormControl,
@@ -32,6 +33,7 @@ const PostCard = ({ item, inProfile }) => {
   const [commentsButtonId, setCommentsButtonId] = useState(0);
   const [commentsButton, setCommentsButton] = useState(false);
   const [comment, setComment] = useState("");
+  const [poll_algo, setPollAlgo] = useState(1);
 
   // const [post, setPost] = useState(item);
   const [likes, setLikes] = useState(item.likes);
@@ -50,8 +52,16 @@ const PostCard = ({ item, inProfile }) => {
 
   const history = useHistory();
 
+  let algoName = !inProfile
+    ? algorithms.filter((item) => item.id == poll_algo)[0].title
+    : algorithms.filter((item) => item.id == algo_id)[0].title;
+
   useEffect(() => {
+    algoName = !inProfile
+      ? algorithms.filter((item) => item.id == poll_algo)[0].title
+      : algorithms.filter((item) => item.id == algo_id)[0].title;
     getUserDetails();
+    getResult();
   }, []);
 
   const FriendProfileRef = async () => {
@@ -69,6 +79,94 @@ const PostCard = ({ item, inProfile }) => {
       .catch((err) => console.error(err));
     setInFriend(true);
     history.push("/FriendProfile");
+  };
+
+  const getFriendAlgo = async () => {
+    await fetch(`http://localhost:4000/api/get_algorithm/${item.user_id}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        json.result[0] !== undefined &&
+          setPollAlgo(json.result[0].algorithm_id);
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const sort = async (e) => {
+    // e.preventDefault()
+    // setLoading(true);
+    if (!inProfile) {
+      getFriendAlgo();
+    }
+    let algo = !inProfile
+      ? algorithms.filter((item) => item.id == poll_algo)[0].code
+      : algorithms.filter((item) => item.id == algo_id)[0].code;
+    // console.log(`Poll algorithm: ${algo}`);
+    return await fetch(
+      `http://localhost:4000/api/post_algo/${item.post_id}/${algo}`,
+      {
+        method: "GET",
+      }
+    )
+      .then((res) => res.json())
+      .then((json) => {
+        // setOrderAnswer(json.answers);
+        // alert(json.answers);
+        // console.log(json);
+        // console.log("json.orderAnswer");
+        // console.log(json.orderAnswer);
+        return json;
+      })
+      .catch((err) => console.error(err));
+    // setLoading(false);
+  };
+
+  const getResult = async () => {
+    // console.log("getResult()");
+    // console.log(await getResult());
+    // console.log(orderAnswer);
+    // console.log("item.answers");
+    // console.log(item.answers);
+    let data = await sort();
+    let sorting = data.comments;
+    // let order = data.orderAnswer;
+    // let count = data.answersCount;
+    // let sumOfUsers = data.sumOfUsers;
+    // console.log("sorting");
+    // console.log(sorting);
+    // console.log("order");
+    // console.log(order);
+    // console.log(item)
+    var result = item.comments
+      .map((item) => {
+        var n = sorting.indexOf(item.comment_id);
+        sorting[n] = "";
+        return [n, item];
+      })
+      .sort()
+      .map((j) => {
+        return j[1];
+      });
+    // setIsSortingPress(true);
+    // result.forEach((e) => {
+    //   e.percents = order[e.answer_id] == undefined ? 0 : order[e.answer_id];
+    //   e.answerCount = count[e.answer_id] == undefined ? 0 : count[e.answer_id];
+    //   e.sumOfUsers = sumOfUsers;
+    // });
+    // result.press=true;
+    // console.log("result");
+    // console.log(result);
+    setComments(result);
+    // item.answers = result;
+    // item.press = true;
+
+    // console.log(orderAnswer);
+    // console.log("new item.answers");
+    // console.log(item.answers);
+    // console.log("new item.press");
+    // console.log(item.press);
+    setLoading(false);
   };
 
   const toggleCommentsButton = () => {

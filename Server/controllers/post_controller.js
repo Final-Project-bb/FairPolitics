@@ -82,7 +82,8 @@ const addComment = (req, res) => {
                         ${JSON.stringify(req.body.user_id)}, 
                         ${JSON.stringify(req.body.comment)})`;
 
-  let sqlGetPostId = "select LAST_INSERT_ID() as comment_id from Post_response limit 1";
+  let sqlGetPostId =
+    "select LAST_INSERT_ID() as comment_id from Post_response limit 1";
 
   connection.query(sqlInsertComment, function (err, result) {
     if (err) {
@@ -92,7 +93,9 @@ const addComment = (req, res) => {
       if (err) {
         throw err;
       }
-      res.status(200).send({ message: "comment added successfully!", id: result });
+      res
+        .status(200)
+        .send({ message: "comment added successfully!", id: result });
     });
   });
 };
@@ -168,8 +171,8 @@ const addLikeToComment = (req, res) => {
 
   let sqlDeleteLikeDisc = `delete from comment_like_approval 
                           where comment_id=${JSON.stringify(
-    req.body.comment_id
-  )} 
+                            req.body.comment_id
+                          )} 
                           and user_id=${JSON.stringify(req.body.user_id)}`;
 
   connection.query(sqlLikeExists, function (err, likeExist) {
@@ -389,7 +392,9 @@ const postAlgo = (req, res) => {
   order by comment_like_approval.user_id`;
 
   // Should be use
-  var getNumCand = `select comment_id from post_response where post_id=${JSON.stringify(req.params.post_id)}`;
+  var getNumCand = `select comment_id from post_response where post_id=${JSON.stringify(
+    req.params.post_id
+  )}`;
 
   connection.query(getNumCand, function (err, comments_id) {
     if (err) {
@@ -415,7 +420,7 @@ const postAlgo = (req, res) => {
         r[a.user_id].push(a.comment_id);
         return r;
       }, Object.create(null));
-      var originalBallotts = []
+      var originalBallotts = [];
       Object.keys(bal).forEach(function (key) {
         originalBallotts.push(bal[key]);
       });
@@ -430,28 +435,28 @@ const postAlgo = (req, res) => {
           }
         }
         ballotts.push(temp1);
-      })
-      console.log("originalBallotts")
-      console.log(originalBallotts)
-      console.log("ballotts")
-      console.log(ballotts)
+      });
+      console.log("originalBallotts");
+      console.log(originalBallotts);
+      console.log("ballotts");
+      console.log(ballotts);
       var profile = [namesKeys, num_cand, ballotts];
-      console.log("profile")
-      console.log(profile)
+      console.log("profile");
+      console.log(profile);
       var election = new algo(profile, req.params.algo);
       var outcomes = election.run_by_name([-1]);
       var result = outcomes[outcomes.length - 1][1];
-      console.log("result")
-      console.log(result)
+      console.log("result");
+      console.log(result);
 
-      let comments = []
+      let comments = [];
       for (const x of result) {
         comments.push(names[x]);
       }
-      console.log("comments")
-      console.log(comments)
+      console.log("comments");
+      console.log(comments);
 
-      res.status(200).send({comments});
+      res.status(200).send({ comments });
     });
   });
 };
