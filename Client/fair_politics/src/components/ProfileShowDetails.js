@@ -130,6 +130,8 @@ const ProfileShowDetails = () => {
     {
       inFriend && fetchFollow();
     }
+    return () => {};
+
   }, [inFriend]);
 
   return (

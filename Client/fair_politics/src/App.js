@@ -102,7 +102,7 @@ function App() {
           <Route exact path='/contact-us'>
             <ContactUs />
           </Route>
-          {is_connected && (
+          {/* {is_connected && ( */}
             <>
               <Route exact path='/home'>
                 <Home />
@@ -141,7 +141,7 @@ function App() {
                 <Algorithms />
               </Route>
             </>
-          )}
+          {/* )} */}
         </Switch>
       </Router>
     </AppContext.Provider>

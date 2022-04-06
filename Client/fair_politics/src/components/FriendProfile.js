@@ -73,6 +73,8 @@ const FriendProfile = () => {
     fetchSelfPosts();
     console.log("Profile effected");
     fetchSelfPolls();
+    return () => {};
+
   }, []);
 
   return (

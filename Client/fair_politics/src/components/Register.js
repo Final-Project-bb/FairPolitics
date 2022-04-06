@@ -9,7 +9,8 @@ import { BiMailSend } from "react-icons/bi";
 import { SiGmail } from "react-icons/si";
 import { FcGoogle, FcOk } from "react-icons/fc";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Backdrop } from "@mui/material";
+import { Backdrop, Tooltip } from "@mui/material";
+import { Icon } from "@iconify/react";
 
 import {
   FormControl,
@@ -21,6 +22,7 @@ import {
   CardActions,
   RadioGroup,
   Radio,
+  IconButton,
 } from "@mui/material";
 
 const Register = () => {
@@ -121,8 +123,8 @@ const Register = () => {
     const newUser = {
       user_id: id,
       password: pass,
-      email:email,
-      gmail:gmail,
+      email: email,
+      gmail: gmail,
       phone_number: phone,
       first_name: first_name,
       last_name: last_name,
@@ -179,11 +181,19 @@ const Register = () => {
   };
   const faceBook = () => {
     const port = 4000;
-    const openedWindow = window.open(`http://localhost:${port}/api/facebook`, "Facebook authenticate", "height=600,width=600");
+    const openedWindow = window.open(
+      `http://localhost:${port}/api/facebook`,
+      "Facebook authenticate",
+      "height=600,width=600"
+    );
     //Note: the fetch starting when the window is closed
     let flag = true;
     while (flag) {
-      if (confirm("you have to closed the Facebook authenticate window to continue!")) {
+      if (
+        confirm(
+          "you have to closed the Facebook authenticate window to continue!"
+        )
+      ) {
         openedWindow.window.close();
         flag = false;
       }
@@ -194,23 +204,32 @@ const Register = () => {
         console.log('Facebook authenticate" window closed!');
         const response = await fetch(
           `http://localhost:${port}/connection/login/facebook/success`
-        ).then((res) => res.json())
+        )
+          .then((res) => res.json())
           .then((json) => {
-            console.log("facebook here:")
+            console.log("facebook here:");
             console.log(json);
             setIsFacebookAuth(true);
             // setChosenAlgorithm(json);
-          })
+          });
       }
     }, 500);
   };
   const gMail = async () => {
     const port = 4000;
-    const openedWindow = window.open(`http://localhost:${port}/api/google`, "Google authenticate", "height=600,width=600");
+    const openedWindow = window.open(
+      `http://localhost:${port}/api/google`,
+      "Google authenticate",
+      "height=600,width=600"
+    );
     //Note: the fetch starting when the window is closed
     let flag = true;
     while (flag) {
-      if (confirm("you have to closed the Google authenticate window to continue!")) {
+      if (
+        confirm(
+          "you have to closed the Google authenticate window to continue!"
+        )
+      ) {
         openedWindow.window.close();
         flag = false;
       }
@@ -221,17 +240,18 @@ const Register = () => {
         console.log('Google authenticate" window closed!');
         const response = await fetch(
           `http://localhost:${port}/connection/login/google/success`
-        ).then((res) => res.json())
+        )
+          .then((res) => res.json())
           .then((json) => {
-            console.log("Gmail here:")
-            setFirstName(json.name.givenName)
-            setLastName(json.name.familyName)
-            setProfilePicture(json.photos[0].value)
-            setGmail(json.emails[0].value)
+            console.log("Gmail here:");
+            setFirstName(json.name.givenName);
+            setLastName(json.name.familyName);
+            setProfilePicture(json.photos[0].value);
+            setGmail(json.emails[0].value);
             setIsGoogleAuth(true);
-            console.log(json)
+            console.log(json);
             // setChosenAlgorithm(json);
-          })
+          });
       }
     }, 500);
   };
@@ -242,7 +262,6 @@ const Register = () => {
   return (
     <div
       style={{
-        backgroundColor: "whitesmoke",
         display: "flex",
         flexDirection: "column",
         flex: 4,
@@ -363,167 +382,175 @@ const Register = () => {
             </CardContent>
           </Card>
           {otherFlag && (
-            <Card style={styles.cardRight}>
-              <CardContent style={styles.content}>
-                <FormControl>
-                  <TextField
-                    // helperText='Enter your first name'
-                    id='standard-basic'
-                    variant='standard'
-                    label='First Name'
-                    // pattern="[0]{1}[5]{1}[0-9]{8}"
-                    // required
-                    // placeholder='first name!'
-                    value={first_name}
-                    onChange={(e) => setFirstName(e.target.value)}
+          <Card style={styles.cardRight}>
+            <CardContent style={styles.content}>
+              <FormControl>
+                <TextField
+                  // helperText='Enter your first name'
+                  id='standard-basic'
+                  variant='standard'
+                  label='First Name'
+                  // pattern="[0]{1}[5]{1}[0-9]{8}"
+                  // required
+                  // placeholder='first name!'
+                  value={first_name}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+                <br />
+                <TextField
+                  // helperText='Enter your last name'
+                  id='standard-basic'
+                  variant='standard'
+                  label='Last Name'
+                  // pattern="[0]{1}[5]{1}[0-9]{8}"
+                  // required
+                  // placeholder='last name!'
+                  value={last_name}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+                <br />
+                <TextField
+                  // helperText='Enter your id:'
+                  id='standard-basic'
+                  variant='standard'
+                  label='Phone'
+                  type='tel'
+                  pattern='[0]{1}[5]{1}[0-9]{8}'
+                  // required
+                  placeholder='valid phone number!'
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className='inputEmail'
+                />
+                <RadioGroup
+                  style={styles.radioGroup}
+                  aria-labelledby='demo-radio-buttons-group-label'
+                  defaultValue='female'
+                  name='radio-buttons-group'>
+                  <FormControlLabel
+                    value='female'
+                    control={<Radio />}
+                    label='Female'
+                    onClick={() => setGender("Female")}
                   />
-                  <br />
-                  <TextField
-                    // helperText='Enter your last name'
-                    id='standard-basic'
-                    variant='standard'
-                    label='Last Name'
-                    // pattern="[0]{1}[5]{1}[0-9]{8}"
-                    // required
-                    // placeholder='last name!'
-                    value={last_name}
-                    onChange={(e) => setLastName(e.target.value)}
+                  <FormControlLabel
+                    value='male'
+                    control={<Radio />}
+                    label='Male'
+                    onClick={() => setGender("Male")}
                   />
-                  <br />
-                  <TextField
-                    // helperText='Enter your id:'
-                    id='standard-basic'
-                    variant='standard'
-                    label='Phone'
-                    type='tel'
-                    pattern='[0]{1}[5]{1}[0-9]{8}'
-                    // required
-                    placeholder='valid phone number!'
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className='inputEmail'
-                  />
-                  <RadioGroup
-                    style={styles.radioGroup}
-                    aria-labelledby='demo-radio-buttons-group-label'
-                    defaultValue='female'
-                    name='radio-buttons-group'>
-                    <FormControlLabel
-                      value='female'
-                      control={<Radio />}
-                      label='Female'
-                      onClick={() => setGender("Female")}
-                    />
-                    <FormControlLabel
-                      value='male'
-                      control={<Radio />}
-                      label='Male'
-                      onClick={() => setGender("Male")}
-                    />
-                  </RadioGroup>
-                  <br />
-                  <TextField
-                    helperText='Enter your Birth Of Date'
-                    id='standard-basic'
-                    variant='standard'
-                    // label='Birth Date'
-                    type='date'
-                    placeholder='Enter BirthDate'
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    name='birthdate'
-                    max={current}
-                  />
-                  <br />
-                  <TextField
-                    // helperText='Enter your location'
-                    id='standard-basic'
-                    variant='standard'
-                    label='Location'
-                    // pattern="[0]{1}[5]{1}[0-9]{8}"
-                    // required
-                    placeholder='city!'
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                  />
-                  <br />
-                  <TextField
-                    // helperText='Enter your rule'
-                    id='standard-basic'
-                    variant='standard'
-                    label='Rule'
-                    // pattern="[0]{1}[5]{1}[0-9]{8}"
-                    // required
-                    placeholder='Rule!'
-                    value={job_title}
-                    onChange={(e) => setJobTitle(e.target.value)}
-                  />
-                  <br />
-                  <TextField
-                    // helperText='Enter your semi-description'
-                    id='standard-basic'
-                    variant='standard'
-                    label='Semi-Description'
-                    // placeholder='semi describe yourself!'
-                    value={semi_description}
-                    onChange={(e) => setSemiDescription(e.target.value)}
-                  />
-                  <br />
-                  <TextField
-                    // helperText='Enter your description'
-                    id='standard-basic'
-                    variant='standard'
-                    label='Description'
-                    placeholder='describe yourself!'
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
-                  <br />
-                  <TextField
-                    // helperText='Insert your Profile's picture'
-                    id='standard-basic'
-                    variant='standard'
-                    label='Profile Picture'
-                    // pattern="[0]{1}[5]{1}[0-9]{8}"
-                    // required
-                    placeholder='Picture!'
-                    value={profile_picture}
-                    onChange={(e) => setProfilePicture(e.target.value)}
-                  />
-                  <br />
-                  <Button
-                    onClick={(e) => registerSubmit(e)}
-                    variant='contained'
-                    color='primary'
-                    type='submit'>
-                    submit
-                  </Button>{" "}
-                  <br />
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "space-around",
-                      position: "relative",
-                      alignItems: "center",
-                      // left: -20,
-                    }}>
-                    <div onClickCapture={() => faceBook()}>
-                      <FaFacebook size={50} />
-                      Facebook
-                    </div>
-                    <div onClickCapture={() => gMail()}>
-                      <SiGmail size={50} />
-                      Gmail
-                    </div>
-                  </div>
-                  <br />
-                  <Button onClick={() => handleClick()}>
-                    already have an account ? sign in here!
-                  </Button>
-                </FormControl>
-              </CardContent>
-            </Card>
+                </RadioGroup>
+                <br />
+                <TextField
+                  helperText='Enter your Birth Of Date'
+                  id='standard-basic'
+                  variant='standard'
+                  // label='Birth Date'
+                  type='date'
+                  placeholder='Enter BirthDate'
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  name='birthdate'
+                  max={current}
+                />
+                <br />
+                <TextField
+                  // helperText='Enter your location'
+                  id='standard-basic'
+                  variant='standard'
+                  label='Location'
+                  // pattern="[0]{1}[5]{1}[0-9]{8}"
+                  // required
+                  placeholder='city!'
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                />
+                <br />
+                <TextField
+                  // helperText='Enter your rule'
+                  id='standard-basic'
+                  variant='standard'
+                  label='Rule'
+                  // pattern="[0]{1}[5]{1}[0-9]{8}"
+                  // required
+                  placeholder='Rule!'
+                  value={job_title}
+                  onChange={(e) => setJobTitle(e.target.value)}
+                />
+                <br />
+                <TextField
+                  // helperText='Enter your semi-description'
+                  id='standard-basic'
+                  variant='standard'
+                  label='Semi-Description'
+                  // placeholder='semi describe yourself!'
+                  value={semi_description}
+                  onChange={(e) => setSemiDescription(e.target.value)}
+                />
+                <br />
+                <TextField
+                  // helperText='Enter your description'
+                  id='standard-basic'
+                  variant='standard'
+                  label='Description'
+                  placeholder='describe yourself!'
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+                <br />
+                <TextField
+                  // helperText='Insert your Profile's picture'
+                  id='standard-basic'
+                  variant='standard'
+                  label='Profile Picture'
+                  // pattern="[0]{1}[5]{1}[0-9]{8}"
+                  // required
+                  placeholder='Picture!'
+                  value={profile_picture}
+                  onChange={(e) => setProfilePicture(e.target.value)}
+                />
+                <br />
+                <Button
+                  onClick={(e) => registerSubmit(e)}
+                  variant='contained'
+                  color='primary'
+                  type='submit'>
+                  submit
+                </Button>{" "}
+                <br />
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                    position: "relative",
+                    alignItems: "center",
+                    // left: -20,
+                  }}>
+                  <Tooltip title='Register via Facebook'>
+                    <IconButton onClick={() => faceBook()}>
+                      <Icon
+                        icon='logos:facebook'
+                        style={{ fontSize: "40px" }}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title='Register via Gmail'>
+                    <IconButton onClick={() => gMail()}>
+                      <Icon
+                        icon='logos:google-gmail'
+                        style={{ fontSize: "35px" }}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+                <br />
+                <Button onClick={() => handleClick()}>
+                  already have an account ? sign in here!
+                </Button>
+              </FormControl>
+            </CardContent>
+          </Card>
           )}
         </div>
       )}
@@ -549,6 +576,7 @@ const styles = {
     // alignItems: "center",
     // textAlign: "center",
     justifyContent: "center",
+    backgroundColor: "whitesmoke",
   },
   cardRight: {
     // height: 400,
@@ -559,6 +587,7 @@ const styles = {
     // alignItems: "center",
     // textAlign: "center",
     justifyContent: "center",
+    backgroundColor: "whitesmoke",
   },
   content: {
     display: "flex",

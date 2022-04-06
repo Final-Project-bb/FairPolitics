@@ -49,25 +49,28 @@ const Comments = ({
   const history = useHistory();
 
   useEffect(() => {
-    getUserDetails();
-  }, []);
+    const ac = new AbortController();
 
-  const getUserDetails = async () => {
-    let id = comment.user_id_comment;
-    await fetch(`http://localhost:4000/api/get_user_by_id/${id}`, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        // console.log(json.result[0]);
-        setUserName({
-          first_name: json.result[0].first_name,
-          last_name: json.result[0].last_name,
-        });
-        return json.result[0];
+    const getUserDetails = async () => {
+      let id = comment.user_id_comment;
+      await fetch(`http://localhost:4000/api/get_user_by_id/${id}`, {
+        method: "GET",
+        signal: ac.signal,
       })
-      .catch((err) => console.error(err));
-  };
+        .then((res) => res.json())
+        .then((json) => {
+          // console.log(json.result[0]);
+          setUserName({
+            first_name: json.result[0].first_name,
+            last_name: json.result[0].last_name,
+          });
+          return json.result[0];
+        })
+        .catch((err) => console.error(err));
+    };
+    getUserDetails();
+    return () => ac.abort();
+  }, []);
 
   const FriendProfileRef = async () => {
     let id = comment.user_id_comment;
@@ -117,9 +120,14 @@ const Comments = ({
 
   const deleteComment = async (comment_id) => {
     if (window.confirm("Are you sure you want to delete this comment?")) {
-      setComments(
-        comments.filter((comment) => comment.comment_id !== comment_id)
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.comment_id !== comment_id)
       );
+      item.comments.forEach((comment, i) => {
+        if (comment.comment_id === comment_id) {
+          item.comments.splice(i, 1);
+        }
+      });
       await fetch(`http://localhost:4000/api/delete_comment/${comment_id}`, {
         method: "DELETE",
       })
@@ -136,6 +144,13 @@ const Comments = ({
           commentLikes.filter((like) => like !== user_details.user_id)
         )
       : setCommentLikes([...commentLikes, user_details.user_id]);
+
+    comment.comment_likes.filter((like) => like === user_details.user_id)
+      .length > 0
+      ? (comment.comment_likes = commentLikes.filter(
+          (like) => like !== user_details.user_id
+        ))
+      : comment.comment_likes.push(user_details.user_id);
 
     const details = {
       comment_id: comment_id,
@@ -236,7 +251,7 @@ const Comments = ({
             <Divider orientation='vertical' flexItem sx={{ mx: 1 }} />
           </>
         )}
-        
+
         <Tooltip
           title={
             commentLikes.filter((like) => like === user_details.user_id)
@@ -254,14 +269,15 @@ const Comments = ({
                     : "#616161",
               }}
             />
-        
-            <div style={{marginLeft: 10, fontSize: 15}}>{commentLikes.length}</div>
+
+            <div style={{ marginLeft: 10, fontSize: 15 }}>
+              {commentLikes.length}
+            </div>
           </IconButton>
 
           {/* {comment.comment_likes.length} */}
           {/* </FavoriteBorderIcon> */}
         </Tooltip>
-
       </CardContent>
       <Divider variant='middle' />
     </div>
