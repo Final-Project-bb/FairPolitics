@@ -23,6 +23,7 @@ import {
 const Login = () => {
   const [onReset, setOnReset] = useState(false);
   const [phone, setPhone] = useState("");
+  const [gmail, setGmail] = useState(null);
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [pass, setPass] = useState("");
@@ -53,10 +54,85 @@ const Login = () => {
   // };
 
   const faceBook = () => {
-    alert("facebook clicked");
+    const port = 4000;
+    const openedWindow = window.open(`http://localhost:${port}/api/facebook`, "Facebook authenticate", "height=600,width=600");
+    //Note: the fetch starting when the window is closed
+    let flag = true;
+    while (flag) {
+      if (confirm("you have to closed the Facebook authenticate window to continue!")) {
+        openedWindow.window.close();
+        flag = false;
+      }
+    }
+    const timer = setInterval(async () => {
+      if (openedWindow.closed) {
+        clearInterval(timer);
+        console.log('Facebook authenticate" window closed!');
+        const response = await fetch(
+          `http://localhost:${port}/connection/login/facebook/success`
+        ).then((res) => res.json())
+          .then((json) => {
+            console.log("facebook here:")
+            console.log(json);
+            // setChosenAlgorithm(json);
+          })
+      }
+    }, 500);
   };
-  const gMail = () => {
-    alert("Gmail clicked");
+  const gMail = async () => {
+    const port = 4000;
+    const openedWindow = window.open(`http://localhost:${port}/api/google`, "Google authenticate", "height=600,width=600");
+    //Note: the fetch starting when the window is closed
+    let flag = true;
+    while (flag) {
+      if (confirm("you have to closed the Google authenticate window to continue!")) {
+        openedWindow.window.close();
+        flag = false;
+      }
+    }
+    const timer = setInterval(async () => {
+      if (openedWindow.closed) {
+        clearInterval(timer);
+        console.log('Google authenticate" window closed!');
+        const response = await fetch(
+          `http://localhost:${port}/connection/login/google/success`
+        ).then((res) => res.json())
+          .then((json) => {
+            console.log("Gmail here:")
+            setGmail(json.emails[0].value)
+            console.log(json)
+            // setChosenAlgorithm(json);
+          })
+      }
+    }, 500);
+  };
+  const loginGoogle = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    await gMail();
+ 
+    const response = await fetch(`http://localhost:4000/api/login_user_by_gmail`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({gmail:gmail}),
+    });
+    if (response.status == 404) {
+      console.log(response);
+      setLoading(false);
+      return;
+    }
+    const data = await response.json();
+    if (data.result !== undefined) {
+      if (data.result[0] !== undefined) {
+        console.log(data.result[0]);
+        setUserDetails(data.result[0]);
+        setIsConnected(true);
+        history.push("/home");
+      }
+    }
+    fetchAlgoId();
+    fetchFollow();
+    setLoading(false);
   };
   const login = async (e) => {
     setLoading(true);
@@ -203,7 +279,7 @@ const Login = () => {
                       <FaFacebook size={50} />
                       Facebook
                     </CardContent>
-                    <CardContent onClickCapture={() => gMail()}>
+                    <CardContent onClickCapture={(e) => loginGoogle(e)}>
                       <SiGmail size={50} />
                       Gmail
                     </CardContent>
