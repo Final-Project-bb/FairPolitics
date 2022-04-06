@@ -37,7 +37,7 @@ CREATE TABLE `algorithm_user_chosen` (
 
 LOCK TABLES `algorithm_user_chosen` WRITE;
 /*!40000 ALTER TABLE `algorithm_user_chosen` DISABLE KEYS */;
-INSERT INTO `algorithm_user_chosen` VALUES (0,'777'),(0,'888'),(0,'999'),(4,'222');
+INSERT INTO `algorithm_user_chosen` VALUES (0,'1234'),(0,'222'),(0,'777'),(0,'888'),(0,'999');
 /*!40000 ALTER TABLE `algorithm_user_chosen` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -99,6 +99,8 @@ DROP TABLE IF EXISTS `login_details`;
 CREATE TABLE `login_details` (
   `user_id` varchar(9) NOT NULL,
   `phone_number` varchar(10) NOT NULL,
+  `gmail` varchar(200) DEFAULT NULL,
+  `email` varchar(200) DEFAULT NULL,
   `password` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`user_id`,`phone_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -110,7 +112,7 @@ CREATE TABLE `login_details` (
 
 LOCK TABLES `login_details` WRITE;
 /*!40000 ALTER TABLE `login_details` DISABLE KEYS */;
-INSERT INTO `login_details` VALUES ('111','0544444444','111'),('222','0542522545','111'),('225','54656746','44'),('333','054225215','44'),('444','053125121','11'),('555','0514512152','111'),('777','0542522545','777'),('888','0542522545','888'),('999','0542522545','999');
+INSERT INTO `login_details` VALUES ('111','0544444444',NULL,NULL,'111'),('1234','','fairpolitics5@gmail.com',NULL,'1234'),('222','0542522545','',NULL,'111'),('225','54656746',NULL,NULL,'44'),('333','054225215','talfreestyle@gmail.com',NULL,'44'),('444','053125121',NULL,NULL,'11'),('555','0514512152',NULL,NULL,'111'),('777','0542522545',NULL,NULL,'777'),('888','0542522545',NULL,NULL,'888'),('999','0542522545',NULL,NULL,'999');
 /*!40000 ALTER TABLE `login_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -187,7 +189,7 @@ CREATE TABLE `poll_answer_approval` (
 
 LOCK TABLES `poll_answer_approval` WRITE;
 /*!40000 ALTER TABLE `poll_answer_approval` DISABLE KEYS */;
-INSERT INTO `poll_answer_approval` VALUES (1,'111'),(1,'225'),(2,'222'),(2,'225'),(2,'333'),(2,'444'),(3,'225'),(3,'333'),(3,'444'),(183,'222');
+INSERT INTO `poll_answer_approval` VALUES (1,'111'),(1,'222'),(1,'225'),(2,'225'),(2,'333'),(2,'444'),(3,'222'),(3,'225'),(3,'333'),(3,'444'),(183,'222');
 /*!40000 ALTER TABLE `poll_answer_approval` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -278,6 +280,7 @@ DROP TABLE IF EXISTS `user_details`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_details` (
   `user_id` varchar(9) NOT NULL,
+  `gmail` varchar(200) NOT NULL,
   `first_name` varchar(45) DEFAULT NULL,
   `last_name` varchar(45) DEFAULT NULL,
   `city` varchar(45) DEFAULT NULL,
@@ -289,7 +292,7 @@ CREATE TABLE `user_details` (
   `is_public_elected` tinyint(1) DEFAULT '0',
   `age` int DEFAULT NULL,
   `birthdate` varchar(10) DEFAULT NULL,
-  PRIMARY KEY (`user_id`)
+  PRIMARY KEY (`user_id`,`gmail`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -299,7 +302,7 @@ CREATE TABLE `user_details` (
 
 LOCK TABLES `user_details` WRITE;
 /*!40000 ALTER TABLE `user_details` DISABLE KEYS */;
-INSERT INTO `user_details` VALUES ('111','idan','ofer','haifa','devops','i did the whole project alone',NULL,'Male','im home',0,NULL,'1990-05-05'),('222','Omer','Shalom1','elyakim11','s1','e11',NULL,'Male','semi omer description',0,28,'0001-10-10'),('225','Omer','Shalom','elyakim','s','e',NULL,'Male','secound semi desecreption',0,28,'1993-02-13'),('333','Tal','Schreiber','Ramat gan','Full Stack','I Did the client side',NULL,'Male','im the client side',0,NULL,'1995-04-26'),('444','Shai','Bonfil','Ariel','Full Stack','i did the server side','','Male','im the server side',0,NULL,'1993-02-27'),('555','test','first','','','','','','',0,NULL,'2022-03-15'),('777','Tal','Schreiber','Ramat gan','','','','Male','',0,NULL,'1995-04-26'),('888','Tal','Schreiber','Ramat gan','','','','','',0,NULL,''),('999','Tal','Schreiber3','Ramat gan','','','','','',0,NULL,'');
+INSERT INTO `user_details` VALUES ('111','','idan','ofer','haifa','devops','i did the whole project alone',NULL,'Male','im home',0,NULL,'1990-05-05'),('1234','fairpolitics5@gmail.com','fair','politics','anywhere','','','https://lh3.googleusercontent.com/a/AATXAJzfr2AGxbXbiiyulj1WowTenkwFmvgvwt6WSEnR=s96-c','','',0,NULL,'1995-02-24'),('222','','Omer','Shalom1','elyakim11','s1','e11',NULL,'Male','semi omer description',0,28,'0001-10-10'),('225','','Omer','Shalom','elyakim','s','e',NULL,'Male','secound semi desecreption',0,28,'1993-02-13'),('333','talfreestyle@gmail.com','Tal','Schreiber','Ramat gan','Full Stack','I Did the client side',NULL,'Male','im the client side',0,NULL,'1995-04-26'),('444','','Shai','Bonfil','Ariel','Full Stack','i did the server side','','Male','im the server side',0,NULL,'1993-02-27'),('555','','test','first','','','','','','',0,NULL,'2022-03-15'),('777','','Tal','Schreiber','Ramat gan','','','','Male','',0,NULL,'1995-04-26'),('888','','Tal','Schreiber','Ramat gan','','','','','',0,NULL,''),('999','','Tal','Schreiber3','Ramat gan','','','','','',0,NULL,'');
 /*!40000 ALTER TABLE `user_details` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -312,4 +315,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-03-30 15:16:37
+-- Dump completed on 2022-04-06 17:01:45
