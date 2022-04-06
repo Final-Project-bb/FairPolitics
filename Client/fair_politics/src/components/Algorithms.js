@@ -57,6 +57,8 @@ const Algorithms = () => {
 
   useEffect(() => {
     getAlgorithmChosen();
+    return () => {};
+
   }, []);
 
   return (
@@ -70,7 +72,12 @@ const Algorithms = () => {
       <CardContent sx={{ color: "#616161" }}>
         NOTE: THE CHOSEN ALGORITHM HERE IS USED TO COMPUTE THE RESULTS ON YOUR POLLS , POSTS AND COMMENTS.
         <br />
-        <img src={require('../images/algoPic.jpg')} />
+        <br />
+        <br />
+        <img width={1000} src={require('../images/algoPic.jpg')} />
+        <br />
+        <br />
+        <br />
         <div>
           {"Let Answers = {a, b, c, d, e} and assume alphabetic tiebreaking. Consider a set of 9 voters"}
           {"with the following approval sets: 5 voters voted to {a, b}, 3 voters voted to {c, d}, 1 voter voted to {e}."}

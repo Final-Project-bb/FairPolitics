@@ -38,41 +38,49 @@ const Home = () => {
     setValue(newValue);
   };
 
-  const fetchPosts = async () => {
-    setLoading(true);
-    const response = await fetch(
-      `http://localhost:4000/api/Post_feed/${user_details.user_id}`
-    );
-    const data = await response.json();
-    console.log("fetchPosts");
-    console.log(data.allPostsWithComments);
-
-    if (data != undefined) {
-      await setPostCards(data.allPostsWithComments);
-    }
-    setLoading(false);
-  };
-
-  const fetchPolls = async () => {
-    setLoading(true);
-    const response = await fetch(
-      `http://localhost:4000/api/poll_feed/${user_details.user_id}`
-    );
-    const data = await response.json();
-    console.log(data.allPollsWithAnswer);
-    console.log("fetchPolls");
-    // console.log(data.allPollsWithAnswer);
-
-    if (data !== undefined) {
-      await setPollCards(data.allPollsWithAnswer);
-    }
-    setLoading(false);
-  };
-
   useEffect(() => {
+    const ac = new AbortController();
+    const fetchPosts = async () => {
+      setLoading(true);
+      const response = await fetch(
+        `http://localhost:4000/api/Post_feed/${user_details.user_id}`,
+        { signal: ac.signal }
+      );
+      const data = await response.json();
+      console.log("fetchPosts");
+      console.log(data.allPostsWithComments);
+
+      if (data != undefined) {
+        await setPostCards(data.allPostsWithComments);
+      }
+      setLoading(false);
+    };
+
+    const fetchPolls = async () => {
+      setLoading(true);
+      const response = await fetch(
+        `http://localhost:4000/api/poll_feed/${user_details.user_id}`,
+        {
+          signal: ac.signal,
+        }
+      );
+      const data = await response.json();
+      console.log(data.allPollsWithAnswer);
+      console.log("fetchPolls");
+      // console.log(data.allPollsWithAnswer);
+
+      if (data !== undefined) {
+        await setPollCards(data.allPollsWithAnswer);
+      }
+      setLoading(false);
+    };
     fetchPosts();
     console.log("Home effected");
     fetchPolls();
+
+    return () => {
+      ac.abort();
+    };
   }, []);
 
   return (
@@ -108,7 +116,7 @@ const Home = () => {
                 </Grid>
                 <Grid container spacing={0}>
                   {postCards.map((item) => {
-                    return <PostCard key={item.post_id} item={item} />;
+                    return <PostCard key={item.post_id} item={item}  />;
                   })}
                 </Grid>
               </Box>

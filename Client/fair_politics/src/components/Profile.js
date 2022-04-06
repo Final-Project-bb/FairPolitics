@@ -27,9 +27,9 @@ const Profile = () => {
     user_details,
     loading,
     setLoading,
-    profilePostCards, 
+    profilePostCards,
     setProfilePostCards,
-    profilePollCards, 
+    profilePollCards,
     setProfilePollCards,
     setInFriend,
     inFriend,
@@ -42,41 +42,51 @@ const Profile = () => {
     setValue(newValue);
   };
 
-  const fetchSelfPolls = async () => {
-    setLoading(true);
-    const response = await fetch(
-      `http://localhost:4000/api/get_polls/${user_details.user_id}`
-    );
-    const data = await response.json();
-    console.log(data.allPollsWithAnswer);
-    console.log("fetchSelfPolls");
-
-    if (data !== undefined) {
-      await setProfilePollCards(data.allPollsWithAnswer);
-    }
-    setLoading(false);
-  };
-
-  const fetchSelfPosts = async () => {
-    setLoading(true);
-    const response = await fetch(
-      `http://localhost:4000/api/get_Posts/${user_details.user_id}`
-    );
-    const data = await response.json();
-    console.log(data.allPostsWithComments);
-    console.log("fetchSelfPosts");
-
-    if (data !== undefined) {
-      await setProfilePostCards(data.allPostsWithComments);
-    }
-    setLoading(false);
-  };
-
   useEffect(() => {
     setInFriend(false);
+
+    const ac = new AbortController();
+
+    const fetchSelfPolls = async () => {
+      setLoading(true);
+      const response = await fetch(
+        `http://localhost:4000/api/get_polls/${user_details.user_id}`,
+        {
+          signal: ac.signal,
+        }
+      );
+      const data = await response.json();
+      console.log(data.allPollsWithAnswer);
+      console.log("fetchSelfPolls");
+
+      if (data !== undefined) {
+        await setProfilePollCards(data.allPollsWithAnswer);
+      }
+      setLoading(false);
+    };
+
+    const fetchSelfPosts = async () => {
+      setLoading(true);
+      const response = await fetch(
+        `http://localhost:4000/api/get_Posts/${user_details.user_id}`,
+        {
+          signal: ac.signal,
+        }
+      );
+      const data = await response.json();
+      console.log(data.allPostsWithComments);
+      console.log("fetchSelfPosts");
+
+      if (data !== undefined) {
+        await setProfilePostCards(data.allPostsWithComments);
+      }
+      setLoading(false);
+    };
+
     fetchSelfPosts();
     console.log("Profile effected");
     fetchSelfPolls();
+    return () => ac.abort();
   }, []);
 
   return (
@@ -103,21 +113,21 @@ const Profile = () => {
               <TabPanel value='1'>
                 {/* <div style={styles.title}>Posts Feed:</div> */}
                 <Box sx={{ flexGrow: 1 }}>
-                    <Grid container direction='row' alignItems='center'>
-                      <IconButton
-                        sx={[
-                          { "&:hover": { color: "#2196f3" }, marginBottom: 5 },
-                        ]}
-                        onClick={() => history.push("/profile/addPost")}>
-                        <Grid item>
-                          <AddIcon
-                            fontSize='large'
-                            // to='/profile/addPoll'
-                          />
-                        </Grid>
-                        <Grid item>Add New Post</Grid>
-                      </IconButton>
-                    </Grid>
+                  <Grid container direction='row' alignItems='center'>
+                    <IconButton
+                      sx={[
+                        { "&:hover": { color: "#2196f3" }, marginBottom: 5 },
+                      ]}
+                      onClick={() => history.push("/profile/addPost")}>
+                      <Grid item>
+                        <AddIcon
+                          fontSize='large'
+                          // to='/profile/addPoll'
+                        />
+                      </Grid>
+                      <Grid item>Add New Post</Grid>
+                    </IconButton>
+                  </Grid>
                   <Grid container spacing={0}>
                     {profilePostCards.map((item) => {
                       return (
@@ -133,21 +143,21 @@ const Profile = () => {
               </TabPanel>
               <TabPanel value='2'>
                 <Box sx={{ flexGrow: 1 }}>
-                    <Grid container direction='row' alignItems='center'>
-                      <IconButton
-                        sx={[
-                          { "&:hover": { color: "#2196f3" }, marginBottom: 5 },
-                        ]}
-                        onClick={() => history.push("/profile/addPoll")}>
-                        <Grid item>
-                          <AddIcon
-                            fontSize='large'
-                            // to='/profile/addPoll'
-                          />
-                        </Grid>
-                        <Grid item>Add New Poll</Grid>
-                      </IconButton>
-                    </Grid>
+                  <Grid container direction='row' alignItems='center'>
+                    <IconButton
+                      sx={[
+                        { "&:hover": { color: "#2196f3" }, marginBottom: 5 },
+                      ]}
+                      onClick={() => history.push("/profile/addPoll")}>
+                      <Grid item>
+                        <AddIcon
+                          fontSize='large'
+                          // to='/profile/addPoll'
+                        />
+                      </Grid>
+                      <Grid item>Add New Poll</Grid>
+                    </IconButton>
+                  </Grid>
                   <Grid container spacing={0}>
                     {profilePollCards.map((item) => {
                       return (
@@ -163,8 +173,7 @@ const Profile = () => {
               </TabPanel>
             </TabContext>
           </Box>
-          <div style={styles.profileHead}>
-          </div>
+          <div style={styles.profileHead}></div>
         </div>
       ) : (
         <Backdrop

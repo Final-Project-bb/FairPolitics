@@ -57,12 +57,87 @@ const PostCard = ({ item, inProfile }) => {
     ? algorithms.filter((item) => item.id == poll_algo)[0].title
     : algorithms.filter((item) => item.id == algo_id)[0].title;
 
-  useEffect(() => {
+  useEffect(() =>  {
+    const ac = new AbortController();
+
     algoName = !inProfile
       ? algorithms.filter((item) => item.id == poll_algo)[0].title
       : algorithms.filter((item) => item.id == algo_id)[0].title;
+
+    const getUserDetails = async () => {
+      let id = item.user_id;
+      await fetch(`http://localhost:4000/api/get_user_by_id/${id}`, {
+        method: "GET",
+        signal: ac.signal,
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          // console.log(json.result[0]);
+          setUserName({
+            first_name: json.result[0].first_name,
+            last_name: json.result[0].last_name,
+          });
+          // return json.result[0];
+        })
+        .catch((err) => console.error(err));
+    };
+    const getFriendAlgo = async () => {
+      await fetch(`http://localhost:4000/api/get_algorithm/${item.user_id}`, {
+        method: "GET",
+        signal: ac.signal,
+
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          json.result[0] !== undefined &&
+            setPollAlgo(json.result[0].algorithm_id);
+        })
+        .catch((err) => console.error(err));
+    };
+    const sort = async () => {
+      if (!inProfile) {
+        getFriendAlgo();
+      }
+      let algo = !inProfile
+        ? algorithms.filter((item) => item.id == poll_algo)[0].code
+        : algorithms.filter((item) => item.id == algo_id)[0].code;
+      return await fetch(
+        `http://localhost:4000/api/post_algo/${item.post_id}/${algo}`,
+        {
+          method: "GET",
+          signal: ac.signal,
+        }
+      )
+        .then((res) => res.json())
+        .then((json) => {
+          return json;
+        })
+        .catch((err) => console.error(err));
+    };
+    const getResult = async () => {
+      let data = await sort();
+      let sorting = data.comments;
+      var result = item.comments
+        .map((item) => {
+          var n = sorting.indexOf(item.comment_id);
+          sorting[n] = "";
+          return [n, item];
+        })
+        .sort()
+        .map((j) => {
+          return j[1];
+        });
+      setComments(result);
+      setLoading(false);
+    };
+
+    
     getUserDetails();
     getResult();
+
+    return () => {
+      ac.abort();
+    };
   }, []);
 
   const FriendProfileRef = async () => {
@@ -82,94 +157,6 @@ const PostCard = ({ item, inProfile }) => {
     history.push("/FriendProfile");
   };
 
-  const getFriendAlgo = async () => {
-    await fetch(`http://localhost:4000/api/get_algorithm/${item.user_id}`, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        json.result[0] !== undefined &&
-          setPollAlgo(json.result[0].algorithm_id);
-      })
-      .catch((err) => console.error(err));
-  };
-
-  const sort = async (e) => {
-    // e.preventDefault()
-    // setLoading(true);
-    if (!inProfile) {
-      getFriendAlgo();
-    }
-    let algo = !inProfile
-      ? algorithms.filter((item) => item.id == poll_algo)[0].code
-      : algorithms.filter((item) => item.id == algo_id)[0].code;
-    // console.log(`Poll algorithm: ${algo}`);
-    return await fetch(
-      `http://localhost:4000/api/post_algo/${item.post_id}/${algo}`,
-      {
-        method: "GET",
-      }
-    )
-      .then((res) => res.json())
-      .then((json) => {
-        // setOrderAnswer(json.answers);
-        // alert(json.answers);
-        // console.log(json);
-        // console.log("json.orderAnswer");
-        // console.log(json.orderAnswer);
-        return json;
-      })
-      .catch((err) => console.error(err));
-    // setLoading(false);
-  };
-
-  const getResult = async () => {
-    // console.log("getResult()");
-    // console.log(await getResult());
-    // console.log(orderAnswer);
-    // console.log("item.answers");
-    // console.log(item.answers);
-    let data = await sort();
-    let sorting = data.comments;
-    // let order = data.orderAnswer;
-    // let count = data.answersCount;
-    // let sumOfUsers = data.sumOfUsers;
-    // console.log("sorting");
-    // console.log(sorting);
-    // console.log("order");
-    // console.log(order);
-    // console.log(item)
-    var result = item.comments
-      .map((item) => {
-        var n = sorting.indexOf(item.comment_id);
-        sorting[n] = "";
-        return [n, item];
-      })
-      .sort()
-      .map((j) => {
-        return j[1];
-      });
-    // setIsSortingPress(true);
-    // result.forEach((e) => {
-    //   e.percents = order[e.answer_id] == undefined ? 0 : order[e.answer_id];
-    //   e.answerCount = count[e.answer_id] == undefined ? 0 : count[e.answer_id];
-    //   e.sumOfUsers = sumOfUsers;
-    // });
-    // result.press=true;
-    // console.log("result");
-    // console.log(result);
-    setComments(result);
-    // item.answers = result;
-    // item.press = true;
-
-    // console.log(orderAnswer);
-    // console.log("new item.answers");
-    // console.log(item.answers);
-    // console.log("new item.press");
-    // console.log(item.press);
-    setLoading(false);
-  };
-
   const toggleCommentsButton = () => {
     setCommentsButtonId(item.post_id);
     if (commentsButton) {
@@ -179,27 +166,16 @@ const PostCard = ({ item, inProfile }) => {
     }
   };
 
-  const getUserDetails = async () => {
-    let id = item.user_id;
-    await fetch(`http://localhost:4000/api/get_user_by_id/${id}`, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        // console.log(json.result[0]);
-        setUserName({
-          first_name: json.result[0].first_name,
-          last_name: json.result[0].last_name,
-        });
-        // return json.result[0];
-      })
-      .catch((err) => console.error(err));
-  };
-
   const LikePost = async () => {
     likes.filter((like) => like === user_details.user_id).length > 0
       ? setLikes(likes.filter((like) => like !== user_details.user_id))
       : setLikes([...likes, user_details.user_id]);
+
+    item.likes.filter((like) => like === user_details.user_id).length > 0
+      ? (item.likes = item.likes.filter(
+          (like) => like !== user_details.user_id
+        ))
+      : item.likes.push(user_details.user_id);
 
     const details = {
       post_id: item.post_id,
@@ -236,6 +212,7 @@ const PostCard = ({ item, inProfile }) => {
           comment_likes: [],
         };
         setComments([...comments, comment_details]);
+        item.comments.push(comment_details);
         setComment("");
       })
       .catch((err) => console.error(err));
@@ -245,7 +222,7 @@ const PostCard = ({ item, inProfile }) => {
     setCurrentItem(item);
     history.push("/profile/editPost");
   };
-  
+
   const deletePost = async () => {
     setLoading(true);
     if (window.confirm("Are you sure you want to delete this post?")) {
@@ -378,7 +355,17 @@ const PostCard = ({ item, inProfile }) => {
                   />
                 );
               })}
-
+            <Box
+              sx={{
+                position: "relative",
+                m: 3,
+                color: "#bf360c",
+                fontStyle: "italic",
+                textAlign: "right",
+                fontSize: 13,
+              }}>
+              {`Comments Ordered By ${algoName}`}
+            </Box>
             <TextField
               sx={{ width: "80%" }}
               // helperText='Tagged elected officials - Example: @israel israel @other person'

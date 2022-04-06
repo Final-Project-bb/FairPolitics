@@ -60,6 +60,8 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
       }
     };
     checkFollow();
+    return () => {};
+
   }, []);
 
   // here should add and remove follow from db.
