@@ -302,6 +302,7 @@ const pollAlgo = (req, res) => {
   from poll_answer_approval join poll_answer on poll_answer_approval.answer_id=poll_answer.answer_id
   where poll_answer.poll_id=1
   order by poll_answer_approval.user_id`;
+  
   // Should be use
 
   var getNumCand = `select answer_id from poll_answer where poll_id=${JSON.stringify(

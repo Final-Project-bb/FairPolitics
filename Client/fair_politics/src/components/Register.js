@@ -26,6 +26,7 @@ import {
 const Register = () => {
   const [id, setId] = useState("");
   const [email, setEmail] = useState("");
+  const [gmail, setGmail] = useState(null);
   const [phone, setPhone] = useState("");
   const [pass, setPass] = useState("");
   const [pass2, setPass2] = useState("");
@@ -44,6 +45,8 @@ const Register = () => {
   const [tempPassFlag, setTempPassFlag] = useState(false);
   const [passFlag, setPassFlag] = useState(false);
   const [otherFlag, setOtherFlag] = useState(false);
+  const [isGoogleAuth, setIsGoogleAuth] = useState(false);
+  const [isFacebookAuth, setIsFacebookAuth] = useState(false);
 
   const { setUserDetails, setIsConnected, loading, setLoading, setAlgoId } =
     useContext(AppContext);
@@ -118,6 +121,8 @@ const Register = () => {
     const newUser = {
       user_id: id,
       password: pass,
+      email:email,
+      gmail:gmail,
       phone_number: phone,
       first_name: first_name,
       last_name: last_name,
@@ -173,20 +178,62 @@ const Register = () => {
       .catch((err) => console.error(err));
   };
   const faceBook = () => {
-    alert("facebook clicked");
+    const port = 4000;
+    const openedWindow = window.open(`http://localhost:${port}/api/facebook`, "Facebook authenticate", "height=600,width=600");
+    //Note: the fetch starting when the window is closed
+    let flag = true;
+    while (flag) {
+      if (confirm("you have to closed the Facebook authenticate window to continue!")) {
+        openedWindow.window.close();
+        flag = false;
+      }
+    }
+    const timer = setInterval(async () => {
+      if (openedWindow.closed) {
+        clearInterval(timer);
+        console.log('Facebook authenticate" window closed!');
+        const response = await fetch(
+          `http://localhost:${port}/connection/login/facebook/success`
+        ).then((res) => res.json())
+          .then((json) => {
+            console.log("facebook here:")
+            console.log(json);
+            setIsFacebookAuth(true);
+            // setChosenAlgorithm(json);
+          })
+      }
+    }, 500);
   };
-  const gMail =async () => {
-    window.open(`http://localhost:4000/api/google`);
-    const response = await fetch(
-      `http://localhost:4000/api/google/callback`
-    ).then((res) => res.json())
-    .then((json) => {
-      console.log("gmail here:")
-      console.log(json);
-      // setChosenAlgorithm(json);
-    })
-
-    // alert("Gmail clicked");
+  const gMail = async () => {
+    const port = 4000;
+    const openedWindow = window.open(`http://localhost:${port}/api/google`, "Google authenticate", "height=600,width=600");
+    //Note: the fetch starting when the window is closed
+    let flag = true;
+    while (flag) {
+      if (confirm("you have to closed the Google authenticate window to continue!")) {
+        openedWindow.window.close();
+        flag = false;
+      }
+    }
+    const timer = setInterval(async () => {
+      if (openedWindow.closed) {
+        clearInterval(timer);
+        console.log('Google authenticate" window closed!');
+        const response = await fetch(
+          `http://localhost:${port}/connection/login/google/success`
+        ).then((res) => res.json())
+          .then((json) => {
+            console.log("Gmail here:")
+            setFirstName(json.name.givenName)
+            setLastName(json.name.familyName)
+            setProfilePicture(json.photos[0].value)
+            setGmail(json.emails[0].value)
+            setIsGoogleAuth(true);
+            console.log(json)
+            // setChosenAlgorithm(json);
+          })
+      }
+    }, 500);
   };
   const history = useHistory();
   const handleClick = () => {

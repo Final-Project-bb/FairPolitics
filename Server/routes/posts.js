@@ -15,6 +15,7 @@ const {
   deleteLikeFromPost,
   deleteLikeFromComment,
   PostsFollowing,
+  postAlgo
 } = require("../controllers/Post_controller");
 
 const router = express.Router();
@@ -32,6 +33,8 @@ router.delete("/delete_comment/:comment_id", deleteComment); //works fine
 
 router.post("/add_like_to_Post", addLikeToPost); //works fine
 router.post("/add_like_to_comment", addLikeToComment); //unnecessary?
+router.get("/post_algo/:post_id/:algo", postAlgo); 
+
 // router.delete("/delete_like_from_Post/:post_id/:user_id", deleteLikeFromPost); //unnecessary?
 // router.delete("/delete_like_from_comment/:comment_id", deleteLikeFromComment); //unnecessary?
 

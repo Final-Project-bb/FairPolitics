@@ -1,6 +1,8 @@
 const Post = require("../models/post");
 const express = require("express");
 const mysql = require("mysql");
+const algo = require("../../Algorithms/dprsequence");
+
 const connection = require("../lib/db");
 
 const createPost = (req, res) => {
@@ -166,8 +168,8 @@ const addLikeToComment = (req, res) => {
 
   let sqlDeleteLikeDisc = `delete from comment_like_approval 
                           where comment_id=${JSON.stringify(
-                            req.body.comment_id
-                          )} 
+    req.body.comment_id
+  )} 
                           and user_id=${JSON.stringify(req.body.user_id)}`;
 
   connection.query(sqlLikeExists, function (err, likeExist) {
@@ -378,6 +380,81 @@ const getPost = (req, res) => {
     });
   });
 };
+const postAlgo = (req, res) => {
+  var ballotts = [];
+  // Should be use
+  var getBallotts = `select comment_like_approval.user_id,comment_like_approval.comment_id
+  from comment_like_approval join post_response on comment_like_approval.comment_id=post_response.comment_id
+  where post_response.post_id=${req.params.post_id}
+  order by comment_like_approval.user_id`;
+
+  // Should be use
+  var getNumCand = `select comment_id from post_response where post_id=${JSON.stringify(req.params.post_id)}`;
+
+  connection.query(getNumCand, function (err, comments_id) {
+    if (err) {
+      throw err;
+    }
+    var c = 0;
+    var namesOriginal = comments_id.map((id) => id.comment_id);
+    var names = {};
+    var namesKeys = [];
+    for (const x of namesOriginal) {
+      names[c++] = x;
+    }
+    for (const key in names) {
+      namesKeys.push(Number(key));
+    }
+    var num_cand = namesOriginal.length;
+    connection.query(getBallotts, function (err, ballottsSql) {
+      if (err) {
+        throw err;
+      }
+      let bal = ballottsSql.reduce(function (r, a) {
+        r[a.user_id] = r[a.user_id] || [];
+        r[a.user_id].push(a.comment_id);
+        return r;
+      }, Object.create(null));
+      var originalBallotts = []
+      Object.keys(bal).forEach(function (key) {
+        originalBallotts.push(bal[key]);
+      });
+      originalBallotts.forEach((ballott) => {
+        // var temp = ballott.map((id) => id.answer_id);
+        var temp1 = [];
+        for (const key in names) {
+          for (const x of ballott) {
+            if (names[key] == x) {
+              temp1.push(Number(key));
+            }
+          }
+        }
+        ballotts.push(temp1);
+      })
+      console.log("originalBallotts")
+      console.log(originalBallotts)
+      console.log("ballotts")
+      console.log(ballotts)
+      var profile = [namesKeys, num_cand, ballotts];
+      console.log("profile")
+      console.log(profile)
+      var election = new algo(profile, req.params.algo);
+      var outcomes = election.run_by_name([-1]);
+      var result = outcomes[outcomes.length - 1][1];
+      console.log("result")
+      console.log(result)
+
+      let comments = []
+      for (const x of result) {
+        comments.push(names[x]);
+      }
+      console.log("comments")
+      console.log(comments)
+
+      res.status(200).send({comments});
+    });
+  });
+};
 
 module.exports = {
   createPost,
@@ -391,6 +468,7 @@ module.exports = {
   addLikeToComment,
   deleteLikeFromPost,
   PostsFollowing,
+  postAlgo,
 };
 
 // getLikeOfPost,

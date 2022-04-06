@@ -5,14 +5,17 @@ const mysql = require("mysql");
 const connection = require("../lib/db");
 
 const createUser = (req, res) => {
+
   var sqlFindUserId = `select * from user_details where user_id = ${JSON.stringify(
     req.body.user_id
   )}`;
 
-  var sqlInsertUser = `Insert into user_details(user_id,first_name,last_name,city,birthdate,job_title,description,profile_picture,gender, semi_description, is_public_elected)
+  var sqlInsertUser = `Insert into user_details(user_id,gmail,first_name,last_name,city,birthdate,job_title,description,profile_picture,gender, semi_description, is_public_elected)
                     values(${JSON.stringify(
-                      req.body.user_id
-                    )}, ${JSON.stringify(req.body.first_name)},
+    req.body.user_id
+  )},
+                    ${JSON.stringify(req.body.gmail)}, 
+                    ${JSON.stringify(req.body.first_name)},
                     ${JSON.stringify(req.body.last_name)}, ${JSON.stringify(
     req.body.city
   )},
@@ -26,10 +29,11 @@ const createUser = (req, res) => {
     req.body.semi_description
   )}, ${JSON.stringify(req.body.is_public_elected)})`;
 
-  var sqlInsertLogin = `Insert into login_details(user_id, phone_number, password)
-                    values(${JSON.stringify(
-                      req.body.user_id
-                    )}, ${JSON.stringify(req.body.phone_number)},
+  var sqlInsertLogin = `Insert into login_details(user_id, phone_number,gmail,email, password)
+                    values(${JSON.stringify(req.body.user_id)},
+                      ${JSON.stringify(req.body.phone_number)},
+                    ${JSON.stringify(req.body.gmail)}, 
+                    ${JSON.stringify(req.body.email)}, 
                     ${JSON.stringify(req.body.password)})`;
 
   connection.query(sqlFindUserId, function (err, result) {
@@ -75,23 +79,40 @@ const loginUser = (req, res) => {
     }
   });
 };
+const loginUserByGmail = (req, res) => {
+  var sqlGetUserDetails = `select * from user_details join login_details on user_details.gmail=login_details.gmail
+  where login_details.gmail=${JSON.stringify(req.body.gmail)}`
+  connection.query(sqlGetUserDetails, function (err, result) {
+    if (err) {
+      throw err;
+    }
+    // if user not found
+    if (result.length === 0) {
+      res.status(404).send({ message: "gmail not exists!" });
+    } else {
+      // // if user found
+      res.status(200).send({ result, message: "successfully logged-in" });
+    }
+  });
+};
+
 
 const updateUser = (req, res) => {
   var sqlUpdate = `UPDATE user_details set first_name=${JSON.stringify(
     req.body.first_name
   )},
             last_name=${JSON.stringify(
-              req.body.last_name
-            )}, city=${JSON.stringify(req.body.city)},
+    req.body.last_name
+  )}, city=${JSON.stringify(req.body.city)},
             birthdate=${JSON.stringify(
-              req.body.birthdate
-            )},job_title=${JSON.stringify(req.body.job_title)},
+    req.body.birthdate
+  )},job_title=${JSON.stringify(req.body.job_title)},
             description=${JSON.stringify(
-              req.body.description
-            )}, profile_picture=${JSON.stringify(req.body.profile_picture)},
+    req.body.description
+  )}, profile_picture=${JSON.stringify(req.body.profile_picture)},
             gender=${JSON.stringify(
-              req.body.gender
-            )}, is_public_elected=${JSON.stringify(
+    req.body.gender
+  )}, is_public_elected=${JSON.stringify(
     req.body.is_public_elected
   )} where user_id=${JSON.stringify(req.body.user_id)}`;
 
@@ -125,7 +146,7 @@ const deleteUser = (req, res) => {
 
 const auth = (req, res) => {
   var code = Math.floor(100000 + Math.random() * 900000);
-  
+
   var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -144,7 +165,7 @@ const auth = (req, res) => {
   transporter.sendMail(mailOptions, function (err, info) {
     if (err) {
       res.status(404).send({ err });
-    }else{
+    } else {
       res.status(200).send({ code });
     }
   });
@@ -155,7 +176,7 @@ const getFollowing = (req, res) => {
   connection.query(sqlGetUserFollowingId, function (err, result) {
     if (err) {
       throw err;
-    } 
+    }
     res.status(200).send({ result });
   });
 };
@@ -177,8 +198,8 @@ const getFollow = (req, res) => {
     ud.description,ud.profile_picture,ud.gender,ud.semi_description,ud.is_public_elected,ud.age,ud.birthdate 
     from user_details as ud left join follower as f on f.user_id=ud.user_id
     where ud.user_id in (select user_following_id as user_id from follower where user_id= ${JSON.stringify(
-      req.params.user_id
-    )})`;
+    req.params.user_id
+  )})`;
   var sqlGetUserFollowersId = `select ud.user_id ,first_name,last_name,city,job_title,
     description,profile_picture,gender,semi_description,is_public_elected,age,birthdate 
     from follower as f join user_details as ud on f.user_id=ud.user_id
@@ -202,8 +223,8 @@ const addFollowing = (req, res) => {
     req.body.user_id
   )} and
                     user_following_id = ${JSON.stringify(
-                      req.body.user_following_id
-                    )}`;
+    req.body.user_following_id
+  )}`;
 
   var sqlInsert = `Insert into follower(user_id,user_following_id)
                 values(${JSON.stringify(req.body.user_id)},${JSON.stringify(
@@ -238,15 +259,15 @@ const removeFollowing = (req, res) => {
     req.body.user_id
   )} and
                     user_following_id = ${JSON.stringify(
-                      req.body.user_following_id
-                    )}`;
+    req.body.user_following_id
+  )}`;
 
   var sqlDel = `delete from follower where user_id=${JSON.stringify(
     req.body.user_id
   )} and
                 user_following_id = ${JSON.stringify(
-                  req.body.user_following_id
-                )}`;
+    req.body.user_following_id
+  )}`;
 
   connection.query(sqlUserId, function (err, result) {
     if (err) {
@@ -294,9 +315,9 @@ const getUserById = (req, res) => {
     if (err) {
       throw err;
     }
-    if(result.length==0){
+    if (result.length == 0) {
       res.status(404).send({ message: "user_id not exists!" });
-    }else{
+    } else {
       res.status(200).send({ result });
     }
   });
@@ -364,6 +385,7 @@ const getChosenAlgorithm = (req, res) => {
 module.exports = {
   createUser,
   loginUser,
+  loginUserByGmail,
   updateUser,
   deleteUser,
   searchByName,
