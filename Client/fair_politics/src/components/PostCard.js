@@ -3,6 +3,11 @@ import { AppContext } from "./Context";
 import { useHistory } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { algorithms } from "./algorithmDetails";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 import {
   FormControl,
@@ -29,7 +34,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import SendIcon from "@mui/icons-material/Send";
 import Comments from "./Comments";
 
-const PostCard = ({ item, inProfile }) => {
+const PostCard = ({ item, inProfile, setSnack }) => {
   const [commentsButtonId, setCommentsButtonId] = useState(0);
   const [commentsButton, setCommentsButton] = useState(false);
   const [comment, setComment] = useState("");
@@ -40,15 +45,16 @@ const PostCard = ({ item, inProfile }) => {
   const [comments, setComments] = useState(item.comments);
   const [userName, setUserName] = useState("");
 
+  const [dialog, setDialog] = useState(false);
+
   const {
     user_details,
     setLoading,
-    PostCards,
     setCurrentItem,
     algo_id,
-    currentItem,
     setFriendDetails,
     setInFriend,
+    setProfilePostCards,
   } = useContext(AppContext);
 
   const history = useHistory();
@@ -57,7 +63,7 @@ const PostCard = ({ item, inProfile }) => {
     ? algorithms.filter((item) => item.id == poll_algo)[0].title
     : algorithms.filter((item) => item.id == algo_id)[0].title;
 
-  useEffect(() =>  {
+  useEffect(async () => {
     const ac = new AbortController();
 
     algoName = !inProfile
@@ -85,7 +91,6 @@ const PostCard = ({ item, inProfile }) => {
       await fetch(`http://localhost:4000/api/get_algorithm/${item.user_id}`, {
         method: "GET",
         signal: ac.signal,
-
       })
         .then((res) => res.json())
         .then((json) => {
@@ -131,9 +136,8 @@ const PostCard = ({ item, inProfile }) => {
       setLoading(false);
     };
 
-    
-    getUserDetails();
-    getResult();
+    await getUserDetails();
+    await getResult();
 
     return () => {
       ac.abort();
@@ -223,15 +227,22 @@ const PostCard = ({ item, inProfile }) => {
     history.push("/profile/editPost");
   };
 
-  const deletePost = async () => {
+  const deletePost = async (e) => {
+    e.preventDefault();
     setLoading(true);
-    if (window.confirm("Are you sure you want to delete this post?")) {
-      await fetch(`http://localhost:4000/api/delete_Post/${item.post_id}`, {
-        method: "DELETE",
+    await fetch(`http://localhost:4000/api/delete_Post/${item.post_id}`, {
+      method: "DELETE",
+    })
+      .then((res) => {
+        res.json();
+        setSnack(true);
+        setProfilePostCards((prev) => {
+          return prev.filter((post) => post.post_id !== item.post_id);
+        });
       })
-        .then((res) => res.json())
-        .catch((error) => console.error(error));
-    }
+      .catch((error) => console.error(error));
+
+    setDialog(false);
     setLoading(false);
   };
 
@@ -255,7 +266,7 @@ const PostCard = ({ item, inProfile }) => {
             </Tooltip>
             <Tooltip title='Delete'>
               <IconButton
-                onClick={(e) => deletePost(e)}
+                onClick={() => setDialog(true)}
                 sx={[
                   {
                     "&:hover": { color: "black" },
@@ -387,6 +398,24 @@ const PostCard = ({ item, inProfile }) => {
           </CardContent>
         </Collapse>
       </Card>
+      <Dialog
+        open={dialog}
+        onClose={() => setDialog(false)}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'>
+        <DialogTitle id='alert-dialog-title'>Delete Post</DialogTitle>
+        <DialogContent>
+          <DialogContentText id='alert-dialog-description'>
+            Are you sure you want delete this post?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDialog(false)}>Cancel</Button>
+          <Button onClick={(e) => deletePost(e)} autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

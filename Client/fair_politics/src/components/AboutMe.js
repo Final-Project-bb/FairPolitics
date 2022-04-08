@@ -5,6 +5,12 @@ import { useHistory } from "react-router-dom";
 import { AppContext } from "./Context";
 import styled from "styled-components";
 import Loading from "./Loading";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+
 import {
   FormControl,
   FormControlLabel,
@@ -56,6 +62,8 @@ const AboutMe = () => {
   );
   const [onEdit, setOnEdit] = useState(false);
   const [onDelete, setOnDelete] = useState(false);
+  const [dialog, setDialog] = useState(false);
+
   const current = new Date().toISOString().split("T")[0];
   const history = useHistory();
 
@@ -119,14 +127,12 @@ const AboutMe = () => {
   const deleteUser = () => {
     setOnEdit(false);
     setOnDelete(!onDelete);
-    if (window.confirm("Are you sure you want to delete this account?")) {
-      setLoading(true);
-      deletefromDb();
-      history.push("/about");
-      setIsConnected(false);
-    }
+    setLoading(true);
+    deletefromDb();
+    setIsConnected(false);
     setOnDelete(false);
     setLoading(false);
+    history.push("/");
   };
   // work but doesn't delete from login_deteils table
   const deletefromDb = async () => {
@@ -150,7 +156,7 @@ const AboutMe = () => {
                 variant='contained'
                 color='error'
                 style={styles.delete_user}
-                onClick={() => deleteUser()}>
+                onClick={() => setDialog(true)}>
                 {onDelete ? "Cancel Delete" : "Delete account"}
               </Button>
               <Button
@@ -291,6 +297,24 @@ const AboutMe = () => {
         </div>
       )}
       {loading && <Loading />}
+      <Dialog
+        open={dialog}
+        onClose={() => setDialog(false)}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'>
+        <DialogTitle id='alert-dialog-title'>Delete User</DialogTitle>
+        <DialogContent>
+          <DialogContentText id='alert-dialog-description'>
+            Are you sure you want delete user?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDialog(false)}>Cancel</Button>
+          <Button onClick={() => deleteUser()} autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
@@ -345,7 +369,7 @@ const styles = {
     // left: 280,
     margin: 10,
     // top: 20,
-    textAlign: 'center'
+    textAlign: "center",
   },
 };
 

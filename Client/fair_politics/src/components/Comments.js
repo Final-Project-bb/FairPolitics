@@ -1,6 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AppContext } from "./Context";
 import { useHistory } from "react-router-dom";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+
 import {
   FormControl,
   FormControlLabel,
@@ -31,10 +37,10 @@ const Comments = ({
   //   getUserDetails,
 }) => {
   const [commentEdit, setCommentEdit] = useState("");
-  const [editCommentForm, setEditCommentForm] = useState(false);
-  const [commentsEditButtonId, setCommentsEditButtonId] = useState(0);
   const [userName, setUserName] = useState("");
   const [commentLikes, setCommentLikes] = useState(comment.comment_likes);
+  const [deleteDialog, setDeleteDialog] = useState(false);
+  const [editDialog, setEditDialog] = useState(false);
 
   const {
     user_details,
@@ -114,28 +120,25 @@ const Comments = ({
       newComments.push(newcomment);
       return newComments;
     });
-
-    setEditCommentForm(false);
+    setEditDialog(false);
   };
 
   const deleteComment = async (comment_id) => {
-    if (window.confirm("Are you sure you want to delete this comment?")) {
-      setComments((prevComments) =>
-        prevComments.filter((comment) => comment.comment_id !== comment_id)
-      );
-      item.comments.forEach((comment, i) => {
-        if (comment.comment_id === comment_id) {
-          item.comments.splice(i, 1);
-        }
-      });
-      await fetch(`http://localhost:4000/api/delete_comment/${comment_id}`, {
-        method: "DELETE",
-      })
-        .then((res) => res.json())
-        .then((json) => console.log(json))
-        .catch((err) => console.error(err));
-      setComment("");
-    }
+    setComments((prevComments) =>
+      prevComments.filter((comment) => comment.comment_id !== comment_id)
+    );
+    item.comments.forEach((comment, i) => {
+      if (comment.comment_id === comment_id) {
+        item.comments.splice(i, 1);
+      }
+    });
+    await fetch(`http://localhost:4000/api/delete_comment/${comment_id}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((json) => console.log(json))
+      .catch((err) => console.error(err));
+    setComment("");
   };
 
   const LikeComment = async (comment_id) => {
@@ -198,24 +201,6 @@ const Comments = ({
         </div>
         {comment.user_id_comment === user_details.user_id && (
           <>
-            {editCommentForm && commentsEditButtonId === comment.comment_id && (
-              <CardContent style={styles.editCommentForm}>
-                <TextField
-                  size='small'
-                  id='standard-basic'
-                  variant='standard'
-                  placeholder='Edit Comment'
-                  type='text'
-                  value={commentEdit}
-                  onChange={(e) => setCommentEdit(e.target.value)}
-                />
-                <SendIcon
-                  sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
-                  size='small'
-                  onClick={() => editComment(comment.comment_id)}
-                />
-              </CardContent>
-            )}
             <Tooltip title='Edit'>
               <IconButton
                 sx={[
@@ -226,9 +211,8 @@ const Comments = ({
                   },
                 ]}
                 onClick={() => {
-                  setEditCommentForm(!editCommentForm);
-                  setCommentsEditButtonId(comment.comment_id);
                   setCommentEdit(comment.comment);
+                  setEditDialog(true);
                 }}>
                 <EditIcon />
               </IconButton>
@@ -243,7 +227,7 @@ const Comments = ({
                     color: "#616161",
                   },
                 ]}
-                onClick={() => deleteComment(comment.comment_id)}>
+                onClick={() => setDeleteDialog(true)}>
                 <DeleteIcon />
               </IconButton>
             </Tooltip>
@@ -280,6 +264,58 @@ const Comments = ({
         </Tooltip>
       </CardContent>
       <Divider variant='middle' />
+      <Dialog
+        open={deleteDialog}
+        onClose={() => setDeleteDialog(false)}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'>
+        <DialogTitle id='alert-dialog-title'>Delete Comment</DialogTitle>
+        <DialogContent>
+          <DialogContentText id='alert-dialog-description'>
+            Are you sure you want delete this comment?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialog(false)}>Cancel</Button>
+          <Button onClick={() => deleteComment(comment.comment_id)} autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={editDialog}
+        onClose={() => setEditDialog(false)}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'>
+        <DialogTitle id='alert-dialog-title'>Edit Comment</DialogTitle>
+        <DialogContent>
+          {/* <DialogContentText id='alert-dialog-description'>
+            Are you sure you want delete this comment?
+          </DialogContentText> */}
+          <CardContent style={styles.editCommentForm}>
+            <TextField
+              size='small'
+              id='standard-basic'
+              variant='standard'
+              placeholder='Edit Comment'
+              type='text'
+              value={commentEdit}
+              onChange={(e) => setCommentEdit(e.target.value)}
+            />
+            {/* <SendIcon
+              sx={[{ "&:hover": { color: "#2196f3" }, cursor: "pointer" }]}
+              size='small'
+              onClick={() => editComment(comment.comment_id)}
+            /> */}
+          </CardContent>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setEditDialog(false)}>Cancel</Button>
+          <Button onClick={() => editComment(comment.comment_id)} autoFocus>
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

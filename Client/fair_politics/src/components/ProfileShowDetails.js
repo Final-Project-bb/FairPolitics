@@ -192,12 +192,13 @@ const ProfileShowDetails = () => {
       <div style={styles.profileHead}>
         <ButtonGroup
           style={{
-            position: "absolute",
-            left: 400,
-            flex: 1,
-            top: -50,
-            flexDirection: "row",
-            justifyContent: "space-around",
+            // position: "absolute",
+            // left: 400,
+            // flex: 1,
+            // top: -50,
+            // flexDirection: "row",
+            // justifyContent: "space-around",
+            margin: 10,
           }}>
           {inFriend && (
             <Button
@@ -219,7 +220,7 @@ const ProfileShowDetails = () => {
           )}
           <Button
             variant='outlined'
-            color='primary'
+            // color='primary'
             onClick={() => showFollowing()}>
             Following {!inFriend ? followings.length : friendFollowings.length}
           </Button>
@@ -258,12 +259,12 @@ const styles = {
   //   left: -10,
   // },
   profileHead: {
-    display: "flex",
-    // justifyContent: "space-around",
-    flexDirection: "row",
-    position: "relative",
-    //   left: -50,
-    top: 100,
+    // display: "flex",
+    // // justifyContent: "space-around",
+    // flexDirection: "row",
+    // position: "relative",
+    // //   left: -50,
+    // top: 100,
   },
   semiDetails: {
     display: "flex",
