@@ -202,7 +202,7 @@ const answerPoll = (req, res) => {
 
 const updateAnswerPoll = (req, res) => {
   // console.log("req.body.oldAnswers");
-  console.log(req.body);
+  // console.log(req.body);
   // let old = req.body.oldAnswers.toString();
   // console.log(old);
   // old = old.substring(1, req.body.oldAnswers.length - 1);
@@ -236,7 +236,7 @@ const updateAnswerPoll = (req, res) => {
       }
     });
   });
-  console.log("end");
+  // console.log("end");
   res.status(200).send({ message: "poll user answer updated successfully!" });
 };
 

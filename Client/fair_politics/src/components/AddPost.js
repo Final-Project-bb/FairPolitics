@@ -3,7 +3,13 @@ import { AppContext } from "./Context";
 import { useHistory } from "react-router-dom";
 import Header from "./Header";
 import ProfileHeader from "./ProfileHeader";
-import styled from "styled-components";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
+});
+
 import {
   FormControl,
   FormControlLabel,
@@ -19,30 +25,17 @@ const AddPost = () => {
   const [tags, setTags] = useState("");
   const [description, setDescription] = useState("");
   const [picture, setPicture] = useState("");
+  const [open, setOpen] = useState(false);
 
   const { user_details } = useContext(AppContext);
 
   const history = useHistory();
 
-  const handleClick = () => {
-    history.push("/profile");
-  };
-
   const addPostSubmit = async (e) => {
-    if (title === "" || description === "") {
-      alert("Title or description can not be empty");
-      return;
-    }
     e.preventDefault();
-    // setTempPassFromDB("1225") // here should get the temp pass from server
-    // alert(`Add Post submit works!`); // here should send pass to phone in sms
-    handleClick();
-    // if(tempPassFromDB===tempPass){
-    //     alert(`Password approved`)
-    // }
-    // else{
-    //     alert(`Password failed`)
-    // }
+    setTimeout(() => {
+      history.goBack();
+    }, 2000);
     const newPost = {
       user_id: user_details.user_id,
       title: title,
@@ -58,69 +51,83 @@ const AddPost = () => {
       .then((res) => res.json())
       .then((json) => {
         console.log(json);
-        alert(`post added successfully`);
+        setOpen(true);
       })
       .catch((err) => console.error(err));
-
     setTitle("");
     setTags("");
     setDescription("");
     setPicture("");
   };
   return (
-    <div style={{backgroundColor: 'whitesmoke'}}>
+    <div style={{ backgroundColor: "whitesmoke" }}>
       <Header title='Add Post page' />
       <ProfileHeader />
       <Card style={styles.card}>
         <CardContent style={styles.content}>
           <FormControl>
-            <TextField
-              helperText='Tagged elected officials - Example: @israel israel @other person'
-              id='standard-basic'
-              variant='standard'
-              label='Tags'
-              // pattern="[@]{1}[a-z]"
-              // required
-              placeholder='valid tags format!'
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
-            />
+            <form
+              style={{ display: "flex", flexDirection: "column" }}
+              onSubmit={(e) => addPostSubmit(e)}>
+              <TextField
+                helperText='Tagged elected officials - Example: @israel israel @other person'
+                id='standard-basic'
+                variant='standard'
+                label='Tags'
+                // pattern="[@]{1}[a-z]"
+                // required
+                placeholder='valid tags format!'
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+              />
 
-            <TextField
-              helperText='Write the title:'
-              id='standard-basic'
-              variant='standard'
-              label='Title'
-              required
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-            <TextField
-              helperText='Write a description:'
-              id='standard-basic'
-              variant='standard'
-              label='Description'
-              required
-              multiline
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-            <TextField
-              helperText='Enter a picture:'
-              id='standard-basic'
-              variant='standard'
-              label='Picture'
-              placeholder='Picture URL'
-              value={picture}
-              onChange={(e) => setPicture(e.target.value)}
-            />
-            <br />
-            <Button variant='contained' onClick={(e) => addPostSubmit(e)}>
-              Submit
-            </Button>
+              <TextField
+                helperText='Write the title:'
+                id='standard-basic'
+                variant='standard'
+                label='Title'
+                required
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+              <TextField
+                helperText='Write a description:'
+                id='standard-basic'
+                variant='standard'
+                label='Description'
+                required
+                multiline
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              <TextField
+                helperText='Enter a picture:'
+                id='standard-basic'
+                variant='standard'
+                label='Picture'
+                placeholder='Picture URL'
+                value={picture}
+                onChange={(e) => setPicture(e.target.value)}
+              />
+              <br />
+              <Button variant='contained' type='submit'>
+                Submit
+              </Button>
+            </form>
           </FormControl>
         </CardContent>
       </Card>
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={() => setOpen(false)}>
+        <Alert
+          onClose={() => setOpen(false)}
+          severity='success'
+          sx={{ width: "100%" }}>
+          Post added successfully ! Redirecting...
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

@@ -4,6 +4,11 @@ import { AppContext } from "./Context";
 import { FaRegEdit, FaTrashAlt } from "react-icons/fa";
 import { useHistory } from "react-router-dom";
 import { algorithms } from "./algorithmDetails";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 import {
   FormControl,
@@ -24,7 +29,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
-const PollCard = ({ item, inProfile }) => {
+const PollCard = ({ item, inProfile, setSnack }) => {
   const {
     user_details,
     algo_id,
@@ -32,7 +37,7 @@ const PollCard = ({ item, inProfile }) => {
     setCurrentItem,
     setFriendDetails,
     setInFriend,
-    setPollCards,
+    setProfilePollCards,
   } = useContext(AppContext);
 
   const [showResults, setShowResults] = useState(item.is_answer_poll);
@@ -40,6 +45,7 @@ const PollCard = ({ item, inProfile }) => {
   const [userName, setUserName] = useState("");
   const [poll_algo, setPollAlgo] = useState(1);
   const [sortedAnswers, setSortedAnswers] = useState(item.answers);
+  const [dialog, setDialog] = useState(false);
 
   let algoName = !inProfile
     ? algorithms.filter((item) => item.id == poll_algo)[0].title
@@ -215,13 +221,19 @@ const PollCard = ({ item, inProfile }) => {
 
   const deletePoll = async (e) => {
     setLoading(true);
-    if (window.confirm("Are you sure you want to delete this poll?")) {
-      await fetch(`http://localhost:4000/api/delete_poll/${item.poll_id}`, {
-        method: "DELETE",
+    await fetch(`http://localhost:4000/api/delete_poll/${item.poll_id}`, {
+      method: "DELETE",
+    })
+      .then((res) => {
+        res.json();
+        setSnack(true);
+        setProfilePollCards((prev) => {
+          return prev.filter((poll) => poll.poll_id !== item.poll_id);
+        });
       })
-        .then((res) => res.json())
-        .catch((error) => console.error(error));
-    }
+      .catch((error) => console.error(error));
+
+    setDialog(false);
     setLoading(false);
   };
 
@@ -232,11 +244,16 @@ const PollCard = ({ item, inProfile }) => {
           return newAnswers.filter((answer) => answer !== answer_id);
         })
       : setNewAnswers([...newAnswers, answer_id]);
+
+    console.log('newAnswersFromHandle');
+    console.log(newAnswers);
+
   };
 
   const updateAnswerPoll = async () => {
     setLoading(true);
-    // console.log(newAnswers);
+    console.log('newAnswers');
+    console.log(newAnswers);
     const ans = {
       newAnswers: newAnswers,
     };
@@ -265,7 +282,7 @@ const PollCard = ({ item, inProfile }) => {
       }
       return answer;
     });
-    console.log("before");
+    // console.log("before");
     // item.answers= updateAnswers;
     // console.log("before1");
     setSortedAnswers(updateAnswers);
@@ -283,15 +300,14 @@ const PollCard = ({ item, inProfile }) => {
     console.log(updateAnswers);
 
     // setSortedAnswers((prevAnswers) => {
-    //   let newanswer = prevAnswers.filter(
-    //     (answer) => answer.answer_id === answer_id
-    //   )[0];
-    //   newanswer.answer = answerEdit;
-    //   let newAnswers = prevAnswers.filter(
-    //     (answer) => answer.answer_id !== answer_id
-    //   );
-    //   newAnswers.push(newanswer);
-    //   return newAnswers;
+    //   let newanswers = prevAnswers.map(answer => {
+    //     if (newAnswers.includes(answer.answer_id)) {
+    //       answer.is_answer = true;
+    //     } else {
+    //       answer.is_answer = false;
+    //     }
+    //   })
+    //   return newanswers;
     // });
   };
 
@@ -315,7 +331,7 @@ const PollCard = ({ item, inProfile }) => {
             </Tooltip>
             <Tooltip title='Delete'>
               <IconButton
-                onClick={(e) => deletePoll(e)}
+                onClick={() => setDialog(true)}
                 sx={[
                   {
                     "&:hover": { color: "black" },
@@ -424,7 +440,24 @@ const PollCard = ({ item, inProfile }) => {
           </>
         </CardContent>
       </Card>
-      {/* )} */}
+      <Dialog
+        open={dialog}
+        onClose={() => setDialog(false)}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'>
+        <DialogTitle id='alert-dialog-title'>Delete Poll</DialogTitle>
+        <DialogContent>
+          <DialogContentText id='alert-dialog-description'>
+            Are you sure you want delete this poll?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDialog(false)}>Cancel</Button>
+          <Button onClick={(e) => deletePoll(e)} autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

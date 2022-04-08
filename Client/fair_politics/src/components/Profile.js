@@ -19,6 +19,12 @@ import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
 import Backdrop from "@mui/material/Backdrop";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
+});
 
 import { useHistory } from "react-router-dom";
 
@@ -35,7 +41,10 @@ const Profile = () => {
     inFriend,
   } = useContext(AppContext);
 
-  const [value, setValue] = React.useState("1");
+  const [value, setValue] = useState("1");
+  const [snack, setSnack] = useState(false);
+
+
   const history = useHistory();
 
   const handleChange = (event, newValue) => {
@@ -90,7 +99,7 @@ const Profile = () => {
   }, []);
 
   return (
-    <div>
+    <div >
       <Header title='Profile Page' />
       {!loading ? (
         <div>
@@ -110,7 +119,7 @@ const Profile = () => {
                   <Tab label='My Polls' value='2' />
                 </TabList>
               </Box>
-              <TabPanel value='1'>
+              <TabPanel value='1' sx={{backgroundColor: 'whitesmoke'}}>
                 {/* <div style={styles.title}>Posts Feed:</div> */}
                 <Box sx={{ flexGrow: 1 }}>
                   <Grid container direction='row' alignItems='center'>
@@ -128,20 +137,22 @@ const Profile = () => {
                       <Grid item>Add New Post</Grid>
                     </IconButton>
                   </Grid>
-                  <Grid container spacing={0}>
+                  <Grid container spacing={0} >
                     {profilePostCards.map((item) => {
                       return (
                         <PostCard
                           key={item.post_id}
                           item={item}
                           inProfile={true}
+                          setSnack={setSnack}
+                          setProfilePostCards={setProfilePostCards}
                         />
                       );
                     })}
                   </Grid>
                 </Box>
               </TabPanel>
-              <TabPanel value='2'>
+              <TabPanel value='2' sx={{backgroundColor: 'whitesmoke'}}>
                 <Box sx={{ flexGrow: 1 }}>
                   <Grid container direction='row' alignItems='center'>
                     <IconButton
@@ -165,6 +176,9 @@ const Profile = () => {
                           key={item.poll_id}
                           item={item}
                           inProfile={true}
+                          setSnack={setSnack}
+                          setProfilePollCards={setProfilePollCards}
+
                         />
                       );
                     })}
@@ -184,6 +198,17 @@ const Profile = () => {
           <CircularProgress color='inherit' />
         </Backdrop>
       )}
+      <Snackbar
+        open={snack}
+        autoHideDuration={6000}
+        onClose={() => setSnack(false)}>
+        <Alert
+          onClose={() => setSnack(false)}
+          severity='success'
+          sx={{ width: "100%" }}>
+          Item deleted successfully !
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

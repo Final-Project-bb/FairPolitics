@@ -436,25 +436,25 @@ const postAlgo = (req, res) => {
         }
         ballotts.push(temp1);
       });
-      console.log("originalBallotts");
-      console.log(originalBallotts);
-      console.log("ballotts");
-      console.log(ballotts);
+      // console.log("originalBallotts");
+      // console.log(originalBallotts);
+      // console.log("ballotts");
+      // console.log(ballotts);
       var profile = [namesKeys, num_cand, ballotts];
-      console.log("profile");
-      console.log(profile);
+      // console.log("profile");
+      // console.log(profile);
       var election = new algo(profile, req.params.algo);
       var outcomes = election.run_by_name([-1]);
       var result = outcomes[outcomes.length - 1][1];
-      console.log("result");
-      console.log(result);
+      // console.log("result");
+      // console.log(result);
 
       let comments = [];
       for (const x of result) {
         comments.push(names[x]);
       }
-      console.log("comments");
-      console.log(comments);
+      // console.log("comments");
+      // console.log(comments);
 
       res.status(200).send({ comments });
     });

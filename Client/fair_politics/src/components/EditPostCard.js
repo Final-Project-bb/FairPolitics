@@ -4,6 +4,13 @@ import { AppContext } from "./Context";
 import { useHistory } from "react-router-dom";
 import Header from "./Header";
 import ProfileHeader from "./ProfileHeader";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
+});
+
 import {
   FormControl,
   FormControlLabel,
@@ -21,43 +28,41 @@ const EditPostCard = () => {
   const [tag, setTag] = useState(currentItem.tag);
   const [description, setDescription] = useState(currentItem.description);
   const [picture, setPicture] = useState(currentItem.picture);
+  const [open, setOpen] = useState(false);
+
   const history = useHistory();
 
   const editPostSubmit = async (e) => {
-    if (title === "" || description === "") {
-      alert("Title or description can not be empty");
-      return;
-    }
-    if (
-      window.confirm("Are you sure you want to submit changes on this post?")
-    ) {
-      e.preventDefault();
-      setLoading(true);
-      const updatedPost = {
-        title: title,
-        description: description,
-        tag: tag,
-        picture: picture,
-      };
-      await fetch(
-        `http://localhost:4000/api/update_Post/${currentItem.post_id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updatedPost),
-        }
-      )
-        .then((res) => res.json())
-        .then((json) => {
-          console.log(json);
-        })
-        .catch((error) => console.error(error));
-      history.push("/profile");
-      setLoading(false);
-    }
+    e.preventDefault();
+    setLoading(true);
+    const updatedPost = {
+      title: title,
+      description: description,
+      tag: tag,
+      picture: picture,
+    };
+    await fetch(
+      `http://localhost:4000/api/update_Post/${currentItem.post_id}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedPost),
+      }
+    )
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        setOpen(true);
+      })
+      .catch((error) => console.error(error));
+    setTimeout(() => {
+      history.goBack();
+    }, 2000);
+    setLoading(false);
   };
+
   return (
-    <div style={{backgroundColor:'whitesmoke'}}>
+    <div style={{ backgroundColor: "whitesmoke" }}>
       <Header title='Profile Page' />
       <ProfileHeader />
       <div style={styles.title}>
@@ -66,61 +71,74 @@ const EditPostCard = () => {
       <Card style={styles.card}>
         <CardContent style={styles.content}>
           <FormControl>
-            <TextField
-              helperText='Tagged elected officials - Example: @israel israel @other person'
-              id='standard-basic'
-              variant='standard'
-              label='Tags'
-              // pattern="[@]{1}[a-z]"
-              // required
-              // placeholder='valid tag format!'
-              // className='tagInput'
-              value={tag}
-              onChange={(e) => setTag(e.target.value)}
-            />
-            <br />
-            <TextField
-              id='standard-basic'
-              variant='standard'
-              label='Title'
-              // pattern="[@]{1}[a-z][a-z]"
-              // required
-              placeholder='a valid title!'
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-            <br />
-            <TextField
-              id='standard-basic'
-              variant='standard'
-              label='Description'
-              // pattern="[@]{1}[a-z][a-z]"
-              // required
-              aria-multiline
-              placeholder='valid description!'
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-            <br />
-            <TextField
-              id='standard-basic'
-              variant='standard'
-              label='Picture'
-              // pattern="[@]{1}[a-z][a-z]"
-              // required
-              placeholder='valid picture!'
-              value={picture}
-              onChange={(e) => setPicture(e.target.value)}
-            />
-            <br />
-            <Button
-              variant='contained'
-              onClick={(e) => editPostSubmit(e)}>
-              Submit
-            </Button>
+            <form
+              style={{ display: "flex", flexDirection: "column" }}
+              onSubmit={(e) => editPostSubmit(e)}>
+              <TextField
+                helperText='Tagged elected officials - Example: @israel israel @other person'
+                id='standard-basic'
+                variant='standard'
+                label='Tags'
+                // pattern="[@]{1}[a-z]"
+                // required
+                // placeholder='valid tag format!'
+                // className='tagInput'
+                value={tag}
+                onChange={(e) => setTag(e.target.value)}
+              />
+              <br />
+              <TextField
+                id='standard-basic'
+                variant='standard'
+                label='Title'
+                // pattern="[@]{1}[a-z][a-z]"
+                required
+                placeholder='a valid title!'
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+              <br />
+              <TextField
+                id='standard-basic'
+                variant='standard'
+                label='Description'
+                // pattern="[@]{1}[a-z][a-z]"
+                required
+                aria-multiline
+                placeholder='valid description!'
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              <br />
+              <TextField
+                id='standard-basic'
+                variant='standard'
+                label='Picture'
+                // pattern="[@]{1}[a-z][a-z]"
+                // required
+                placeholder='valid picture!'
+                value={picture}
+                onChange={(e) => setPicture(e.target.value)}
+              />
+              <br />
+              <Button type='submit' variant='contained'>
+                Submit
+              </Button>
+            </form>
           </FormControl>
         </CardContent>
       </Card>
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={() => setOpen(false)}>
+        <Alert
+          onClose={() => setOpen(false)}
+          severity='success'
+          sx={{ width: "100%" }}>
+          Post edited successfully ! Redirecting...
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
