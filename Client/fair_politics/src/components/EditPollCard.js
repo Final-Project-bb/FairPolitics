@@ -19,6 +19,7 @@ import {
   CardContent,
   TextField,
   Avatar,
+  Grid,
 } from "@mui/material";
 
 const EditPollCard = () => {
@@ -90,84 +91,86 @@ const EditPollCard = () => {
       <div style={styles.title}>
         Edit {currentItem.poll_id} {currentItem.title} poll
       </div>
-      <Card style={styles.card}>
-        <CardContent style={styles.content}>
-          <FormControl>
-            <form
-              style={{ display: "flex", flexDirection: "column" }}
-              onSubmit={(e) => editPollSubmit(e)}>
-              <TextField
-                id='standard-basic'
-                variant='standard'
-                label='Question'
-                // pattern="[@]{1}[a-z][a-z]"
-                required
-                value={title}
-                onChange={(e) => setQuestion(e.target.value)}
-              />
-              <br />
-              {inputList
-                .map((answer) => answer.answer)
-                .map((x, i) => {
-                  return (
-                    <>
-                      <TextField
-                        id='standard-basic'
-                        variant='standard'
-                        label='Answer'
-                        placeholder='Enter Answer'
-                        value={x}
-                        required
-                        onChange={(e) => handleInputChange(e, i)}
-                      />
-                      <div className='btn-box'>
-                        {inputList.length !== 1 && (
-                          <Button
-                            className='mr10'
-                            onClick={() => handleRemoveClick(i)}>
-                            Remove
-                          </Button>
-                        )}
-                        {inputList.length - 1 === i && (
-                          <Button onClick={handleAddClick}>
-                            Add Another Answer
-                          </Button>
-                        )}
-                      </div>
-                    </>
-                  );
-                })}
-              <br />
-              <TextField
-                id='standard-basic'
-                variant='standard'
-                label='Description'
-                // pattern="[@]{1}[a-z][a-z]"
-                required
-                multiline
-                placeholder='valid description!'
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-              <br />
-              <TextField
-                id='standard-basic'
-                variant='standard'
-                label='Picture'
-                // pattern="[@]{1}[a-z][a-z]"
-                // required
-                placeholder='valid picture!'
-                value={picture}
-                onChange={(e) => setPicture(e.target.value)}
-              />
-              <br />
-              <Button type='submit' variant='contained'>
-                Submit
-              </Button>
-            </form>
-          </FormControl>
-        </CardContent>
-      </Card>
+      <Grid container spacing={0} direction='column' alignItems='center'>
+        <Card style={styles.card}>
+          <CardContent style={styles.content}>
+            <FormControl>
+              <form
+                style={{ display: "flex", flexDirection: "column" }}
+                onSubmit={(e) => editPollSubmit(e)}>
+                <TextField
+                  id='standard-basic'
+                  variant='standard'
+                  label='Question'
+                  // pattern="[@]{1}[a-z][a-z]"
+                  required
+                  value={title}
+                  onChange={(e) => setQuestion(e.target.value)}
+                />
+                <br />
+                {inputList
+                  .map((answer) => answer.answer)
+                  .map((x, i) => {
+                    return (
+                      <React.Fragment key={i}>
+                        <TextField
+                          id='standard-basic'
+                          variant='standard'
+                          label='Answer'
+                          placeholder='Enter Answer'
+                          value={x}
+                          required
+                          onChange={(e) => handleInputChange(e, i)}
+                        />
+                        <div className='btn-box'>
+                          {inputList.length !== 1 && (
+                            <Button
+                              className='mr10'
+                              onClick={() => handleRemoveClick(i)}>
+                              Remove
+                            </Button>
+                          )}
+                          {inputList.length - 1 === i && (
+                            <Button onClick={handleAddClick}>
+                              Add Another Answer
+                            </Button>
+                          )}
+                        </div>
+                      </React.Fragment>
+                    );
+                  })}
+                <br />
+                <TextField
+                  id='standard-basic'
+                  variant='standard'
+                  label='Description'
+                  // pattern="[@]{1}[a-z][a-z]"
+                  required
+                  multiline
+                  placeholder='valid description!'
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+                <br />
+                <TextField
+                  id='standard-basic'
+                  variant='standard'
+                  label='Picture'
+                  // pattern="[@]{1}[a-z][a-z]"
+                  // required
+                  placeholder='valid picture!'
+                  value={picture}
+                  onChange={(e) => setPicture(e.target.value)}
+                />
+                <br />
+                <Button type='submit' variant='contained'>
+                  Submit
+                </Button>
+              </form>
+            </FormControl>
+          </CardContent>
+        </Card>
+      </Grid>
       <Snackbar
         open={open}
         autoHideDuration={6000}
@@ -186,13 +189,16 @@ const EditPollCard = () => {
 const styles = {
   card: {
     // height: 400,
-    width: 600,
-    top: 50,
-    left: "30%",
+    width: 700,
+    // top: 50,
+    // left: "30%",
+    // display: "flex",
+    // justifyContent: "space-around",
     position: "relative",
     alignItems: "center",
     textAlign: "center",
     justifyContent: "center",
+    margin: 5,
   },
   content: {
     display: "flex",
@@ -204,11 +210,11 @@ const styles = {
     display: "flex",
     justifyContent: "space-around",
     // flexDirection: 'row',
-    position: "relative",
+    // position: "relative",
     // marginLeft:10,
     fontSize: 25,
-    top: 30,
-    left: -230,
+    // top: 30,
+    // left: -230,
   },
 };
 

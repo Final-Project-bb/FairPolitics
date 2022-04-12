@@ -381,7 +381,7 @@ const PollCard = ({ item, inProfile, setSnack }) => {
                       control={
                         <Checkbox
                           defaultChecked={answer.is_answer}
-                          onClick={() => handleCheckbox(answer.answer_id)}
+                          onChange={() => handleCheckbox(answer.answer_id)}
                         />
                       }
                       label={answer.answer}

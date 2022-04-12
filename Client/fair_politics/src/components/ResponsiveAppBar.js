@@ -14,6 +14,8 @@ import MenuItem from "@mui/material/MenuItem";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
+import LoginIcon from "@mui/icons-material/Login";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 import { useHistory } from "react-router-dom";
 import { AppContext } from "./Context";
@@ -46,14 +48,10 @@ const ResponsiveAppBar = () => {
   const onSearch = (e) => {
     e.preventDefault();
     console.log(search);
-    if (is_connected) {
-      setLoading(true);
-      fetchSearchUsers();
-      setLoading(false);
-      history.push("/search");
-    } else {
-      alert("you have to sign in first");
-    }
+    setLoading(true);
+    fetchSearchUsers();
+    setLoading(false);
+    history.push("/search");
   };
   const fetchSearchUsers = async () => {
     const response = await fetch(
@@ -81,8 +79,9 @@ const ResponsiveAppBar = () => {
 
   const handleCloseNavMenu = (page) => {
     setAnchorElNav(null);
+    // console.log(history.location.pathname);
     // console.log("button clicked from closeNav menu");
-    if (typeof page === 'object') {
+    if (typeof page === "object") {
       return;
     }
     history.push(`/${page}`);
@@ -196,7 +195,13 @@ const ResponsiveAppBar = () => {
                   <Button
                     key={page}
                     onClick={() => handleCloseNavMenu(page)}
-                    sx={styles.NavButton}>
+                    sx={styles.NavButton}
+                    variant={
+                      history.location.pathname === `/${page}`
+                        ? "contained"
+                        : "text"
+                    }
+                    color='info'>
                     {page}
                   </Button>
                 ))
@@ -204,29 +209,58 @@ const ResponsiveAppBar = () => {
                   <Button
                     key={page}
                     onClick={() => handleCloseNavMenu(page)}
-                    sx={{ my: 2, color: "white", display: "block" }}>
+                    sx={styles.NavButton}
+                    variant={
+                      history.location.pathname === `/${page}`
+                        ? "contained"
+                        : "text"
+                    }
+                    color='info'>
                     {page}
                   </Button>
                 ))}
           </Box>
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <form onSubmit={onSearch}>
-                <StyledInputBase
-                  placeholder='Search…'
-                  // inputProps={{ 'aria-label': 'search' }}
-                  onKeyDown={handleKeyDown(onSearch)}
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </form>
-            </Search>
+            {is_connected && (
+              <Search>
+                <SearchIconWrapper>
+                  <SearchIcon />
+                </SearchIconWrapper>
+                <form onSubmit={onSearch}>
+                  <StyledInputBase
+                    placeholder='Search…'
+                    // inputProps={{ 'aria-label': 'search' }}
+                    onKeyDown={handleKeyDown(onSearch)}
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </form>
+              </Search>
+            )}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
+            {is_connected ? (
+              <Tooltip title='Logout'>
+                <IconButton
+                  size='large'
+                  onClick={() => handleCloseUserMenu("Logout")}
+                  color='inherit'
+                  sx={{ mr: 3 }}>
+                  <LogoutIcon />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              <Tooltip title='Login'>
+                <IconButton
+                  size='large'
+                  onClick={() => history.push("/")}
+                  color='inherit'
+                  sx={{ mr: 3 }}>
+                  <LoginIcon />
+                </IconButton>
+              </Tooltip>
+            )}
             <Tooltip title='Open settings'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
@@ -286,11 +320,14 @@ const styles = {
         color: "#2196f3",
         backgroundColor: "white",
       },
-      // "&:active": {
-      //   color: "#1769aa",
-      //   backgroundColor: "white",
+      // '&:active': {
+      //   boxShadow: 'none',
+      //   backgroundColor: '#0062cc',
+      //   borderColor: '#005cbf',
       // },
-      // width: "10%",
+      // '&:focus': {
+      //   boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
+      // },
       my: 2,
       color: "white",
       display: "block",
