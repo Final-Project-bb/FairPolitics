@@ -23,20 +23,20 @@ const About = () => {
         // style={{ minHeight: "100vh" }}
       >
         <Card sx={styles.card}>
-          <CardContent style={styles.content}>
+          <CardContent sx={styles.content}>
             Many times we see an imbalance between the issues that the elected
             offical focuses on and the issues that the electorate wanted to
             focus on.
-            <CardContent style={styles.content}>
+            <CardContent sx={styles.content}>
               This case carries with it a problem of not fulfilling the will of
               the voters so we decided to fix this by developing a system called
               Fair Politic that will help the elected offical who wants to get
-              Poll from his voter to know which issues to focus on in order
+              feedback from his voter to know which issues to focus on in order
               to divide his time more correctly.
             </CardContent>
-            <CardContent style={styles.content}>
-              We intend to build the Poll and implement Dynamic Proportional
-              Rankings algorithm Poll so that the results they get reflects
+            <CardContent sx={styles.content}>
+              We intend to build the feedback and implement Dynamic Proportional
+              Rankings algorithm feedback so that the results they get reflects
               the will of the voters. This system will be conveniently and
               friendly to the electorate and elected by unique identification,
               Including support for a variety of languages common to the
@@ -53,7 +53,8 @@ const styles = {
   card: {
     // minHeight: 400,
     width: 700,
-    top: 50,
+    margin: 5,
+    // top: 50,
     // left: "30%",
     position: "relative",
     alignItems: "center",

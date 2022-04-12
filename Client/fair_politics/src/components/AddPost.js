@@ -18,6 +18,7 @@ import {
   CardContent,
   TextField,
   CardActions,
+  Grid,
 } from "@mui/material";
 
 const AddPost = () => {
@@ -63,60 +64,67 @@ const AddPost = () => {
     <div style={{ backgroundColor: "whitesmoke" }}>
       <Header title='Add Post page' />
       <ProfileHeader />
-      <Card style={styles.card}>
-        <CardContent style={styles.content}>
-          <FormControl>
-            <form
-              style={{ display: "flex", flexDirection: "column" }}
-              onSubmit={(e) => addPostSubmit(e)}>
-              <TextField
-                helperText='Tagged elected officials - Example: @israel israel @other person'
-                id='standard-basic'
-                variant='standard'
-                label='Tags'
-                // pattern="[@]{1}[a-z]"
-                // required
-                placeholder='valid tags format!'
-                value={tags}
-                onChange={(e) => setTags(e.target.value)}
-              />
+      <Grid
+        container
+        spacing={0}
+        direction='column'
+        alignItems='center'
+      >
+        <Card sx={styles.card}>
+          <CardContent style={styles.content}>
+            <FormControl>
+              <form
+                style={{ display: "flex", flexDirection: "column" }}
+                onSubmit={(e) => addPostSubmit(e)}>
+                <TextField
+                  helperText='Tagged elected officials - Example: @israel israel @other person'
+                  id='standard-basic'
+                  variant='standard'
+                  label='Tags'
+                  // pattern="[@]{1}[a-z]"
+                  // required
+                  placeholder='valid tags format!'
+                  value={tags}
+                  onChange={(e) => setTags(e.target.value)}
+                />
 
-              <TextField
-                helperText='Write the title:'
-                id='standard-basic'
-                variant='standard'
-                label='Title'
-                required
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-              <TextField
-                helperText='Write a description:'
-                id='standard-basic'
-                variant='standard'
-                label='Description'
-                required
-                multiline
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-              <TextField
-                helperText='Enter a picture:'
-                id='standard-basic'
-                variant='standard'
-                label='Picture'
-                placeholder='Picture URL'
-                value={picture}
-                onChange={(e) => setPicture(e.target.value)}
-              />
-              <br />
-              <Button variant='contained' type='submit'>
-                Submit
-              </Button>
-            </form>
-          </FormControl>
-        </CardContent>
-      </Card>
+                <TextField
+                  helperText='Write the title:'
+                  id='standard-basic'
+                  variant='standard'
+                  label='Title'
+                  required
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+                <TextField
+                  helperText='Write a description:'
+                  id='standard-basic'
+                  variant='standard'
+                  label='Description'
+                  required
+                  multiline
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+                <TextField
+                  helperText='Enter a picture:'
+                  id='standard-basic'
+                  variant='standard'
+                  label='Picture'
+                  placeholder='Picture URL'
+                  value={picture}
+                  onChange={(e) => setPicture(e.target.value)}
+                />
+                <br />
+                <Button variant='contained' type='submit'>
+                  Submit
+                </Button>
+              </form>
+            </FormControl>
+          </CardContent>
+        </Card>
+      </Grid>
       <Snackbar
         open={open}
         autoHideDuration={6000}
@@ -135,13 +143,16 @@ const AddPost = () => {
 const styles = {
   card: {
     // height: 400,
-    width: 600,
-    top: 50,
-    left: "30%",
+    width: 700,
+    // top: 50,
+    // left: "30%",
+    // display: "flex",
+    // justifyContent: "space-around",
     position: "relative",
     alignItems: "center",
     textAlign: "center",
     justifyContent: "center",
+    margin: 5,
   },
   content: {
     display: "flex",

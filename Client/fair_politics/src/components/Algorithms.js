@@ -58,7 +58,6 @@ const Algorithms = () => {
   useEffect(() => {
     getAlgorithmChosen();
     return () => {};
-
   }, []);
 
   return (
@@ -70,26 +69,45 @@ const Algorithms = () => {
         </CardContent>
       )}
       <CardContent sx={{ color: "#616161" }}>
-        NOTE: THE CHOSEN ALGORITHM HERE IS USED TO COMPUTE THE RESULTS ON YOUR POLLS , POSTS AND COMMENTS.
+        NOTE: THE CHOSEN ALGORITHM HERE IS USED TO COMPUTE THE RESULTS ON YOUR
+        POLLS , POSTS AND COMMENTS.
         <br />
         <br />
         <br />
-        <img width={1000} src={require('../images/algoPic.jpg')} />
+        <img width={1000} src={require("../images/algoPic.jpg")} />
         <br />
         <br />
         <br />
         <div>
-          {"Let Answers = {a, b, c, d, e} and assume alphabetic tiebreaking. Consider a set of 9 voters"}
-          {"with the following approval sets: 5 voters voted to {a, b}, 3 voters voted to {c, d}, 1 voter voted to {e}."}
-          {"Let V denote the group consisting of the 5 voters voted to {a, b} and V' the group consisting of the 3 voters voted to {c, d}."}
+          {
+            "Let Answers = {a, b, c, d, e} and assume alphabetic tiebreaking. Consider a set of 9 voters"
+          }
+          {
+            "with the following approval sets: 5 voters voted to {a, b}, 3 voters voted to {c, d}, 1 voter voted to {e}."
+          }
+          {
+            "Let V denote the group consisting of the 5 voters voted to {a, b} and V' the group consisting of the 3 voters voted to {c, d}."
+          }
           {"First, consider Dynamic Sequential PAV and Dynamic Phragmen."}
-          {"In the first iteration, both rules output round1 = (a, c, b, d, e), effectively alternating between answers supported by voter groups V and V'."}
-          {"Let us assume that from V we first implements answer 'b'. Then, the two rules output round2 = (c, a, d, e)."}
-          {"If the next implemented answer is 'd', both rules output round3 = (a, c, e)."}
+          {
+            "In the first iteration, both rules output round1 = (a, c, b, d, e), effectively alternating between answers supported by voter groups V and V'."
+          }
+          {
+            "Let us assume that from V we first implements answer 'b'. Then, the two rules output round2 = (c, a, d, e)."
+          }
+          {
+            "If the next implemented answer is 'd', both rules output round3 = (a, c, e)."
+          }
           {"Next, consider Myopic Sequential PAV and Myopic Phragmen."}
-          {"In the first iteration, both rules (and AV) rank the answers according to their number of votes: round1 = (a, b, c, d, e)."}
-          {"After the implementation of answer 'b', both rules output round2 = (c, d, a, e), which differs from the AV ranking round2 = (a, c, d, e)."}
-          {"If we then implements answer 'd', the two rules output round3 = (a, c, e)."}
+          {
+            "In the first iteration, both rules (and AV) rank the answers according to their number of votes: round1 = (a, b, c, d, e)."
+          }
+          {
+            "After the implementation of answer 'b', both rules output round2 = (c, d, a, e), which differs from the AV ranking round2 = (a, c, d, e)."
+          }
+          {
+            "If we then implements answer 'd', the two rules output round3 = (a, c, e)."
+          }
         </div>
       </CardContent>
       <Grid container spacing={0} direction='row' alignItems='center'>
@@ -104,7 +122,7 @@ const Algorithms = () => {
                 border: chosenAlgorithm === algo.id ? "2px solid #1769aa" : 0,
                 borderRadius: "2%",
               }}>
-              <Card>
+              <Card sx={{ overflow: 'auto', height: 400, }}>
                 {/* <CardContent sx={{ fontWeight: "bold", fontSize: 30 }}>
                 id: {algo.id}
               </CardContent> */}
@@ -118,9 +136,7 @@ const Algorithms = () => {
                   }}>
                   <label>{algo.title}</label>
                   <Button
-                    variant={
-                      chosenAlgorithm === algo.id ? "contained" : "text"
-                    }
+                    variant={chosenAlgorithm === algo.id ? "contained" : "text"}
                     color='primary'
                     sx={{
                       position: "relative",
