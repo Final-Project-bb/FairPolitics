@@ -429,7 +429,7 @@ PostCard.deafult = {
 const styles = {
   card: {
     // height: 400,
-    width: 600,
+    // width: 600,
   },
   content: {
     display: "flex",

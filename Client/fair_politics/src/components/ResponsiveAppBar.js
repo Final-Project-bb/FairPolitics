@@ -125,7 +125,7 @@ const ResponsiveAppBar = () => {
   };
 
   return (
-    <AppBar position='static'>
+    <AppBar color='info' position='static'>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
           <Typography
@@ -198,10 +198,10 @@ const ResponsiveAppBar = () => {
                     sx={styles.NavButton}
                     variant={
                       history.location.pathname === `/${page}`
-                        ? "contained"
+                        ? "outlined"
                         : "text"
                     }
-                    color='info'>
+                    color='inherit'>
                     {page}
                   </Button>
                 ))
@@ -212,10 +212,10 @@ const ResponsiveAppBar = () => {
                     sx={styles.NavButton}
                     variant={
                       history.location.pathname === `/${page}`
-                        ? "contained"
+                        ? "outlined"
                         : "text"
                     }
-                    color='info'>
+                    color='inherit'>
                     {page}
                   </Button>
                 ))}
@@ -252,13 +252,19 @@ const ResponsiveAppBar = () => {
               </Tooltip>
             ) : (
               <Tooltip title='Login'>
-                <IconButton
+                <Button
+                  variant={
+                    history.location.pathname === "/" ||
+                    history.location.pathname === "/connection/login"
+                      ? "outlined"
+                      : "text"
+                  }
                   size='large'
                   onClick={() => history.push("/")}
                   color='inherit'
                   sx={{ mr: 3 }}>
                   <LoginIcon />
-                </IconButton>
+                </Button>
               </Tooltip>
             )}
             <Tooltip title='Open settings'>

@@ -22,7 +22,7 @@ import {
   CardContent,
   TextField,
   CardActions,
-  IconButton
+  IconButton,
 } from "@mui/material";
 
 const Login = () => {
@@ -251,7 +251,11 @@ const Login = () => {
     }
   };
   return (
-    <div style={{ backgroundColor: "white" }}>
+    <div
+      style={{
+        backgroundColor: "#212121",
+        minHeight: 800,
+      }}>
       <Header title='Login Page' />
       {!loading && (
         <div>
@@ -300,7 +304,7 @@ const Login = () => {
                     variant='contained'
                     color='primary'
                     type='submit'>
-                    submit
+                    Login
                   </Button>
                   <br />
                   <Button
@@ -448,9 +452,9 @@ const styles = {
 
   card: {
     // height: 400,
-    width: 600,
+    width: "50%",
+    left: "25%",
     top: 50,
-    left: "30%",
     position: "relative",
     alignItems: "center",
     textAlign: "center",

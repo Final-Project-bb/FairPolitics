@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 const About = () => {
   return (
-    <div style={{background: 'whitesmoke'}}>
+    <div style={{ background: "whitesmoke", minHeight: 800 }}>
       <Header title='About Page' />
       <Grid
         container
@@ -84,7 +84,6 @@ const styles = {
     fontSize: 25,
     //   left: 335,
   },
-
 };
 
 export default About;

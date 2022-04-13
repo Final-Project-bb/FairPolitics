@@ -104,10 +104,6 @@ const Register = () => {
   };
   const approvePassword = (event) => {
     event.preventDefault();
-    if (pass2 === "" || pass === "") {
-      alert("Title or description can not be empty");
-      return;
-    }
     if (pass2 === pass) {
       alert(`Password approved`);
       setOtherFlag(true);
@@ -265,15 +261,19 @@ const Register = () => {
         display: "flex",
         flexDirection: "column",
         flex: 4,
+        backgroundColor: '#212121',
+        minHeight: 800
       }}>
       <Header title='Register Page' />
       {!loading && (
         <div>
-          <Card style={styles.cardLeft}>
-            <CardContent style={styles.content}>
-              <FormControl>
-                {!tempPassFlag && !passFlag && (
-                  <>
+          <Card sx={styles.card}>
+            <CardContent sx={styles.content}>
+              {!tempPassFlag && !passFlag && (
+                <FormControl>
+                  <form
+                    style={{ display: "flex", flexDirection: "column" }}
+                    onSubmit={(e) => emailSubmit(e)}>
                     <TextField
                       // helperText='Enter your id:'
                       id='standard-basic'
@@ -281,59 +281,65 @@ const Register = () => {
                       label='ID'
                       pattern='[0-9]{9}'
                       required
-                      placeholder='valid id number!'
+                      placeholder='Valid id number'
                       value={id}
                       onChange={(e) => setId(e.target.value)}
                       className='inputId'
                     />
                     <br />
-                    {/* <label>Enter a Phone Number: </label> */}
                     <TextField
-                      // helperText='Enter your id:'
+                      helperText='You will get Confirmation Email to the address you type here:'
                       id='standard-basic'
                       variant='standard'
                       label='Email'
                       type='email'
                       // pattern='[0]{1}[5]{1}[0-9]{8}'
                       required
-                      placeholder='valid email!'
+                      placeholder='Valid email'
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className='inputEmail'
                     />
                     <br />
-                    <BiMailSend onClick={(e) => emailSubmit(e)} size={30} />
-                    {/* <input type='submit' /> */}
-                    <br />
-                  </>
-                )}
-                {tempPassFlag && !passFlag && (
-                  <>
+                    <Tooltip title='Send'>
+                      <Button
+                        sx={[{ "&:hover": { backgroundColor: "white" } }]}
+                        type='submit'>
+                        <BiMailSend size={30} />
+                      </Button>
+                    </Tooltip>
+                  </form>
+                </FormControl>
+              )}
+              {tempPassFlag && !passFlag && (
+                <FormControl>
+                  <form
+                    style={{ display: "flex", flexDirection: "column" }}
+                    onSubmit={(e) => approveSubmit(e)}>
                     <TextField
                       // helperText='Enter a temporary password'
                       id='standard-basic'
                       variant='standard'
                       label='Temporary Password'
                       // pattern="[0]{1}[5]{1}[0-9]{8}"
-                      // required
+                      required
                       placeholder='Password from Email!'
                       value={Number(tempPass)}
                       onChange={(e) => setTempPass(Number(e.target.value))}
                     />
 
                     <br />
-                    <Button
-                      onClick={(e) => approveSubmit(e)}
-                      variant='contained'
-                      color='primary'
-                      type='submit'>
+                    <Button variant='contained' color='primary' type='submit'>
                       submit
                     </Button>
-                  </>
-                )}
-                {passFlag && !otherFlag && (
-                  <>
-                    <br />
+                  </form>
+                </FormControl>
+              )}
+              {passFlag && !otherFlag && (
+                <FormControl>
+                  <form
+                    style={{ display: "flex", flexDirection: "column" }}
+                    onSubmit={(e) => approvePassword(e)}>
                     <TextField
                       // helperText='Enter your final password'
                       id='standard-basic'
@@ -341,7 +347,7 @@ const Register = () => {
                       label='Final Password'
                       type='password'
                       // pattern="[0]{1}[5]{1}[0-9]{8}"
-                      // required
+                      required
                       placeholder='your password!'
                       value={pass}
                       onChange={(e) => setPass(e.target.value)}
@@ -354,203 +360,207 @@ const Register = () => {
                       label='Repeat Password'
                       type='password'
                       // pattern="[0]{1}[5]{1}[0-9]{8}"
-                      // required
+                      required
                       // placeholder='repeat your password!'
                       value={pass2}
                       onChange={(e) => setPass2(e.target.value)}
                     />
                     <br />
-                    <Button
-                      onClick={(e) => approvePassword(e)}
-                      variant='contained'
-                      color='primary'
-                      type='submit'>
+                    <Button variant='contained' color='primary' type='submit'>
                       submit
                     </Button>
-                  </>
-                )}
-                {passFlag && otherFlag && (
-                  <>
-                    <div>Successful initial verification! </div>
-                    <FcOk
-                      style={{ position: "relative", left: 205, top: -17 }}
-                    />
-                    <div>Please fill in the following details correctly.</div>
-                  </>
-                )}
-              </FormControl>
+                  </form>
+                </FormControl>
+              )}
+              {otherFlag && (
+                <>
+                  <div>Successful initial verification! </div>
+                  <FcOk
+                    style={{ position: "relative", left: "75%", top: -17 }}
+                  />
+                  <div>Please fill in the following details correctly.</div>
+                </>
+              )}
             </CardContent>
           </Card>
           {otherFlag && (
-          <Card style={styles.cardRight}>
-            <CardContent style={styles.content}>
-              <FormControl>
-                <TextField
-                  // helperText='Enter your first name'
-                  id='standard-basic'
-                  variant='standard'
-                  label='First Name'
-                  // pattern="[0]{1}[5]{1}[0-9]{8}"
-                  // required
-                  // placeholder='first name!'
-                  value={first_name}
-                  onChange={(e) => setFirstName(e.target.value)}
-                />
-                <br />
-                <TextField
-                  // helperText='Enter your last name'
-                  id='standard-basic'
-                  variant='standard'
-                  label='Last Name'
-                  // pattern="[0]{1}[5]{1}[0-9]{8}"
-                  // required
-                  // placeholder='last name!'
-                  value={last_name}
-                  onChange={(e) => setLastName(e.target.value)}
-                />
-                <br />
-                <TextField
-                  // helperText='Enter your id:'
-                  id='standard-basic'
-                  variant='standard'
-                  label='Phone'
-                  type='tel'
-                  pattern='[0]{1}[5]{1}[0-9]{8}'
-                  // required
-                  placeholder='valid phone number!'
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className='inputEmail'
-                />
-                <RadioGroup
-                  style={styles.radioGroup}
-                  aria-labelledby='demo-radio-buttons-group-label'
-                  defaultValue='female'
-                  name='radio-buttons-group'>
-                  <FormControlLabel
-                    value='female'
-                    control={<Radio />}
-                    label='Female'
-                    onClick={() => setGender("Female")}
-                  />
-                  <FormControlLabel
-                    value='male'
-                    control={<Radio />}
-                    label='Male'
-                    onClick={() => setGender("Male")}
-                  />
-                </RadioGroup>
-                <br />
-                <TextField
-                  helperText='Enter your Birth Of Date'
-                  id='standard-basic'
-                  variant='standard'
-                  // label='Birth Date'
-                  type='date'
-                  placeholder='Enter BirthDate'
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  name='birthdate'
-                  max={current}
-                />
-                <br />
-                <TextField
-                  // helperText='Enter your location'
-                  id='standard-basic'
-                  variant='standard'
-                  label='Location'
-                  // pattern="[0]{1}[5]{1}[0-9]{8}"
-                  // required
-                  placeholder='city!'
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                />
-                <br />
-                <TextField
-                  // helperText='Enter your rule'
-                  id='standard-basic'
-                  variant='standard'
-                  label='Rule'
-                  // pattern="[0]{1}[5]{1}[0-9]{8}"
-                  // required
-                  placeholder='Rule!'
-                  value={job_title}
-                  onChange={(e) => setJobTitle(e.target.value)}
-                />
-                <br />
-                <TextField
-                  // helperText='Enter your semi-description'
-                  id='standard-basic'
-                  variant='standard'
-                  label='Semi-Description'
-                  // placeholder='semi describe yourself!'
-                  value={semi_description}
-                  onChange={(e) => setSemiDescription(e.target.value)}
-                />
-                <br />
-                <TextField
-                  // helperText='Enter your description'
-                  id='standard-basic'
-                  variant='standard'
-                  label='Description'
-                  placeholder='describe yourself!'
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-                <br />
-                <TextField
-                  // helperText='Insert your Profile's picture'
-                  id='standard-basic'
-                  variant='standard'
-                  label='Profile Picture'
-                  // pattern="[0]{1}[5]{1}[0-9]{8}"
-                  // required
-                  placeholder='Picture!'
-                  value={profile_picture}
-                  onChange={(e) => setProfilePicture(e.target.value)}
-                />
-                <br />
-                <Button
-                  onClick={(e) => registerSubmit(e)}
-                  variant='contained'
-                  color='primary'
-                  type='submit'>
-                  submit
-                </Button>{" "}
-                <br />
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-around",
-                    position: "relative",
-                    alignItems: "center",
-                    // left: -20,
-                  }}>
-                  <Tooltip title='Register via Facebook'>
-                    <IconButton onClick={() => faceBook()}>
-                      <Icon
-                        icon='logos:facebook'
-                        style={{ fontSize: "40px" }}
+            <Card sx={styles.card}>
+              <CardContent sx={styles.content}>
+                <FormControl>
+                  <form
+                    style={{ display: "flex", flexDirection: "column" }}
+                    onSubmit={(e) => registerSubmit(e)}>
+                    <TextField
+                      // helperText='Enter your first name'
+                      id='standard-basic'
+                      variant='standard'
+                      label='First Name'
+                      // pattern="[0]{1}[5]{1}[0-9]{8}"
+                      required
+                      // placeholder='first name!'
+                      value={first_name}
+                      onChange={(e) => setFirstName(e.target.value)}
+                    />
+                    <br />
+                    <TextField
+                      // helperText='Enter your last name'
+                      id='standard-basic'
+                      variant='standard'
+                      label='Last Name'
+                      // pattern="[0]{1}[5]{1}[0-9]{8}"
+                      required
+                      // placeholder='last name!'
+                      value={last_name}
+                      onChange={(e) => setLastName(e.target.value)}
+                    />
+                    <br />
+                    <TextField
+                      // helperText='Enter your id:'
+                      id='standard-basic'
+                      variant='standard'
+                      label='Phone'
+                      type='tel'
+                      pattern='[0]{1}[5]{1}[0-9]{8}'
+                      // required
+                      placeholder='valid phone number!'
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className='inputEmail'
+                    />
+                    <RadioGroup
+                      style={styles.radioGroup}
+                      aria-labelledby='demo-radio-buttons-group-label'
+                      defaultValue='female'
+                      name='radio-buttons-group'>
+                      <FormControlLabel
+                        value='female'
+                        control={<Radio />}
+                        label='Female'
+                        onClick={() => setGender("Female")}
                       />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title='Register via Gmail'>
-                    <IconButton onClick={() => gMail()}>
-                      <Icon
-                        icon='logos:google-gmail'
-                        style={{ fontSize: "35px" }}
+                      <FormControlLabel
+                        value='male'
+                        control={<Radio />}
+                        label='Male'
+                        onClick={() => setGender("Male")}
                       />
-                    </IconButton>
-                  </Tooltip>
-                </div>
-                <br />
-                <Button onClick={() => handleClick()}>
-                  already have an account ? sign in here!
-                </Button>
-              </FormControl>
-            </CardContent>
-          </Card>
+                    </RadioGroup>
+                    <br />
+                    <TextField
+                      helperText='Enter your Birth Of Date'
+                      id='standard-basic'
+                      variant='standard'
+                      // label='Birth Date'
+                      type='date'
+                      placeholder='Enter BirthDate'
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
+                      name='birthdate'
+                      max={current}
+                    />
+                    <br />
+                    <TextField
+                      // helperText='Enter your location'
+                      id='standard-basic'
+                      variant='standard'
+                      label='Location'
+                      // pattern="[0]{1}[5]{1}[0-9]{8}"
+                      required
+                      placeholder='city!'
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                    />
+                    <br />
+                    <TextField
+                      // helperText='Enter your rule'
+                      id='standard-basic'
+                      variant='standard'
+                      label='Rule'
+                      // pattern="[0]{1}[5]{1}[0-9]{8}"
+                      required
+                      placeholder='Rule!'
+                      value={job_title}
+                      onChange={(e) => setJobTitle(e.target.value)}
+                    />
+                    <br />
+                    <TextField
+                      // helperText='Enter your semi-description'
+                      id='standard-basic'
+                      variant='standard'
+                      label='Semi-Description'
+                      // placeholder='semi describe yourself!'
+                      value={semi_description}
+                      onChange={(e) => setSemiDescription(e.target.value)}
+                    />
+                    <br />
+                    <TextField
+                      // helperText='Enter your description'
+                      id='standard-basic'
+                      variant='standard'
+                      label='Description'
+                      placeholder='describe yourself!'
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                    />
+                    <br />
+                    <TextField
+                      // helperText='Insert your Profile's picture'
+                      id='standard-basic'
+                      variant='standard'
+                      label='Profile Picture'
+                      // pattern="[0]{1}[5]{1}[0-9]{8}"
+                      // required
+                      placeholder='Picture!'
+                      value={profile_picture}
+                      onChange={(e) => setProfilePicture(e.target.value)}
+                    />
+                    <br />
+                    <Button variant='contained' color='primary' type='submit'>
+                      submit
+                    </Button>
+                    <br />
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-around",
+                        position: "relative",
+                        alignItems: "center",
+                        // left: -20,
+                      }}>
+                      <Tooltip title='Register via Facebook'>
+                        <IconButton
+                          sx={[
+                            {
+                              "&:hover": { backgroundColor: "white" },
+                              fontSize: "40px",
+                            },
+                          ]}
+                          onClick={() => faceBook()}>
+                          <Icon icon='logos:facebook' />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title='Register via Gmail'>
+                        <IconButton
+                          sx={[
+                            {
+                              "&:hover": { backgroundColor: "white" },
+                              fontSize: "35px",
+                            },
+                          ]}
+                          onClick={() => gMail()}>
+                          <Icon icon='logos:google-gmail' />
+                        </IconButton>
+                      </Tooltip>
+                    </div>
+                    <br />
+                    <Button onClick={() => handleClick()}>
+                      already have an account ? sign in here!
+                    </Button>
+                  </form>
+                </FormControl>
+              </CardContent>
+            </Card>
           )}
         </div>
       )}
@@ -567,22 +577,22 @@ const Register = () => {
 };
 
 const styles = {
-  cardLeft: {
+  card: {
     // height: 400,
-    width: 600,
-    top: 50,
-    left: "5%",
+    width: "50%",
+    left: "25%",
     position: "relative",
-    // alignItems: "center",
-    // textAlign: "center",
+    alignItems: "center",
+    textAlign: "center",
     justifyContent: "center",
     backgroundColor: "whitesmoke",
+    my: 10,
   },
   cardRight: {
     // height: 400,
     width: 600,
-    top: -45,
-    left: "50%",
+    // top: -45,
+    // left: "50%",
     position: "relative",
     // alignItems: "center",
     // textAlign: "center",
