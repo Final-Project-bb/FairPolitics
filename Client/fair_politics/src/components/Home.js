@@ -100,23 +100,27 @@ const Home = () => {
             </Box>
             <TabPanel value='1'>
               {/* <div style={styles.title}>Posts Feed:</div> */}
+              <Grid container direction='row' alignItems='center'>
+                <IconButton
+                  sx={[{ "&:hover": { color: "#2196f3" }, marginBottom: 5 }]}
+                  onClick={() => history.push("/profile/addPost")}>
+                  <Grid item>
+                    <AddIcon
+                      fontSize='large'
+                      // to='/profile/addPoll'
+                    />
+                  </Grid>
+                  <Grid item>Add New Post</Grid>
+                </IconButton>
+              </Grid>
               <Box sx={{ flexGrow: 1 }}>
-                <Grid container direction='row' alignItems='center'>
-                  <IconButton
-                    sx={[{ "&:hover": { color: "#2196f3" }, marginBottom: 5 }]}
-                    onClick={() => history.push("/profile/addPost")}>
-                    <Grid item>
-                      <AddIcon
-                        fontSize='large'
-                        // to='/profile/addPoll'
-                      />
-                    </Grid>
-                    <Grid item>Add New Post</Grid>
-                  </IconButton>
-                </Grid>
-                <Grid container spacing={0}>
+                <Grid container direction='column' spacing={0}>
                   {postCards.map((item) => {
-                    return <PostCard key={item.post_id} item={item}  />;
+                    return (
+                      <Grid item >
+                        <PostCard key={item.post_id} item={item} />
+                      </Grid>
+                    );
                   })}
                 </Grid>
               </Box>

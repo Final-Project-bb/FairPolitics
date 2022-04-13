@@ -14,6 +14,7 @@ import {
   Avatar,
   Grid,
   Tooltip,
+  Divider,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { algorithms } from "./algorithmDetails";
@@ -68,12 +69,8 @@ const Algorithms = () => {
           Please Choose Algorithm to use for the haluka hogenet{" "}
         </CardContent>
       )}
+
       <CardContent sx={{ color: "#616161" }}>
-        NOTE: THE CHOSEN ALGORITHM HERE IS USED TO COMPUTE THE RESULTS ON YOUR
-        POLLS , POSTS AND COMMENTS.
-        <br />
-        <br />
-        <br />
         <img width={1000} src={require("../images/algoPic.jpg")} />
         <br />
         <br />
@@ -110,6 +107,11 @@ const Algorithms = () => {
           }
         </div>
       </CardContent>
+      <Divider variant='middle' />
+      <CardContent sx={{ fontWeight: 'medium' }}>
+        NOTE: THE CHOSEN ALGORITHM HERE IS USED TO COMPUTE THE RESULTS ON YOUR
+        POLLS , POSTS AND COMMENTS.
+      </CardContent>
       <Grid container spacing={0} direction='row' alignItems='center'>
         {algorithms.map((algo) => {
           return (
@@ -122,7 +124,7 @@ const Algorithms = () => {
                 border: chosenAlgorithm === algo.id ? "2px solid #1769aa" : 0,
                 borderRadius: "2%",
               }}>
-              <Card sx={{ overflow: 'auto', height: 400, }}>
+              <Card sx={{ overflow: "auto", height: 400 }}>
                 {/* <CardContent sx={{ fontWeight: "bold", fontSize: 30 }}>
                 id: {algo.id}
               </CardContent> */}
