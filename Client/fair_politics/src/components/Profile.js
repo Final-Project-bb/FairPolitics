@@ -16,7 +16,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import AddIcon from "@mui/icons-material/Add";
-import IconButton from "@mui/material/IconButton";
+import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Backdrop from "@mui/material/Backdrop";
 import Snackbar from "@mui/material/Snackbar";
@@ -43,7 +43,6 @@ const Profile = () => {
 
   const [value, setValue] = useState("1");
   const [snack, setSnack] = useState(false);
-
 
   const history = useHistory();
 
@@ -99,13 +98,11 @@ const Profile = () => {
   }, []);
 
   return (
-    <div >
+    <div style={{ backgroundColor: "whitesmoke" }}>
       <Header title='Profile Page' />
       {!loading ? (
         <div>
-          {/* <div style={{position:'relative',}}> */}
           <ProfileHeader />
-          {/* </div> */}
           <Box sx={{ width: "100%", typography: "body1" }}>
             <TabContext value={value}>
               <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -115,17 +112,32 @@ const Profile = () => {
                   variant='fullWidth'
                   onChange={handleChange}
                   aria-label='lab API tabs example'>
-                  <Tab label='My Posts' value='1' />
-                  <Tab label='My Polls' value='2' />
+                  <Tab
+                    sx={{ backgroundColor: "white" }}
+                    label='My Posts'
+                    value='1'
+                  />
+                  <Tab
+                    sx={{ backgroundColor: "white" }}
+                    label='My Polls'
+                    value='2'
+                  />
                 </TabList>
               </Box>
-              <TabPanel value='1' sx={{backgroundColor: 'whitesmoke'}}>
+              <TabPanel value='1' sx={{ backgroundColor: "whitesmoke" }}>
                 {/* <div style={styles.title}>Posts Feed:</div> */}
                 <Box sx={{ flexGrow: 1 }}>
                   <Grid container direction='row' alignItems='center'>
-                    <IconButton
+                    <Button
                       sx={[
-                        { "&:hover": { color: "#2196f3" }, marginBottom: 5 },
+                        {
+                          "&:hover": {
+                            color: "#2196f3",
+                            backgroundColor: "white",
+                            boxShadow: 3,
+                          },
+                          marginBottom: 5,
+                        },
                       ]}
                       onClick={() => history.push("/profile/addPost")}>
                       <Grid item>
@@ -135,9 +147,9 @@ const Profile = () => {
                         />
                       </Grid>
                       <Grid item>Add New Post</Grid>
-                    </IconButton>
+                    </Button>
                   </Grid>
-                  <Grid container spacing={0} >
+                  <Grid container spacing={0}>
                     {profilePostCards.map((item) => {
                       return (
                         <PostCard
@@ -152,22 +164,26 @@ const Profile = () => {
                   </Grid>
                 </Box>
               </TabPanel>
-              <TabPanel value='2' sx={{backgroundColor: 'whitesmoke'}}>
+              <TabPanel value='2' sx={{ backgroundColor: "whitesmoke" }}>
                 <Box sx={{ flexGrow: 1 }}>
                   <Grid container direction='row' alignItems='center'>
-                    <IconButton
+                    <Button
                       sx={[
-                        { "&:hover": { color: "#2196f3" }, marginBottom: 5 },
+                        {
+                          "&:hover": {
+                            color: "#2196f3",
+                            backgroundColor: "white",
+                            boxShadow: 3,
+                          },
+                          marginBottom: 5,
+                        },
                       ]}
                       onClick={() => history.push("/profile/addPoll")}>
                       <Grid item>
-                        <AddIcon
-                          fontSize='large'
-                          // to='/profile/addPoll'
-                        />
+                        <AddIcon fontSize='large' />
                       </Grid>
                       <Grid item>Add New Poll</Grid>
-                    </IconButton>
+                    </Button>
                   </Grid>
                   <Grid container spacing={0}>
                     {profilePollCards.map((item) => {
@@ -178,7 +194,6 @@ const Profile = () => {
                           inProfile={true}
                           setSnack={setSnack}
                           setProfilePollCards={setProfilePollCards}
-
                         />
                       );
                     })}

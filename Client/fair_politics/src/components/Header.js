@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
-import Navbar from "./Navbar/Navbar";
 import styled from "styled-components";
-import AppBar from "./ResponsiveAppBar";
+import ResponsiveAppBar from "./ResponsiveAppBar";
 
 import { AppContext } from "./Context";
 
@@ -11,7 +10,7 @@ const Header = ({ title }) => {
   return (
     <div style={styles.title}>
       {/* <Navbar /> */}
-      <AppBar />
+      <ResponsiveAppBar />
       <Nav>
         <label style={styles.text}>
           Welcome{is_connected? `, ${user_details.first_name} ${user_details.last_name}!` :" Guest, please join us!" }
@@ -48,18 +47,19 @@ const styles = {
     color: "#20232a",
     //   textAlign: "center",
     // fontSize: 30,
-    fontWeight: "bold",
+    // fontWeight: "bold",
   },
   text: {
     // textAlign: "center",
     display: "flex",
     position: "relative",
     color: "whitesmoke",
-    fontWeight: "20",
+    // fontWeight: "100",
     fontSize: 20,
     justifyContent: "center",
     left: 10,
     top: 10,
+    
     // left:100,
     // top:-25,
   },

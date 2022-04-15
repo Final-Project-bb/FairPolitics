@@ -16,6 +16,9 @@ import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
+import PropTypes from "prop-types";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
+import CssBaseline from "@mui/material/CssBaseline";
 
 import { useHistory } from "react-router-dom";
 import { AppContext } from "./Context";
@@ -25,7 +28,32 @@ const inActivePages = ["About", "Contact-Us"];
 const activeSettings = ["Profile", "Account", "Algorithms", "Logout"];
 const inActiveSettings = ["Login", "Sign-Up"];
 
-const ResponsiveAppBar = () => {
+function ElevationScroll(props) {
+  const { children, window } = props;
+  // Note that you normally won't need to set the window ref as useScrollTrigger
+  // will default to window.
+  // This is only being set here because the demo is in an iframe.
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 0,
+    target: window ? window() : undefined,
+  });
+
+  return React.cloneElement(children, {
+    elevation: trigger ? 4 : 0,
+  });
+}
+
+ElevationScroll.propTypes = {
+  children: PropTypes.element.isRequired,
+  /**
+   * Injected by the documentation to work in an iframe.
+   * You won't need it on your project.
+   */
+  window: PropTypes.func,
+};
+
+const ResponsiveAppBar = (props) => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [search, setSearch] = useState();
@@ -125,197 +153,206 @@ const ResponsiveAppBar = () => {
   };
 
   return (
-    <AppBar color='info' position='static'>
-      <Container maxWidth='xl'>
-        <Toolbar disableGutters>
-          <Typography
-            variant='h6'
-            noWrap
-            component='div'
-            sx={{ mr: 2, display: { xs: "none", md: "flex" } }}>
-            Fair Politics
-          </Typography>
+    <React.Fragment>
+      <CssBaseline />
 
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size='large'
-              aria-label='account of current user'
-              aria-controls='menu-appbar'
-              aria-haspopup='true'
-              onClick={handleOpenNavMenu}
-              color='inherit'>
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id='menu-appbar'
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}>
-              {/* left menu */}
-              {is_connected
-                ? activePages.map((page) => (
-                    <MenuItem
-                      key={page}
-                      onClick={() => handleCloseNavMenu(page)}>
-                      <Typography textAlign='center'>{page}</Typography>
-                    </MenuItem>
-                  ))
-                : inActivePages.map((page) => (
-                    <MenuItem
-                      key={page}
-                      onClick={() => handleCloseNavMenu(page)}>
-                      <Typography textAlign='center'>{page}</Typography>
-                    </MenuItem>
-                  ))}
-            </Menu>
-          </Box>
-          <Typography
-            variant='h6'
-            noWrap
-            component='div'
-            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            Fair Politics
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {/* main menu */}
-            {is_connected
-              ? activePages.map((page) => (
-                  <Button
-                    key={page}
-                    onClick={() => handleCloseNavMenu(page)}
-                    sx={styles.NavButton}
-                    variant={
-                      history.location.pathname === `/${page}`
-                        ? "outlined"
-                        : "text"
-                    }
-                    color='inherit'>
-                    {page}
-                  </Button>
-                ))
-              : inActivePages.map((page) => (
-                  <Button
-                    key={page}
-                    onClick={() => handleCloseNavMenu(page)}
-                    sx={styles.NavButton}
-                    variant={
-                      history.location.pathname === `/${page}`
-                        ? "outlined"
-                        : "text"
-                    }
-                    color='inherit'>
-                    {page}
-                  </Button>
-                ))}
-          </Box>
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            {is_connected && (
-              <Search>
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
-                <form onSubmit={onSearch}>
-                  <StyledInputBase
-                    placeholder='Search…'
-                    // inputProps={{ 'aria-label': 'search' }}
-                    onKeyDown={handleKeyDown(onSearch)}
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
-                </form>
-              </Search>
-            )}
-          </Box>
+      <ElevationScroll {...props}>
+        <AppBar color='info' position='sticky' 
+        // sx={{ bottom: 'auto', top: 0 }}
+        >
+          <Container maxWidth='xl'>
+            <Toolbar disableGutters>
+              <Typography
+                variant='h6'
+                noWrap
+                component='div'
+                sx={{ mr: 2, display: { xs: "none", md: "flex" } }}>
+                Fair Politics
+              </Typography>
 
-          <Box sx={{ flexGrow: 0 }}>
-            {is_connected ? (
-              <Tooltip title='Logout'>
+              <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
                 <IconButton
                   size='large'
-                  onClick={() => handleCloseUserMenu("Logout")}
-                  color='inherit'
-                  sx={{ mr: 3 }}>
-                  <LogoutIcon />
+                  aria-label='account of current user'
+                  aria-controls='menu-appbar'
+                  aria-haspopup='true'
+                  onClick={handleOpenNavMenu}
+                  color='inherit'>
+                  <MenuIcon />
                 </IconButton>
-              </Tooltip>
-            ) : (
-              <Tooltip title='Login'>
-                <Button
-                  variant={
-                    history.location.pathname === "/" ||
-                    history.location.pathname === "/connection/login"
-                      ? "outlined"
-                      : "text"
-                  }
-                  size='large'
-                  onClick={() => history.push("/")}
-                  color='inherit'
-                  sx={{ mr: 3 }}>
-                  <LoginIcon />
-                </Button>
-              </Tooltip>
-            )}
-            <Tooltip title='Open settings'>
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar
-                  alt='Remy Sharp'
-                  src={
-                    is_connected
-                      ? require("../images/profilePicExmple.jpg")
-                      : ""
-                    //user_details.profile_picture
-                  }
-                />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id='menu-appbar'
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}>
-              {/* right menu */}
-              {is_connected
-                ? activeSettings.map((setting) => (
-                    <MenuItem
-                      key={setting}
-                      onClick={() => handleCloseUserMenu(setting)}>
-                      <Typography textAlign='center'>{setting}</Typography>
-                    </MenuItem>
-                  ))
-                : inActiveSettings.map((setting) => (
-                    <MenuItem
-                      key={setting}
-                      onClick={() => handleCloseUserMenu(setting)}>
-                      <Typography textAlign='center'>{setting}</Typography>
-                    </MenuItem>
-                  ))}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+                <Menu
+                  id='menu-appbar'
+                  anchorEl={anchorElNav}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                  open={Boolean(anchorElNav)}
+                  onClose={handleCloseNavMenu}
+                  sx={{
+                    display: { xs: "block", md: "none" },
+                  }}>
+                  {/* left menu */}
+                  {is_connected
+                    ? activePages.map((page) => (
+                        <MenuItem
+                          key={page}
+                          onClick={() => handleCloseNavMenu(page)}>
+                          <Typography textAlign='center'>{page}</Typography>
+                        </MenuItem>
+                      ))
+                    : inActivePages.map((page) => (
+                        <MenuItem
+                          key={page}
+                          onClick={() => handleCloseNavMenu(page)}>
+                          <Typography textAlign='center'>{page}</Typography>
+                        </MenuItem>
+                      ))}
+                </Menu>
+              </Box>
+              <Typography
+                variant='h6'
+                noWrap
+                component='div'
+                sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+                Fair Politics
+              </Typography>
+              <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+                {/* main menu */}
+                {is_connected
+                  ? activePages.map((page) => (
+                      <Button
+                        key={page}
+                        onClick={() => handleCloseNavMenu(page)}
+                        sx={styles.NavButton}
+                        variant={
+                          history.location.pathname === `/${page}`
+                            ? "outlined"
+                            : "text"
+                        }
+                        color='inherit'>
+                        {page}
+                      </Button>
+                    ))
+                  : inActivePages.map((page) => (
+                      <Button
+                        key={page}
+                        onClick={() => handleCloseNavMenu(page)}
+                        sx={styles.NavButton}
+                        variant={
+                          history.location.pathname === `/${page}`
+                            ? "outlined"
+                            : "text"
+                        }
+                        color='inherit'>
+                        {page}
+                      </Button>
+                    ))}
+              </Box>
+              <Box sx={{ display: { xs: "none", md: "flex" } }}>
+                {is_connected && (
+                  <Search>
+                    <SearchIconWrapper>
+                      <SearchIcon />
+                    </SearchIconWrapper>
+                    <form onSubmit={onSearch}>
+                      <StyledInputBase
+                        placeholder='Search…'
+                        // inputProps={{ 'aria-label': 'search' }}
+                        onKeyDown={handleKeyDown(onSearch)}
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                      />
+                    </form>
+                  </Search>
+                )}
+              </Box>
+
+              <Box sx={{ flexGrow: 0 }}>
+                {is_connected ? (
+                  <Tooltip title='Logout'>
+                    <IconButton
+                      size='large'
+                      onClick={() => handleCloseUserMenu("Logout")}
+                      color='inherit'
+                      sx={{ mr: 3 }}>
+                      <LogoutIcon />
+                    </IconButton>
+                  </Tooltip>
+                ) : (
+                  <Tooltip title='Login'>
+                    <Button
+                      variant={
+                        history.location.pathname === "/" ||
+                        history.location.pathname === "/connection/login"
+                          ? "outlined"
+                          : "text"
+                      }
+                      size='large'
+                      onClick={() => history.push("/")}
+                      color='inherit'
+                      sx={{ mr: 3 }}>
+                      <LoginIcon />
+                    </Button>
+                  </Tooltip>
+                )}
+                <Tooltip title='Open settings'>
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar
+                      alt='Remy Sharp'
+                      src={
+                        is_connected
+                          ? require("../images/profilePicExmple.jpg")
+                          : ""
+                        //user_details.profile_picture
+                      }
+                    />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id='menu-appbar'
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}>
+                  {/* right menu */}
+                  {is_connected
+                    ? activeSettings.map((setting) => (
+                        <MenuItem
+                          key={setting}
+                          onClick={() => handleCloseUserMenu(setting)}>
+                          <Typography textAlign='center'>{setting}</Typography>
+                        </MenuItem>
+                      ))
+                    : inActiveSettings.map((setting) => (
+                        <MenuItem
+                          key={setting}
+                          onClick={() => handleCloseUserMenu(setting)}>
+                          <Typography textAlign='center'>{setting}</Typography>
+                        </MenuItem>
+                      ))}
+                </Menu>
+              </Box>
+            </Toolbar>
+          </Container>
+        </AppBar>
+
+      </ElevationScroll>
+    </React.Fragment>
   );
 };
 

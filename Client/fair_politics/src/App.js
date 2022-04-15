@@ -1,6 +1,5 @@
 import "./App.css";
 import React, { useState } from "react";
-import InitialPage from "./components/InitialPage";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import About from "./components/About";
@@ -19,6 +18,7 @@ import Search from "./components/Search";
 import EditPostCard from "./components/EditPostCard";
 import EditPollCard from "./components/EditPollCard";
 import Algorithms from "./components/Algorithms";
+import Header from "./components/Header";
 function App() {
   const [user_details, setUserDetails] = useState({});
   const [algo_id, setAlgoId] = useState();
@@ -34,8 +34,6 @@ function App() {
   const [friendFollowings, setFriendFollowings] = useState([]);
   const [friendFollowers, setFriendFollowers] = useState([]);
   const [inFriend, setInFriend] = useState(false);
-  // const [followingDetails, setFollowingDetails] = useState([]);
-  // const [followerDetails, setFollowerDetails] = useState([]);
   const [usersSearch, setUsersSearch] = useState([]);
   const [currentItem, setCurrentItem] = useState({
     title: "",
@@ -43,8 +41,7 @@ function App() {
     tag: "",
     picture: "",
   });
-  // const friendPath=`/FriendProfile/${friend_details.first_name}-${friend_details.last_name}`
-  // const aboutFriendPath=`/FriendProfile/${friend_details.first_name}-${friend_details.last_name}`
+
   return (
     <AppContext.Provider
       value={{
@@ -62,9 +59,9 @@ function App() {
         setPostCards,
         pollCards,
         setPollCards,
-        profilePostCards, 
+        profilePostCards,
         setProfilePostCards,
-        profilePollCards, 
+        profilePollCards,
         setProfilePollCards,
         followings,
         setFollowings,
@@ -76,10 +73,6 @@ function App() {
         setFriendFollowings,
         friendFollowers,
         setFriendFollowers,
-        // followingDetails,
-        // setFollowingDetails,
-        // followerDetails,
-        // setFollowerDetails,
         usersSearch,
         setUsersSearch,
         currentItem,
@@ -103,44 +96,44 @@ function App() {
             <ContactUs />
           </Route>
           {/* {is_connected && ( */}
-            <>
-              <Route exact path='/home'>
-                <Home />
-              </Route>
-              <Route exact path='/profile'>
-                <Profile />
-              </Route>
-              <Route exact path='/profile/aboutProfile'>
-                <AboutMe />
-              </Route>
-              <Route exact path='/profile/addPost'>
-                <AddPost />
-              </Route>
-              <Route exact path='/profile/addPoll'>
-                <AddPoll />
-              </Route>
-              <Route exact path='/profile/editPost'>
-                <EditPostCard />
-              </Route>
-              <Route exact path='/profile/editPoll'>
-                <EditPollCard />
-              </Route>
-              <Route exact path='/profile/following'>
-                <Following />
-              </Route>
-              <Route exact path='/profile/follower'>
-                <Follower />
-              </Route>
-              <Route exact path='/search'>
-                <Search />
-              </Route>
-              <Route exact path='/FriendProfile'>
-                <FriendProfile />
-              </Route>
-              <Route exact path='/algorithms'>
-                <Algorithms />
-              </Route>
-            </>
+          <>
+            <Route exact path='/home'>
+              <Home />
+            </Route>
+            <Route exact path='/profile'>
+              <Profile />
+            </Route>
+            <Route exact path='/profile/aboutProfile'>
+              <AboutMe />
+            </Route>
+            <Route exact path='/profile/addPost'>
+              <AddPost />
+            </Route>
+            <Route exact path='/profile/addPoll'>
+              <AddPoll />
+            </Route>
+            <Route exact path='/profile/editPost'>
+              <EditPostCard />
+            </Route>
+            <Route exact path='/profile/editPoll'>
+              <EditPollCard />
+            </Route>
+            <Route exact path='/profile/following'>
+              <Following />
+            </Route>
+            <Route exact path='/profile/follower'>
+              <Follower />
+            </Route>
+            <Route exact path='/search'>
+              <Search />
+            </Route>
+            <Route exact path='/FriendProfile'>
+              <FriendProfile />
+            </Route>
+            <Route exact path='/algorithms'>
+              <Algorithms />
+            </Route>
+          </>
           {/* )} */}
         </Switch>
       </Router>

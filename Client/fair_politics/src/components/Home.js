@@ -12,6 +12,7 @@ import Grid from "@mui/material/Grid";
 import Loading from "./Loading";
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
+import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Backdrop } from "@mui/material";
 
@@ -94,32 +95,50 @@ const Home = () => {
                 variant='fullWidth'
                 onChange={handleChange}
                 aria-label='lab API tabs example'>
-                <Tab label='Posts Feed' value='1' />
-                <Tab label='Polls Feed' value='2' />
+                <Tab
+                  sx={{ backgroundColor: "white" }}
+                  label='Posts Feed'
+                  value='1'
+                />
+                <Tab
+                  sx={{ backgroundColor: "white" }}
+                  label='Polls Feed'
+                  value='2'
+                />
               </TabList>
             </Box>
             <TabPanel value='1'>
               {/* <div style={styles.title}>Posts Feed:</div> */}
-              <Grid container direction='row' alignItems='center'>
-                <IconButton
-                  sx={[{ "&:hover": { color: "#2196f3" }, marginBottom: 5 }]}
-                  onClick={() => history.push("/profile/addPost")}>
-                  <Grid item>
-                    <AddIcon
-                      fontSize='large'
-                      // to='/profile/addPoll'
-                    />
-                  </Grid>
-                  <Grid item>Add New Post</Grid>
-                </IconButton>
-              </Grid>
+
               <Box sx={{ flexGrow: 1 }}>
+                <Grid container direction='row' alignItems='center'>
+                  <Button
+                    sx={[
+                      {
+                        "&:hover": {
+                          color: "#2196f3",
+                          backgroundColor: "white",
+                          boxShadow: 3,
+                        },
+                        marginBottom: 5,
+                      },
+                    ]}
+                    onClick={() => history.push("/profile/addPost")}>
+                    <Grid item>
+                      <AddIcon
+                        fontSize='large'
+                        // to='/profile/addPoll'
+                      />
+                    </Grid>
+                    <Grid item>Add New Post</Grid>
+                  </Button>
+                </Grid>
                 <Grid container direction='column' spacing={0}>
                   {postCards.map((item) => {
                     return (
-                      <Grid item >
-                        <PostCard key={item.post_id} item={item} />
-                      </Grid>
+                      // <Grid item >
+                      <PostCard key={item.post_id} item={item} />
+                      // </Grid>
                     );
                   })}
                 </Grid>
@@ -129,14 +148,23 @@ const Home = () => {
               {/* <div style={styles.title}>Polls Feed</div> */}
               <Box sx={{ flexGrow: 1 }}>
                 <Grid container direction='row' alignItems='center'>
-                  <IconButton
-                    sx={[{ "&:hover": { color: "#2196f3" }, marginBottom: 5 }]}
+                  <Button
+                    sx={[
+                      {
+                        "&:hover": {
+                          color: "#2196f3",
+                          backgroundColor: "white",
+                          boxShadow: 3,
+                        },
+                        marginBottom: 5,
+                      },
+                    ]}
                     onClick={() => history.push("/profile/addPoll")}>
                     <Grid item>
                       <AddIcon fontSize='large' />
                     </Grid>
                     <Grid item>Add New Poll</Grid>
-                  </IconButton>
+                  </Button>
                 </Grid>
                 <Grid container spacing={0}>
                   {pollCards.map((item) => {

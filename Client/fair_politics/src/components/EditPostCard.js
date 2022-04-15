@@ -67,10 +67,9 @@ const EditPostCard = () => {
       <Header title='Profile Page' />
       <ProfileHeader />
       <div style={styles.title}>
-          Edit {currentItem.post_id} {currentItem.title} Post
-        </div>
+        Edit {currentItem.post_id} {currentItem.title} Post
+      </div>
       <Grid container spacing={0} direction='column' alignItems='center'>
-
         <Card style={styles.card}>
           <CardContent style={styles.content}>
             <FormControl>
@@ -87,6 +86,7 @@ const EditPostCard = () => {
                   // placeholder='valid tag format!'
                   // className='tagInput'
                   value={tag}
+                  inputProps={{ maxLength: 45 }}
                   onChange={(e) => setTag(e.target.value)}
                 />
                 <br />
@@ -98,6 +98,7 @@ const EditPostCard = () => {
                   required
                   placeholder='a valid title!'
                   value={title}
+                  inputProps={{ maxLength: 45 }}
                   onChange={(e) => setTitle(e.target.value)}
                 />
                 <br />
@@ -110,6 +111,7 @@ const EditPostCard = () => {
                   aria-multiline
                   placeholder='valid description!'
                   value={description}
+                  inputProps={{ maxLength: 1000 }}
                   onChange={(e) => setDescription(e.target.value)}
                 />
                 <br />
@@ -121,6 +123,7 @@ const EditPostCard = () => {
                   // required
                   placeholder='valid picture!'
                   value={picture}
+                  inputProps={{ maxLength: 200 }}
                   onChange={(e) => setPicture(e.target.value)}
                 />
                 <br />

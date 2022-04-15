@@ -52,8 +52,8 @@ const About = () => {
 const styles = {
   card: {
     // minHeight: 400,
-    width: 700,
-    margin: 5,
+    width: '60%',
+    my: 10,
     // top: 50,
     // left: "30%",
     position: "relative",

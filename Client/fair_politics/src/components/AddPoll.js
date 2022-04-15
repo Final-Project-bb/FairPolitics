@@ -101,6 +101,7 @@ const AddPoll = () => {
                   required
                   // placeholder='valid tags format!'
                   value={title}
+                  inputProps={{ maxLength: 100 }}
                   onChange={(e) => setTitle(e.target.value)}
                 />
                 {/* <div style={{ marginTop: 20 }}>{JSON.stringify(inputList)}</div> */}
@@ -114,6 +115,7 @@ const AddPoll = () => {
                         placeholder='Enter Answer'
                         label='Answer'
                         value={x}
+                        inputProps={{ maxLength: 50 }}
                         onChange={(e) => handleInputChange(e, i)}
                       />
                       {/* <ButtonGroup> */}
@@ -143,6 +145,7 @@ const AddPoll = () => {
                   multiline
                   placeholder='valid description!'
                   value={description}
+                  inputProps={{ maxLength: 1000 }}
                   onChange={(e) => setDescription(e.target.value)}
                 />
                 <TextField
@@ -154,6 +157,7 @@ const AddPoll = () => {
                   // required
                   placeholder='valid picture!'
                   value={picture}
+                  inputProps={{ maxLength: 45 }}
                   onChange={(e) => setPicture(e.target.value)}
                 />
                 <br />

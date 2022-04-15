@@ -245,14 +245,13 @@ const PollCard = ({ item, inProfile, setSnack }) => {
         })
       : setNewAnswers([...newAnswers, answer_id]);
 
-    console.log('newAnswersFromHandle');
+    console.log("newAnswersFromHandle");
     console.log(newAnswers);
-
   };
 
   const updateAnswerPoll = async () => {
     setLoading(true);
-    console.log('newAnswers');
+    console.log("newAnswers");
     console.log(newAnswers);
     const ans = {
       newAnswers: newAnswers,
@@ -313,7 +312,7 @@ const PollCard = ({ item, inProfile, setSnack }) => {
 
   return (
     <div style={styles.head}>
-      <Card style={styles.card}>
+      <Card raised style={styles.card}>
         {inProfile && (
           <CardContent style={{ display: "flex", flex: 3 }}>
             <Tooltip title='Edit'>
@@ -465,17 +464,18 @@ PollCard.deafult = {
   inProfile: false,
 };
 const styles = {
-  card: {
-    // height: 400,
-    width: 600,
-  },
   head: {
     display: "flex",
-    // justifyContent: "space-around",
+    alignItems: "center",
     flexDirection: "column",
     marginBottom: 30,
-    marginRight: 30,
+    width: "100%",
   },
+  card: {
+    // height: 400,
+    width: "80%",
+  },
+
   title: {
     display: "flex",
     justifyContent: "space-around",

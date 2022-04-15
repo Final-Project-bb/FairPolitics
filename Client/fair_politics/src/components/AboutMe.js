@@ -164,7 +164,7 @@ const AboutMe = () => {
                 color='primary'
                 style={styles.edit_info}
                 onClick={() => editButton()}>
-                {onEdit ? "Cancel info" : "Edit info"}
+                {onEdit ? "Cancel edit" : "Edit details"}
               </Button>
             </>
           )}
@@ -173,8 +173,8 @@ const AboutMe = () => {
           )}
           {/* <div className='delete-button' onClick={() => { if (window.confirm('Are you sure you wish to delete this item?')) this.onCancel() } } /> */}
           {onEdit && (
-            <Card style={styles.card}>
-              <CardContent style={styles.content}>
+            <Card raised sx={styles.card}>
+              <CardContent sx={styles.content}>
                 <FormControl>
                   <TextField
                     // helperText='Enter your first name:'
@@ -184,6 +184,7 @@ const AboutMe = () => {
                     // pattern="[0]{1}[5]{1}[0-9]{8}"
                     // required
                     value={first_name}
+                    inputProps={{ maxLength: 45 }}
                     onChange={(e) => setFirstName(e.target.value)}
                   />
                   <br />
@@ -196,6 +197,7 @@ const AboutMe = () => {
                     // required
                     // placeholder='last name!'
                     value={last_name}
+                    inputProps={{ maxLength: 45 }}
                     onChange={(e) => setLastName(e.target.value)}
                   />
                   <br />
@@ -226,6 +228,7 @@ const AboutMe = () => {
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
                     name='birthdate'
+                    inputProps={{ maxLength: 10 }}
                     max={current}
                   />
                   <br />
@@ -236,6 +239,7 @@ const AboutMe = () => {
                     variant='standard'
                     label='Semi-Description'
                     value={semi_description}
+                    inputProps={{ maxLength: 150 }}
                     onChange={(e) => setSemiDescription(e.target.value)}
                   />
                   <br />
@@ -246,6 +250,7 @@ const AboutMe = () => {
                     variant='standard'
                     label='Description'
                     value={description}
+                    inputProps={{ maxLength: 1000 }}
                     onChange={(e) => setDescription(e.target.value)}
                   />
                   <br />
@@ -259,6 +264,7 @@ const AboutMe = () => {
                     // required
                     placeholder='location!'
                     value={city}
+                    inputProps={{ maxLength: 45 }}
                     onChange={(e) => setCity(e.target.value)}
                   />
                   <br />
@@ -271,6 +277,7 @@ const AboutMe = () => {
                     // pattern="[0]{1}[5]{1}[0-9]{8}"
                     // required
                     value={job_title}
+                    inputProps={{ maxLength: 45 }}
                     onChange={(e) => setJobTitle(e.target.value)}
                   />
                   <br />
@@ -284,6 +291,7 @@ const AboutMe = () => {
                     // required
                     placeholder='Picture!'
                     value={profile_picture}
+                    inputProps={{ maxLength: 200 }}
                     onChange={(e) => setProfilePicture(e.target.value)}
                   />
                   <br />
@@ -323,7 +331,7 @@ const styles = {
   card: {
     // height: 400,
     width: 600,
-    top: 50,
+    my: 5,
     left: "30%",
     position: "relative",
     alignItems: "center",
