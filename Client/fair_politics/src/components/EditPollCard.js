@@ -105,6 +105,7 @@ const EditPollCard = () => {
                   // pattern="[@]{1}[a-z][a-z]"
                   required
                   value={title}
+                  inputProps={{ maxLength: 100 }}
                   onChange={(e) => setQuestion(e.target.value)}
                 />
                 <br />
@@ -120,6 +121,7 @@ const EditPollCard = () => {
                           placeholder='Enter Answer'
                           value={x}
                           required
+                          inputProps={{ maxLength: 50 }}
                           onChange={(e) => handleInputChange(e, i)}
                         />
                         <div className='btn-box'>
@@ -149,6 +151,8 @@ const EditPollCard = () => {
                   multiline
                   placeholder='valid description!'
                   value={description}
+                  inputProps={{ maxLength: 1000 }}
+
                   onChange={(e) => setDescription(e.target.value)}
                 />
                 <br />
@@ -160,6 +164,7 @@ const EditPollCard = () => {
                   // required
                   placeholder='valid picture!'
                   value={picture}
+                  inputProps={{ maxLength: 45 }}
                   onChange={(e) => setPicture(e.target.value)}
                 />
                 <br />

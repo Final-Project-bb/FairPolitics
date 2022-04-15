@@ -261,8 +261,8 @@ const Register = () => {
         display: "flex",
         flexDirection: "column",
         flex: 4,
-        backgroundColor: '#212121',
-        minHeight: 800
+        backgroundColor: "#212121",
+        minHeight: 800,
       }}>
       <Header title='Register Page' />
       {!loading && (
@@ -282,6 +282,7 @@ const Register = () => {
                       pattern='[0-9]{9}'
                       required
                       placeholder='Valid id number'
+                      inputProps={{ maxLength: 9 }}
                       value={id}
                       onChange={(e) => setId(e.target.value)}
                       className='inputId'
@@ -297,6 +298,7 @@ const Register = () => {
                       required
                       placeholder='Valid email'
                       value={email}
+                      inputProps={{ maxLength: 200 }}
                       onChange={(e) => setEmail(e.target.value)}
                       className='inputEmail'
                     />
@@ -324,6 +326,7 @@ const Register = () => {
                       // pattern="[0]{1}[5]{1}[0-9]{8}"
                       required
                       placeholder='Password from Email!'
+                      inputProps={{ maxLength: 6 }}
                       value={Number(tempPass)}
                       onChange={(e) => setTempPass(Number(e.target.value))}
                     />
@@ -350,6 +353,7 @@ const Register = () => {
                       required
                       placeholder='your password!'
                       value={pass}
+                      inputProps={{ maxLength: 45 }}
                       onChange={(e) => setPass(e.target.value)}
                     />
                     <br />
@@ -363,6 +367,7 @@ const Register = () => {
                       required
                       // placeholder='repeat your password!'
                       value={pass2}
+                      inputProps={{ maxLength: 45 }}
                       onChange={(e) => setPass2(e.target.value)}
                     />
                     <br />
@@ -399,6 +404,7 @@ const Register = () => {
                       required
                       // placeholder='first name!'
                       value={first_name}
+                      inputProps={{ maxLength: 45 }}
                       onChange={(e) => setFirstName(e.target.value)}
                     />
                     <br />
@@ -411,6 +417,7 @@ const Register = () => {
                       required
                       // placeholder='last name!'
                       value={last_name}
+                      inputProps={{ maxLength: 45 }}
                       onChange={(e) => setLastName(e.target.value)}
                     />
                     <br />
@@ -424,6 +431,7 @@ const Register = () => {
                       // required
                       placeholder='valid phone number!'
                       value={phone}
+                      inputProps={{ maxLength: 10 }}
                       onChange={(e) => setPhone(e.target.value)}
                       className='inputEmail'
                     />
@@ -454,6 +462,7 @@ const Register = () => {
                       type='date'
                       placeholder='Enter BirthDate'
                       value={date}
+                      inputProps={{ maxLength: 10 }}
                       onChange={(e) => setDate(e.target.value)}
                       name='birthdate'
                       max={current}
@@ -468,6 +477,7 @@ const Register = () => {
                       required
                       placeholder='city!'
                       value={city}
+                      inputProps={{ maxLength: 45 }}
                       onChange={(e) => setCity(e.target.value)}
                     />
                     <br />
@@ -480,6 +490,7 @@ const Register = () => {
                       required
                       placeholder='Rule!'
                       value={job_title}
+                      inputProps={{ maxLength: 45 }}
                       onChange={(e) => setJobTitle(e.target.value)}
                     />
                     <br />
@@ -490,6 +501,7 @@ const Register = () => {
                       label='Semi-Description'
                       // placeholder='semi describe yourself!'
                       value={semi_description}
+                      inputProps={{ maxLength: 150 }}
                       onChange={(e) => setSemiDescription(e.target.value)}
                     />
                     <br />
@@ -501,6 +513,7 @@ const Register = () => {
                       placeholder='describe yourself!'
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
+                      inputProps={{ maxLength: 1000 }}
                     />
                     <br />
                     <TextField
@@ -512,6 +525,7 @@ const Register = () => {
                       // required
                       placeholder='Picture!'
                       value={profile_picture}
+                      inputProps={{ maxLength: 200 }}
                       onChange={(e) => setProfilePicture(e.target.value)}
                     />
                     <br />

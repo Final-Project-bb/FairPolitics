@@ -146,7 +146,7 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
   return (
     <div>
       {flag && (
-        <Card style={styles.card}>
+        <Card raised style={styles.card}>
           <CardContent style={styles.content}>
             <Avatar
               src={require("../images/profilePicExmple.jpg")}

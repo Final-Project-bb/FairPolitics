@@ -26,6 +26,7 @@ import {
   Tooltip,
   Box,
   Collapse,
+  Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -248,9 +249,9 @@ const PostCard = ({ item, inProfile, setSnack }) => {
 
   return (
     <div style={styles.head}>
-      <Card style={styles.card}>
+      <Card raised sx={styles.card}>
         {inProfile && (
-          <CardContent style={{ display: "flex", flex: 3 }}>
+          <CardContent>
             <Tooltip title='Edit'>
               <IconButton
                 onClick={(e) => editPost(e)}
@@ -279,9 +280,22 @@ const PostCard = ({ item, inProfile, setSnack }) => {
             </Tooltip>
           </CardContent>
         )}
-        <CardContent style={{ display: "block", verticalAlign: "middle" }}>
+        <CardContent sx={{ mb: 5 }}>
           <Tooltip title='Go To Profile'>
-            <IconButton onClick={FriendProfileRef} sx={{ p: 0 }}>
+            <Button
+              onClick={FriendProfileRef}
+              sx={[
+                {
+                  "&:hover": {
+                    // color: "#2196f3",
+                    backgroundColor: "whitesmoke",
+                    boxShadow: 3,
+                  },
+                  marginBottom: 5,
+                  // p: 0,
+                  position: "absolute",
+                },
+              ]}>
               <Grid container direction='column' alignItems='center'>
                 <Grid item>
                   <Avatar
@@ -297,13 +311,13 @@ const PostCard = ({ item, inProfile, setSnack }) => {
                   {userName.first_name} {userName.last_name}
                 </Grid>
               </Grid>
-            </IconButton>
+            </Button>
           </Tooltip>
-          <br />
+          <Typography variant='h5' sx={styles.title}>
+            {item.post_id} {item.title}
+          </Typography>
         </CardContent>
-        <CardContent style={styles.title}>
-          {item.post_id} {item.title}
-        </CardContent>
+
         <CardContent style={styles.text}>{item.description}</CardContent>
         <CardActions>
           <Tooltip
@@ -312,26 +326,28 @@ const PostCard = ({ item, inProfile, setSnack }) => {
                 ? "Unlike"
                 : "Like"
             }>
-            <IconButton sx={{ marginRight: "auto" }} onClick={() => LikePost()}>
-              <FavoriteIcon
-                label={likes.length}
-                fontSize='medium'
-                sx={[
-                  {
-                    cursor: "pointer",
-                    color:
-                      likes.filter((like) => like === user_details.user_id)
-                        .length > 0
-                        ? "#e53935"
-                        : "#616161",
-                    marginRight: 1,
-                  },
-                ]}
-              />
-              {likes.length}
-            </IconButton>
+            <Box>
+              <IconButton
+                sx={{ marginRight: "auto" }}
+                onClick={() => LikePost()}>
+                <FavoriteIcon
+                  label={likes.length}
+                  fontSize='medium'
+                  sx={[
+                    {
+                      cursor: "pointer",
+                      color:
+                        likes.filter((like) => like === user_details.user_id)
+                          .length > 0
+                          ? "#e53935"
+                          : "#616161",
+                    },
+                  ]}
+                />
+              </IconButton>
+              ({likes.length})
+            </Box>
           </Tooltip>
-          {/* <CardContent> */}
           <ExpandMore
             expand={commentsButton}
             onClick={() => toggleCommentsButton()}
@@ -385,6 +401,7 @@ const PostCard = ({ item, inProfile, setSnack }) => {
               // label='Add Comment'
               type='text'
               value={comment}
+              inputProps={{ maxLength: 1000 }}
               onChange={(e) => setComment(e.target.value)}
               placeholder='Add comment'
             />
@@ -427,9 +444,17 @@ PostCard.deafult = {
 };
 
 const styles = {
+  head: {
+    display: "flex",
+    flexDirection: "column",
+    marginBottom: 30,
+    width: "100%",
+    alignItems: "center",
+  },
   card: {
     // height: 400,
     // width: 600,
+    width: "80%",
   },
   content: {
     display: "flex",
@@ -437,23 +462,19 @@ const styles = {
     flexDirection: "column",
     // marginBottom: 30,
   },
-  head: {
-    display: "flex",
 
-    // justifyContent: "space-around",
-    // flexDirection: "column",
-    marginBottom: 30,
-    marginRight: 30,
-  },
   title: {
     display: "flex",
     justifyContent: "space-around",
     // flexDirection: 'row',
     // position: "relative",
     // marginLeft:10,
-    fontSize: 25,
+    // fontSize: 25,
     // top: 100,
     // right:150
+    textAlign: "center",
+    alignSelf: "center",
+    mx: "auto",
   },
   editCommentForm: {
     display: "flex",

@@ -21,12 +21,12 @@ import {
   Avatar,
   Grid,
   Tooltip,
+  Box,
 } from "@mui/material";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import SendIcon from "@mui/icons-material/Send";
 
 const Comments = ({
   item,
@@ -187,7 +187,7 @@ const Comments = ({
                     }
                   />
                 </Grid>
-                <Grid item fontSize='small' style={{ marginTop: 8 }}>
+                <Grid item fontSize='small' sx={{ marginTop: 1 }}>
                   {userName.first_name} {userName.last_name}
                 </Grid>
               </Grid>
@@ -243,24 +243,28 @@ const Comments = ({
               ? "Unlike"
               : "Like"
           }>
-          <IconButton onClick={() => LikeComment(comment.comment_id)}>
-            <FavoriteBorderIcon
-              sx={{
-                color:
-                  commentLikes.filter((like) => like === user_details.user_id)
-                    .length > 0
-                    ? "#e53935"
-                    : "#616161",
-              }}
-            />
+          <Box
+            sx={{
+              flexDirection: "row",
+              display: "flex",
+              alignItems: "center",
+            }}>
+            <IconButton onClick={() => LikeComment(comment.comment_id)}>
+              <FavoriteBorderIcon
+                sx={{
+                  color:
+                    commentLikes.filter((like) => like === user_details.user_id)
+                      .length > 0
+                      ? "#e53935"
+                      : "#616161",
+                }}
+              />
 
-            <div style={{ marginLeft: 10, fontSize: 15 }}>
-              {commentLikes.length}
-            </div>
-          </IconButton>
-
-          {/* {comment.comment_likes.length} */}
-          {/* </FavoriteBorderIcon> */}
+              {/* <div style={{ marginLeft: 10, fontSize: 15 }}>
+            </div> */}
+            </IconButton>
+            {commentLikes.length}
+          </Box>
         </Tooltip>
       </CardContent>
       <Divider variant='middle' />
@@ -300,6 +304,7 @@ const Comments = ({
               placeholder='Edit Comment'
               type='text'
               value={commentEdit}
+              inputProps={{ maxLength: 1000 }}
               onChange={(e) => setCommentEdit(e.target.value)}
             />
             {/* <SendIcon

@@ -64,12 +64,7 @@ const AddPost = () => {
     <div style={{ backgroundColor: "whitesmoke" }}>
       <Header title='Add Post page' />
       <ProfileHeader />
-      <Grid
-        container
-        spacing={0}
-        direction='column'
-        alignItems='center'
-      >
+      <Grid container spacing={0} direction='column' alignItems='center'>
         <Card sx={styles.card}>
           <CardContent style={styles.content}>
             <FormControl>
@@ -85,6 +80,7 @@ const AddPost = () => {
                   // required
                   placeholder='valid tags format!'
                   value={tags}
+                  inputProps={{ maxLength: 45 }}
                   onChange={(e) => setTags(e.target.value)}
                 />
 
@@ -95,6 +91,7 @@ const AddPost = () => {
                   label='Title'
                   required
                   value={title}
+                  inputProps={{ maxLength: 45 }}
                   onChange={(e) => setTitle(e.target.value)}
                 />
                 <TextField
@@ -105,6 +102,7 @@ const AddPost = () => {
                   required
                   multiline
                   value={description}
+                  inputProps={{ maxLength: 1000 }}
                   onChange={(e) => setDescription(e.target.value)}
                 />
                 <TextField
@@ -114,6 +112,7 @@ const AddPost = () => {
                   label='Picture'
                   placeholder='Picture URL'
                   value={picture}
+                  inputProps={{ maxLength: 200 }}
                   onChange={(e) => setPicture(e.target.value)}
                 />
                 <br />
