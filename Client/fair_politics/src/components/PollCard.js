@@ -25,6 +25,7 @@ import {
   Tooltip,
   Alert,
   Box,
+  Typography,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -52,7 +53,6 @@ const PollCard = ({ item, inProfile, setSnack }) => {
     : algorithms.filter((item) => item.id == algo_id)[0].title;
 
   useEffect(() => {
-    // sort();
     algoName = !inProfile
       ? algorithms.filter((item) => item.id == poll_algo)[0].title
       : algorithms.filter((item) => item.id == algo_id)[0].title;
@@ -344,29 +344,57 @@ const PollCard = ({ item, inProfile, setSnack }) => {
           </CardContent>
         )}
 
-        <CardContent style={{ display: "block", verticalAlign: "middle" }}>
+        <CardContent sx={{ display: "flex", flexDirection: "row" }}>
           <Tooltip title='Go To Profile'>
-            <IconButton onClick={FriendProfileRef} sx={{ p: 0 }}>
-              <Grid container direction='column' alignItems='center'>
-                <Grid item>
-                  <Avatar
-                    alt='Remy Sharp'
-                    src={
-                      require("../images/profilePicExmple.jpg")
-                      //user_details.profile_picture
-                    }
-                  />
-                </Grid>
-                <Grid item fontSize='small' style={{ marginTop: 8 }}>
-                  {/* {item.user_id} */}
-                  {userName.first_name} {userName.last_name}
-                </Grid>
-              </Grid>
-            </IconButton>
+            <Typography sx={{ display: "flex", mr: "auto" }}>
+              <Button
+                onClick={FriendProfileRef}
+                sx={[
+                  {
+                    "&:hover": {
+                      // color: "#2196f3",
+                      backgroundColor: "whitesmoke",
+                      boxShadow: 3,
+                    },
+                    display: "flex",
+                    flexDirection: "column",
+                    // marginBottom: 5,
+                    // p: 0,
+                    // position: "absolute",
+                  },
+                ]}>
+                <Avatar
+                  sx={{ mb: 1 }}
+                  alt='Remy Sharp'
+                  src={
+                    require("../images/profilePicExmple.jpg")
+                    //user_details.profile_picture
+                  }
+                />
+                {userName.first_name} {userName.last_name}
+              </Button>
+            </Typography>
           </Tooltip>
-        </CardContent>
-        <CardContent style={styles.title}>
-          {item.poll_id} {item.title}
+          <Typography
+            variant='h5'
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              mx: "auto",
+            }}>
+            {item.poll_id} {item.title}
+          </Typography>
+          <Typography
+            variant='h7'
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              // mt: -5
+              ml: "auto",
+              color: "#607d8b",
+            }}>
+            {item.upload_date}
+          </Typography>
         </CardContent>
 
         <CardContent style={styles.description}>{item.description}</CardContent>

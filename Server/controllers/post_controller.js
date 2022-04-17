@@ -6,13 +6,14 @@ const algo = require("../../Algorithms/dprsequence");
 const connection = require("../lib/db");
 
 const createPost = (req, res) => {
-  let sqlInsertPost = `insert into Post(user_id,title,tag,description,picture)
+  let sqlInsertPost = `insert into Post(user_id, title, tag, description, picture, upload_date)
     values(
     ${JSON.stringify(req.body.user_id)}, 
     ${JSON.stringify(req.body.title)},
     ${JSON.stringify(req.body.tag)}, 
     ${JSON.stringify(req.body.description)},
-    ${JSON.stringify(req.body.picture)})`;
+    ${JSON.stringify(req.body.picture)},
+    ${JSON.stringify(req.body.upload_date)})`;
   let sqlGetPostId = "select LAST_INSERT_ID() as post_id from Post limit 1";
 
   connection.query(sqlInsertPost, function (err, result) {
@@ -227,7 +228,7 @@ const deleteLikeFromPost = (req, res) => {
 };
 
 const PostsFollowing = (req, res) => {
-  let getPostsWithCommentsSql = `SELECT Post.post_id, Post.user_id, Post.title, Post.description, Post.tag, Post.picture,
+  let getPostsWithCommentsSql = `SELECT Post.post_id, Post.user_id, Post.title, Post.description, Post.tag, Post.picture, Post.upload_date,
   Post_response.comment_id, Post_response.comment, Post_response.user_id as 'user_id_comment'
   FROM Post left JOIN Post_response
   ON Post.post_id = Post_response.post_id
@@ -263,6 +264,7 @@ const PostsFollowing = (req, res) => {
           description: p.description,
           tag: p.tag,
           picture: p.picture,
+          upload_date: p.upload_date,
           comments: [
             {
               comment_id: p.comment_id,
@@ -307,7 +309,7 @@ const PostsFollowing = (req, res) => {
 };
 
 const getPost = (req, res) => {
-  let getPostsWithCommentsSql = `SELECT Post.post_id, Post.user_id, Post.title, Post.description, Post.tag, Post.picture, 
+  let getPostsWithCommentsSql = `SELECT Post.post_id, Post.user_id, Post.title, Post.description, Post.tag, Post.picture, Post.upload_date,
   Post_response.comment_id, Post_response.comment,  Post_response.user_id as 'user_id_comment'
   FROM Post left JOIN Post_response      
   ON Post.post_id = Post_response.post_id
@@ -341,6 +343,7 @@ const getPost = (req, res) => {
           description: p.description,
           tag: p.tag,
           picture: p.picture,
+          upload_date: p.upload_date,
           comments: [
             {
               comment_id: p.comment_id,

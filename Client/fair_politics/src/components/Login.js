@@ -260,7 +260,7 @@ const Login = () => {
       {!loading && (
         <div>
           {!onReset && (
-            <Card style={styles.card}>
+            <Card raised style={styles.card}>
               <CardContent style={styles.content}>
                 <FormControl>
                   <TextField

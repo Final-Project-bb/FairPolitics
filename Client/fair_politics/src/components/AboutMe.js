@@ -10,6 +10,8 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 import {
   FormControl,
@@ -20,6 +22,9 @@ import {
   TextField,
   RadioGroup,
   Radio,
+  Box,
+  Tooltip,
+  IconButton,
 } from "@mui/material";
 
 const AboutMe = () => {
@@ -145,27 +150,45 @@ const AboutMe = () => {
   };
 
   return (
-    <div style={{ backgroundColor: "whitesmoke" }}>
+    <div
+      style={{
+        backgroundColor: "lightgray",
+        minHeight: 658,
+        paddingBottom: 20,
+      }}>
       <Header title='About Me' />
       {!loading && (
         <div>
-          <ProfileHeader />
           {!inFriend && (
             <>
-              <Button
-                variant='contained'
-                color='error'
-                style={styles.delete_user}
-                onClick={() => setDialog(true)}>
-                {onDelete ? "Cancel Delete" : "Delete account"}
-              </Button>
-              <Button
-                variant={!onEdit ? "out ed" : "contained"}
-                color='primary'
-                style={styles.edit_info}
-                onClick={() => editButton()}>
-                {onEdit ? "Cancel edit" : "Edit details"}
-              </Button>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  mt: 5,
+                }}>
+                <Tooltip title='Delete Account'>
+                  <IconButton
+                    variant='contained'
+                    color='error'
+                    // sx={{ marginRight: 5 }}
+                    onClick={() => setDialog(true)}>
+                    {/* {onDelete ? "Cancel Delete" : "Delete account"} */}
+                    <DeleteIcon fontSize='large' />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title='Edit Details'>
+                  <IconButton
+                    variant={!onEdit ? "outlined" : "contained"}
+                    color='primary'
+                    onClick={() => editButton()}>
+                    {/* {onEdit ? "Cancel edit" : "Edit details"} */}
+                    <EditIcon fontSize='large' />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+              <ProfileHeader />
             </>
           )}
           {!onEdit && (
@@ -224,7 +247,7 @@ const AboutMe = () => {
                     type='date'
                     id='standard-basic'
                     variant='standard'
-                    label='BirthDate'
+                    helperText='BirthDate'
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
                     name='birthdate'
@@ -329,20 +352,18 @@ const AboutMe = () => {
 
 const styles = {
   card: {
-    // height: 400,
     width: 600,
-    my: 5,
-    left: "30%",
+    // my: 5,
     position: "relative",
     alignItems: "center",
     textAlign: "center",
     justifyContent: "center",
+    mx: "auto",
+    mt: 5,
   },
   content: {
     display: "flex",
-    // justifyContent: "space-around",
     flexDirection: "column",
-    // marginBottom: 30,
   },
   radioGroup: {
     display: "flex",
@@ -350,32 +371,13 @@ const styles = {
     justifyContent: "center",
   },
 
-  edit_info: {
-    display: "flex",
-    justifyContent: "space-around",
-    flexDirection: "column",
-    position: "relative",
-    left: 180,
-    margin: 10,
-    top: 10,
-  },
-  delete_user: {
-    display: "flex",
-    justifyContent: "space-around",
-    flexDirection: "column",
-    position: "relative",
-    left: 180,
-    margin: 10,
-    top: 10,
-    // color: "red",
-  },
   description: {
-    display: "flex",
-    justifyContent: "space-around",
-    flexDirection: "column",
-    position: "relative",
-    // left: 280,
-    margin: 10,
+    // display: "flex",
+    // justifyContent: "space-around",
+    // flexDirection: "column",
+    // position: "relative",
+    // // left: 280,
+    // margin: 10,
     // top: 20,
     textAlign: "center",
   },

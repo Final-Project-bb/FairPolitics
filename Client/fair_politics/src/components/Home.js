@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import Header from "./Header";
 import PostCard from "./PostCard";
 import PollCard from "./PollCard";
@@ -15,9 +15,10 @@ import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Backdrop } from "@mui/material";
-
+import { AppBar } from "@mui/material";
+import { Tabs } from "@mui/material";
 import { useHistory } from "react-router-dom";
-
+import { css } from "@emotion/react";
 const Home = () => {
   const {
     user_details,
@@ -31,7 +32,7 @@ const Home = () => {
     setInFriend,
   } = useContext(AppContext);
 
-  const [value, setValue] = React.useState("1");
+  const [value, setValue] = useState("1");
 
   const history = useHistory();
 
@@ -85,28 +86,29 @@ const Home = () => {
   }, []);
 
   return (
-    <div style={{ backgroundColor: "whitesmoke" }}>
+    <div style={{ backgroundColor: "lightgray" }}>
       <Header title='Home Page' />
       {!loading ? (
         <Box sx={{ width: "100%", typography: "body1" }}>
           <TabContext value={value}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <TabList
-                variant='fullWidth'
-                onChange={handleChange}
-                aria-label='lab API tabs example'>
-                <Tab
-                  sx={{ backgroundColor: "white" }}
-                  label='Posts Feed'
-                  value='1'
-                />
-                <Tab
-                  sx={{ backgroundColor: "white" }}
-                  label='Polls Feed'
-                  value='2'
-                />
-              </TabList>
-            </Box>
+            <AppBar position='fixed' sx={{ top: "auto", bottom: 0, backgroundColor: "whitesmoke" }}>
+              <Box
+                sx={{
+                  borderBottom: 1 ,
+                  borderColor: "divider",
+                  boxShadow: 3,
+                }}>
+                <TabList
+                  variant='fullWidth'
+                  color='secondary'
+                  onChange={handleChange}
+                  sx={{  }}
+                  >
+                  <Tab label='Posts Feed' value='1'  />
+                  <Tab label='Polls Feed' value='2' />
+                </TabList>
+              </Box>
+            </AppBar>
             <TabPanel value='1'>
               {/* <div style={styles.title}>Posts Feed:</div> */}
 

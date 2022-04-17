@@ -4,6 +4,7 @@ import Loading from "./Loading";
 import { AppContext } from "./Context";
 
 import UserCard from "./UserCard";
+import { Grid } from "@mui/material";
 const Search = () => {
   const {
     loading,
@@ -45,21 +46,19 @@ const Search = () => {
     },
   ];
   return (
-    <div>
+    <div style={{ backgroundColor: "lightgray", minHeight: 657 }}>
       <Header title='Search Page' />
-      <div style={styles.text}>
-        {!loading ? (
-          <>
-            {usersSearch.map((user) => (
-              <div>
-                <UserCard key={user.user_id} user_info={user} inSearch={true} />
-              </div>
-            ))}
-          </>
-        ) : (
-          <Loading />
-        )}
-      </div>
+      {/* <div style={styles.card}> */}
+      {!loading ? (
+        <Grid container spacing={0} sx={{ marginTop: 5 }}>
+          {usersSearch.map((user) => (
+            <UserCard key={user.user_id} user_info={user} inSearch={true} />
+          ))}
+        </Grid>
+      ) : (
+        <Loading />
+      )}
+      {/* </div> */}
     </div>
   );
 };
@@ -80,11 +79,11 @@ const styles = {
     // top: 10,
     // right:150
   },
-  text: {
+  card: {
     display: "flex",
     flexDirection: "column",
     position: "relative",
-    top: 0,
+    // top: 0,
     // fontSize: 25,
     justifyContent: "center",
     alignItems: "center",

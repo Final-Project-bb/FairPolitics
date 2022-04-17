@@ -50,7 +50,7 @@ const ContactUs = () => {
   ];
 
   return (
-    <Box sx={{ backgroundColor: "whitesmoke" }}>
+    <Box sx={{ backgroundColor: "lightgray" }}>
       <Header title='Contact-us Page' />
       <div style={{ position: "relative" }}>
         <Grid
@@ -60,7 +60,7 @@ const ContactUs = () => {
           sx={{ alignItems: "center", justifyContent: "space-around" }}>
           {team.map((dev) => {
             return (
-              <Card key={dev.name} sx={styles.card}>
+              <Card raised key={dev.name} sx={styles.card}>
                 <CardContent sx={styles.content}>
                   <Typography variant='h5' component='div'>
                     {dev.name}

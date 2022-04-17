@@ -21,7 +21,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Backdrop from "@mui/material/Backdrop";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-
+import AppBar from "@mui/material/AppBar";
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
 });
@@ -98,33 +98,31 @@ const Profile = () => {
   }, []);
 
   return (
-    <div style={{ backgroundColor: "whitesmoke" }}>
+    <div style={{ backgroundColor: "lightgray" }}>
       <Header title='Profile Page' />
       {!loading ? (
         <div>
           <ProfileHeader />
           <Box sx={{ width: "100%", typography: "body1" }}>
             <TabContext value={value}>
-              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                <TabList
-                  // indicatorColor='secondary'
-                  textColor='primary'
-                  variant='fullWidth'
-                  onChange={handleChange}
-                  aria-label='lab API tabs example'>
-                  <Tab
-                    sx={{ backgroundColor: "white" }}
-                    label='My Posts'
-                    value='1'
-                  />
-                  <Tab
-                    sx={{ backgroundColor: "white" }}
-                    label='My Polls'
-                    value='2'
-                  />
-                </TabList>
-              </Box>
-              <TabPanel value='1' sx={{ backgroundColor: "whitesmoke" }}>
+              <AppBar position='fixed' sx={{ top: "auto", bottom: 0, backgroundColor: "whitesmoke"  }}>
+                <Box
+                  sx={{
+                    borderBottom: 1,
+                    borderColor: "divider",
+                    boxShadow: 4,
+                  }}>
+                  <TabList
+                    textColor='primary'
+                    variant='fullWidth'
+                    onChange={handleChange}
+                    sx={{ }}>
+                    <Tab label='My Posts' value='1' />
+                    <Tab label='My Polls' value='2' />
+                  </TabList>
+                </Box>
+              </AppBar>
+              <TabPanel value='1' >
                 {/* <div style={styles.title}>Posts Feed:</div> */}
                 <Box sx={{ flexGrow: 1 }}>
                   <Grid container direction='row' alignItems='center'>
@@ -164,7 +162,7 @@ const Profile = () => {
                   </Grid>
                 </Box>
               </TabPanel>
-              <TabPanel value='2' sx={{ backgroundColor: "whitesmoke" }}>
+              <TabPanel value='2' >
                 <Box sx={{ flexGrow: 1 }}>
                   <Grid container direction='row' alignItems='center'>
                     <Button

@@ -32,6 +32,11 @@ const AddPost = () => {
 
   const history = useHistory();
 
+  const currentDate = new Date().toISOString().split("T")[0];
+  const currentTime = new Date().toISOString().split("T")[1].split('.')[0];
+
+
+
   const addPostSubmit = async (e) => {
     e.preventDefault();
     setTimeout(() => {
@@ -43,6 +48,7 @@ const AddPost = () => {
       tag: tags,
       description: description,
       picture: picture,
+      upload_date: `${currentDate}, ${currentTime}`,
     };
     await fetch("http://localhost:4000/api/create_Post", {
       method: "POST",
@@ -61,7 +67,7 @@ const AddPost = () => {
     setPicture("");
   };
   return (
-    <div style={{ backgroundColor: "whitesmoke" }}>
+    <div style={{ backgroundColor: "lightgray" }}>
       <Header title='Add Post page' />
       <ProfileHeader />
       <Grid container spacing={0} direction='column' alignItems='center'>

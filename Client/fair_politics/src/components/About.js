@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 const About = () => {
   return (
-    <div style={{ background: "whitesmoke", minHeight: 800 }}>
+    <div style={{ background: "lightgray", minHeight: 800 }}>
       <Header title='About Page' />
       <Grid
         container
@@ -22,7 +22,7 @@ const About = () => {
         alignItems='center'
         // style={{ minHeight: "100vh" }}
       >
-        <Card sx={styles.card}>
+        <Card raised sx={styles.card}>
           <CardContent sx={styles.content}>
             Many times we see an imbalance between the issues that the elected
             offical focuses on and the issues that the electorate wanted to

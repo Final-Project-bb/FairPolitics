@@ -11,7 +11,7 @@ const Following = () => {
   // console.log("followingDetails");
   // console.log(followingDetails);
   return (
-    <div>
+    <div style={{ backgroundColor: "lightgray" }}>
       <Header title='Following' />
       <ProfileHeader />
       <br />
