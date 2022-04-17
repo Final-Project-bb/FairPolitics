@@ -19,6 +19,7 @@ import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useHistory } from "react-router-dom";
 import { Backdrop } from "@mui/material";
+import { AppBar } from "@mui/material";
 
 const FriendProfile = () => {
   const [value, setValue] = React.useState("1");
@@ -74,26 +75,35 @@ const FriendProfile = () => {
     console.log("Profile effected");
     fetchSelfPolls();
     return () => {};
-
   }, []);
 
   return (
-    <div style={{ backgroundColor: "whitesmoke" }}>
+    <div style={{ backgroundColor: "lightgray" }}>
       <Header title='Home Page' />
       <ProfileHeader />
 
       {!loading ? (
         <Box sx={{ width: "100%", typography: "body1" }}>
           <TabContext value={value}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <TabList
-                variant='fullWidth'
-                onChange={handleChange}
-                aria-label='lab API tabs example'>
-                <Tab label={`${friend_details.first_name}'S Posts`} value='1' />
-                <Tab label={`${friend_details.first_name}'S Polls`} value='2' />
-              </TabList>
-            </Box>
+            <AppBar
+              position='fixed'
+              sx={{ top: "auto", bottom: 0, backgroundColor: "whitesmoke" }}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <TabList
+                  variant='fullWidth'
+                  onChange={handleChange}
+                  aria-label='lab API tabs example'>
+                  <Tab
+                    label={`${friend_details.first_name}'S Posts`}
+                    value='1'
+                  />
+                  <Tab
+                    label={`${friend_details.first_name}'S Polls`}
+                    value='2'
+                  />
+                </TabList>
+              </Box>
+            </AppBar>
             <TabPanel value='1'>
               {/* <div style={styles.title}>Posts Feed:</div> */}
               <Box sx={{ flexGrow: 1 }}>

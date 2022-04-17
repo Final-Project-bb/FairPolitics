@@ -3,19 +3,47 @@ import styled from "styled-components";
 import ResponsiveAppBar from "./ResponsiveAppBar";
 
 import { AppContext } from "./Context";
+import { AppBar, Typography, Toolbar, Container, Box } from "@mui/material";
 
 const Header = ({ title }) => {
-  const { user_details,is_connected } = useContext(AppContext);
+  const { user_details, is_connected } = useContext(AppContext);
 
   return (
     <div style={styles.title}>
-      {/* <Navbar /> */}
       <ResponsiveAppBar />
-      <Nav>
-        <label style={styles.text}>
-          Welcome{is_connected? `, ${user_details.first_name} ${user_details.last_name}!` :" Guest, please join us!" }
-        </label>
-      </Nav>
+      {/* <Box sx={{ flexGrow: 1, height: 55 }}> */}
+        <AppBar
+          sx={{
+            height: 50,
+            mt: 8,
+            boxShadow: "0 3px 20px rgb(0 0 0 / 8%)",
+            background: "#1769aa",
+            color: "whitesmoke",
+          }}
+          position='static'>
+          <Container maxWidth='xl'>
+            <Toolbar disableGutters>
+              <Typography
+                variant='body1'
+                noWrap
+                component='div'
+                sx={{
+                  display: { xs: "none", md: "flex" },
+                  // fontWeight: "lighter",
+                  // fontSize: 20,
+                  color: "whitesmoke",
+                }}>
+                Welcome
+                {is_connected
+                  ? `, ${user_details.first_name} ${user_details.last_name}!`
+                  : " Guest, please join us!"}{" "}
+              </Typography>
+            </Toolbar>
+          </Container>
+          {/* <label style={styles.text}></label> */}
+        </AppBar>
+      {/* </Box> */}
+      {/* <Nav></Nav> */}
     </div>
   );
 };
@@ -33,25 +61,25 @@ const styles = {
     backgroundColor: "#eaeaea",
   },
   title: {
-    flexDirection: "row",
-    // justifyContent: 'space-around',
-    marginTop: 0,
-    // margin  :0,
-    paddingVertical: 8,
-    // padding: 20,
-    textDecoration: "none",
-    // borderWidth: 4,
-    borderColor: "#20232a",
-    //   borderRadius: 0,
-    backgroundColor: "#61dafb",
-    color: "#20232a",
-    //   textAlign: "center",
-    // fontSize: 30,
+    // flexDirection: "row",
+    // // justifyContent: 'space-around',
+    // marginTop: 0,
+    // // margin  :0,
+    // paddingVertical: 8,
+    // // padding: 20,
+    // textDecoration: "none",
+    // // borderWidth: 4,
+    // borderColor: "#20232a",
+    // //   borderRadius: 0,
+    // backgroundColor: "#61dafb",
+    // color: "#20232a",
+    // //   textAlign: "center",
+    // // fontSize: 30,
     // fontWeight: "bold",
   },
   text: {
     // textAlign: "center",
-    display: "flex",
+    // display: "flex",
     position: "relative",
     color: "whitesmoke",
     // fontWeight: "100",
@@ -59,7 +87,7 @@ const styles = {
     justifyContent: "center",
     left: 10,
     top: 10,
-    
+
     // left:100,
     // top:-25,
   },
@@ -82,6 +110,7 @@ const Nav = styled.nav`
   display: flex;
   justify-content: space-between;
   z-index: 10;
+  margin-top: 20;
   /* Third Nav */
   /* justify-content: flex-start; */
 `;

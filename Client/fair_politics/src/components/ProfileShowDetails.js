@@ -13,6 +13,7 @@ import {
   ButtonGroup,
   Link,
   Box,
+  Divider,
 } from "@mui/material";
 
 const ProfileShowDetails = () => {
@@ -131,110 +132,113 @@ const ProfileShowDetails = () => {
       inFriend && fetchFollow();
     }
     return () => {};
-
   }, [inFriend]);
 
   return (
     <Box sx={styles.container}>
-      <Box
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          margin: 10,
-          marginRight: 20,
-          justifyContent: "center",
-          textAlign: "center",
-        }}>
-        
-        <Avatar
-          src={`${JSON.stringify(user_details.profile_picture)}`}
-          // alt='Remy Sharp'
+      <Card sx={styles.card}>
+        <CardContent
           style={{
-            borderRadius: !picturePress ? 350 : 0,
-            // position: !picturePress ? "relative" : "absolute",
-            height: !picturePress ? 150 : 400,
-            width: !picturePress ? 150 : 400,
-            // marginRight: 20,
-            // marginLeft: 20,
-            marginBottom: 10,
-          }}
-          onClickCapture={() => setPicturePress(!picturePress)}
-        />
-        <Button
-          color='primary'
-          onClick={() => {
-            history.push("/profile/aboutProfile");
-          }}>
-          About Me
-        </Button>
-      </Box>
-      <div style={styles.semiDetails}>
-        <div style={{ fontWeight: "light", fontSize: 17 }}>
-          {!inFriend ? user_details.first_name : friend_details.first_name}{" "}
-          {!inFriend ? user_details.last_name : friend_details.last_name}
-        </div>
-        <div style={{ fontWeight: "light", fontSize: 17 }}>
-          {!inFriend ? user_details.gender : friend_details.gender} ,{" "}
-          {!inFriend ? user_details.age : friend_details.age}
-        </div>
-        <div style={{ fontWeight: "light", fontSize: 17 }}>
-          Working in:{" "}
-          {!inFriend ? user_details.job_title : friend_details.job_title}
-          Living in {!inFriend ? user_details.city : friend_details.city}
-        </div>
-        <div style={{ fontWeight: "light", fontSize: 17 }}>
-          {!inFriend
-            ? user_details.semi_description
-            : friend_details.semi_description}
-        </div>
-      </div>
-
-      <div style={styles.profileHead}>
-        <ButtonGroup
-          style={{
-            // position: "absolute",
-            // left: 400,
-            // flex: 1,
-            // top: -50,
-            // flexDirection: "row",
-            // justifyContent: "space-around",
+            display: "flex",
+            flexDirection: "column",
             margin: 10,
+            marginRight: 20,
+            justifyContent: "center",
+            textAlign: "center",
           }}>
-          {inFriend && (
+          <Avatar
+            src={`${JSON.stringify(user_details.profile_picture)}`}
+            // alt='Remy Sharp'
+            style={{
+              borderRadius: !picturePress ? 350 : 0,
+              // position: !picturePress ? "relative" : "absolute",
+              height: !picturePress ? 150 : 400,
+              width: !picturePress ? 150 : 400,
+              // marginRight: 20,
+              // marginLeft: 20,
+              marginBottom: 10,
+            }}
+            onClickCapture={() => setPicturePress(!picturePress)}
+          />
+          {!inFriend && (
             <Button
-              variant={
-                followings.filter(
-                  (user) => user.user_id === friend_details.user_id
-                ).length > 0
-                  ? "contained"
-                  : "outlined"
-              }
               color='primary'
-              onClick={() => updateFollow()}>
-              {followings.filter(
-                (user) => user.user_id === friend_details.user_id
-              ).length > 0
-                ? "Unfollow"
-                : "Follow"}
+              onClick={() => {
+                history.push("/profile/aboutProfile");
+              }}>
+              About Me
             </Button>
           )}
-          <Button
-            variant='outlined'
-            // color='primary'
-            onClick={() => showFollowing()}>
-            Following {!inFriend ? followings.length : friendFollowings.length}
-          </Button>
-          <Button
-            variant='outlined'
-            color='primary'
-            onClick={() => showFollower()}>
-            Follower {!inFriend ? followers.length : friendFollowers.length}
-          </Button>
-        </ButtonGroup>
-        {/* image profile will be here */}
-        {/* about and more..  */}
-        {/* <button style={styles.info}> more info</button> */}
-      </div>
+        </CardContent>
+        <div style={styles.semiDetails}>
+          <div style={{ fontWeight: "light", fontSize: 17 }}>
+            {!inFriend ? user_details.first_name : friend_details.first_name}{" "}
+            {!inFriend ? user_details.last_name : friend_details.last_name}
+          </div>
+          <div style={{ fontWeight: "light", fontSize: 17 }}>
+            {!inFriend ? user_details.gender : friend_details.gender} ,{" "}
+            {!inFriend ? user_details.age : friend_details.age}
+          </div>
+          <div style={{ fontWeight: "light", fontSize: 17 }}>
+            Working in:{" "}
+            {!inFriend ? user_details.job_title : friend_details.job_title}
+            Living in {!inFriend ? user_details.city : friend_details.city}
+          </div>
+          <div style={{ fontWeight: "light", fontSize: 17 }}>
+            {!inFriend
+              ? user_details.semi_description
+              : friend_details.semi_description}
+          </div>
+        </div>
+
+        <div>
+          <ButtonGroup
+            style={{
+              // position: "absolute",
+              // left: 400,
+              // flex: 1,
+              // top: -50,
+              // flexDirection: "row",
+              // justifyContent: "space-around",
+              margin: 10,
+            }}>
+            {inFriend && (
+              <Button
+                variant={
+                  followings.filter(
+                    (user) => user.user_id === friend_details.user_id
+                  ).length > 0
+                    ? "contained"
+                    : "outlined"
+                }
+                color='primary'
+                onClick={() => updateFollow()}>
+                {followings.filter(
+                  (user) => user.user_id === friend_details.user_id
+                ).length > 0
+                  ? "Unfollow"
+                  : "Follow"}
+              </Button>
+            )}
+            <Button
+              variant='outlined'
+              // color='primary'
+              onClick={() => showFollowing()}>
+              Following (
+              {!inFriend ? followings.length : friendFollowings.length})
+            </Button>
+            <Button
+              variant='outlined'
+              color='primary'
+              onClick={() => showFollower()}>
+              Follower ({!inFriend ? followers.length : friendFollowers.length})
+            </Button>
+          </ButtonGroup>
+          {/* image profile will be here */}
+          {/* about and more..  */}
+          {/* <button style={styles.info}> more info</button> */}
+        </div>
+      </Card>
     </Box>
   );
 };
@@ -245,8 +249,17 @@ const ProfileShowDetails = () => {
 
 const styles = {
   container: {
+    // display: "flex",
+    // flexDirection: "row",
+    // alignItems: "center",
+  },
+  card: {
+    width: "90%",
     display: "flex",
     flexDirection: "row",
+    mx: "auto",
+    mt: 5,
+    boxShadow: 4,
   },
   // name: {
   //   display: "flex",

@@ -157,8 +157,8 @@ const ResponsiveAppBar = (props) => {
       <CssBaseline />
 
       <ElevationScroll {...props}>
-        <AppBar color='info' position='sticky' 
-        // sx={{ bottom: 'auto', top: 0 }}
+        <AppBar color='info' position='fixed' 
+        sx={{ bottom: 'auto', top: 0 }}
         >
           <Container maxWidth='xl'>
             <Toolbar disableGutters>

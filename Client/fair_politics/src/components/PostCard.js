@@ -280,41 +280,56 @@ const PostCard = ({ item, inProfile, setSnack }) => {
             </Tooltip>
           </CardContent>
         )}
-        <CardContent sx={{ mb: 5 }}>
+        <CardContent sx={{ display: "flex", flexDirection: "row" }}>
           <Tooltip title='Go To Profile'>
-            <Button
-              onClick={FriendProfileRef}
-              sx={[
-                {
-                  "&:hover": {
-                    // color: "#2196f3",
-                    backgroundColor: "whitesmoke",
-                    boxShadow: 3,
+            <Typography sx={{ display: "flex", mr: "auto" }}>
+              <Button
+                onClick={FriendProfileRef}
+                sx={[
+                  {
+                    "&:hover": {
+                      // color: "#2196f3",
+                      backgroundColor: "whitesmoke",
+                      boxShadow: 3,
+                    },
+                    display: "flex",
+                    flexDirection: "column",
+                    // marginBottom: 5,
+                    // p: 0,
+                    // position: "absolute",
                   },
-                  marginBottom: 5,
-                  // p: 0,
-                  position: "absolute",
-                },
-              ]}>
-              <Grid container direction='column' alignItems='center'>
-                <Grid item>
-                  <Avatar
-                    alt='Remy Sharp'
-                    src={
-                      require("../images/profilePicExmple.jpg")
-                      //user_details.profile_picture
-                    }
-                  />
-                </Grid>
-                <Grid item fontSize='small' style={{ marginTop: 8 }}>
-                  {/* {item.user_id} */}
-                  {userName.first_name} {userName.last_name}
-                </Grid>
-              </Grid>
-            </Button>
+                ]}>
+                <Avatar
+                  sx={{ mb: 1 }}
+                  alt='Remy Sharp'
+                  src={
+                    require("../images/profilePicExmple.jpg")
+                    //user_details.profile_picture
+                  }
+                />
+                {userName.first_name} {userName.last_name}
+              </Button>
+            </Typography>
           </Tooltip>
-          <Typography variant='h5' sx={styles.title}>
+          <Typography
+            variant='h5'
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              mx: "auto",
+            }}>
             {item.post_id} {item.title}
+          </Typography>
+          <Typography
+            variant='h7'
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              // mt: -5
+              ml: "auto",
+              color: "#607d8b",
+            }}>
+            {item.upload_date}
           </Typography>
         </CardContent>
 
@@ -326,24 +341,17 @@ const PostCard = ({ item, inProfile, setSnack }) => {
                 ? "Unlike"
                 : "Like"
             }>
-            <Box>
+            <Box sx={{ position: "relative" }}>
               <IconButton
-                sx={{ marginRight: "auto" }}
+                sx={{
+                  color:
+                    likes.filter((like) => like === user_details.user_id)
+                      .length > 0
+                      ? "#e53935"
+                      : "#616161",
+                }}
                 onClick={() => LikePost()}>
-                <FavoriteIcon
-                  label={likes.length}
-                  fontSize='medium'
-                  sx={[
-                    {
-                      cursor: "pointer",
-                      color:
-                        likes.filter((like) => like === user_details.user_id)
-                          .length > 0
-                          ? "#e53935"
-                          : "#616161",
-                    },
-                  ]}
-                />
+                <FavoriteIcon label={likes.length} fontSize='medium' />
               </IconButton>
               ({likes.length})
             </Box>
@@ -465,15 +473,7 @@ const styles = {
 
   title: {
     display: "flex",
-    justifyContent: "space-around",
-    // flexDirection: 'row',
-    // position: "relative",
-    // marginLeft:10,
-    // fontSize: 25,
-    // top: 100,
-    // right:150
-    textAlign: "center",
-    alignSelf: "center",
+    justifyContent: "center",
     mx: "auto",
   },
   editCommentForm: {

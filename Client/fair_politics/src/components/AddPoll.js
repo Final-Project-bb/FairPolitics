@@ -32,6 +32,9 @@ const AddPoll = () => {
 
   const history = useHistory();
 
+  const currentDate = new Date().toISOString().split("T")[0];
+  const currentTime = new Date().toISOString().split("T")[1].split(".")[0];
+
   const addPollSubmit = async (e) => {
     e.preventDefault();
     setTimeout(() => {
@@ -43,6 +46,7 @@ const AddPoll = () => {
       picture: picture,
       answers: inputList,
       user_id: user_details.user_id,
+      upload_date: `${currentDate}, ${currentTime}`,
     };
     await fetch("http://localhost:4000/api/create_poll", {
       method: "POST",
@@ -82,7 +86,7 @@ const AddPoll = () => {
   };
 
   return (
-    <div style={{ backgroundColor: "whitesmoke" }}>
+    <div style={{ backgroundColor: "lightgray" }}>
       <Header title='Add Poll page' />
       <ProfileHeader />
       <Grid container spacing={0} direction='column' alignItems='center'>

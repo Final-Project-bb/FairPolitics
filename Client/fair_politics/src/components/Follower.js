@@ -10,7 +10,7 @@ const Follower = () => {
     useContext(AppContext);
 
   return (
-    <div>
+    <div style={{ backgroundColor: "lightgray" }}>
       <Header title='Follower' />
       <ProfileHeader />
       <br />

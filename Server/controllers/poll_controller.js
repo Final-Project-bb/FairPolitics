@@ -6,13 +6,12 @@ const algo = require("../../Algorithms/dprsequence");
 // const { getFollowing } = require("./login_controller")
 
 const createPoll = (req, res) => {
-  let sqlInsertPoll = `insert into poll(user_id,title,description,picture)
-                        values(${JSON.stringify(
-                          req.body.user_id
-                        )},${JSON.stringify(req.body.title)},
-                        ${JSON.stringify(
-                          req.body.description
-                        )},${JSON.stringify(req.body.picture)})`;
+  let sqlInsertPoll = `insert into poll(user_id,title,description,picture,upload_date)
+                        values(${JSON.stringify(req.body.user_id)}
+                        ,${JSON.stringify(req.body.title)}
+                        ,${JSON.stringify(req.body.description)}
+                        ,${JSON.stringify(req.body.picture)}
+                        ,${JSON.stringify(req.body.upload_date)})`;
 
   let sqlGetPollId = "select LAST_INSERT_ID() as poll_id from poll limit 1";
 
@@ -47,7 +46,7 @@ const createPoll = (req, res) => {
   });
 };
 const getPoll = (req, res) => {
-  let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer 
+  let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll.upload_date, poll_answer.answer_id, poll_answer.answer 
   ,IF((select count(*) from poll_answer_approval where
          user_id=${JSON.stringify(
            req.params.user_id
@@ -82,6 +81,7 @@ const getPoll = (req, res) => {
           title: p.title,
           description: p.description,
           picture: p.picture,
+          upload_date: p.upload_date,
           is_answer_poll: false,
           answers: [
             {
@@ -241,7 +241,7 @@ const updateAnswerPoll = (req, res) => {
 };
 
 const pollsFollowing = (req, res) => {
-  let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll_answer.answer_id, poll_answer.answer 
+  let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll.upload_date, poll_answer.answer_id, poll_answer.answer 
   ,IF((select count(*) from poll_answer_approval where
          user_id=${JSON.stringify(
            req.params.user_id
@@ -277,6 +277,7 @@ const pollsFollowing = (req, res) => {
           title: p.title,
           description: p.description,
           picture: p.picture,
+          upload_date: p.upload_date,
           is_answer_poll: false,
           answers: [
             {

@@ -3,6 +3,7 @@ import ProfileShowDetails from "./ProfileShowDetails";
 import { NavLink as Link } from "react-router-dom";
 import styled from "styled-components";
 import { AppContext } from "./Context";
+import { Divider } from "@mui/material";
 
 
 const ProfileHeader = () => {
@@ -12,6 +13,8 @@ const ProfileHeader = () => {
   return (
     <div style={styles.order}>
       <ProfileShowDetails />
+      <Divider sx={{mt: 5,}} variant='middle' />
+
     </div>
   );
 };
@@ -21,11 +24,11 @@ const ProfileHeader = () => {
 
 const styles = {
   order: {
-    flexDirection: "row",
-    position: "relative",
-    // left: 22,
-    backgroundColor: 'whitesmoke',
-    justifyContent: 'space-around',
+    // flexDirection: "row",
+    // position: "relative",
+    // // left: 22,
+    // backgroundColor: 'whitesmoke',
+    // justifyContent: 'space-around',
   },
 
   profileHead: {

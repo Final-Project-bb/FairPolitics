@@ -62,19 +62,23 @@ const Algorithms = () => {
   }, []);
 
   return (
-    <div style={{ backgroundColor: "whitesmoke" }}>
+    <div style={{ backgroundColor: "lightgray" }}>
       <Header />
       {chosenAlgorithm === -1 && (
         <CardContent sx={{ color: "red" }}>
           Please Choose Algorithm to use for the haluka hogenet{" "}
         </CardContent>
       )}
+      <CardContent sx={{ display: "flex", justifyContent: "center" }}>
+        <img
+          style={{ borderRadius: 20, elevation: 3 }}
+          width={900}
+          src={require("../images/algoPic.jpg")}
+        />
+      </CardContent>
+      <Divider variant='middle' />
 
-      <CardContent sx={{ color: "#616161" }}>
-        <img width={1000} src={require("../images/algoPic.jpg")} />
-        <br />
-        <br />
-        <br />
+      <CardContent sx={{}}>
         <div>
           {
             "Let Answers = {a, b, c, d, e} and assume alphabetic tiebreaking. Consider a set of 9 voters"
@@ -108,7 +112,7 @@ const Algorithms = () => {
         </div>
       </CardContent>
       <Divider variant='middle' />
-      <CardContent sx={{ fontWeight: 'medium' }}>
+      <CardContent sx={{ fontWeight: "medium" }}>
         NOTE: THE CHOSEN ALGORITHM HERE IS USED TO COMPUTE THE RESULTS ON YOUR
         POLLS , POSTS AND COMMENTS.
       </CardContent>
@@ -118,13 +122,12 @@ const Algorithms = () => {
             <Box
               key={algo.id}
               sx={{
-                boxShadow: 3,
                 width: 500,
                 margin: 3,
                 border: chosenAlgorithm === algo.id ? "2px solid #1769aa" : 0,
-                borderRadius: "2%",
+                borderRadius: "1.5%",
               }}>
-              <Card sx={{ overflow: "auto", height: 400 }}>
+              <Card raised sx={{ height: 400 }}>
                 {/* <CardContent sx={{ fontWeight: "bold", fontSize: 30 }}>
                 id: {algo.id}
               </CardContent> */}
@@ -149,7 +152,13 @@ const Algorithms = () => {
                   </Button>
                 </CardContent>
 
-                <CardContent sx={{ fontWeight: "light", fontSize: 17 }}>
+                <CardContent
+                  sx={{
+                    fontWeight: "light",
+                    fontSize: 17,
+                    overflow: "auto",
+                    height: 260,
+                  }}>
                   {algo.description}
                 </CardContent>
                 <CardContent sx={{ fontWeight: "light", fontSize: 16 }}>
