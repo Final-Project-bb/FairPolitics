@@ -6,6 +6,7 @@ import Header from "./Header";
 import ProfileHeader from "./ProfileHeader";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import { useStateIfMounted } from "use-state-if-mounted";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -22,14 +23,17 @@ import {
   Grid,
 } from "@mui/material";
 
-const EditPostCard = () => {
-  const { currentItem, setLoading } = useContext(AppContext);
+const EditPostCard = ({ setDialog }) => {
+  const { currentItem, setLoading, setProfilePostCards } =
+    useContext(AppContext);
 
-  const [title, setTitle] = useState(currentItem.title);
-  const [tag, setTag] = useState(currentItem.tag);
-  const [description, setDescription] = useState(currentItem.description);
-  const [picture, setPicture] = useState(currentItem.picture);
-  const [open, setOpen] = useState(false);
+  const [title, setTitle] = useStateIfMounted(currentItem.title);
+  const [tag, setTag] = useStateIfMounted(currentItem.tag);
+  const [description, setDescription] = useStateIfMounted(
+    currentItem.description
+  );
+  const [picture, setPicture] = useStateIfMounted(currentItem.picture);
+  const [open, setOpen] = useStateIfMounted(false);
 
   const history = useHistory();
 
@@ -54,88 +58,104 @@ const EditPostCard = () => {
       .then((json) => {
         console.log(json);
         setOpen(true);
+        setProfilePostCards((prevPostCards) => {
+          const i = prevPostCards.findIndex(
+            (post) => post.post_id === currentItem.post_id
+          );
+          let newPost = prevPostCards[i];
+          newPost.title = title;
+          newPost.description = description;
+          newPost.tag = tag;
+          newPost.picture = picture;
+          let newPosts = prevPostCards.filter(
+            (post) => post.post_id !== currentItem.post_id
+          );
+          newPosts.splice(i, 0, newPost);
+          return newPosts;
+        });
+        setLoading(false);
+        setDialog(false);
       })
       .catch((error) => console.error(error));
-    setTimeout(() => {
-      history.goBack();
-    }, 2000);
-    setLoading(false);
+    // setTimeout(() => {
+    //   history.goBack();
+    // }, 2000);
   };
 
   return (
-    <div style={{ backgroundColor: "whitesmoke" }}>
-      <Header title='Profile Page' />
-      <ProfileHeader />
-      <div style={styles.title}>
+    <div>
+      {/* <Header title='Profile Page' />
+      <ProfileHeader /> */}
+      {/* <div style={styles.title}>
         Edit {currentItem.post_id} {currentItem.title} Post
-      </div>
+      </div> */}
       <Grid container spacing={0} direction='column' alignItems='center'>
-        <Card style={styles.card}>
-          <CardContent style={styles.content}>
-            <FormControl>
-              <form
-                style={{ display: "flex", flexDirection: "column" }}
-                onSubmit={(e) => editPostSubmit(e)}>
-                <TextField
-                  helperText='Tagged elected officials - Example: @israel israel @other person'
-                  id='standard-basic'
-                  variant='standard'
-                  label='Tags'
-                  // pattern="[@]{1}[a-z]"
-                  // required
-                  // placeholder='valid tag format!'
-                  // className='tagInput'
-                  value={tag}
-                  inputProps={{ maxLength: 45 }}
-                  onChange={(e) => setTag(e.target.value)}
-                />
-                <br />
-                <TextField
-                  id='standard-basic'
-                  variant='standard'
-                  label='Title'
-                  // pattern="[@]{1}[a-z][a-z]"
-                  required
-                  placeholder='a valid title!'
-                  value={title}
-                  inputProps={{ maxLength: 45 }}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-                <br />
-                <TextField
-                  id='standard-basic'
-                  variant='standard'
-                  label='Description'
-                  // pattern="[@]{1}[a-z][a-z]"
-                  required
-                  aria-multiline
-                  placeholder='valid description!'
-                  value={description}
-                  inputProps={{ maxLength: 1000 }}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-                <br />
-                <TextField
-                  id='standard-basic'
-                  variant='standard'
-                  label='Picture'
-                  // pattern="[@]{1}[a-z][a-z]"
-                  // required
-                  placeholder='valid picture!'
-                  value={picture}
-                  inputProps={{ maxLength: 200 }}
-                  onChange={(e) => setPicture(e.target.value)}
-                />
-                <br />
-                <Button type='submit' variant='contained'>
-                  Submit
-                </Button>
-              </form>
-            </FormControl>
-          </CardContent>
-        </Card>
+        {/* <Card raised style={styles.card}> */}
+        <CardContent style={styles.content}>
+          <FormControl>
+            <form
+              style={{ display: "flex", flexDirection: "column" }}
+              onSubmit={(e) => editPostSubmit(e)}>
+              <TextField
+                helperText='Tagged elected officials - Example: @israel israel @other person'
+                id='standard-basic'
+                variant='standard'
+                label='Tags'
+                // pattern="[@]{1}[a-z]"
+                // required
+                // placeholder='valid tag format!'
+                // className='tagInput'
+                value={tag}
+                inputProps={{ maxLength: 45 }}
+                onChange={(e) => setTag(e.target.value)}
+              />
+              <br />
+              <TextField
+                id='standard-basic'
+                variant='standard'
+                label='Title'
+                // pattern="[@]{1}[a-z][a-z]"
+                required
+                placeholder='a valid title!'
+                value={title}
+                inputProps={{ maxLength: 45 }}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+              <br />
+              <TextField
+                id='standard-basic'
+                variant='standard'
+                label='Description'
+                // pattern="[@]{1}[a-z][a-z]"
+                required
+                aria-multiline
+                placeholder='valid description!'
+                value={description}
+                inputProps={{ maxLength: 1000 }}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              <br />
+              <TextField
+                id='standard-basic'
+                variant='standard'
+                label='Picture'
+                // pattern="[@]{1}[a-z][a-z]"
+                // required
+                placeholder='valid picture!'
+                value={picture}
+                inputProps={{ maxLength: 200 }}
+                onChange={(e) => setPicture(e.target.value)}
+              />
+              <br />
+              <Button type='submit' variant='contained'>
+                Submit
+              </Button>
+            </form>
+          </FormControl>
+        </CardContent>
+        {/* </Card> */}
       </Grid>
-      <Snackbar
+      {/* <Snackbar
         open={open}
         autoHideDuration={6000}
         onClose={() => setOpen(false)}>
@@ -145,7 +165,7 @@ const EditPostCard = () => {
           sx={{ width: "100%" }}>
           Post edited successfully ! Redirecting...
         </Alert>
-      </Snackbar>
+      </Snackbar> */}
     </div>
   );
 };
@@ -153,7 +173,7 @@ const EditPostCard = () => {
 const styles = {
   card: {
     // height: 400,
-    width: 700,
+    // width: 700,
     // top: 50,
     // left: "30%",
     // display: "flex",

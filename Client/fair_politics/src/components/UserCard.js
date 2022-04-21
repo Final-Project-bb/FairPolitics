@@ -17,6 +17,7 @@ import {
   Typography,
   CardActions,
 } from "@mui/material";
+import { useStateIfMounted } from "use-state-if-mounted";
 
 const UserCard = ({ user_info, inFollowing, inSearch }) => {
   const {
@@ -35,9 +36,9 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
   } = useContext(AppContext);
   const history = useHistory();
 
-  const [picturePress, setPicturePress] = useState(false);
-  const [isFollow, setIsFollow] = useState(false);
-  const [flag, setFlag] = useState(true);
+  const [picturePress, setPicturePress] = useStateIfMounted(false);
+  const [isFollow, setIsFollow] = useStateIfMounted(false);
+  const [flag, setFlag] = useStateIfMounted(true);
   // const flag= true;
   let followState = false;
   useEffect(() => {

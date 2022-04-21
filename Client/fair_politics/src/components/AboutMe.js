@@ -12,6 +12,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import { useStateIfMounted } from "use-state-if-mounted";
 
 import {
   FormControl,
@@ -38,36 +39,36 @@ const AboutMe = () => {
     friend_details,
   } = useContext(AppContext);
 
-  const [first_name, setFirstName] = useState(
+  const [first_name, setFirstName] = useStateIfMounted(
     inFriend ? friend_details.first_name : user_details.first_name
   );
-  const [last_name, setLastName] = useState(
+  const [last_name, setLastName] = useStateIfMounted(
     inFriend ? friend_details.last_name : user_details.last_name
   );
-  const [city, setCity] = useState(
+  const [city, setCity] = useStateIfMounted(
     inFriend ? friend_details.city : user_details.city
   );
-  const [job_title, setJobTitle] = useState(
+  const [job_title, setJobTitle] = useStateIfMounted(
     inFriend ? friend_details.job_title : user_details.job_title
   );
-  const [date, setDate] = useState(
+  const [date, setDate] = useStateIfMounted(
     inFriend ? friend_details.birthdate : user_details.birthdate
   );
-  const [profile_picture, setProfilePicture] = useState(
+  const [profile_picture, setProfilePicture] = useStateIfMounted(
     inFriend ? friend_details.profile_picture : user_details.profile_picture
   );
-  const [gender, setGender] = useState(
+  const [gender, setGender] = useStateIfMounted(
     inFriend ? friend_details.gender : user_details.gender
   );
-  const [description, setDescription] = useState(
+  const [description, setDescription] = useStateIfMounted(
     inFriend ? friend_details.description : user_details.description
   );
-  const [semi_description, setSemiDescription] = useState(
+  const [semi_description, setSemiDescription] = useStateIfMounted(
     inFriend ? friend_details.semi_description : user_details.semi_description
   );
-  const [onEdit, setOnEdit] = useState(false);
-  const [onDelete, setOnDelete] = useState(false);
-  const [dialog, setDialog] = useState(false);
+  const [onEdit, setOnEdit] = useStateIfMounted(false);
+  const [onDelete, setOnDelete] = useStateIfMounted(false);
+  const [dialog, setDialog] = useStateIfMounted(false);
 
   const current = new Date().toISOString().split("T")[0];
   const history = useHistory();

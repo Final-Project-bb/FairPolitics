@@ -19,6 +19,17 @@ import { AppBar } from "@mui/material";
 import { Tabs } from "@mui/material";
 import { useHistory } from "react-router-dom";
 import { css } from "@emotion/react";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+
+import AddPost from "./AddPost";
+import AddPoll from "./AddPoll";
+import { useStateIfMounted } from "use-state-if-mounted";
+import { StyledTabs, StyledTab } from "./CustomStyledTabs";
+
 const Home = () => {
   const {
     user_details,
@@ -32,7 +43,9 @@ const Home = () => {
     setInFriend,
   } = useContext(AppContext);
 
-  const [value, setValue] = useState("1");
+  const [value, setValue] = useStateIfMounted("1");
+  const [dialog, setDialog] = useStateIfMounted(false);
+  const [dialogContent, setDialogContent] = useStateIfMounted("");
 
   const history = useHistory();
 
@@ -41,12 +54,10 @@ const Home = () => {
   };
 
   useEffect(() => {
-    const ac = new AbortController();
     const fetchPosts = async () => {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:4000/api/Post_feed/${user_details.user_id}`,
-        { signal: ac.signal }
+        `http://localhost:4000/api/Post_feed/${user_details.user_id}`
       );
       const data = await response.json();
       console.log("fetchPosts");
@@ -61,10 +72,7 @@ const Home = () => {
     const fetchPolls = async () => {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:4000/api/poll_feed/${user_details.user_id}`,
-        {
-          signal: ac.signal,
-        }
+        `http://localhost:4000/api/poll_feed/${user_details.user_id}`
       );
       const data = await response.json();
       console.log(data.allPollsWithAnswer);
@@ -79,34 +87,32 @@ const Home = () => {
     fetchPosts();
     console.log("Home effected");
     fetchPolls();
-
-    return () => {
-      ac.abort();
-    };
   }, []);
 
   return (
     <div style={{ backgroundColor: "lightgray" }}>
       <Header title='Home Page' />
-      {!loading ? (
+      <div>
         <Box sx={{ width: "100%", typography: "body1" }}>
           <TabContext value={value}>
-            <AppBar position='fixed' sx={{ top: "auto", bottom: 0, backgroundColor: "whitesmoke" }}>
+            <AppBar
+              position='fixed'
+              sx={{ top: "auto", bottom: 0, backgroundColor: "whitesmoke" }}>
               <Box
                 sx={{
-                  borderBottom: 1 ,
+                  borderBottom: 1,
                   borderColor: "divider",
                   boxShadow: 3,
                 }}>
-                <TabList
+                <StyledTabs
+                  value={value}
                   variant='fullWidth'
                   color='secondary'
                   onChange={handleChange}
-                  sx={{  }}
-                  >
-                  <Tab label='Posts Feed' value='1'  />
-                  <Tab label='Polls Feed' value='2' />
-                </TabList>
+                  sx={{ color: "black" }}>
+                  <StyledTab label='Posts Feed' value='1' />
+                  <StyledTab label='Polls Feed' value='2' />
+                </StyledTabs>
               </Box>
             </AppBar>
             <TabPanel value='1'>
@@ -125,7 +131,10 @@ const Home = () => {
                         marginBottom: 5,
                       },
                     ]}
-                    onClick={() => history.push("/profile/addPost")}>
+                    onClick={() => {
+                      setDialogContent("Add New Content");
+                      setDialog(true);
+                    }}>
                     <Grid item>
                       <AddIcon
                         fontSize='large'
@@ -161,7 +170,10 @@ const Home = () => {
                         marginBottom: 5,
                       },
                     ]}
-                    onClick={() => history.push("/profile/addPoll")}>
+                    onClick={() => {
+                      setDialogContent("Add New Content");
+                      setDialog(true);
+                    }}>
                     <Grid item>
                       <AddIcon fontSize='large' />
                     </Grid>
@@ -177,16 +189,36 @@ const Home = () => {
             </TabPanel>
           </TabContext>
         </Box>
-      ) : (
-        <>
-          <Backdrop
-            sx={{ color: "#fff" }}
-            open={loading}
-            onClick={() => setLoading(false)}>
-            <CircularProgress color='inherit' />
-          </Backdrop>
-        </>
-      )}
+        <Dialog
+          open={dialog}
+          onClose={() => setDialog(false)}
+          aria-labelledby='alert-dialog-title'
+          aria-describedby='alert-dialog-description'>
+          <DialogTitle id='alert-dialog-title'>
+            {value === "1" ? "Add New Post" : "Add New Poll"}
+          </DialogTitle>
+          {dialogContent === "Add New Content" && (
+            <>
+              <DialogContent>
+                {value === "1" ? (
+                  <AddPost setDialog={setDialog} />
+                ) : (
+                  <AddPoll setDialog={setDialog} />
+                )}
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => setDialog(false)}>Cancel</Button>
+              </DialogActions>
+            </>
+          )}
+        </Dialog>
+      </div>
+      <Backdrop
+        sx={{ color: "#fff" }}
+        open={loading}
+        onClick={() => setLoading(false)}>
+        <CircularProgress color='inherit' />
+      </Backdrop>
     </div>
   );
 };

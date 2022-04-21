@@ -9,6 +9,8 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { useStateIfMounted } from "use-state-if-mounted";
+import EditPollCard from "./EditPollCard";
 
 import {
   FormControl,
@@ -41,23 +43,128 @@ const PollCard = ({ item, inProfile, setSnack }) => {
     setProfilePollCards,
   } = useContext(AppContext);
 
-  const [showResults, setShowResults] = useState(item.is_answer_poll);
-  const [newAnswers, setNewAnswers] = useState([]);
-  const [userName, setUserName] = useState("");
-  const [poll_algo, setPollAlgo] = useState(1);
-  const [sortedAnswers, setSortedAnswers] = useState(item.answers);
-  const [dialog, setDialog] = useState(false);
+  const [showResults, setShowResults] = useStateIfMounted(item.is_answer_poll);
+  const [newAnswers, setNewAnswers] = useStateIfMounted([]);
+  const [userName, setUserName] = useStateIfMounted("");
+  const [poll_algo, setPollAlgo] = useStateIfMounted(1);
+  const [sortedAnswers, setSortedAnswers] = useStateIfMounted(item.answers);
+
+  const [dialog, setDialog] = useStateIfMounted(false);
+  const [dialogContent, setDialogContent] = useStateIfMounted("");
 
   let algoName = !inProfile
     ? algorithms.filter((item) => item.id == poll_algo)[0].title
     : algorithms.filter((item) => item.id == algo_id)[0].title;
 
-  useEffect(() => {
+  useEffect(async () => {
     algoName = !inProfile
       ? algorithms.filter((item) => item.id == poll_algo)[0].title
       : algorithms.filter((item) => item.id == algo_id)[0].title;
-    getUserDetails();
-    getResult();
+
+    const getUserDetails = async () => {
+      let id = item.user_id;
+
+      await fetch(`http://localhost:4000/api/get_user_by_id/${id}`, {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          // console.log(json.result[0]);
+          setUserName({
+            first_name: json.result[0].first_name,
+            last_name: json.result[0].last_name,
+          });
+          // return json.result[0];
+        })
+        .catch((err) => console.error(err));
+    };
+
+    const getFriendAlgo = async () => {
+      await fetch(`http://localhost:4000/api/get_algorithm/${item.user_id}`, {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          json.result[0] !== undefined &&
+            setPollAlgo(json.result[0].algorithm_id);
+        })
+        .catch((err) => console.error(err));
+    };
+
+    const sort = async (e) => {
+      // e.preventDefault()
+      // setLoading(true);
+      if (!inProfile) {
+        getFriendAlgo();
+      }
+      let algo = !inProfile
+        ? algorithms.filter((item) => item.id == poll_algo)[0].code
+        : algorithms.filter((item) => item.id == algo_id)[0].code;
+      // console.log(`Poll algorithm: ${algo}`);
+      return await fetch(
+        `http://localhost:4000/api/poll_algo/${item.poll_id}/${algo}`,
+        {
+          method: "GET",
+        }
+      )
+        .then((res) => res.json())
+        .then((json) => {
+          return json;
+        })
+        .catch((err) => console.error(err));
+      // setLoading(false);
+    };
+
+    const getResult = async () => {
+      // console.log("getResult()");
+      // console.log(await getResult());
+      // console.log(orderAnswer);
+      // console.log("item.answers");
+      // console.log(item.answers);
+      let data = await sort();
+      let sorting = data.answers;
+      let order = data.orderAnswer;
+      let count = data.answersCount;
+      let sumOfUsers = data.sumOfUsers;
+      // console.log("sorting");
+      // console.log(sorting);
+      // console.log("order");
+      // console.log(order);
+      // console.log(item)
+      var result = item.answers
+        .map((item) => {
+          var n = sorting.indexOf(item.answer_id);
+          sorting[n] = "";
+          return [n, item];
+        })
+        .sort()
+        .map((j) => {
+          return j[1];
+        });
+      // setIsSortingPress(true);
+      result.forEach((e) => {
+        e.percents = order[e.answer_id] == undefined ? 0 : order[e.answer_id];
+        e.answerCount =
+          count[e.answer_id] == undefined ? 0 : count[e.answer_id];
+        e.sumOfUsers = sumOfUsers;
+      });
+      // result.press=true;
+      // console.log("result");
+      // console.log(result);
+      setSortedAnswers(result);
+      item.answers = result;
+      item.press = true;
+
+      // console.log(orderAnswer);
+      // console.log("new item.answers");
+      // console.log(item.answers);
+      // console.log("new item.press");
+      // console.log(item.press);
+      setLoading(false);
+    };
+
+    await getUserDetails();
+    await getResult();
     const answer_approval = [];
     item.answers.map((answer) => {
       if (answer.is_answer) {
@@ -88,36 +195,6 @@ const PollCard = ({ item, inProfile, setSnack }) => {
     history.push("/FriendProfile");
   };
 
-  const getUserDetails = async () => {
-    let id = item.user_id;
-
-    await fetch(`http://localhost:4000/api/get_user_by_id/${id}`, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        // console.log(json.result[0]);
-        setUserName({
-          first_name: json.result[0].first_name,
-          last_name: json.result[0].last_name,
-        });
-        // return json.result[0];
-      })
-      .catch((err) => console.error(err));
-  };
-
-  const getFriendAlgo = async () => {
-    await fetch(`http://localhost:4000/api/get_algorithm/${item.user_id}`, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        json.result[0] !== undefined &&
-          setPollAlgo(json.result[0].algorithm_id);
-      })
-      .catch((err) => console.error(err));
-  };
-
   // const answerPoll = async () => {
   //   setLoading(true);
   //   const ans = {
@@ -137,82 +214,6 @@ const PollCard = ({ item, inProfile, setSnack }) => {
   //   setLoading(false);
   // };
 
-  const sort = async (e) => {
-    // e.preventDefault()
-    // setLoading(true);
-    if (!inProfile) {
-      getFriendAlgo();
-    }
-    let algo = !inProfile
-      ? algorithms.filter((item) => item.id == poll_algo)[0].code
-      : algorithms.filter((item) => item.id == algo_id)[0].code;
-    // console.log(`Poll algorithm: ${algo}`);
-    return await fetch(
-      `http://localhost:4000/api/poll_algo/${item.poll_id}/${algo}`,
-      {
-        method: "GET",
-      }
-    )
-      .then((res) => res.json())
-      .then((json) => {
-        // setOrderAnswer(json.answers);
-        // alert(json.answers);
-        // console.log(json);
-        // console.log("json.orderAnswer");
-        // console.log(json.orderAnswer);
-        return json;
-      })
-      .catch((err) => console.error(err));
-    // setLoading(false);
-  };
-
-  const getResult = async () => {
-    // console.log("getResult()");
-    // console.log(await getResult());
-    // console.log(orderAnswer);
-    // console.log("item.answers");
-    // console.log(item.answers);
-    let data = await sort();
-    let sorting = data.answers;
-    let order = data.orderAnswer;
-    let count = data.answersCount;
-    let sumOfUsers = data.sumOfUsers;
-    // console.log("sorting");
-    // console.log(sorting);
-    // console.log("order");
-    // console.log(order);
-    // console.log(item)
-    var result = item.answers
-      .map((item) => {
-        var n = sorting.indexOf(item.answer_id);
-        sorting[n] = "";
-        return [n, item];
-      })
-      .sort()
-      .map((j) => {
-        return j[1];
-      });
-    // setIsSortingPress(true);
-    result.forEach((e) => {
-      e.percents = order[e.answer_id] == undefined ? 0 : order[e.answer_id];
-      e.answerCount = count[e.answer_id] == undefined ? 0 : count[e.answer_id];
-      e.sumOfUsers = sumOfUsers;
-    });
-    // result.press=true;
-    // console.log("result");
-    // console.log(result);
-    setSortedAnswers(result);
-    item.answers = result;
-    item.press = true;
-
-    // console.log(orderAnswer);
-    // console.log("new item.answers");
-    // console.log(item.answers);
-    // console.log("new item.press");
-    // console.log(item.press);
-    setLoading(false);
-  };
-
   const editPoll = (e) => {
     // console.log(item);
     setCurrentItem(item);
@@ -226,15 +227,14 @@ const PollCard = ({ item, inProfile, setSnack }) => {
     })
       .then((res) => {
         res.json();
-        setSnack(true);
         setProfilePollCards((prev) => {
           return prev.filter((poll) => poll.poll_id !== item.poll_id);
         });
+        setSnack(true);
+        setDialog(false);
+        setLoading(false);
       })
       .catch((error) => console.error(error));
-
-    setDialog(false);
-    setLoading(false);
   };
 
   const handleCheckbox = (answer_id) => {
@@ -317,20 +317,27 @@ const PollCard = ({ item, inProfile, setSnack }) => {
           <CardContent style={{ display: "flex", flex: 3 }}>
             <Tooltip title='Edit'>
               <IconButton
+                onClick={(e) => {
+                  setCurrentItem(item);
+                  setDialogContent("Edit Poll");
+                  setDialog(true);
+                }}
                 sx={[
                   {
                     "&:hover": { color: "black" },
                     cursor: "pointer",
                     color: "#616161",
                   },
-                ]}
-                onClick={(e) => editPoll(e)}>
+                ]}>
                 <EditIcon />
               </IconButton>
             </Tooltip>
             <Tooltip title='Delete'>
               <IconButton
-                onClick={() => setDialog(true)}
+                onClick={(e) => {
+                  setDialogContent("Delete Poll");
+                  setDialog(true);
+                }}
                 sx={[
                   {
                     "&:hover": { color: "black" },
@@ -472,18 +479,35 @@ const PollCard = ({ item, inProfile, setSnack }) => {
         onClose={() => setDialog(false)}
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'>
-        <DialogTitle id='alert-dialog-title'>Delete Poll</DialogTitle>
-        <DialogContent>
-          <DialogContentText id='alert-dialog-description'>
-            Are you sure you want delete this poll?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDialog(false)}>Cancel</Button>
-          <Button onClick={(e) => deletePoll(e)} autoFocus>
-            Yes
-          </Button>
-        </DialogActions>
+        <DialogTitle id='alert-dialog-title'>{dialogContent}</DialogTitle>
+        {dialogContent === "Delete Poll" && (
+          <>
+            <DialogContent>
+              <DialogContentText id='alert-dialog-description'>
+                Are you sure you want delete this poll?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setDialog(false)}>Cancel</Button>
+              <Button onClick={(e) => deletePoll(e)} autoFocus>
+                Yes
+              </Button>
+            </DialogActions>
+          </>
+        )}
+        {dialogContent === "Edit Poll" && (
+          <>
+            <DialogContent>
+              <EditPollCard setDialog={setDialog} />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setDialog(false)}>Cancel</Button>
+              {/* <Button onClick={(e) => deletePost(e)} autoFocus>
+                Yes
+              </Button> */}
+            </DialogActions>
+          </>
+        )}
       </Dialog>
     </div>
   );

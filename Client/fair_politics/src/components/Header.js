@@ -11,39 +11,42 @@ const Header = ({ title }) => {
   return (
     <div style={styles.title}>
       <ResponsiveAppBar />
+      <AppBar position='static'>
+        <Container maxWidth='xl'>
+          <Toolbar disableGutters></Toolbar>
+        </Container>
+      </AppBar>
       {/* <Box sx={{ flexGrow: 1, height: 55 }}> */}
-        <AppBar
-          sx={{
-            height: 50,
-            mt: 8,
-            boxShadow: "0 3px 20px rgb(0 0 0 / 8%)",
-            background: "#1769aa",
-            color: "whitesmoke",
-          }}
-          position='static'>
-          <Container maxWidth='xl'>
-            <Toolbar disableGutters>
-              <Typography
-                variant='body1'
-                noWrap
-                component='div'
-                sx={{
-                  display: { xs: "none", md: "flex" },
-                  // fontWeight: "lighter",
-                  // fontSize: 20,
-                  color: "whitesmoke",
-                }}>
-                Welcome
-                {is_connected
-                  ? `, ${user_details.first_name} ${user_details.last_name}!`
-                  : " Guest, please join us!"}{" "}
-              </Typography>
-            </Toolbar>
-          </Container>
-          {/* <label style={styles.text}></label> */}
-        </AppBar>
-      {/* </Box> */}
-      {/* <Nav></Nav> */}
+      <AppBar
+        sx={{
+          height: 55,
+          // mt: 8,
+          boxShadow: "0 3px 20px rgb(0 0 0 / 8%)",
+          background: "#1769aa",
+          color: "whitesmoke",
+        }}
+        position='static'>
+        <Container maxWidth='xl'>
+          <Toolbar disableGutters>
+            <Typography
+              variant='body2'
+              noWrap
+              component='div'
+              sx={{
+                display: { xs: "none", md: "flex" },
+                fontWeight: "lighter",
+                fontSize: 20,
+                color: "lightgray",
+              }}>
+              Welcome
+              {is_connected
+                ? `, ${user_details.first_name} ${user_details.last_name}!`
+                : " Guest, please join us!"}{" "}
+            </Typography>
+          </Toolbar>
+        </Container>
+        {/* <label style={styles.text}></label> */}
+      </AppBar>
     </div>
   );
 };

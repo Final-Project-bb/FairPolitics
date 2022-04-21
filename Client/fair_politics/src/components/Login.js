@@ -13,6 +13,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from "@mui/icons-material/Google";
 import { Icon } from "@iconify/react";
+import { useStateIfMounted } from "use-state-if-mounted";
 
 import {
   FormControl,
@@ -26,15 +27,15 @@ import {
 } from "@mui/material";
 
 const Login = () => {
-  const [onReset, setOnReset] = useState(false);
-  const [phone, setPhone] = useState("");
-  const [gmail, setGmail] = useState(null);
-  const [id, setId] = useState("");
-  const [password, setPassword] = useState("");
-  const [pass, setPass] = useState("");
-  const [pass2, setPass2] = useState("");
-  const [tempPass, setTempPass] = useState("");
-  const [tempPassFromDB, setTempPassFromDB] = useState("");
+  const [onReset, setOnReset] = useStateIfMounted(false);
+  const [phone, setPhone] = useStateIfMounted("");
+  const [gmail, setGmail] = useStateIfMounted(null);
+  const [id, setId] = useStateIfMounted("");
+  const [password, setPassword] = useStateIfMounted("");
+  const [pass, setPass] = useStateIfMounted("");
+  const [pass2, setPass2] = useStateIfMounted("");
+  const [tempPass, setTempPass] = useStateIfMounted("");
+  const [tempPassFromDB, setTempPassFromDB] = useStateIfMounted("");
 
   const {
     setUserDetails,

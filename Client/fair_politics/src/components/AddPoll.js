@@ -5,6 +5,7 @@ import Header from "./Header";
 import ProfileHeader from "./ProfileHeader";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import { useStateIfMounted } from "use-state-if-mounted";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -21,14 +22,15 @@ import {
   ButtonGroup,
   Grid,
 } from "@mui/material";
-const AddPoll = () => {
-  const [title, setTitle] = useState("");
-  const [picture, setPicture] = useState("");
-  const [description, setDescription] = useState("");
-  const [inputList, setInputList] = useState([""]);
-  const [open, setOpen] = useState(false);
+const AddPoll = ({ setDialog }) => {
+  const [title, setTitle] = useStateIfMounted("");
+  const [picture, setPicture] = useStateIfMounted("");
+  const [description, setDescription] = useStateIfMounted("");
+  const [inputList, setInputList] = useStateIfMounted([""]);
+  const [open, setOpen] = useStateIfMounted(false);
 
-  const { user_details } = useContext(AppContext);
+  const { user_details, setLoading, setProfilePollCards } =
+    useContext(AppContext);
 
   const history = useHistory();
 
@@ -37,9 +39,11 @@ const AddPoll = () => {
 
   const addPollSubmit = async (e) => {
     e.preventDefault();
-    setTimeout(() => {
-      history.goBack();
-    }, 2000);
+    console.log("before fetch");
+    setLoading(true);
+    // setTimeout(() => {
+    //   history.goBack();
+    // }, 2000);
     const newPoll = {
       title: title,
       description: description,
@@ -55,7 +59,13 @@ const AddPoll = () => {
     })
       .then((res) => res.json())
       .then((json) => {
+        console.log("after fetch");
+
         console.log(json);
+        newPoll.poll_id = json.id;
+        setProfilePollCards((prevPollCards) => [...prevPollCards, newPoll]);
+        setLoading(false);
+        setDialog(false);
         setOpen(true);
       })
       .catch((err) => console.error(err));
@@ -86,92 +96,92 @@ const AddPoll = () => {
   };
 
   return (
-    <div style={{ backgroundColor: "lightgray" }}>
-      <Header title='Add Poll page' />
-      <ProfileHeader />
+    <div>
+      {/* <Header title='Add Poll page' />
+      <ProfileHeader /> */}
       <Grid container spacing={0} direction='column' alignItems='center'>
-        <Card style={styles.card}>
-          <CardContent style={styles.content}>
-            <FormControl>
-              <form
-                style={{ display: "flex", flexDirection: "column" }}
-                onSubmit={(e) => addPollSubmit(e)}>
-                <TextField
-                  helperText='Title of the question:'
-                  id='standard-basic'
-                  variant='standard'
-                  label='Question'
-                  // pattern="[@]{1}[a-z][a-z]"
-                  required
-                  // placeholder='valid tags format!'
-                  value={title}
-                  inputProps={{ maxLength: 100 }}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-                {/* <div style={{ marginTop: 20 }}>{JSON.stringify(inputList)}</div> */}
-                {inputList.map((x, i) => {
-                  return (
-                    <React.Fragment key={i}>
-                      <TextField
-                        required
-                        id='standard-basic'
-                        variant='standard'
-                        placeholder='Enter Answer'
-                        label='Answer'
-                        value={x}
-                        inputProps={{ maxLength: 50 }}
-                        onChange={(e) => handleInputChange(e, i)}
-                      />
-                      {/* <ButtonGroup> */}
-                      {inputList.length !== 1 && (
-                        <Button
-                          // className='mr10'
-                          onClick={() => handleRemoveClick(i)}>
-                          Remove
-                        </Button>
-                      )}
-                      {inputList.length - 1 === i && (
-                        <Button onClick={handleAddClick}>
-                          Add Another Answer
-                        </Button>
-                      )}
-                      {/* </ButtonGroup> */}
-                    </React.Fragment>
-                  );
-                })}
-                <TextField
-                  helperText='Write a description of the Poll:'
-                  id='standard-basic'
-                  variant='standard'
-                  label='Description'
-                  // pattern="[@]{1}[a-z][a-z]"
-                  required
-                  multiline
-                  placeholder='valid description!'
-                  value={description}
-                  inputProps={{ maxLength: 1000 }}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-                <TextField
-                  helperText='Enter a picture:'
-                  id='standard-basic'
-                  variant='standard'
-                  label='Picture'
-                  // pattern="[@]{1}[a-z][a-z]"
-                  // required
-                  placeholder='valid picture!'
-                  value={picture}
-                  inputProps={{ maxLength: 45 }}
-                  onChange={(e) => setPicture(e.target.value)}
-                />
-                <br />
-                <Button type='submit' variant='contained'>
-                  Submit
-                </Button>
-              </form>
-            </FormControl>
-          </CardContent>
-        </Card>
+        {/* <Card style={styles.card}> */}
+        <CardContent style={styles.content}>
+          <FormControl>
+            <form
+              style={{ display: "flex", flexDirection: "column" }}
+              onSubmit={(e) => addPollSubmit(e)}>
+              <TextField
+                helperText='Title of the question:'
+                id='standard-basic'
+                variant='standard'
+                label='Question'
+                // pattern="[@]{1}[a-z][a-z]"
+                required
+                // placeholder='valid tags format!'
+                value={title}
+                inputProps={{ maxLength: 100 }}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+              {/* <div style={{ marginTop: 20 }}>{JSON.stringify(inputList)}</div> */}
+              {inputList.map((x, i) => {
+                return (
+                  <React.Fragment key={i}>
+                    <TextField
+                      required
+                      id='standard-basic'
+                      variant='standard'
+                      placeholder='Enter Answer'
+                      label='Answer'
+                      value={x}
+                      inputProps={{ maxLength: 50 }}
+                      onChange={(e) => handleInputChange(e, i)}
+                    />
+                    {/* <ButtonGroup> */}
+                    {inputList.length !== 1 && (
+                      <Button
+                        // className='mr10'
+                        onClick={() => handleRemoveClick(i)}>
+                        Remove
+                      </Button>
+                    )}
+                    {inputList.length - 1 === i && (
+                      <Button onClick={handleAddClick}>
+                        Add Another Answer
+                      </Button>
+                    )}
+                    {/* </ButtonGroup> */}
+                  </React.Fragment>
+                );
+              })}
+              <TextField
+                helperText='Write a description of the Poll:'
+                id='standard-basic'
+                variant='standard'
+                label='Description'
+                // pattern="[@]{1}[a-z][a-z]"
+                required
+                multiline
+                placeholder='valid description!'
+                value={description}
+                inputProps={{ maxLength: 1000 }}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              <TextField
+                helperText='Enter a picture:'
+                id='standard-basic'
+                variant='standard'
+                label='Picture'
+                // pattern="[@]{1}[a-z][a-z]"
+                // required
+                placeholder='valid picture!'
+                value={picture}
+                inputProps={{ maxLength: 45 }}
+                onChange={(e) => setPicture(e.target.value)}
+              />
+              <br />
+              <Button type='submit' variant='contained'>
+                Submit
+              </Button>
+            </form>
+          </FormControl>
+        </CardContent>
+        {/* </Card> */}
       </Grid>
       <Snackbar
         open={open}
@@ -191,7 +201,7 @@ const AddPoll = () => {
 const styles = {
   card: {
     // height: 400,
-    width: 700,
+    // width: 700,
     // top: 50,
     // left: "30%",
     // display: "flex",

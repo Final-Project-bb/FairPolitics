@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AppContext } from "./Context";
 import { useHistory } from "react-router-dom";
+import { useStateIfMounted } from "use-state-if-mounted";
 
 import {
   FormControl,
@@ -17,7 +18,7 @@ import {
 } from "@mui/material";
 
 const ProfileShowDetails = () => {
-  const [picturePress, setPicturePress] = useState(false);
+  const [picturePress, setPicturePress] = useStateIfMounted(false);
   const {
     user_details,
     friend_details,

@@ -6,6 +6,7 @@ import Header from "./Header";
 import ProfileHeader from "./ProfileHeader";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import { useStateIfMounted } from "use-state-if-mounted";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -22,23 +23,27 @@ import {
   Grid,
 } from "@mui/material";
 
-const EditPollCard = () => {
-  const { user_details, currentItem, setLoading } = useContext(AppContext);
+const EditPollCard = ({ setDialog }) => {
+  const { user_details, currentItem, setLoading, setProfilePollCards } =
+    useContext(AppContext);
+  let p;
+  // currentItem.picture === null ? (p = "") : (p = picture);
+  const [inputList, setInputList] = useStateIfMounted(currentItem.answers);
 
-  const [inputList, setInputList] = useState(currentItem.answers);
-
-  const [title, setQuestion] = useState(currentItem.title);
-  const [picture, setPicture] = useState(currentItem.picture);
-  const [description, setDescription] = useState(currentItem.description);
-  const [open, setOpen] = useState(false);
+  const [title, setQuestion] = useStateIfMounted(currentItem.title);
+  const [picture, setPicture] = useStateIfMounted(currentItem.picture);
+  const [description, setDescription] = useStateIfMounted(
+    currentItem.description
+  );
+  const [open, setOpen] = useStateIfMounted(false);
 
   const history = useHistory();
 
   const editPollSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    console.log("before fetch");
+    // setLoading(true);
     const updatedPoll = {
-      user_id: user_details.user_id,
       title: title,
       description: description,
       answers: inputList,
@@ -54,14 +59,32 @@ const EditPollCard = () => {
     )
       .then((res) => res.json())
       .then((json) => {
+        console.log("inside fetch");
+
         console.log(json);
-        setOpen(true);
+        // setOpen(true);
+        setProfilePollCards((prevPollCards) => {
+          const i = prevPollCards.findIndex(
+            (poll) => poll.poll_id === currentItem.poll_id
+          );
+          let newPoll = prevPollCards[i];
+          newPoll.title = title;
+          newPoll.description = description;
+          newPoll.answers = inputList;
+          newPoll.picture = picture;
+          let newPolls = prevPollCards.filter(
+            (poll) => poll.poll_id !== currentItem.poll_id
+          );
+          newPolls.splice(i, 0, newPoll);
+          return newPolls;
+        });
+        setLoading(false);
+        setDialog(false);
       })
       .catch((error) => console.error(error));
-    setTimeout(() => {
-      history.goBack();
-    }, 2000);
-    setLoading(false);
+    // setTimeout(() => {
+    //   history.goBack();
+    // }, 2000);
   };
 
   // handle input change
@@ -85,98 +108,97 @@ const EditPollCard = () => {
   };
 
   return (
-    <div style={{ backgroundColor: "whitesmoke" }}>
-      <Header title='Profile Page' />
-      <ProfileHeader />
-      <div style={styles.title}>
+    <div>
+      {/* <Header title='Profile Page' />
+      <ProfileHeader /> */}
+      {/* <div style={styles.title}>
         Edit {currentItem.poll_id} {currentItem.title} poll
-      </div>
+      </div> */}
       <Grid container spacing={0} direction='column' alignItems='center'>
-        <Card style={styles.card}>
-          <CardContent style={styles.content}>
-            <FormControl>
-              <form
-                style={{ display: "flex", flexDirection: "column" }}
-                onSubmit={(e) => editPollSubmit(e)}>
-                <TextField
-                  id='standard-basic'
-                  variant='standard'
-                  label='Question'
-                  // pattern="[@]{1}[a-z][a-z]"
-                  required
-                  value={title}
-                  inputProps={{ maxLength: 100 }}
-                  onChange={(e) => setQuestion(e.target.value)}
-                />
-                <br />
-                {inputList
-                  .map((answer) => answer.answer)
-                  .map((x, i) => {
-                    return (
-                      <React.Fragment key={i}>
-                        <TextField
-                          id='standard-basic'
-                          variant='standard'
-                          label='Answer'
-                          placeholder='Enter Answer'
-                          value={x}
-                          required
-                          inputProps={{ maxLength: 50 }}
-                          onChange={(e) => handleInputChange(e, i)}
-                        />
-                        <div className='btn-box'>
-                          {inputList.length !== 1 && (
-                            <Button
-                              className='mr10'
-                              onClick={() => handleRemoveClick(i)}>
-                              Remove
-                            </Button>
-                          )}
-                          {inputList.length - 1 === i && (
-                            <Button onClick={handleAddClick}>
-                              Add Another Answer
-                            </Button>
-                          )}
-                        </div>
-                      </React.Fragment>
-                    );
-                  })}
-                <br />
-                <TextField
-                  id='standard-basic'
-                  variant='standard'
-                  label='Description'
-                  // pattern="[@]{1}[a-z][a-z]"
-                  required
-                  multiline
-                  placeholder='valid description!'
-                  value={description}
-                  inputProps={{ maxLength: 1000 }}
-
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-                <br />
-                <TextField
-                  id='standard-basic'
-                  variant='standard'
-                  label='Picture'
-                  // pattern="[@]{1}[a-z][a-z]"
-                  // required
-                  placeholder='valid picture!'
-                  value={picture}
-                  inputProps={{ maxLength: 45 }}
-                  onChange={(e) => setPicture(e.target.value)}
-                />
-                <br />
-                <Button type='submit' variant='contained'>
-                  Submit
-                </Button>
-              </form>
-            </FormControl>
-          </CardContent>
-        </Card>
+        {/* <Card style={styles.card}> */}
+        <CardContent style={styles.content}>
+          <FormControl>
+            <form
+              style={{ display: "flex", flexDirection: "column" }}
+              onSubmit={editPollSubmit}>
+              <TextField
+                id='standard-basic'
+                variant='standard'
+                label='Question'
+                // pattern="[@]{1}[a-z][a-z]"
+                required
+                value={title}
+                inputProps={{ maxLength: 100 }}
+                onChange={(e) => setQuestion(e.target.value)}
+              />
+              <br />
+              {inputList
+                .map((answer) => answer.answer)
+                .map((x, i) => {
+                  return (
+                    <React.Fragment key={i}>
+                      <TextField
+                        id='standard-basic'
+                        variant='standard'
+                        label='Answer'
+                        placeholder='Enter Answer'
+                        value={x}
+                        required
+                        inputProps={{ maxLength: 50 }}
+                        onChange={(e) => handleInputChange(e, i)}
+                      />
+                      <div className='btn-box'>
+                        {inputList.length !== 1 && (
+                          <Button
+                            className='mr10'
+                            onClick={() => handleRemoveClick(i)}>
+                            Remove
+                          </Button>
+                        )}
+                        {inputList.length - 1 === i && (
+                          <Button onClick={handleAddClick}>
+                            Add Another Answer
+                          </Button>
+                        )}
+                      </div>
+                    </React.Fragment>
+                  );
+                })}
+              <br />
+              <TextField
+                id='standard-basic'
+                variant='standard'
+                label='Description'
+                // pattern="[@]{1}[a-z][a-z]"
+                required
+                multiline
+                placeholder='valid description!'
+                value={description}
+                inputProps={{ maxLength: 1000 }}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              <br />
+              <TextField
+                id='standard-basic'
+                variant='standard'
+                label='Picture'
+                // pattern="[@]{1}[a-z][a-z]"
+                // required
+                placeholder='valid picture!'
+                value={picture}
+                inputProps={{ maxLength: 45 }}
+                onChange={(e) => setPicture(e.target.value)}
+              />
+              <br />
+              <Button type='submit' variant='contained'>
+                Submit
+              </Button>
+            </form>
+          </FormControl>
+        </CardContent>
+        {/* </Card> */}
       </Grid>
-      <Snackbar
+      {/* <Snackbar
         open={open}
         autoHideDuration={6000}
         onClose={() => setOpen(false)}>
@@ -186,7 +208,7 @@ const EditPollCard = () => {
           sx={{ width: "100%" }}>
           Poll edited successfully ! Redirecting...
         </Alert>
-      </Snackbar>
+      </Snackbar> */}
     </div>
   );
 };
