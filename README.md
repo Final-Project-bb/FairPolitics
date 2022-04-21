@@ -1,16 +1,16 @@
 <h1> FairPolitics project </h1><br>
- Many times we see an imbalance between the issues that the elected
- offical focuses on and the issues that the electorate wanted to focus
- on. This case carries with it a problem of not fulfilling the will of
- the voters so we decided to fix this by developing a system called
- <strong> Fair Politics</strong> that will help the elected offical who wants to get
- feedback from his voter to know which issues to focus on in order to
- divide his time more correctly. We intend to build the feedback and
- implement Dynamic Proportional Rankings algorithm feedback so that the
- results they get reflects the will of the voters. This system will be
- conveniently and friendly to the electorate and elected by unique
- identification, Including support for a variety of languages common to
- the population.
+Many times we see an imbalance between the issues that the elected official
+focuses on and the issues that the electorate wanted to focus on. This case carries
+with it a problem of not fulfilling the will of the voters, so we decided to fix
+this by developing a system called <strong>Fair Politics</strong> that will help the elected official
+who wants to get feedback from his voters to know which issues to focus, to divide
+his time more correctly. Also, our system builds in a way such that we achieve the
+highest satisfaction for most of the voters. We intend to build the feedback and
+implement Dynamic Proportional Rankings algorithm feedback, such that the results
+they get reflect the will of the voters. This system will be convenient and friendly
+to the users, including support for a variety of languages common to the population.
+Moreover, we have a unique identification to avoid bias in the results.
+
 
 ## Initialize project: 
   * Basically can be executed by Linux Ubuntu/Windows.
@@ -52,7 +52,22 @@
         ```
 
 
-  
+## Initialize .env file:
+<strong>make your .env file in this format:</strong>
+<br><br>
+// for DB connection
+<br>DATABASE_HOST = your DB host (usualy localhost)
+<br>DATABASE_USER = your DB user name (usualy root)
+<br>DATABASE_PASSWORD = your DB password
+<br>DATABASE = your DB schema name
+<br><br>
+// Google token
+<br>GOOGLE_CLIENT_ID = "your id";
+<br>GOOGLE_CLIENT_SECRET = "your id";
+<br><br>
+// Facebook token
+<br>FACEBOOK_APP_ID = "your id";
+<br>FACEBOOK_APP_SECRET = "your id";
 
 ## Languages:
 - <strong> Backend: Python,nodeJs(express).<strong/><br>
