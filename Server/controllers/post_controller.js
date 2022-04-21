@@ -25,7 +25,9 @@ const createPost = (req, res) => {
           throw err;
         } else {
           let id = postId[0].post_id;
-          res.status(200).send({ message: `post ${id} added successfully!` });
+          res
+            .status(200)
+            .send({ message: `post ${id} added successfully!`, id: id });
         }
       });
     }

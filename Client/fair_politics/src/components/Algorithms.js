@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { AppContext } from "./Context";
 import Header from "./Header";
+import { useStateIfMounted } from "use-state-if-mounted";
+
 import {
   FormControl,
   FormControlLabel,
@@ -20,7 +22,7 @@ import { Box } from "@mui/system";
 import { algorithms } from "./algorithmDetails";
 
 const Algorithms = () => {
-  const [chosenAlgorithm, setChosenAlgorithm] = useState(-1);
+  const [chosenAlgorithm, setChosenAlgorithm] = useStateIfMounted(-1);
   const { user_details, algo_id, setAlgoId } = useContext(AppContext);
 
   const getAlgorithmChosen = async () => {

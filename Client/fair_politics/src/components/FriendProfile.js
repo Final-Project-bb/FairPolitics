@@ -20,9 +20,11 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useHistory } from "react-router-dom";
 import { Backdrop } from "@mui/material";
 import { AppBar } from "@mui/material";
+import { useStateIfMounted } from "use-state-if-mounted";
+import { StyledTabs, StyledTab } from "./CustomStyledTabs";
 
 const FriendProfile = () => {
-  const [value, setValue] = React.useState("1");
+  const [value, setValue] = useStateIfMounted("1");
 
   const history = useHistory();
 
@@ -89,19 +91,20 @@ const FriendProfile = () => {
               position='fixed'
               sx={{ top: "auto", bottom: 0, backgroundColor: "whitesmoke" }}>
               <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                <TabList
+                <StyledTabs
+                  value={value}
                   variant='fullWidth'
                   onChange={handleChange}
                   aria-label='lab API tabs example'>
-                  <Tab
+                  <StyledTab
                     label={`${friend_details.first_name}'S Posts`}
                     value='1'
                   />
-                  <Tab
+                  <StyledTab
                     label={`${friend_details.first_name}'S Polls`}
                     value='2'
                   />
-                </TabList>
+                </StyledTabs>
               </Box>
             </AppBar>
             <TabPanel value='1'>

@@ -39,7 +39,9 @@ const createPoll = (req, res) => {
               //   }
             );
           });
-          res.status(200).send({ message: `poll ${id} added successfully!` });
+          res
+            .status(200)
+            .send({ message: `poll ${id} added successfully!`, id: id });
         }
       });
     }

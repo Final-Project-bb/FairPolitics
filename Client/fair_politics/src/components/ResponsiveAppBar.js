@@ -19,6 +19,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import PropTypes from "prop-types";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 import CssBaseline from "@mui/material/CssBaseline";
+import { useStateIfMounted } from "use-state-if-mounted";
 
 import { useHistory } from "react-router-dom";
 import { AppContext } from "./Context";
@@ -54,9 +55,9 @@ ElevationScroll.propTypes = {
 };
 
 const ResponsiveAppBar = (props) => {
-  const [anchorElNav, setAnchorElNav] = useState(null);
-  const [anchorElUser, setAnchorElUser] = useState(null);
-  const [search, setSearch] = useState();
+  const [anchorElNav, setAnchorElNav] = useStateIfMounted(null);
+  const [anchorElUser, setAnchorElUser] = useStateIfMounted(null);
+  const [search, setSearch] = useStateIfMounted();
 
   const {
     user_details,
@@ -157,9 +158,7 @@ const ResponsiveAppBar = (props) => {
       <CssBaseline />
 
       <ElevationScroll {...props}>
-        <AppBar color='info' position='fixed' 
-        sx={{ bottom: 'auto', top: 0 }}
-        >
+        <AppBar color='info' position='fixed' sx={{ bottom: "auto", top: 0 }}>
           <Container maxWidth='xl'>
             <Toolbar disableGutters>
               <Typography
@@ -350,7 +349,6 @@ const ResponsiveAppBar = (props) => {
             </Toolbar>
           </Container>
         </AppBar>
-
       </ElevationScroll>
     </React.Fragment>
   );

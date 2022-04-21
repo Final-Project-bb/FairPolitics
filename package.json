@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "use-state-if-mounted": "^1.0.4"
+  }
+}

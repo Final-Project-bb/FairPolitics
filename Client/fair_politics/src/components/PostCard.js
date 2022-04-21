@@ -8,6 +8,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { useStateIfMounted } from "use-state-if-mounted";
 
 import {
   FormControl,
@@ -34,19 +35,21 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import SendIcon from "@mui/icons-material/Send";
 import Comments from "./Comments";
+import EditPostCard from "./EditPostCard";
 
 const PostCard = ({ item, inProfile, setSnack }) => {
-  const [commentsButtonId, setCommentsButtonId] = useState(0);
-  const [commentsButton, setCommentsButton] = useState(false);
-  const [comment, setComment] = useState("");
-  const [poll_algo, setPollAlgo] = useState(1);
+  const [commentsButtonId, setCommentsButtonId] = useStateIfMounted(0);
+  const [commentsButton, setCommentsButton] = useStateIfMounted(false);
+  const [comment, setComment] = useStateIfMounted("");
+  const [poll_algo, setPollAlgo] = useStateIfMounted(1);
 
-  // const [post, setPost] = useState(item);
-  const [likes, setLikes] = useState(item.likes);
-  const [comments, setComments] = useState(item.comments);
-  const [userName, setUserName] = useState("");
+  // const [post, setPost] = useStateIfMounted(item);
+  const [likes, setLikes] = useStateIfMounted(item.likes);
+  const [comments, setComments] = useStateIfMounted(item.comments);
+  const [userName, setUserName] = useStateIfMounted("");
 
-  const [dialog, setDialog] = useState(false);
+  const [dialog, setDialog] = useStateIfMounted(false);
+  const [dialogContent, setDialogContent] = useStateIfMounted("");
 
   const {
     user_details,
@@ -65,8 +68,6 @@ const PostCard = ({ item, inProfile, setSnack }) => {
     : algorithms.filter((item) => item.id == algo_id)[0].title;
 
   useEffect(async () => {
-    const ac = new AbortController();
-
     algoName = !inProfile
       ? algorithms.filter((item) => item.id == poll_algo)[0].title
       : algorithms.filter((item) => item.id == algo_id)[0].title;
@@ -75,7 +76,6 @@ const PostCard = ({ item, inProfile, setSnack }) => {
       let id = item.user_id;
       await fetch(`http://localhost:4000/api/get_user_by_id/${id}`, {
         method: "GET",
-        signal: ac.signal,
       })
         .then((res) => res.json())
         .then((json) => {
@@ -91,7 +91,6 @@ const PostCard = ({ item, inProfile, setSnack }) => {
     const getFriendAlgo = async () => {
       await fetch(`http://localhost:4000/api/get_algorithm/${item.user_id}`, {
         method: "GET",
-        signal: ac.signal,
       })
         .then((res) => res.json())
         .then((json) => {
@@ -111,7 +110,6 @@ const PostCard = ({ item, inProfile, setSnack }) => {
         `http://localhost:4000/api/post_algo/${item.post_id}/${algo}`,
         {
           method: "GET",
-          signal: ac.signal,
         }
       )
         .then((res) => res.json())
@@ -139,10 +137,6 @@ const PostCard = ({ item, inProfile, setSnack }) => {
 
     await getUserDetails();
     await getResult();
-
-    return () => {
-      ac.abort();
-    };
   }, []);
 
   const FriendProfileRef = async () => {
@@ -236,10 +230,12 @@ const PostCard = ({ item, inProfile, setSnack }) => {
     })
       .then((res) => {
         res.json();
-        setSnack(true);
         setProfilePostCards((prev) => {
           return prev.filter((post) => post.post_id !== item.post_id);
         });
+        setSnack(true);
+        setDialog(false);
+        setLoading(false);
       })
       .catch((error) => console.error(error));
 
@@ -254,7 +250,11 @@ const PostCard = ({ item, inProfile, setSnack }) => {
           <CardContent>
             <Tooltip title='Edit'>
               <IconButton
-                onClick={(e) => editPost(e)}
+                onClick={() => {
+                  setCurrentItem(item);
+                  setDialogContent("Edit Post");
+                  setDialog(true);
+                }}
                 sx={[
                   {
                     "&:hover": { color: "black" },
@@ -267,7 +267,10 @@ const PostCard = ({ item, inProfile, setSnack }) => {
             </Tooltip>
             <Tooltip title='Delete'>
               <IconButton
-                onClick={() => setDialog(true)}
+                onClick={() => {
+                  setDialogContent("Delete Post");
+                  setDialog(true);
+                }}
                 sx={[
                   {
                     "&:hover": { color: "black" },
@@ -363,7 +366,7 @@ const PostCard = ({ item, inProfile, setSnack }) => {
             aria-label='show more'>
             <Tooltip
               title={
-                comments[0].comment_id !== null
+                comments.length > 0
                   ? !commentsButton
                     ? `Show Comments`
                     : `Hide Comments`
@@ -372,12 +375,11 @@ const PostCard = ({ item, inProfile, setSnack }) => {
               <ExpandMoreIcon />
             </Tooltip>
           </ExpandMore>
-          ({comments[0].comment_id !== null ? comments.length : 0})
-          {/* </CardContent> */}
+          ({comments.length}){/* </CardContent> */}
         </CardActions>
         <Collapse in={commentsButton} timeout='auto' unmountOnExit>
           <CardContent>
-            {comments[0].comment_id !== null &&
+            {comments.length > 0 &&
               comments.map((comment) => {
                 return (
                   <Comments
@@ -428,18 +430,35 @@ const PostCard = ({ item, inProfile, setSnack }) => {
         onClose={() => setDialog(false)}
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'>
-        <DialogTitle id='alert-dialog-title'>Delete Post</DialogTitle>
-        <DialogContent>
-          <DialogContentText id='alert-dialog-description'>
-            Are you sure you want delete this post?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDialog(false)}>Cancel</Button>
-          <Button onClick={(e) => deletePost(e)} autoFocus>
-            Yes
-          </Button>
-        </DialogActions>
+        <DialogTitle id='alert-dialog-title'>{dialogContent}</DialogTitle>
+        {dialogContent === "Delete Post" && (
+          <>
+            <DialogContent>
+              <DialogContentText id='alert-dialog-description'>
+                Are you sure you want delete this post?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setDialog(false)}>Cancel</Button>
+              <Button onClick={(e) => deletePost(e)} autoFocus>
+                Yes
+              </Button>
+            </DialogActions>
+          </>
+        )}
+        {dialogContent === "Edit Post" && (
+          <>
+            <DialogContent>
+              <EditPostCard setDialog={setDialog} />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setDialog(false)}>Cancel</Button>
+              {/* <Button onClick={(e) => deletePost(e)} autoFocus>
+                Yes
+              </Button> */}
+            </DialogActions>
+          </>
+        )}
       </Dialog>
     </div>
   );

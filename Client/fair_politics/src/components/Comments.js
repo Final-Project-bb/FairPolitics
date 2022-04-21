@@ -6,6 +6,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { useStateIfMounted } from "use-state-if-mounted";
 
 import {
   FormControl,
@@ -36,11 +37,13 @@ const Comments = ({
   comments,
   //   getUserDetails,
 }) => {
-  const [commentEdit, setCommentEdit] = useState("");
-  const [userName, setUserName] = useState("");
-  const [commentLikes, setCommentLikes] = useState(comment.comment_likes);
-  const [deleteDialog, setDeleteDialog] = useState(false);
-  const [editDialog, setEditDialog] = useState(false);
+  const [commentEdit, setCommentEdit] = useStateIfMounted("");
+  const [userName, setUserName] = useStateIfMounted("");
+  const [commentLikes, setCommentLikes] = useStateIfMounted(
+    comment.comment_likes
+  );
+  const [deleteDialog, setDeleteDialog] = useStateIfMounted(false);
+  const [editDialog, setEditDialog] = useStateIfMounted(false);
 
   const {
     user_details,
@@ -55,13 +58,10 @@ const Comments = ({
   const history = useHistory();
 
   useEffect(() => {
-    const ac = new AbortController();
-
     const getUserDetails = async () => {
       let id = comment.user_id_comment;
       await fetch(`http://localhost:4000/api/get_user_by_id/${id}`, {
         method: "GET",
-        signal: ac.signal,
       })
         .then((res) => res.json())
         .then((json) => {
@@ -75,7 +75,6 @@ const Comments = ({
         .catch((err) => console.error(err));
     };
     getUserDetails();
-    return () => ac.abort();
   }, []);
 
   const FriendProfileRef = async () => {
@@ -108,16 +107,17 @@ const Comments = ({
       .then((json) => console.log(json))
       .catch((err) => console.error(err));
     setComment("");
-
     setComments((prevComments) => {
-      let newcomment = prevComments.filter(
+      const i = prevComments.findIndex(
         (comment) => comment.comment_id === comment_id
-      )[0];
-      newcomment.comment = commentEdit;
-      let newComments = prevComments.filter(
-        (comment) => comment.comment_id !== comment_id
       );
-      newComments.push(newcomment);
+      let newcomment = prevComments[i];
+      newcomment.comment = commentEdit;
+      let newComments = prevComments.filter((comment) => {
+        return comment.comment_id !== comment_id;
+      });
+      console.log(i);
+      newComments.splice(i, 0, newcomment);
       return newComments;
     });
     setEditDialog(false);

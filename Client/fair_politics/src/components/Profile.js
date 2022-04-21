@@ -22,6 +22,17 @@ import Backdrop from "@mui/material/Backdrop";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import AppBar from "@mui/material/AppBar";
+import { useStateIfMounted } from "use-state-if-mounted";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import { StyledTabs, StyledTab } from "./CustomStyledTabs";
+
+import AddPost from "./AddPost";
+import AddPoll from "./AddPoll";
+
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
 });
@@ -41,8 +52,10 @@ const Profile = () => {
     inFriend,
   } = useContext(AppContext);
 
-  const [value, setValue] = useState("1");
-  const [snack, setSnack] = useState(false);
+  const [value, setValue] = useStateIfMounted("1");
+  const [snack, setSnack] = useStateIfMounted(false);
+  const [dialog, setDialog] = useStateIfMounted(false);
+  const [dialogContent, setDialogContent] = useStateIfMounted("");
 
   const history = useHistory();
 
@@ -53,15 +66,10 @@ const Profile = () => {
   useEffect(() => {
     setInFriend(false);
 
-    const ac = new AbortController();
-
     const fetchSelfPolls = async () => {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:4000/api/get_polls/${user_details.user_id}`,
-        {
-          signal: ac.signal,
-        }
+        `http://localhost:4000/api/get_polls/${user_details.user_id}`
       );
       const data = await response.json();
       console.log(data.allPollsWithAnswer);
@@ -76,10 +84,7 @@ const Profile = () => {
     const fetchSelfPosts = async () => {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:4000/api/get_Posts/${user_details.user_id}`,
-        {
-          signal: ac.signal,
-        }
+        `http://localhost:4000/api/get_Posts/${user_details.user_id}`
       );
       const data = await response.json();
       console.log(data.allPostsWithComments);
@@ -94,124 +99,149 @@ const Profile = () => {
     fetchSelfPosts();
     console.log("Profile effected");
     fetchSelfPolls();
-    return () => ac.abort();
   }, []);
 
   return (
     <div style={{ backgroundColor: "lightgray" }}>
       <Header title='Profile Page' />
-      {!loading ? (
-        <div>
-          <ProfileHeader />
-          <Box sx={{ width: "100%", typography: "body1" }}>
-            <TabContext value={value}>
-              <AppBar position='fixed' sx={{ top: "auto", bottom: 0, backgroundColor: "whitesmoke"  }}>
-                <Box
-                  sx={{
-                    borderBottom: 1,
-                    borderColor: "divider",
-                    boxShadow: 4,
-                  }}>
-                  <TabList
-                    textColor='primary'
-                    variant='fullWidth'
-                    onChange={handleChange}
-                    sx={{ }}>
-                    <Tab label='My Posts' value='1' />
-                    <Tab label='My Polls' value='2' />
-                  </TabList>
-                </Box>
-              </AppBar>
-              <TabPanel value='1' >
-                {/* <div style={styles.title}>Posts Feed:</div> */}
-                <Box sx={{ flexGrow: 1 }}>
-                  <Grid container direction='row' alignItems='center'>
-                    <Button
-                      sx={[
-                        {
-                          "&:hover": {
-                            color: "#2196f3",
-                            backgroundColor: "white",
-                            boxShadow: 3,
-                          },
-                          marginBottom: 5,
+      <div>
+        <ProfileHeader />
+        <Box sx={{ width: "100%", typography: "body1" }}>
+          <TabContext value={value}>
+            <AppBar
+              position='fixed'
+              sx={{ top: "auto", bottom: 0, backgroundColor: "whitesmoke" }}>
+              <Box
+                sx={{
+                  borderBottom: 1,
+                  borderColor: "divider",
+                  boxShadow: 4,
+                }}>
+                <StyledTabs
+                  value={value}
+                  textColor='primary'
+                  variant='fullWidth'
+                  onChange={handleChange}
+                  sx={{}}>
+                  <StyledTab label='My Posts' value='1' />
+                  <StyledTab label='My Polls' value='2' />
+                </StyledTabs>
+              </Box>
+            </AppBar>
+            <TabPanel value='1'>
+              {/* <div style={styles.title}>Posts Feed:</div> */}
+              <Box sx={{ flexGrow: 1 }}>
+                <Grid container direction='row' alignItems='center'>
+                  <Button
+                    sx={[
+                      {
+                        "&:hover": {
+                          color: "#2196f3",
+                          backgroundColor: "white",
+                          boxShadow: 3,
                         },
-                      ]}
-                      onClick={() => history.push("/profile/addPost")}>
-                      <Grid item>
-                        <AddIcon
-                          fontSize='large'
-                          // to='/profile/addPoll'
-                        />
-                      </Grid>
-                      <Grid item>Add New Post</Grid>
-                    </Button>
-                  </Grid>
-                  <Grid container spacing={0}>
-                    {profilePostCards.map((item) => {
-                      return (
-                        <PostCard
-                          key={item.post_id}
-                          item={item}
-                          inProfile={true}
-                          setSnack={setSnack}
-                          setProfilePostCards={setProfilePostCards}
-                        />
-                      );
-                    })}
-                  </Grid>
-                </Box>
-              </TabPanel>
-              <TabPanel value='2' >
-                <Box sx={{ flexGrow: 1 }}>
-                  <Grid container direction='row' alignItems='center'>
-                    <Button
-                      sx={[
-                        {
-                          "&:hover": {
-                            color: "#2196f3",
-                            backgroundColor: "white",
-                            boxShadow: 3,
-                          },
-                          marginBottom: 5,
+                        marginBottom: 5,
+                      },
+                    ]}
+                    onClick={() => {
+                      setDialogContent("Add New Content");
+                      setDialog(true);
+                    }}>
+                    <Grid item>
+                      <AddIcon
+                        fontSize='large'
+                        // to='/profile/addPoll'
+                      />
+                    </Grid>
+                    <Grid item>Add New Post</Grid>
+                  </Button>
+                </Grid>
+                <Grid container spacing={0}>
+                  {profilePostCards.map((item) => {
+                    return (
+                      <PostCard
+                        key={item.post_id}
+                        item={item}
+                        inProfile={true}
+                        setSnack={setSnack}
+                      />
+                    );
+                  })}
+                </Grid>
+              </Box>
+            </TabPanel>
+            <TabPanel value='2'>
+              <Box sx={{ flexGrow: 1 }}>
+                <Grid container direction='row' alignItems='center'>
+                  <Button
+                    sx={[
+                      {
+                        "&:hover": {
+                          color: "#2196f3",
+                          backgroundColor: "white",
+                          boxShadow: 3,
                         },
-                      ]}
-                      onClick={() => history.push("/profile/addPoll")}>
-                      <Grid item>
-                        <AddIcon fontSize='large' />
-                      </Grid>
-                      <Grid item>Add New Poll</Grid>
-                    </Button>
-                  </Grid>
-                  <Grid container spacing={0}>
-                    {profilePollCards.map((item) => {
-                      return (
-                        <PollCard
-                          key={item.poll_id}
-                          item={item}
-                          inProfile={true}
-                          setSnack={setSnack}
-                          setProfilePollCards={setProfilePollCards}
-                        />
-                      );
-                    })}
-                  </Grid>
-                </Box>
-              </TabPanel>
-            </TabContext>
-          </Box>
-          <div style={styles.profileHead}></div>
-        </div>
-      ) : (
-        <Backdrop
-          sx={{ color: "#fff" }}
-          open={loading}
-          // onClick={() => setLoading(false)}
+                        marginBottom: 5,
+                      },
+                    ]}
+                    onClick={() => {
+                      setDialogContent("Add New Content");
+                      setDialog(true);
+                    }}>
+                    <Grid item>
+                      <AddIcon fontSize='large' />
+                    </Grid>
+                    <Grid item>Add New Poll</Grid>
+                  </Button>
+                </Grid>
+                <Grid container spacing={0}>
+                  {profilePollCards.map((item) => {
+                    return (
+                      <PollCard
+                        key={item.poll_id}
+                        item={item}
+                        inProfile={true}
+                        setSnack={setSnack}
+                      />
+                    );
+                  })}
+                </Grid>
+              </Box>
+            </TabPanel>
+          </TabContext>
+        </Box>
+        <Dialog
+          open={dialog}
+          onClose={() => setDialog(false)}
+          // aria-labelledby='alert-dialog-title'
+          // aria-describedby='alert-dialog-description'
         >
-          <CircularProgress color='inherit' />
-        </Backdrop>
-      )}
-      <Snackbar
+          <DialogTitle id='alert-dialog-title'>
+            {value === "1" ? "Add New Post" : "Add New Poll"}
+          </DialogTitle>
+          {dialogContent === "Add New Content" && (
+            <>
+              <DialogContent>
+                {value === "1" ? (
+                  <AddPost setDialog={setDialog} />
+                ) : (
+                  <AddPoll setDialog={setDialog} />
+                )}
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => setDialog(false)}>Cancel</Button>
+              </DialogActions>
+            </>
+          )}
+        </Dialog>
+      </div>
+      <Backdrop
+        sx={{ color: "#fff" }}
+        open={loading}
+        onClick={() => setLoading(false)}>
+        <CircularProgress color='inherit' />
+      </Backdrop>
+      {/* <Snackbar
         open={snack}
         autoHideDuration={6000}
         onClose={() => setSnack(false)}>
@@ -221,7 +251,7 @@ const Profile = () => {
           sx={{ width: "100%" }}>
           Item deleted successfully !
         </Alert>
-      </Snackbar>
+      </Snackbar> */}
     </div>
   );
 };
@@ -291,79 +321,5 @@ const styles = {
     // // margin:100,
   },
 };
-const NavLinkAbout = styled(Link)`
-  color: #fff;
-  ${"" /* justify-content: space-between; */}
-  flex-direction:row;
-  color: white;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  position: absolute;
-  left: 50px;
-  ${"" /* fontSize:30px; */}
-  ${"" /* size:30px; */}
-  text-decoration: none;
-  ${"" /* margin-left: 30px; */}
-  top:-100px;
-  ${"" /* padding: 0 0.1rem; */}
-  height: 100%;
-  cursor: pointer;
-  &:hover {
-    color: green;
-  }
-  &.active {
-    color: #15cdfc;
-  }
-`;
-const NavLinkDis = styled(Link)`
-  color: #fff;
-  ${"" /* justify-content: space-between; */}
-  flex-direction:row;
-  color: white;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  position: absolute;
-  left: 140px;
-  ${"" /* fontSize:30px; */}
-  ${"" /* size:30px; */}
-  text-decoration: none;
-  ${"" /* margin-left: 30px; */}
-  top:-100px;
-  ${"" /* padding: 0 0.1rem; */}
-  height: 100%;
-  cursor: pointer;
-  &:hover {
-    color: green;
-  }
-  &.active {
-    color: #15cdfc;
-  }
-`;
-const NavLinkFeed = styled(Link)`
-  color: #fff;
-  ${"" /* justify-content: space-between; */}
-  flex-direction:row;
-  color: white;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  position: absolute;
-  left: 270px;
-  ${"" /* fontSize:30px; */}
-  ${"" /* size:30px; */}
-  text-decoration: none;
-  ${"" /* margin-left: 30px; */}
-  top:-100px;
-  ${"" /* padding: 0 0.1rem; */}
-  height: 100%;
-  cursor: pointer;
-  &:hover {
-    color: green;
-  }
-  &.active {
-    color: #15cdfc;
-  }
-`;
+
 export default Profile;

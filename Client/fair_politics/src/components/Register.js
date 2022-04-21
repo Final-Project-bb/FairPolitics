@@ -11,6 +11,7 @@ import { FcGoogle, FcOk } from "react-icons/fc";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Backdrop, Tooltip } from "@mui/material";
 import { Icon } from "@iconify/react";
+import { useStateIfMounted } from "use-state-if-mounted";
 
 import {
   FormControl,
@@ -26,29 +27,29 @@ import {
 } from "@mui/material";
 
 const Register = () => {
-  const [id, setId] = useState("");
-  const [email, setEmail] = useState("");
-  const [gmail, setGmail] = useState(null);
-  const [phone, setPhone] = useState("");
-  const [pass, setPass] = useState("");
-  const [pass2, setPass2] = useState("");
-  const [tempPass, setTempPass] = useState("");
-  const [tempPassFromDB, setTempPassFromDB] = useState("");
-  const [first_name, setFirstName] = useState("");
-  const [last_name, setLastName] = useState("");
-  const [city, setCity] = useState("");
-  const [job_title, setJobTitle] = useState("");
-  const [date, setDate] = useState("");
-  const [profile_picture, setProfilePicture] = useState("");
-  const [gender, setGender] = useState("");
-  const [is_public_elected, setIsPublicElected] = useState(0);
-  const [description, setDescription] = useState("");
-  const [semi_description, setSemiDescription] = useState("");
-  const [tempPassFlag, setTempPassFlag] = useState(false);
-  const [passFlag, setPassFlag] = useState(false);
-  const [otherFlag, setOtherFlag] = useState(false);
-  const [isGoogleAuth, setIsGoogleAuth] = useState(false);
-  const [isFacebookAuth, setIsFacebookAuth] = useState(false);
+  const [id, setId] = useStateIfMounted("");
+  const [email, setEmail] = useStateIfMounted("");
+  const [gmail, setGmail] = useStateIfMounted(null);
+  const [phone, setPhone] = useStateIfMounted("");
+  const [pass, setPass] = useStateIfMounted("");
+  const [pass2, setPass2] = useStateIfMounted("");
+  const [tempPass, setTempPass] = useStateIfMounted("");
+  const [tempPassFromDB, setTempPassFromDB] = useStateIfMounted("");
+  const [first_name, setFirstName] = useStateIfMounted("");
+  const [last_name, setLastName] = useStateIfMounted("");
+  const [city, setCity] = useStateIfMounted("");
+  const [job_title, setJobTitle] = useStateIfMounted("");
+  const [date, setDate] = useStateIfMounted("");
+  const [profile_picture, setProfilePicture] = useStateIfMounted("");
+  const [gender, setGender] = useStateIfMounted("");
+  const [is_public_elected, setIsPublicElected] = useStateIfMounted(0);
+  const [description, setDescription] = useStateIfMounted("");
+  const [semi_description, setSemiDescription] = useStateIfMounted("");
+  const [tempPassFlag, setTempPassFlag] = useStateIfMounted(false);
+  const [passFlag, setPassFlag] = useStateIfMounted(false);
+  const [otherFlag, setOtherFlag] = useStateIfMounted(false);
+  const [isGoogleAuth, setIsGoogleAuth] = useStateIfMounted(false);
+  const [isFacebookAuth, setIsFacebookAuth] = useStateIfMounted(false);
 
   const { setUserDetails, setIsConnected, loading, setLoading, setAlgoId } =
     useContext(AppContext);
