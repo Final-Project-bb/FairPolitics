@@ -37,7 +37,7 @@ import SendIcon from "@mui/icons-material/Send";
 import Comments from "./Comments";
 import EditPostCard from "./EditPostCard";
 
-const PostCard = ({ item, inProfile, setSnack }) => {
+const PostCard = ({ item, inProfile, setAlert, setAlertContent }) => {
   const [commentsButtonId, setCommentsButtonId] = useStateIfMounted(0);
   const [commentsButton, setCommentsButton] = useStateIfMounted(false);
   const [comment, setComment] = useStateIfMounted("");
@@ -225,6 +225,7 @@ const PostCard = ({ item, inProfile, setSnack }) => {
   const deletePost = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setDialog(false);
     await fetch(`http://localhost:4000/api/delete_Post/${item.post_id}`, {
       method: "DELETE",
     })
@@ -233,9 +234,9 @@ const PostCard = ({ item, inProfile, setSnack }) => {
         setProfilePostCards((prev) => {
           return prev.filter((post) => post.post_id !== item.post_id);
         });
-        setSnack(true);
-        setDialog(false);
         setLoading(false);
+        setAlertContent("Post Deleted successfully");
+        setAlert(true);
       })
       .catch((error) => console.error(error));
 
@@ -375,11 +376,11 @@ const PostCard = ({ item, inProfile, setSnack }) => {
               <ExpandMoreIcon />
             </Tooltip>
           </ExpandMore>
-          ({comments.length}){/* </CardContent> */}
+          ({comments[0].comment_id !== null ? comments.length : 0})
         </CardActions>
         <Collapse in={commentsButton} timeout='auto' unmountOnExit>
           <CardContent>
-            {comments.length > 0 &&
+            {comments[0].comment_id !== null &&
               comments.map((comment) => {
                 return (
                   <Comments
@@ -449,7 +450,11 @@ const PostCard = ({ item, inProfile, setSnack }) => {
         {dialogContent === "Edit Post" && (
           <>
             <DialogContent>
-              <EditPostCard setDialog={setDialog} />
+              <EditPostCard
+                setDialog={setDialog}
+                setAlert={setAlert}
+                setAlertContent={setAlertContent}
+              />
             </DialogContent>
             <DialogActions>
               <Button onClick={() => setDialog(false)}>Cancel</Button>

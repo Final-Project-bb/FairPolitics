@@ -23,7 +23,7 @@ import {
   Grid,
 } from "@mui/material";
 
-const EditPostCard = ({ setDialog }) => {
+const EditPostCard = ({ setDialog, setAlert, setAlertContent }) => {
   const { currentItem, setLoading, setProfilePostCards } =
     useContext(AppContext);
 
@@ -40,6 +40,8 @@ const EditPostCard = ({ setDialog }) => {
   const editPostSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setDialog(false);
+
     const updatedPost = {
       title: title,
       description: description,
@@ -73,8 +75,9 @@ const EditPostCard = ({ setDialog }) => {
           newPosts.splice(i, 0, newPost);
           return newPosts;
         });
+        setAlertContent("Post Edited successfully");
+        setAlert(true);
         setLoading(false);
-        setDialog(false);
       })
       .catch((error) => console.error(error));
     // setTimeout(() => {

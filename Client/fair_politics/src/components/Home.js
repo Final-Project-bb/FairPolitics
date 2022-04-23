@@ -27,9 +27,15 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 import AddPost from "./AddPost";
 import AddPoll from "./AddPoll";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import { useStateIfMounted } from "use-state-if-mounted";
+
 import { StyledTabs, StyledTab } from "./CustomStyledTabs";
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
+});
 const Home = () => {
   const {
     user_details,
@@ -46,6 +52,8 @@ const Home = () => {
   const [value, setValue] = useStateIfMounted("1");
   const [dialog, setDialog] = useStateIfMounted(false);
   const [dialogContent, setDialogContent] = useStateIfMounted("");
+  const [alert, setAlert] = useStateIfMounted(false);
+  const [alertContent, setAlertContent] = useStateIfMounted("");
 
   const history = useHistory();
 
@@ -201,9 +209,17 @@ const Home = () => {
             <>
               <DialogContent>
                 {value === "1" ? (
-                  <AddPost setDialog={setDialog} />
+                  <AddPost
+                    setDialog={setDialog}
+                    setAlert={setAlert}
+                    setAlertContent={setAlertContent}
+                  />
                 ) : (
-                  <AddPoll setDialog={setDialog} />
+                  <AddPoll
+                    setDialog={setDialog}
+                    setAlert={setAlert}
+                    setAlertContent={setAlertContent}
+                  />
                 )}
               </DialogContent>
               <DialogActions>
@@ -212,6 +228,17 @@ const Home = () => {
             </>
           )}
         </Dialog>
+        <Snackbar
+          open={alert}
+          autoHideDuration={6000}
+          onClose={() => setAlert(false)}>
+          <Alert
+            onClose={() => setAlert(false)}
+            severity='success'
+            sx={{ width: "100%" }}>
+            {alertContent}
+          </Alert>
+        </Snackbar>
       </div>
       <Backdrop
         sx={{ color: "#fff" }}

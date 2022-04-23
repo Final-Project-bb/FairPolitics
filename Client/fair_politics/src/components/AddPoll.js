@@ -22,12 +22,12 @@ import {
   ButtonGroup,
   Grid,
 } from "@mui/material";
-const AddPoll = ({ setDialog }) => {
+const AddPoll = ({ setDialog, setAlert, setAlertContent }) => {
   const [title, setTitle] = useStateIfMounted("");
   const [picture, setPicture] = useStateIfMounted("");
   const [description, setDescription] = useStateIfMounted("");
   const [inputList, setInputList] = useStateIfMounted([""]);
-  const [open, setOpen] = useStateIfMounted(false);
+  // const [open, setOpen] = useStateIfMounted(false);
 
   const { user_details, setLoading, setProfilePollCards } =
     useContext(AppContext);
@@ -41,6 +41,8 @@ const AddPoll = ({ setDialog }) => {
     e.preventDefault();
     console.log("before fetch");
     setLoading(true);
+    setDialog(false);
+
     // setTimeout(() => {
     //   history.goBack();
     // }, 2000);
@@ -65,8 +67,8 @@ const AddPoll = ({ setDialog }) => {
         newPoll.poll_id = json.id;
         setProfilePollCards((prevPollCards) => [...prevPollCards, newPoll]);
         setLoading(false);
-        setDialog(false);
-        setOpen(true);
+        setAlertContent("Poll Added Successfully");
+        setAlert(true);
       })
       .catch((err) => console.error(err));
     setTitle("");
@@ -183,7 +185,7 @@ const AddPoll = ({ setDialog }) => {
         </CardContent>
         {/* </Card> */}
       </Grid>
-      <Snackbar
+      {/* <Snackbar
         open={open}
         autoHideDuration={6000}
         onClose={() => setOpen(false)}>
@@ -193,7 +195,7 @@ const AddPoll = ({ setDialog }) => {
           sx={{ width: "100%" }}>
           Poll added successfully ! Redirecting...
         </Alert>
-      </Snackbar>
+      </Snackbar> */}
     </div>
   );
 };

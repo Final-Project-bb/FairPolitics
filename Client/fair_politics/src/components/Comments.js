@@ -65,7 +65,7 @@ const Comments = ({
       })
         .then((res) => res.json())
         .then((json) => {
-          // console.log(json.result[0]);
+          console.log(json.result[0]);
           setUserName({
             first_name: json.result[0].first_name,
             last_name: json.result[0].last_name,
