@@ -32,7 +32,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
-const PollCard = ({ item, inProfile, setSnack }) => {
+const PollCard = ({ item, inProfile, setAlert }) => {
   const {
     user_details,
     algo_id,
@@ -221,7 +221,9 @@ const PollCard = ({ item, inProfile, setSnack }) => {
   };
 
   const deletePoll = async (e) => {
+    e.preventDefault();
     setLoading(true);
+    setDialog(false);
     await fetch(`http://localhost:4000/api/delete_poll/${item.poll_id}`, {
       method: "DELETE",
     })
@@ -230,9 +232,9 @@ const PollCard = ({ item, inProfile, setSnack }) => {
         setProfilePollCards((prev) => {
           return prev.filter((poll) => poll.poll_id !== item.poll_id);
         });
-        setSnack(true);
-        setDialog(false);
         setLoading(false);
+        setAlertContent("Poll Deleted successfully");
+        setAlert(true);
       })
       .catch((error) => console.error(error));
   };
@@ -498,7 +500,11 @@ const PollCard = ({ item, inProfile, setSnack }) => {
         {dialogContent === "Edit Poll" && (
           <>
             <DialogContent>
-              <EditPollCard setDialog={setDialog} />
+              <EditPollCard
+                setDialog={setDialog}
+                setAlert={setAlert}
+                setAlertContent={setAlertContent}
+              />
             </DialogContent>
             <DialogActions>
               <Button onClick={() => setDialog(false)}>Cancel</Button>

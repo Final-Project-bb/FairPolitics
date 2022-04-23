@@ -22,12 +22,12 @@ import {
   Grid,
 } from "@mui/material";
 
-const AddPost = ({ setDialog }) => {
+const AddPost = ({ setDialog, setAlert, setAlertContent }) => {
   const [title, setTitle] = useStateIfMounted("");
   const [tags, setTags] = useStateIfMounted("");
   const [description, setDescription] = useStateIfMounted("");
   const [picture, setPicture] = useStateIfMounted("");
-  const [open, setOpen] = useStateIfMounted(false);
+  // const [open, setOpen] = useStateIfMounted(false);
 
   const { user_details, setLoading, setProfilePostCards } =
     useContext(AppContext);
@@ -40,6 +40,7 @@ const AddPost = ({ setDialog }) => {
   const addPostSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setDialog(false);
     const newPost = {
       user_id: user_details.user_id,
       title: title,
@@ -61,8 +62,8 @@ const AddPost = ({ setDialog }) => {
         newPost.post_id = json.id;
         setProfilePostCards((prevPostCards) => [...prevPostCards, newPost]);
         setLoading(true);
-        setDialog(false);
-        setOpen(true);
+        setAlertContent("Post Added Successfully");
+        setAlert(true);
       })
       .catch((err) => console.error(err));
     setTitle("");

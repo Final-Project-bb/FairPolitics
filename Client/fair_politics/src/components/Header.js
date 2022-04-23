@@ -19,11 +19,12 @@ const Header = ({ title }) => {
       {/* <Box sx={{ flexGrow: 1, height: 55 }}> */}
       <AppBar
         sx={{
-          height: 55,
+          maxHeight: 55,
           // mt: 8,
           boxShadow: "0 3px 20px rgb(0 0 0 / 8%)",
           background: "#1769aa",
           color: "whitesmoke",
+          
         }}
         position='static'>
         <Container maxWidth='xl'>
@@ -34,8 +35,8 @@ const Header = ({ title }) => {
               component='div'
               sx={{
                 display: { xs: "none", md: "flex" },
-                fontWeight: "lighter",
-                fontSize: 20,
+                fontWeight: 100,
+                fontSize: 18,
                 color: "lightgray",
               }}>
               Welcome

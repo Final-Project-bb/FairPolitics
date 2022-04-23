@@ -56,6 +56,8 @@ const Profile = () => {
   const [snack, setSnack] = useStateIfMounted(false);
   const [dialog, setDialog] = useStateIfMounted(false);
   const [dialogContent, setDialogContent] = useStateIfMounted("");
+  const [alert, setAlert] = useStateIfMounted(false);
+  const [alertContent, setAlertContent] = useStateIfMounted("");
 
   const history = useHistory();
 
@@ -163,7 +165,8 @@ const Profile = () => {
                         key={item.post_id}
                         item={item}
                         inProfile={true}
-                        setSnack={setSnack}
+                        setAlert={setAlert}
+                        setAlertContent={setAlertContent}
                       />
                     );
                   })}
@@ -201,7 +204,8 @@ const Profile = () => {
                         key={item.poll_id}
                         item={item}
                         inProfile={true}
-                        setSnack={setSnack}
+                        setAlert={setAlert}
+                        setAlertContent={setAlertContent}
                       />
                     );
                   })}
@@ -223,9 +227,17 @@ const Profile = () => {
             <>
               <DialogContent>
                 {value === "1" ? (
-                  <AddPost setDialog={setDialog} />
+                  <AddPost
+                    setDialog={setDialog}
+                    setAlert={setAlert}
+                    setAlertContent={setAlertContent}
+                  />
                 ) : (
-                  <AddPoll setDialog={setDialog} />
+                  <AddPoll
+                    setDialog={setDialog}
+                    setAlert={setAlert}
+                    setAlertContent={setAlertContent}
+                  />
                 )}
               </DialogContent>
               <DialogActions>
@@ -241,17 +253,17 @@ const Profile = () => {
         onClick={() => setLoading(false)}>
         <CircularProgress color='inherit' />
       </Backdrop>
-      {/* <Snackbar
-        open={snack}
+      <Snackbar
+        open={alert}
         autoHideDuration={6000}
-        onClose={() => setSnack(false)}>
+        onClose={() => setAlert(false)}>
         <Alert
-          onClose={() => setSnack(false)}
+          onClose={() => setAlert(false)}
           severity='success'
           sx={{ width: "100%" }}>
-          Item deleted successfully !
+          {alertContent}
         </Alert>
-      </Snackbar> */}
+      </Snackbar>
     </div>
   );
 };

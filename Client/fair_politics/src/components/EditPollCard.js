@@ -23,7 +23,7 @@ import {
   Grid,
 } from "@mui/material";
 
-const EditPollCard = ({ setDialog }) => {
+const EditPollCard = ({ setDialog, setAlert, setAlertContent }) => {
   const { user_details, currentItem, setLoading, setProfilePollCards } =
     useContext(AppContext);
   let p;
@@ -42,6 +42,8 @@ const EditPollCard = ({ setDialog }) => {
   const editPollSubmit = async (e) => {
     e.preventDefault();
     console.log("before fetch");
+    setDialog(false);
+
     // setLoading(true);
     const updatedPoll = {
       title: title,
@@ -79,7 +81,8 @@ const EditPollCard = ({ setDialog }) => {
           return newPolls;
         });
         setLoading(false);
-        setDialog(false);
+        setAlertContent("Poll Edited successfully");
+        setAlert(true);
       })
       .catch((error) => console.error(error));
     // setTimeout(() => {
