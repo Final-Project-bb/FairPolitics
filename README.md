@@ -55,20 +55,21 @@ Moreover, we have a unique identification to avoid bias in the results.
 ## Initialize .env file:
 <strong>make your .env file in this format:</strong>
 <br><br>
+```
 // for DB connection
-<br>DATABASE_HOST = your DB host (usualy localhost)
-<br>DATABASE_USER = your DB user name (usualy root)
-<br>DATABASE_PASSWORD = your DB password
-<br>DATABASE = your DB schema name
-<br><br>
-// Google token
-<br>GOOGLE_CLIENT_ID = "your id";
-<br>GOOGLE_CLIENT_SECRET = "your id";
-<br><br>
-// Facebook token
-<br>FACEBOOK_APP_ID = "your id";
-<br>FACEBOOK_APP_SECRET = "your id";
+DATABASE_HOST = your DB host (usualy localhost)
+DATABASE_USER = your DB user name (usualy root)
+DATABASE_PASSWORD = your DB password
+DATABASE = your DB schema name
 
+// Google token
+GOOGLE_CLIENT_ID = "your id";
+GOOGLE_CLIENT_SECRET = "your id";
+
+// Facebook token
+FACEBOOK_APP_ID = "your id";
+FACEBOOK_APP_SECRET = "your id";
+```
 ## Languages:
 - <strong> Backend: Python,nodeJs(express).<strong/><br>
 - <strong> Frontend: html,css,reactJs,bootstrap.<strong/><br>
