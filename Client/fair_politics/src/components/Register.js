@@ -48,8 +48,8 @@ const Register = () => {
   const [tempPassFlag, setTempPassFlag] = useStateIfMounted(false);
   const [passFlag, setPassFlag] = useStateIfMounted(false);
   const [otherFlag, setOtherFlag] = useStateIfMounted(false);
-  const [isGoogleAuth, setIsGoogleAuth] = useStateIfMounted(false);
-  const [isFacebookAuth, setIsFacebookAuth] = useStateIfMounted(false);
+  // const [isGoogleAuth, setIsGoogleAuth] = useStateIfMounted(false);
+  // const [isFacebookAuth, setIsFacebookAuth] = useStateIfMounted(false);
 
   const { setUserDetails, setIsConnected, loading, setLoading, setAlgoId } =
     useContext(AppContext);
@@ -206,7 +206,7 @@ const Register = () => {
           .then((json) => {
             console.log("facebook here:");
             console.log(json);
-            setIsFacebookAuth(true);
+            // setIsFacebookAuth(true);
             // setChosenAlgorithm(json);
           });
       }
@@ -245,7 +245,7 @@ const Register = () => {
             setLastName(json.name.familyName);
             setProfilePicture(json.photos[0].value);
             setGmail(json.emails[0].value);
-            setIsGoogleAuth(true);
+            // setIsGoogleAuth(true);
             console.log(json);
             // setChosenAlgorithm(json);
           });
@@ -543,7 +543,7 @@ const Register = () => {
                         alignItems: "center",
                         // left: -20,
                       }}>
-                      <Tooltip title='Register via Facebook'>
+                      {/* <Tooltip title='Register via Facebook'>
                         <IconButton
                           sx={[
                             {
@@ -554,9 +554,9 @@ const Register = () => {
                           onClick={() => faceBook()}>
                           <Icon icon='logos:facebook' />
                         </IconButton>
-                      </Tooltip>
+                      </Tooltip> */}
                       <Tooltip title='Register via Gmail'>
-                        <IconButton
+                        <Button
                           sx={[
                             {
                               "&:hover": { backgroundColor: "white" },
@@ -565,7 +565,7 @@ const Register = () => {
                           ]}
                           onClick={() => gMail()}>
                           <Icon icon='logos:google-gmail' />
-                        </IconButton>
+                        </Button>
                       </Tooltip>
                     </div>
                     <br />

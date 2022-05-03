@@ -106,7 +106,7 @@ function App() {
             <Route exact path='/profile/aboutProfile'>
               <AboutMe />
             </Route>
-            <Route exact path='/profile/addPost'>
+            {/* <Route exact path='/profile/addPost'>
               <AddPost />
             </Route>
             <Route exact path='/profile/addPoll'>
@@ -117,7 +117,7 @@ function App() {
             </Route>
             <Route exact path='/profile/editPoll'>
               <EditPollCard />
-            </Route>
+            </Route> */}
             <Route exact path='/profile/following'>
               <Following />
             </Route>

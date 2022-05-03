@@ -27,11 +27,11 @@ const EditPollCard = ({ setDialog, setAlert, setAlertContent }) => {
   const { user_details, currentItem, setLoading, setProfilePollCards } =
     useContext(AppContext);
   let p;
-  // currentItem.picture === null ? (p = "") : (p = picture);
+  currentItem.picture === null ? (p = "") : (p = picture);
   const [inputList, setInputList] = useStateIfMounted(currentItem.answers);
 
   const [title, setQuestion] = useStateIfMounted(currentItem.title);
-  const [picture, setPicture] = useStateIfMounted(currentItem.picture);
+  const [picture, setPicture] = useStateIfMounted(p);
   const [description, setDescription] = useStateIfMounted(
     currentItem.description
   );

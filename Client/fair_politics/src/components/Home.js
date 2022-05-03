@@ -17,7 +17,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { Backdrop } from "@mui/material";
 import { AppBar } from "@mui/material";
 import { Tabs } from "@mui/material";
-import { useHistory } from "react-router-dom";
 import { css } from "@emotion/react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -55,45 +54,44 @@ const Home = () => {
   const [alert, setAlert] = useStateIfMounted(false);
   const [alertContent, setAlertContent] = useStateIfMounted("");
 
-  const history = useHistory();
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  const fetchPosts = async () => {
+    setLoading(true);
+    const response = await fetch(
+      `http://localhost:4000/api/Post_feed/${user_details.user_id}`
+    );
+    const data = await response.json();
+    console.log("fetchPosts");
+    console.log(data.allPostsWithComments);
+
+    if (data != undefined) {
+      await setPostCards(data.allPostsWithComments);
+    }
+    setLoading(false);
+  };
+
+  const fetchPolls = async () => {
+    setLoading(true);
+    const response = await fetch(
+      `http://localhost:4000/api/poll_feed/${user_details.user_id}`
+    );
+    const data = await response.json();
+    console.log(data.allPollsWithAnswer);
+    console.log("fetchPolls");
+    // console.log(data.allPollsWithAnswer);
+
+    if (data !== undefined) {
+      await setPollCards(data.allPollsWithAnswer);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const fetchPosts = async () => {
-      setLoading(true);
-      const response = await fetch(
-        `http://localhost:4000/api/Post_feed/${user_details.user_id}`
-      );
-      const data = await response.json();
-      console.log("fetchPosts");
-      console.log(data.allPostsWithComments);
-
-      if (data != undefined) {
-        await setPostCards(data.allPostsWithComments);
-      }
-      setLoading(false);
-    };
-
-    const fetchPolls = async () => {
-      setLoading(true);
-      const response = await fetch(
-        `http://localhost:4000/api/poll_feed/${user_details.user_id}`
-      );
-      const data = await response.json();
-      console.log(data.allPollsWithAnswer);
-      console.log("fetchPolls");
-      // console.log(data.allPollsWithAnswer);
-
-      if (data !== undefined) {
-        await setPollCards(data.allPollsWithAnswer);
-      }
-      setLoading(false);
-    };
-    fetchPosts();
     console.log("Home effected");
+    fetchPosts();
     fetchPolls();
   }, []);
 
@@ -115,7 +113,6 @@ const Home = () => {
                 <StyledTabs
                   value={value}
                   variant='fullWidth'
-                  color='secondary'
                   onChange={handleChange}
                   sx={{ color: "black" }}>
                   <StyledTab label='Posts Feed' value='1' />
@@ -190,7 +187,13 @@ const Home = () => {
                 </Grid>
                 <Grid container spacing={0}>
                   {pollCards.map((item) => {
-                    return <PollCard key={item.poll_id} item={item} />;
+                    return (
+                      <PollCard
+                        key={item.poll_id}
+                        item={item}
+                        fetchPolls={fetchPolls}
+                      />
+                    );
                   })}
                 </Grid>
               </Box>
