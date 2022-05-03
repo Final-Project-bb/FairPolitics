@@ -124,13 +124,13 @@ const ResponsiveAppBar = (props) => {
         history.push("/profile/aboutProfile");
         break;
       case "Profile":
-        history.push("/profile");
+        history.push("/Profile");
         break;
       case "Login":
         history.push("/connection/login");
         break;
       case "Algorithms":
-        history.push("/algorithms");
+        history.push("/Algorithms");
 
         // history.push("/connection/login");
         break;

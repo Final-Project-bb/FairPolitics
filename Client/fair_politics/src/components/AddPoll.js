@@ -50,11 +50,12 @@ const AddPoll = ({ setDialog, setAlert, setAlertContent }) => {
       title: title,
       description: description,
       picture: picture,
-      answers: inputList,
+      answers: [],
       user_id: user_details.user_id,
       upload_date: `${currentDate}, ${currentTime}`,
+      is_answer_poll: false,
     };
-    await fetch("http://localhost:4000/api/create_poll", {
+    fetch("http://localhost:4000/api/create_poll", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newPoll),

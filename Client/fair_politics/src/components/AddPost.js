@@ -49,7 +49,7 @@ const AddPost = ({ setDialog, setAlert, setAlertContent }) => {
       picture: picture,
       upload_date: `${currentDate}, ${currentTime}`,
       likes: [],
-      comments: [],
+      comments: [{ comment_id: null }],
     };
     await fetch("http://localhost:4000/api/create_Post", {
       method: "POST",
@@ -61,7 +61,7 @@ const AddPost = ({ setDialog, setAlert, setAlertContent }) => {
         console.log(json);
         newPost.post_id = json.id;
         setProfilePostCards((prevPostCards) => [...prevPostCards, newPost]);
-        setLoading(true);
+        setLoading(false);
         setAlertContent("Post Added Successfully");
         setAlert(true);
       })

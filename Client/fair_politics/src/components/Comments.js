@@ -65,7 +65,7 @@ const Comments = ({
       })
         .then((res) => res.json())
         .then((json) => {
-          console.log(json.result[0]);
+          // console.log(json.result[0]);
           setUserName({
             first_name: json.result[0].first_name,
             last_name: json.result[0].last_name,
@@ -86,7 +86,7 @@ const Comments = ({
     })
       .then((res) => res.json())
       .then((json) => {
-        console.log(json.result[0]);
+        // console.log(json.result[0]);
         setFriendDetails(json.result[0]);
       })
       .catch((err) => console.error(err));
@@ -116,7 +116,7 @@ const Comments = ({
       let newComments = prevComments.filter((comment) => {
         return comment.comment_id !== comment_id;
       });
-      console.log(i);
+      // console.log(i);
       newComments.splice(i, 0, newcomment);
       return newComments;
     });

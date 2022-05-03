@@ -201,7 +201,7 @@ const Login = () => {
         console.log(data.result[0]);
         setUserDetails(data.result[0]);
         setIsConnected(true);
-        history.push("/home");
+        history.push("/Home");
       }
     }
     fetchAlgoId();
@@ -324,12 +324,12 @@ const Login = () => {
                   </Button>
                   {/* <small style={styles.small3}>Sign in quickly!</small> */}
                   <CardContent style={styles.iconsContainer}>
-                    <IconButton onClick={() => faceBook()}>
+                    {/* <IconButton onClick={() => faceBook()}>
                       <Icon
                         icon='logos:facebook'
                         style={{ fontSize: "40px" }}
                       />
-                    </IconButton>
+                    </IconButton> */}
                     <IconButton onClick={(e) => loginGoogle(e)}>
                       <Icon
                         icon='logos:google-gmail'

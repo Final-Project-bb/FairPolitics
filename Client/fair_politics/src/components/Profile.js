@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 // import { NavLink as Link } from "react-router-dom";
 import Header from "./Header";
 import ProfileHeader from "./ProfileHeader";
-import ProfileShowDetails from "./ProfileShowDetails";
 import PostCard from "./PostCard";
 import PollCard from "./PollCard";
 import styled from "styled-components";
@@ -37,8 +36,6 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
 });
 
-import { useHistory } from "react-router-dom";
-
 const Profile = () => {
   const {
     user_details,
@@ -53,53 +50,49 @@ const Profile = () => {
   } = useContext(AppContext);
 
   const [value, setValue] = useStateIfMounted("1");
-  const [snack, setSnack] = useStateIfMounted(false);
   const [dialog, setDialog] = useStateIfMounted(false);
   const [dialogContent, setDialogContent] = useStateIfMounted("");
   const [alert, setAlert] = useStateIfMounted(false);
   const [alertContent, setAlertContent] = useStateIfMounted("");
 
-  const history = useHistory();
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  const fetchSelfPolls = async () => {
+    setLoading(true);
+    const response = await fetch(
+      `http://localhost:4000/api/get_polls/${user_details.user_id}`
+    );
+    const data = await response.json();
+    console.log(data.allPollsWithAnswer);
+    console.log("fetchSelfPolls");
+
+    if (data !== undefined) {
+      await setProfilePollCards(data.allPollsWithAnswer);
+    }
+    setLoading(false);
+  };
+
+  const fetchSelfPosts = async () => {
+    setLoading(true);
+    const response = await fetch(
+      `http://localhost:4000/api/get_Posts/${user_details.user_id}`
+    );
+    const data = await response.json();
+    console.log(data.allPostsWithComments);
+    console.log("fetchSelfPosts");
+
+    if (data !== undefined) {
+      await setProfilePostCards(data.allPostsWithComments);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     setInFriend(false);
-
-    const fetchSelfPolls = async () => {
-      setLoading(true);
-      const response = await fetch(
-        `http://localhost:4000/api/get_polls/${user_details.user_id}`
-      );
-      const data = await response.json();
-      console.log(data.allPollsWithAnswer);
-      console.log("fetchSelfPolls");
-
-      if (data !== undefined) {
-        await setProfilePollCards(data.allPollsWithAnswer);
-      }
-      setLoading(false);
-    };
-
-    const fetchSelfPosts = async () => {
-      setLoading(true);
-      const response = await fetch(
-        `http://localhost:4000/api/get_Posts/${user_details.user_id}`
-      );
-      const data = await response.json();
-      console.log(data.allPostsWithComments);
-      console.log("fetchSelfPosts");
-
-      if (data !== undefined) {
-        await setProfilePostCards(data.allPostsWithComments);
-      }
-      setLoading(false);
-    };
-
-    fetchSelfPosts();
     console.log("Profile effected");
+    fetchSelfPosts();
     fetchSelfPolls();
   }, []);
 
@@ -121,7 +114,6 @@ const Profile = () => {
                 }}>
                 <StyledTabs
                   value={value}
-                  textColor='primary'
                   variant='fullWidth'
                   onChange={handleChange}
                   sx={{}}>
@@ -206,6 +198,7 @@ const Profile = () => {
                         inProfile={true}
                         setAlert={setAlert}
                         setAlertContent={setAlertContent}
+                        fetchPolls={fetchSelfPolls}
                       />
                     );
                   })}

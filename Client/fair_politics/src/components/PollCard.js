@@ -32,7 +32,13 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
-const PollCard = ({ item, inProfile, setAlert }) => {
+const PollCard = ({
+  item,
+  inProfile,
+  setAlert,
+  setAlertContent,
+  fetchPolls,
+}) => {
   const {
     user_details,
     algo_id,
@@ -41,6 +47,7 @@ const PollCard = ({ item, inProfile, setAlert }) => {
     setFriendDetails,
     setInFriend,
     setProfilePollCards,
+    setPollCards,
   } = useContext(AppContext);
 
   const [showResults, setShowResults] = useStateIfMounted(item.is_answer_poll);
@@ -152,8 +159,8 @@ const PollCard = ({ item, inProfile, setAlert }) => {
       // console.log("result");
       // console.log(result);
       setSortedAnswers(result);
-      item.answers = result;
-      item.press = true;
+      // item.answers = result;
+      // item.press = true;
 
       // console.log(orderAnswer);
       // console.log("new item.answers");
@@ -172,8 +179,6 @@ const PollCard = ({ item, inProfile, setAlert }) => {
       }
     });
     setNewAnswers(answer_approval);
-
-    return () => {};
   }, []);
 
   const history = useHistory();
@@ -310,6 +315,7 @@ const PollCard = ({ item, inProfile, setAlert }) => {
     //   })
     //   return newanswers;
     // });
+    fetchPolls();
   };
 
   return (
