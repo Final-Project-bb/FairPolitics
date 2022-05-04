@@ -71,7 +71,11 @@ const AddPoll = ({ setDialog, setAlert, setAlertContent }) => {
         setAlertContent("Poll Added Successfully");
         setAlert(true);
       })
-      .catch((err) => console.error(err));
+      .catch((error) => {
+        console.error(error);
+        setAlertContent("Poll Add Failed");
+        setAlert(true);
+      });
     setTitle("");
     setPicture("");
     setDescription("");

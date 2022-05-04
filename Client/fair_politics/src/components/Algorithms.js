@@ -22,8 +22,10 @@ import { Box } from "@mui/system";
 import { algorithms } from "./algorithmDetails";
 
 const Algorithms = () => {
+  // const algoid = window.localStorage.getItem("algoid");
+
+  const { user_details, algo_id, setAlgoId, setUserDetails, setIsConnected, } = useContext(AppContext);
   const [chosenAlgorithm, setChosenAlgorithm] = useStateIfMounted(-1);
-  const { user_details, algo_id, setAlgoId } = useContext(AppContext);
 
   const getAlgorithmChosen = async () => {
     await fetch(
@@ -38,10 +40,13 @@ const Algorithms = () => {
       .catch((err) => console.error(err));
   };
 
-  const setAlgorithmChosen = async (algoID) => {
+  const setAlgorithmChosen = async (algoID, algoName) => {
     setChosenAlgorithm(algoID);
     // console.log(algoID);
     setAlgoId(algoID);
+    window.localStorage.setItem("algoName", algoName);
+    window.localStorage.setItem("algoID", algoID);
+
     await fetch(
       `http://localhost:4000/api/choose_algorithm/${user_details.user_id}/${algoID}`,
       {
@@ -59,8 +64,11 @@ const Algorithms = () => {
   };
 
   useEffect(() => {
+    const user = window.localStorage.getItem("user");
+    const isconnected = window.localStorage.getItem("isconnected");
+    setUserDetails(JSON.parse(user));
+    setIsConnected(isconnected);
     getAlgorithmChosen();
-    return () => {};
   }, []);
 
   return (
@@ -149,7 +157,7 @@ const Algorithms = () => {
                       position: "relative",
                       marginLeft: "auto",
                     }}
-                    onClick={() => setAlgorithmChosen(algo.id)}>
+                    onClick={() => setAlgorithmChosen(algo.id, algo.title)}>
                     {chosenAlgorithm === algo.id ? "Chosen" : "Choose"}
                   </Button>
                 </CardContent>

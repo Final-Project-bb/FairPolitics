@@ -193,6 +193,7 @@ const Login = () => {
     if (response.status == 404) {
       console.log(response);
       setLoading(false);
+      window.alert('wrong details');
       return;
     }
     const data = await response.json();
@@ -201,12 +202,18 @@ const Login = () => {
         console.log(data.result[0]);
         setUserDetails(data.result[0]);
         setIsConnected(true);
+        window.localStorage.setItem("user", JSON.stringify(data.result[0]));
+        window.localStorage.setItem("isconnected", true);
+
         history.push("/Home");
       }
     }
     fetchAlgoId();
     fetchFollow();
     setLoading(false);
+    // useEffect(() => {
+    //   window.localStorage.setItem("user", JSON.stringify(user_details));
+    // });
   };
 
   const fetchFollow = async () => {

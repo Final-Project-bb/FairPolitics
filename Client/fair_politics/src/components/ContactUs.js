@@ -1,6 +1,8 @@
 import React from "react";
 import Header from "./Header";
 import styled from "styled-components";
+import { AppContext } from "./Context";
+import { useContext, useEffect } from "react";
 
 import {
   FormControl,
@@ -20,6 +22,8 @@ import {
 } from "@mui/material";
 
 const ContactUs = () => {
+  const { setUserDetails, setIsConnected } =
+    useContext(AppContext);
   const team = [
     {
       name: "Omer Shalom",
@@ -49,6 +53,15 @@ const ContactUs = () => {
     },
   ];
 
+  useEffect(() => {
+    const user = window.localStorage.getItem("user");
+    const isconnected = window.localStorage.getItem("isconnected");
+    if (isconnected) {
+      setUserDetails(JSON.parse(user));
+      setIsConnected(isconnected);
+    }
+  }, []);
+
   return (
     <Box sx={{ backgroundColor: "lightgray" }}>
       <Header title='Contact-us Page' />
@@ -76,26 +89,26 @@ const ContactUs = () => {
                       justifyContent: "center",
                       textAlign: "center",
                     }}> */}
-                    <Grid container direction='column' alignItems='center'>
-                      <Avatar
-                        sx={{
-                          width: 150,
-                          height: 150,
-                        }}
-                        size='400'
-                        alt='Remy Sharp'
-                        src={dev.picture}
-                      />
-                      <Grid item fontSize='medium' sx={{ marginTop: 3 }}>
-                        {dev.role}
-                      </Grid>
+                  <Grid container direction='column' alignItems='center'>
+                    <Avatar
+                      sx={{
+                        width: 150,
+                        height: 150,
+                      }}
+                      size='400'
+                      alt='Remy Sharp'
+                      src={dev.picture}
+                    />
+                    <Grid item fontSize='medium' sx={{ marginTop: 3 }}>
+                      {dev.role}
                     </Grid>
+                  </Grid>
                   {/* </IconButton> */}
                   {/* </Tooltip> */}
                 </CardContent>
                 {/* </Grid> */}
                 <CardContent style={styles.content}>
-                <CardContent sx={styles.content}>{dev.gmail}</CardContent>
+                  <CardContent sx={styles.content}>{dev.gmail}</CardContent>
                   <Link href={dev.linkedIn} style={styles.content}>
                     LinkedIn Account
                   </Link>

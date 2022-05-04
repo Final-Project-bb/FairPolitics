@@ -108,6 +108,7 @@ const ResponsiveAppBar = (props) => {
 
   const handleCloseNavMenu = (page) => {
     setAnchorElNav(null);
+    console.log(is_connected);
     // console.log(history.location.pathname);
     // console.log("button clicked from closeNav menu");
     if (typeof page === "object") {
@@ -140,6 +141,10 @@ const ResponsiveAppBar = (props) => {
       case "Logout":
         setIsConnected(false);
         setUserDetails({});
+        window.localStorage.setItem("user", JSON.stringify({}));
+        window.localStorage.setItem("isconnected", false);
+        // setUserDetails(JSON.parse(user));
+        // setIsConnected(isconnected);
         // setFollowerDetails([]);
         // setFollowingDetails([]);
         setFollowers([]);

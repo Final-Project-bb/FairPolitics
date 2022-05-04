@@ -59,14 +59,16 @@ const PollCard = ({
   const [dialog, setDialog] = useStateIfMounted(false);
   const [dialogContent, setDialogContent] = useStateIfMounted("");
 
-  let algoName = !inProfile
-    ? algorithms.filter((item) => item.id == poll_algo)[0].title
-    : algorithms.filter((item) => item.id == algo_id)[0].title;
+  // let algoName = !inProfile
+  //   ? algorithms.filter((item) => item.id == poll_algo)[0].title
+  //   : algorithms.filter((item) => item.id == algo_id)[0].title;
+
+  const algoName = window.localStorage.getItem("algoName");
 
   useEffect(async () => {
-    algoName = !inProfile
-      ? algorithms.filter((item) => item.id == poll_algo)[0].title
-      : algorithms.filter((item) => item.id == algo_id)[0].title;
+    // algoName = !inProfile
+    //   ? algorithms.filter((item) => item.id == poll_algo)[0].title
+    //   : algorithms.filter((item) => item.id == algo_id)[0].title;
 
     const getUserDetails = async () => {
       let id = item.user_id;
@@ -252,14 +254,14 @@ const PollCard = ({
         })
       : setNewAnswers([...newAnswers, answer_id]);
 
-    console.log("newAnswersFromHandle");
-    console.log(newAnswers);
+    // console.log("newAnswersFromHandle");
+    // console.log(newAnswers);
   };
 
   const updateAnswerPoll = async () => {
     setLoading(true);
-    console.log("newAnswers");
-    console.log(newAnswers);
+    // console.log("newAnswers");
+    // console.log(newAnswers);
     const ans = {
       newAnswers: newAnswers,
     };
@@ -275,8 +277,8 @@ const PollCard = ({
       .then((json) => console.log(json))
       .catch((err) => console.error(err));
     setLoading(false);
-    console.log("sortedAnswers");
-    console.log(sortedAnswers);
+    // console.log("sortedAnswers");
+    // console.log(sortedAnswers);
     console.log("newAnswers");
     console.log(newAnswers);
 
@@ -302,8 +304,8 @@ const PollCard = ({
     // let data = updateAnswers.map(ans=>{if(ans.is_answer){ans.answer_id}})
     // console.log("data"+data)
     // // setNewAnswers([])
-    console.log("updateAnswers");
-    console.log(updateAnswers);
+    // console.log("updateAnswers");
+    // console.log(updateAnswers);
 
     // setSortedAnswers((prevAnswers) => {
     //   let newanswers = prevAnswers.map(answer => {
@@ -418,17 +420,15 @@ const PollCard = ({
             {sortedAnswers.map((answer) => (
               <CardContent key={answer.answer_id}>
                 {!showResults ? (
-                  <>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          defaultChecked={answer.is_answer}
-                          onChange={() => handleCheckbox(answer.answer_id)}
-                        />
-                      }
-                      label={answer.answer}
-                    />
-                  </>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        defaultChecked={answer.is_answer}
+                        onChange={() => handleCheckbox(answer.answer_id)}
+                      />
+                    }
+                    label={answer.answer}
+                  />
                 ) : (
                   <>
                     <div>
@@ -524,8 +524,10 @@ const PollCard = ({
     </div>
   );
 };
-PollCard.deafult = {
+PollCard.defaultProps = {
   inProfile: false,
+  setAlert: () => {},
+  setAlertContent: () => {},
 };
 const styles = {
   head: {
