@@ -47,6 +47,8 @@ const Profile = () => {
     setProfilePollCards,
     setInFriend,
     inFriend,
+    setUserDetails,
+    setIsConnected,
   } = useContext(AppContext);
 
   const [value, setValue] = useStateIfMounted("1");
@@ -61,8 +63,10 @@ const Profile = () => {
 
   const fetchSelfPolls = async () => {
     setLoading(true);
+    const user = JSON.parse(window.localStorage.getItem("user"));
+
     const response = await fetch(
-      `http://localhost:4000/api/get_polls/${user_details.user_id}`
+      `http://localhost:4000/api/get_polls/${user.user_id}`
     );
     const data = await response.json();
     console.log(data.allPollsWithAnswer);
@@ -76,8 +80,10 @@ const Profile = () => {
 
   const fetchSelfPosts = async () => {
     setLoading(true);
+    const user = JSON.parse(window.localStorage.getItem("user"));
+
     const response = await fetch(
-      `http://localhost:4000/api/get_Posts/${user_details.user_id}`
+      `http://localhost:4000/api/get_Posts/${user.user_id}`
     );
     const data = await response.json();
     console.log(data.allPostsWithComments);
@@ -90,6 +96,10 @@ const Profile = () => {
   };
 
   useEffect(() => {
+    const user = window.localStorage.getItem("user");
+    const isconnected = window.localStorage.getItem("isconnected");
+    setUserDetails(JSON.parse(user));
+    setIsConnected(isconnected);
     setInFriend(false);
     console.log("Profile effected");
     fetchSelfPosts();
@@ -115,8 +125,7 @@ const Profile = () => {
                 <StyledTabs
                   value={value}
                   variant='fullWidth'
-                  onChange={handleChange}
-                  sx={{}}>
+                  onChange={handleChange}>
                   <StyledTab label='My Posts' value='1' />
                   <StyledTab label='My Polls' value='2' />
                 </StyledTabs>
@@ -239,6 +248,17 @@ const Profile = () => {
             </>
           )}
         </Dialog>
+        <Snackbar
+          open={alert}
+          autoHideDuration={6000}
+          onClose={() => setAlert(false)}>
+          <Alert
+            onClose={() => setAlert(false)}
+            severity='success'
+            sx={{ width: "100%" }}>
+            {alertContent}
+          </Alert>
+        </Snackbar>
       </div>
       <Backdrop
         sx={{ color: "#fff" }}
@@ -246,17 +266,6 @@ const Profile = () => {
         onClick={() => setLoading(false)}>
         <CircularProgress color='inherit' />
       </Backdrop>
-      <Snackbar
-        open={alert}
-        autoHideDuration={6000}
-        onClose={() => setAlert(false)}>
-        <Alert
-          onClose={() => setAlert(false)}
-          severity='success'
-          sx={{ width: "100%" }}>
-          {alertContent}
-        </Alert>
-      </Snackbar>
     </div>
   );
 };

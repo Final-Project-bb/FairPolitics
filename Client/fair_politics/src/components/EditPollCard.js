@@ -84,7 +84,11 @@ const EditPollCard = ({ setDialog, setAlert, setAlertContent }) => {
         setAlertContent("Poll Edited successfully");
         setAlert(true);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        setAlertContent("Poll Edit Failed");
+        setAlert(true);
+      });
     // setTimeout(() => {
     //   history.goBack();
     // }, 2000);

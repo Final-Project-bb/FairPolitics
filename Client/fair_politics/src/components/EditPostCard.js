@@ -79,10 +79,11 @@ const EditPostCard = ({ setDialog, setAlert, setAlertContent }) => {
         setAlert(true);
         setLoading(false);
       })
-      .catch((error) => console.error(error));
-    // setTimeout(() => {
-    //   history.goBack();
-    // }, 2000);
+      .catch((error) => {
+        console.error(error);
+        setAlertContent("Post Edit Failed");
+        setAlert(true);
+      }); 
   };
 
   return (

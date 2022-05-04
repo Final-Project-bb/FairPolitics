@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import About from "./components/About";
@@ -19,7 +19,9 @@ import EditPostCard from "./components/EditPostCard";
 import EditPollCard from "./components/EditPollCard";
 import Algorithms from "./components/Algorithms";
 import Header from "./components/Header";
+
 function App() {
+  
   const [user_details, setUserDetails] = useState({});
   const [algo_id, setAlgoId] = useState();
   const [friend_details, setFriendDetails] = useState({});
@@ -41,6 +43,17 @@ function App() {
     tag: "",
     picture: "",
   });
+
+  // useEffect(() => {
+  //   const user = window.localStorage.getItem("user");
+  //   const isconnected = window.localStorage.getItem("isconnected");
+  //   setUserDetails(JSON.parse(user));
+  //   setIsConnected(isconnected);
+  // }, []);
+
+  // useEffect(() => {
+  //   window.localStorage.setItem("user", JSON.stringify(user_details));
+  // });
 
   return (
     <AppContext.Provider
@@ -89,18 +102,18 @@ function App() {
           <Route exact path='/connection/register'>
             <Register />
           </Route>
-          <Route exact path='/about'>
+          <Route exact path='/About'>
             <About />
           </Route>
-          <Route exact path='/contact-us'>
+          <Route exact path='/Contact-Us'>
             <ContactUs />
           </Route>
           {/* {is_connected && ( */}
           <>
-            <Route exact path='/home'>
+            <Route exact path='/Home'>
               <Home />
             </Route>
-            <Route exact path='/profile'>
+            <Route exact path='/Profile'>
               <Profile />
             </Route>
             <Route exact path='/profile/aboutProfile'>
@@ -130,7 +143,7 @@ function App() {
             <Route exact path='/FriendProfile'>
               <FriendProfile />
             </Route>
-            <Route exact path='/algorithms'>
+            <Route exact path='/Algorithms'>
               <Algorithms />
             </Route>
           </>

@@ -63,14 +63,15 @@ const PostCard = ({ item, inProfile, setAlert, setAlertContent }) => {
 
   const history = useHistory();
 
-  let algoName = !inProfile
-    ? algorithms.filter((item) => item.id == poll_algo)[0].title
-    : algorithms.filter((item) => item.id == algo_id)[0].title;
+  // let algoName = !inProfile
+  //   ? algorithms.filter((item) => item.id == poll_algo)[0].title
+  //   : algorithms.filter((item) => item.id == algo_id)[0].title;
+  const algoName = window.localStorage.getItem("algoName");
 
   useEffect(async () => {
-    algoName = !inProfile
-      ? algorithms.filter((item) => item.id == poll_algo)[0].title
-      : algorithms.filter((item) => item.id == algo_id)[0].title;
+    // algoName = !inProfile
+    //   ? algorithms.filter((item) => item.id == poll_algo)[0].title
+    //   : algorithms.filter((item) => item.id == algo_id)[0].title;
 
     const getUserDetails = async () => {
       let id = item.user_id;
@@ -469,10 +470,10 @@ const PostCard = ({ item, inProfile, setAlert, setAlertContent }) => {
   );
 };
 
-PostCard.deafult = {
+PostCard.defaultProps = {
   inProfile: false,
-  // onEdit: false,
-  // setOnEdit: () => {},
+  setAlert: () => {},
+  setAlertContent: () => {},
 };
 
 const styles = {

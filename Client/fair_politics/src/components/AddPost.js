@@ -65,7 +65,11 @@ const AddPost = ({ setDialog, setAlert, setAlertContent }) => {
         setAlertContent("Post Added Successfully");
         setAlert(true);
       })
-      .catch((err) => console.error(err));
+      .catch((error) => {
+        console.error(error);
+        setAlertContent("Post Add Failed");
+        setAlert(true);
+      });
     setTitle("");
     setTags("");
     setDescription("");

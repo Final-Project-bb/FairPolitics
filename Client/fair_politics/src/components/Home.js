@@ -46,6 +46,8 @@ const Home = () => {
     setPostCards,
     inFriend,
     setInFriend,
+    setUserDetails,
+    setIsConnected,
   } = useContext(AppContext);
 
   const [value, setValue] = useStateIfMounted("1");
@@ -60,8 +62,10 @@ const Home = () => {
 
   const fetchPosts = async () => {
     setLoading(true);
+    const user = JSON.parse(window.localStorage.getItem("user"));
+
     const response = await fetch(
-      `http://localhost:4000/api/Post_feed/${user_details.user_id}`
+      `http://localhost:4000/api/Post_feed/${user.user_id}`
     );
     const data = await response.json();
     console.log("fetchPosts");
@@ -75,8 +79,10 @@ const Home = () => {
 
   const fetchPolls = async () => {
     setLoading(true);
+    const user = JSON.parse(window.localStorage.getItem("user"));
+
     const response = await fetch(
-      `http://localhost:4000/api/poll_feed/${user_details.user_id}`
+      `http://localhost:4000/api/poll_feed/${user.user_id}`
     );
     const data = await response.json();
     console.log(data.allPollsWithAnswer);
@@ -90,6 +96,10 @@ const Home = () => {
   };
 
   useEffect(() => {
+    const user = window.localStorage.getItem("user");
+    const isconnected = window.localStorage.getItem("isconnected");
+    setUserDetails(JSON.parse(user));
+    setIsConnected(isconnected);
     console.log("Home effected");
     fetchPosts();
     fetchPolls();
@@ -113,8 +123,7 @@ const Home = () => {
                 <StyledTabs
                   value={value}
                   variant='fullWidth'
-                  onChange={handleChange}
-                  sx={{ color: "black" }}>
+                  onChange={handleChange}>
                   <StyledTab label='Posts Feed' value='1' />
                   <StyledTab label='Polls Feed' value='2' />
                 </StyledTabs>

@@ -1,6 +1,9 @@
 import React from "react";
 import Header from "./Header";
 import Loading from "./Loading";
+import { AppContext } from "./Context";
+import { useContext, useEffect } from "react";
+
 import {
   FormControl,
   FormControlLabel,
@@ -12,6 +15,16 @@ import {
   Grid,
 } from "@mui/material";
 const About = () => {
+  const { setUserDetails, setIsConnected, isConnected } =
+    useContext(AppContext);
+
+  useEffect(() => {
+    const user = window.localStorage.getItem("user");
+    const isconnected = window.localStorage.getItem("isconnected");
+    setUserDetails(JSON.parse(user));
+    setIsConnected(isconnected);
+  }, []);
+
   return (
     <div style={{ background: "lightgray", minHeight: 800 }}>
       <Header title='About Page' />
@@ -52,7 +65,7 @@ const About = () => {
 const styles = {
   card: {
     // minHeight: 400,
-    width: '60%',
+    width: "60%",
     my: 10,
     // top: 50,
     // left: "30%",
