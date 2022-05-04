@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "./Header";
-import { useState, useContext } from "react";
+import { useState, useContext ,useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { AppContext } from "./Context";
@@ -47,6 +47,17 @@ const Login = () => {
     setFollowers,
   } = useContext(AppContext);
 
+  useEffect(() => {
+ 
+    // connected = window.localStorage.getItem("isconnected");
+    // c=connected==null?false:true;
+    // initPath=window.localStorage.getItem("isconnected")==null?'/':'/Home';
+    // console.log("initPath",initPath+" type of",typeof(initPath))
+    // console.log("connected",connected)
+    // console.log("c",c)
+    // console.log("initPath",initPath)
+    history.push(window.localStorage.getItem("isconnected")==null?'/':'/Home')
+  });
   const history = useHistory();
   const handleClick = () => {
     history.push("/connection/register");
@@ -230,6 +241,8 @@ const Login = () => {
     );
     const data = await response.json();
     setAlgoId(data.result[0].algorithm_id);
+    // window.localStorage.setItem("algoName", algoName);
+    window.localStorage.setItem("algoID", data.result[0].algorithm_id);
   };
   const phoneSubmit = (event) => {
     event.preventDefault();
