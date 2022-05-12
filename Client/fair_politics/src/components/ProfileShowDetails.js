@@ -28,6 +28,7 @@ const ProfileShowDetails = () => {
     followers,
     inFriend,
     setFollowings,
+    setFollowers,
     setInFriend,
     friendFollowings,
     setFriendFollowings,
@@ -35,17 +36,32 @@ const ProfileShowDetails = () => {
     setFriendFollowers,
     setFollowingDetails,
     setFollowerDetails,
+    setFriendDetails,
   } = useContext(AppContext);
   const history = useHistory();
 
-  const fetchFollow = async () => {
+  const fetchFollowFriend = async () => {
+    const friend = JSON.parse(window.localStorage.getItem("friend"));
+
     const response = await fetch(
-      `http://localhost:4000/api/get_follow/${friend_details.user_id}`
+      `http://localhost:4000/api/get_follow/${friend.user_id}`
     );
     const data = await response.json();
     console.log(data);
     setFriendFollowings(data.following);
     setFriendFollowers(data.follower);
+  };
+
+  const fetchFollow = async () => {
+    const user = JSON.parse(window.localStorage.getItem("user"));
+
+    const response = await fetch(
+      `http://localhost:4000/api/get_follow/${user.user_id}`
+    );
+    const data = await response.json();
+    console.log(data);
+    setFollowings(data.following);
+    setFollowers(data.follower);
   };
 
   const showFollowing = () => {
@@ -129,11 +145,18 @@ const ProfileShowDetails = () => {
   };
 
   useEffect(() => {
-    {
-      inFriend && fetchFollow();
+    const infriend = JSON.parse(window.localStorage.getItem("infriend"));
+    setInFriend(infriend);
+    if (infriend) {
+      fetchFollowFriend();
+      setFriendDetails(JSON.parse(window.localStorage.getItem("friend")));
+    } else {
+      fetchFollow();
     }
-    return () => {};
-  }, [inFriend]);
+
+  }, []);
+
+  useEffect(() => {});
 
   return (
     <Box sx={styles.container}>

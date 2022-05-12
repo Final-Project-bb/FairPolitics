@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import { useStateIfMounted } from "use-state-if-mounted";
 
-const UserCard = ({ user_info, inFollowing, inSearch }) => {
+const UserCard = ({ user_info, inFollowing  }) => {
   const {
     setFollowerDetails,
     setFollowingDetails,
@@ -142,6 +142,8 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
     console.log(data);
   };
   const navigateToUserInfoProfile = () => {
+    window.localStorage.setItem("friend", JSON.stringify(user_info));
+    window.localStorage.setItem("infriend", true);
     setFriendDetails(user_info);
     console.log(user_info);
     setInFriend(true);
@@ -160,10 +162,9 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
                 justifyContent: "flex-start",
                 position: "absolute",
               }}>
-              <IconButton sx={{}}>
+              <IconButton onClick={() => navigateToUserInfoProfile()}>
                 <Avatar
                   src={require("../images/profilePicExmple.jpg")}
-                  onClick={() => navigateToUserInfoProfile()}
                   alt='logo'
                   sx={{
                     // borderRadius: !picturePress ? 350 : 0,
@@ -172,9 +173,9 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
                     height: 80,
                     width: 80,
                   }}
-                  onClickCapture={() => {
-                    setPicturePress(!picturePress);
-                  }}
+                  // onClickCapture={() => {
+                  //   setPicturePress(!picturePress);
+                  // }}
                 />
               </IconButton>
             </Typography>
@@ -213,7 +214,7 @@ const UserCard = ({ user_info, inFollowing, inSearch }) => {
 };
 UserCard.defaultProps = {
   inFollowing: false,
-  inSearch: false,
+  // inSearch: false,
 };
 const styles = {
   card: {

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Header from "./Header";
 import ProfileHeader from "./ProfileHeader";
 import { useHistory } from "react-router-dom";
@@ -38,6 +38,13 @@ const AboutMe = () => {
     inFriend,
     friend_details,
   } = useContext(AppContext);
+  // const user = window.localStorage.getItem("user");
+
+
+  // const [formInputs, setformInputs] = useStateIfMounted({
+  //   first_name: inFriend ? friend_details.first_name : user_details.first_name,
+  //   last_name: inFriend ? friend_details.last_name : user_details.last_name,
+  // });
 
   const [first_name, setFirstName] = useStateIfMounted(
     inFriend ? friend_details.first_name : user_details.first_name
@@ -98,6 +105,7 @@ const AboutMe = () => {
     setLoading(true);
     const new_user_details = {
       user_id: user_details.user_id,
+      gmail: user_details.gmail,
       first_name: first_name,
       last_name: last_name,
       city: city,
@@ -111,6 +119,7 @@ const AboutMe = () => {
       is_public_elected: user_details.is_public_elected,
     };
     setUserDetails(new_user_details);
+    window.localStorage.setItem('user', JSON.stringify(new_user_details));
     editUserDb(new_user_details);
     setLoading(false);
     setOnEdit(false);
@@ -129,7 +138,6 @@ const AboutMe = () => {
       .catch((error) => console.error(error));
   };
 
-  // work but doesn't delete from login_deteils table
   const deleteUser = () => {
     setOnEdit(false);
     setOnDelete(!onDelete);
@@ -138,9 +146,13 @@ const AboutMe = () => {
     setIsConnected(false);
     setOnDelete(false);
     setLoading(false);
+    localStorage.removeItem("user");
+    localStorage.removeItem("isconnected");
+    localStorage.removeItem("algoName");
+    localStorage.removeItem("algoID");
     history.push("/");
   };
-  // work but doesn't delete from login_deteils table
+
   const deletefromDb = async () => {
     await fetch(
       `http://localhost:4000/api/delete_user/${user_details.user_id}`,
@@ -150,6 +162,32 @@ const AboutMe = () => {
     ).catch((error) => console.error(error));
   };
 
+  useEffect(() => {
+    const user = window.localStorage.getItem("user");
+    const isconnected = window.localStorage.getItem("isconnected");
+    setUserDetails(JSON.parse(user));
+    setIsConnected(isconnected);
+  }, []);
+
+  // useEffect(() => {
+  //   window.localStorage.setItem(
+  //     "forminputs",
+  //     JSON.stringify({
+  //       first_name: first_name,
+  //       last_name: last_name,
+  //     })
+  //   );
+  //   console.log('second effect');
+
+  // }, [first_name, last_name]);
+
+  // useEffect(() => {
+  //   const forminput = JSON.parse(window.localStorage.getItem("forminputs"));
+  //   console.log(forminput);
+  //   setFirstName(forminput.first_name);
+  //   setLastName(forminput.last_name);
+  // });
+
   return (
     <div
       style={{
@@ -158,6 +196,8 @@ const AboutMe = () => {
         paddingBottom: 20,
       }}>
       <Header title='About Me' />
+      <ProfileHeader />
+
       {!loading && (
         <div>
           {!inFriend && (
@@ -189,7 +229,6 @@ const AboutMe = () => {
                   </IconButton>
                 </Tooltip>
               </Box>
-              <ProfileHeader />
             </>
           )}
           {!onEdit && (

@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "./Header";
-import { useState, useContext ,useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { AppContext } from "./Context";
@@ -48,7 +48,6 @@ const Login = () => {
   } = useContext(AppContext);
 
   useEffect(() => {
- 
     // connected = window.localStorage.getItem("isconnected");
     // c=connected==null?false:true;
     // initPath=window.localStorage.getItem("isconnected")==null?'/':'/Home';
@@ -56,7 +55,10 @@ const Login = () => {
     // console.log("connected",connected)
     // console.log("c",c)
     // console.log("initPath",initPath)
-    history.push(window.localStorage.getItem("isconnected")==null?'/':'/Home')
+    history.push(
+      window.localStorage.getItem("isconnected") == null ? "/" : "/Home"
+    );
+    window.localStorage.getItem("isconnected") !== null && fetchFollow();
   });
   const history = useHistory();
   const handleClick = () => {
@@ -204,7 +206,7 @@ const Login = () => {
     if (response.status == 404) {
       console.log(response);
       setLoading(false);
-      window.alert('wrong details');
+      window.alert("wrong details");
       return;
     }
     const data = await response.json();
@@ -228,7 +230,9 @@ const Login = () => {
   };
 
   const fetchFollow = async () => {
-    const response = await fetch(`http://localhost:4000/api/get_follow/${id}`);
+    const user = JSON.parse(window.localStorage.getItem("user"));
+
+    const response = await fetch(`http://localhost:4000/api/get_follow/${user.user_id}`);
     const data = await response.json();
     console.log(data);
     setFollowings(data.following);

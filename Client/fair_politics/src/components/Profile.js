@@ -98,6 +98,8 @@ const Profile = () => {
   useEffect(() => {
     const user = window.localStorage.getItem("user");
     const isconnected = window.localStorage.getItem("isconnected");
+    window.localStorage.setItem("infriend", false);
+
     setUserDetails(JSON.parse(user));
     setIsConnected(isconnected);
     setInFriend(false);

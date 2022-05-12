@@ -44,8 +44,10 @@ const FriendProfile = () => {
 
   const fetchSelfPolls = async () => {
     setLoading(true);
+    const friend = JSON.parse(window.localStorage.getItem("friend"));
+
     const response = await fetch(
-      `http://localhost:4000/api/get_polls/${friend_details.user_id}`
+      `http://localhost:4000/api/get_polls/${friend.user_id}`
     );
     const data = await response.json();
     console.log(data.allPollsWithAnswer);
@@ -59,8 +61,10 @@ const FriendProfile = () => {
 
   const fetchSelfPosts = async () => {
     setLoading(true);
+    const friend = JSON.parse(window.localStorage.getItem("friend"));
+
     const response = await fetch(
-      `http://localhost:4000/api/get_Posts/${friend_details.user_id}`
+      `http://localhost:4000/api/get_Posts/${friend.user_id}`
     );
     const data = await response.json();
     console.log(data.allPostsWithComments);

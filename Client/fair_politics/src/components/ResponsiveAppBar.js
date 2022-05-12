@@ -57,7 +57,6 @@ ElevationScroll.propTypes = {
 const ResponsiveAppBar = (props) => {
   const [anchorElNav, setAnchorElNav] = useStateIfMounted(null);
   const [anchorElUser, setAnchorElUser] = useStateIfMounted(null);
-  const [search, setSearch] = useStateIfMounted();
 
   const {
     user_details,
@@ -70,6 +69,9 @@ const ResponsiveAppBar = (props) => {
     setFollowingDetails,
     setFollowers,
     setFollowings,
+    search,
+    setSearch,
+    setInFriend,
   } = useContext(AppContext);
 
   const history = useHistory();
@@ -80,6 +82,7 @@ const ResponsiveAppBar = (props) => {
     setLoading(true);
     fetchSearchUsers();
     setLoading(false);
+    window.localStorage.setItem("search", search);
     history.push("/search");
   };
   const fetchSearchUsers = async () => {
@@ -108,7 +111,7 @@ const ResponsiveAppBar = (props) => {
 
   const handleCloseNavMenu = (page) => {
     setAnchorElNav(null);
-    console.log("is_connected",is_connected);
+    // console.log("is_connected",is_connected);
     // console.log(history.location.pathname);
     // console.log("button clicked from closeNav menu");
     if (typeof page === "object") {
@@ -122,6 +125,8 @@ const ResponsiveAppBar = (props) => {
     // console.log("button clicked from closeUser menu");
     switch (setting) {
       case "Account":
+        setInFriend(false);
+        window.localStorage.setItem("infriend", false);
         history.push("/profile/aboutProfile");
         break;
       case "Profile":

@@ -151,9 +151,12 @@ const PostCard = ({ item, inProfile, setAlert, setAlertContent }) => {
       .then((json) => {
         // console.log(json.result[0]);
         setFriendDetails(json.result[0]);
+        window.localStorage.setItem("friend", JSON.stringify(json.result[0]));
+        window.localStorage.setItem("infriend", true);
       })
       .catch((err) => console.error(err));
     setInFriend(true);
+
     history.push("/FriendProfile");
   };
 

@@ -22,15 +22,16 @@ import { Box } from "@mui/system";
 import { algorithms } from "./algorithmDetails";
 
 const Algorithms = () => {
-  // const algoid = window.localStorage.getItem("algoid");
+  const algoid = JSON.parse(window.localStorage.getItem("algoID"));
 
-  const { user_details, algo_id, setAlgoId, setUserDetails, setIsConnected, } = useContext(AppContext);
-  const [chosenAlgorithm, setChosenAlgorithm] = useStateIfMounted(-1);
+  const { user_details, algo_id, setAlgoId, setUserDetails, setIsConnected } =
+    useContext(AppContext);
+  // const [chosenAlgorithm, setChosenAlgorithm] = useStateIfMounted(JSON.parse(window.localStorage.getItem("algoID")));
 
   const getAlgorithmChosen = async () => {
-    await fetch(
-      `http://localhost:4000/api/get_algorithm/${user_details.user_id}`
-    )
+    const user = window.localStorage.getItem("user");
+
+    await fetch(`http://localhost:4000/api/get_algorithm/${user.user_id}`)
       .then((res) => res.json())
       .then((json) => {
         // console.log(json.result[0].algorithm_id);
@@ -64,6 +65,7 @@ const Algorithms = () => {
   };
 
   useEffect(() => {
+    console.log('algoid', algoid);
     const user = window.localStorage.getItem("user");
     const isconnected = window.localStorage.getItem("isconnected");
     setUserDetails(JSON.parse(user));
@@ -74,7 +76,7 @@ const Algorithms = () => {
   return (
     <div style={{ backgroundColor: "lightgray" }}>
       <Header />
-      {chosenAlgorithm === -1 && (
+      {algoid === -1 && (
         <CardContent sx={{ color: "red" }}>
           Please Choose Algorithm to use for the haluka hogenet{" "}
         </CardContent>
@@ -134,7 +136,7 @@ const Algorithms = () => {
               sx={{
                 width: 500,
                 margin: 3,
-                border: chosenAlgorithm === algo.id ? "2px solid #1769aa" : 0,
+                border: algoid === algo.id ? "2px solid #1769aa" : 0,
                 borderRadius: "1.5%",
               }}>
               <Card raised sx={{ height: 400 }}>
@@ -151,14 +153,14 @@ const Algorithms = () => {
                   }}>
                   <label>{algo.title}</label>
                   <Button
-                    variant={chosenAlgorithm === algo.id ? "contained" : "text"}
+                    variant={algoid === algo.id ? "contained" : "text"}
                     color='primary'
                     sx={{
                       position: "relative",
                       marginLeft: "auto",
                     }}
                     onClick={() => setAlgorithmChosen(algo.id, algo.title)}>
-                    {chosenAlgorithm === algo.id ? "Chosen" : "Choose"}
+                    {algoid === algo.id ? "Chosen" : "Choose"}
                   </Button>
                 </CardContent>
 

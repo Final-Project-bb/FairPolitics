@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Header from "./Header";
 import Loading from "./Loading";
 import { AppContext } from "./Context";
@@ -10,9 +10,12 @@ const Search = () => {
     loading,
     setLoading,
     usersSearch,
+    setUsersSearch,
     setUserDetails,
     is_connected,
     setIsConnected,
+    search,
+    user_details,
   } = useContext(AppContext);
 
   const users = [
@@ -45,6 +48,26 @@ const Search = () => {
       is_public_elected: true,
     },
   ];
+
+  useEffect(() => {
+    const fetchSearchUsers = async () => {
+    const Search = window.localStorage.getItem("search");
+    const user = window.localStorage.getItem("user");
+
+      const response = await fetch(
+        `http://localhost:4000/api/search_by_name/${Search}/${user.user_id}`
+      );
+      const data = await response.json();
+      console.log(data.result);
+      setUsersSearch(data.result);
+    };
+    const user = window.localStorage.getItem("user");
+    const isconnected = window.localStorage.getItem("isconnected");
+    setUserDetails(JSON.parse(user));
+    setIsConnected(isconnected);
+    fetchSearchUsers();
+  }, [search]);
+
   return (
     <div style={{ backgroundColor: "lightgray", minHeight: 657 }}>
       <Header title='Search Page' />
@@ -52,7 +75,7 @@ const Search = () => {
       {!loading ? (
         <Grid container spacing={0} sx={{ marginTop: 5 }}>
           {usersSearch.map((user) => (
-            <UserCard key={user.user_id} user_info={user} inSearch={true} />
+            <UserCard key={user.user_id} user_info={user}  />
           ))}
         </Grid>
       ) : (
