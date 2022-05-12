@@ -24,7 +24,9 @@ function App() {
   const [user_details, setUserDetails] = useState({});
   const [algo_id, setAlgoId] = useState(window.localStorage.getItem("algoID"));
   const [friend_details, setFriendDetails] = useState({});
-  const [is_connected, setIsConnected] = useState(window.localStorage.getItem("isconnected")==null?false:true);
+  const [is_connected, setIsConnected] = useState(
+    window.localStorage.getItem("isconnected") == null ? false : true
+  );
   const [loading, setLoading] = useState(false);
   const [postCards, setPostCards] = useState([]);
   const [pollCards, setPollCards] = useState([]);
@@ -35,6 +37,7 @@ function App() {
   const [friendFollowings, setFriendFollowings] = useState([]);
   const [friendFollowers, setFriendFollowers] = useState([]);
   const [inFriend, setInFriend] = useState(false);
+  const [search, setSearch] = useState('');
   const [usersSearch, setUsersSearch] = useState([]);
   const [currentItem, setCurrentItem] = useState({
     title: "",
@@ -85,11 +88,13 @@ function App() {
         setUsersSearch,
         currentItem,
         setCurrentItem,
+        search,
+        setSearch,
       }}>
       <Router>
         <Switch>
           <Route exact path='/'>
-            <Login/>
+            <Login />
           </Route>
           <Route exact path='/connection/login'>
             <Login />

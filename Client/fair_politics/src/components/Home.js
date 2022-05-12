@@ -101,6 +101,7 @@ const Home = () => {
     setUserDetails(JSON.parse(user));
     setIsConnected(isconnected);
     console.log("Home effected");
+    console.log(user_details);
     fetchPosts();
     fetchPolls();
   }, []);
