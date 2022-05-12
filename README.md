@@ -63,12 +63,8 @@ DATABASE_PASSWORD = your DB password
 DATABASE = your DB schema name
 
 // Google token
-GOOGLE_CLIENT_ID = "your id";
-GOOGLE_CLIENT_SECRET = "your id";
-
-// Facebook token
-FACEBOOK_APP_ID = "your id";
-FACEBOOK_APP_SECRET = "your id";
+GOOGLE_CLIENT_ID = "your id"
+GOOGLE_CLIENT_SECRET = "your id"
 ```
 ## Languages:
 - <strong> Backend: Python,nodeJs(express).<strong/><br>
