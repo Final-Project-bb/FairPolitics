@@ -1,36 +1,194 @@
 import React from "react";
 import Header from "./Header";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { AppContext } from "./Context";
 import Loading from "./Loading";
+import { FaFacebook, FaSms } from "react-icons/fa";
+import { SiGmail } from "react-icons/si";
+import GoogleLogin from "react-google-login";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import GoogleIcon from "@mui/icons-material/Google";
+import { Icon } from "@iconify/react";
+import { useStateIfMounted } from "use-state-if-mounted";
+
+import {
+  FormControl,
+  FormControlLabel,
+  Button,
+  Card,
+  CardContent,
+  TextField,
+  CardActions,
+  IconButton,
+} from "@mui/material";
 
 const Login = () => {
-  const [onReset, setOnReset] = useState(false);
-  const [phone, setPhone] = useState("");
-  const [id, setId] = useState("");
-  const [password, setPassword] = useState("");
-  const [pass, setPass] = useState("");
-  const [pass2, setPass2] = useState("");
-  const [tempPass, setTempPass] = useState("");
-  const [tempPassFromDB, setTempPassFromDB] = useState("");
+  const [onReset, setOnReset] = useStateIfMounted(false);
+  const [phone, setPhone] = useStateIfMounted("");
+  const [gmail, setGmail] = useStateIfMounted(null);
+  const [id, setId] = useStateIfMounted("");
+  const [password, setPassword] = useStateIfMounted("");
+  const [pass, setPass] = useStateIfMounted("");
+  const [pass2, setPass2] = useStateIfMounted("");
+  const [tempPass, setTempPass] = useStateIfMounted("");
+  const [tempPassFromDB, setTempPassFromDB] = useStateIfMounted("");
 
-  const { setUserDetails, setIsConnected, loading, setLoading, setFollowings, setFollowers } =
-    useContext(AppContext);
+  const {
+    setUserDetails,
+    setAlgoId,
+    setIsConnected,
+    loading,
+    setLoading,
+    setFollowings,
+    setFollowers,
+  } = useContext(AppContext);
 
+  useEffect(() => {
+    // connected = window.localStorage.getItem("isconnected");
+    // c=connected==null?false:true;
+    // initPath=window.localStorage.getItem("isconnected")==null?'/':'/Home';
+    // console.log("initPath",initPath+" type of",typeof(initPath))
+    // console.log("connected",connected)
+    // console.log("c",c)
+    // console.log("initPath",initPath)
+    history.push(
+      window.localStorage.getItem("isconnected") == null ? "/" : "/Home"
+    );
+    window.localStorage.getItem("isconnected") !== null && fetchFollow();
+  });
   const history = useHistory();
   const handleClick = () => {
     history.push("/connection/register");
   };
   // this function made to check the first get fetch , just click on the gmail button
-  const click = async () => {
-    const response = await fetch("http://localhost:4000/api/get_user/222");
-    const data = await response.json();
-    console.log(data.result[0].user_id);
-    // setUserInfo(data);
-  };
+  // const click = async () => {
+  //   const response = await fetch("http://localhost:4000/api/get_user/222");
+  //   const data = await response.json();
+  //   console.log(data.result[0].user_id);
+  //   // setUserInfo(data);
+  // };
 
+  const faceBook = () => {
+    const port = 4000;
+    const openedWindow = window.open(
+      `http://localhost:${port}/api/facebook`,
+      "Facebook authenticate",
+      "height=600,width=600"
+    );
+    //Note: the fetch starting when the window is closed
+    let flag = true;
+    while (flag) {
+      if (
+        confirm(
+          "you have to closed the Facebook authenticate window to continue!"
+        )
+      ) {
+        openedWindow.window.close();
+        flag = false;
+      }
+    }
+    const timer = setInterval(async () => {
+      if (openedWindow.closed) {
+        clearInterval(timer);
+        console.log('Facebook authenticate" window closed!');
+        const response = await fetch(
+          `http://localhost:${port}/connection/login/facebook/success`
+        )
+          .then((res) => res.json())
+          .then((json) => {
+            console.log("facebook here:");
+            console.log(json);
+            // setChosenAlgorithm(json);
+          });
+      }
+    }, 500);
+  };
+  const gMail = async () => {
+    const port = 4000;
+    const openedWindow = window.open(
+      `http://localhost:${port}/api/google`,
+      "Google authenticate",
+      "height=600,width=600"
+    );
+    //Note: the fetch starting when the window is closed
+    let flag = true;
+    while (flag) {
+      if (
+        confirm(
+          "you have to closed the Google authenticate window to continue!"
+        )
+      ) {
+        openedWindow.window.close();
+        flag = false;
+      }
+    }
+    const timer = setInterval(async () => {
+      let response;
+      let flag = false;
+      if (openedWindow.closed) {
+        clearInterval(timer);
+        console.log('Google authenticate" window closed!');
+        response = await fetch(
+          `http://localhost:${port}/connection/login/google/success`
+        )
+          .then((res) => res.json())
+          .then((json) => {
+            console.log("Gmail here:");
+            setGmail(json.emails[0].value);
+            console.log(json);
+            flag = true;
+            return json.emails[0].value;
+            // setChosenAlgorithm(json);
+          });
+      }
+      if (flag) {
+        console.log("response");
+        console.log(response);
+        return response;
+      }
+    }, 500);
+  };
+  const loginGoogle = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    let mail = await gMail();
+    console.log("mail");
+    console.log(mail);
+
+    const response = await fetch(
+      `http://localhost:4000/api/login_user_by_gmail`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ gmail: gmail }),
+      }
+    );
+    if (response.status == 404) {
+      console.log(response);
+      setLoading(false);
+      return;
+    }
+    const data = await response.json();
+    if (data.result !== undefined) {
+      if (data.result[0] !== undefined) {
+        console.log("data.result[0]");
+        console.log(data.result[0]);
+
+        setId(data.result[0].user_id);
+        setUserDetails(data.result[0]);
+        setIsConnected(true);
+        history.push("/home");
+      }
+    }
+
+    fetchAlgoId();
+    fetchFollow();
+    setLoading(false);
+  };
 
   const login = async (e) => {
     setLoading(true);
@@ -46,34 +204,50 @@ const Login = () => {
       body: JSON.stringify(login_details),
     });
     if (response.status == 404) {
-      // console.log(response)
+      console.log(response);
       setLoading(false);
+      window.alert("wrong details");
       return;
     }
     const data = await response.json();
     if (data.result !== undefined) {
       if (data.result[0] !== undefined) {
-        // console.log(data.result[0]);
+        console.log(data.result[0]);
         setUserDetails(data.result[0]);
         setIsConnected(true);
-        history.push("/home");
+        window.localStorage.setItem("user", JSON.stringify(data.result[0]));
+        window.localStorage.setItem("isconnected", true);
+
+        history.push("/Home");
       }
     }
+    fetchAlgoId();
     fetchFollow();
     setLoading(false);
-
+    // useEffect(() => {
+    //   window.localStorage.setItem("user", JSON.stringify(user_details));
+    // });
   };
 
+  const fetchFollow = async () => {
+    const user = JSON.parse(window.localStorage.getItem("user"));
 
-  const fetchFollow = async () => { 
-    const response = await fetch(`http://localhost:4000/api/get_follow/${id}`);
+    const response = await fetch(`http://localhost:4000/api/get_follow/${user.user_id}`);
     const data = await response.json();
     console.log(data);
     setFollowings(data.following);
     setFollowers(data.follower);
-  }
+  };
 
-
+  const fetchAlgoId = async () => {
+    const response = await fetch(
+      `http://localhost:4000/api/get_algorithm/${id}`
+    );
+    const data = await response.json();
+    setAlgoId(data.result[0].algorithm_id);
+    // window.localStorage.setItem("algoName", algoName);
+    window.localStorage.setItem("algoID", data.result[0].algorithm_id);
+  };
   const phoneSubmit = (event) => {
     event.preventDefault();
     setTempPassFromDB("1225"); // here should get the temp pass from server
@@ -102,118 +276,192 @@ const Login = () => {
     }
   };
   return (
-    <div>
-      {/* <a href=''>Login<a/> */}
+    <div
+      style={{
+        backgroundColor: "#212121",
+        minHeight: 800,
+      }}>
       <Header title='Login Page' />
       {!loading && (
         <div>
           {!onReset && (
-            <LoginFormStyle>
-              <form onSubmit={(e) => login(e)}>
-                <label style={styles.label}>Enter your id:</label>
-                <input
-                  style={styles.input}
-                  type='id'
-                  // pattern="[0-9]{9}"
-                  required
-                  placeholder='valid id number!'
-                  value={id}
-                  onChange={(e) => setId(e.target.value)}
-                />
-                <small style={styles.small}>Forgot your password?!</small>
-                <br />
-                <label style={styles.label2}>Enter a password:</label>
-                <input
-                  style={styles.input2}
-                  type='tel'
-                  // pattern="[0]{1}[5]{1}[0-9]{8}"
-                  required
-                  placeholder='valid password!'
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <small style={styles.small2}>valid password!</small>
-                <button style={styles.subBut}>submit</button>
-              </form>
-              <button
-                style={styles.forgotButton}
-                onClick={() => setOnReset(!onReset)}>
-                Reset password
-              </button>
-              <small style={styles.small3}>Sign in quickly!</small>
-              <button style={styles.faceButton}>Facebook</button>
-              <button style={styles.gmailButton} onClick={() => click()}>
-                Gmail
-              </button>
-              <button style={styles.signUpButton} onClick={handleClick}>
-                don't have an account ? sign up here!
-              </button>
-            </LoginFormStyle>
+            <Card raised style={styles.card}>
+              <CardContent style={styles.content}>
+                <FormControl>
+                  <TextField
+                    // helperText='Enter your id:'
+                    id='standard-basic'
+                    variant='standard'
+                    label='ID'
+                    pattern='[0-9]{9}'
+                    required
+                    placeholder='valid id number!'
+                    value={id}
+                    onChange={(e) => setId(e.target.value)}
+                  />
+                  <br />
+                  <TextField
+                    // helperText='Enter a password:'
+                    id='standard-basic'
+                    variant='standard'
+                    label='Password'
+                    // pattern="[0]{1}[5]{1}[0-9]{8}"
+                    required
+                    placeholder='valid password!'
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <br />
+
+                  {/* <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                    position: "relative",
+                    left: -20,
+                    top: 180,
+                  }}></div> */}
+                  {/* <small style={styles.small}></small> */}
+
+                  <Button
+                    onClick={(e) => login(e)}
+                    variant='contained'
+                    color='primary'
+                    type='submit'>
+                    Login
+                  </Button>
+                  <br />
+                  <Button
+                    variant='text'
+                    color='primary'
+                    // style={styles.forgotButton}
+                    onClick={() => setOnReset(!onReset)}>
+                    Forgot your password? Click Here!
+                  </Button>
+                  <br />
+                  <Button
+                    variant='outlined'
+                    color='primary'
+                    onClick={() => handleClick()}>
+                    don't have an account ? sign up here!
+                  </Button>
+                  {/* <small style={styles.small3}>Sign in quickly!</small> */}
+                  <CardContent style={styles.iconsContainer}>
+                    {/* <IconButton onClick={() => faceBook()}>
+                      <Icon
+                        icon='logos:facebook'
+                        style={{ fontSize: "40px" }}
+                      />
+                    </IconButton> */}
+                    <IconButton onClick={(e) => loginGoogle(e)}>
+                      <Icon
+                        icon='logos:google-gmail'
+                        style={{ fontSize: "35px" }}
+                      />
+                    </IconButton>
+                  </CardContent>
+                </FormControl>
+              </CardContent>
+            </Card>
           )}
           {onReset && (
-            <FirstRegisterFormStyle>
-              <form onSubmit={(e) => phoneSubmit(e)}>
-                <label>Enter a Phone Number:</label>
-                <input
-                  type='tel'
-                  pattern='[0]{1}[5]{1}[0-9]{8}'
-                  required
-                  placeholder='valid phone number!'
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className='inputPhoneNum'
-                />
-                <br />
-                <input type='submit' />
-              </form>
-              <form onSubmit={(e) => approveSubmit(e)}>
-                <label>Enter a temporary password:</label>
-                <br />
-                <input
-                  type='password'
-                  // pattern="[0]{1}[5]{1}[0-9]{8}"
-                  // required
-                  placeholder='password from sms!'
-                  value={tempPass}
-                  onChange={(e) => setTempPass(e.target.value)}
-                />
-                <input type='submit' />
-              </form>
-              <br />
-              <form onSubmit={(e) => approvePassword()}>
-                <label>Enter your final password:</label>
-                <br />
-                <input
-                  type='password'
-                  // pattern="[0]{1}[5]{1}[0-9]{8}"
-                  // required
-                  placeholder='your password!'
-                  value={pass}
-                  onChange={(e) => setPass(e.target.value)}
-                />
-                <br />
-                <label>Enter your final password again:</label>
-                <br />
-                <input
-                  type='password'
-                  // pattern="[0]{1}[5]{1}[0-9]{8}"
-                  // required
-                  placeholder='repet your password!'
-                  value={pass2}
-                  onChange={(e) => setPass2(e.target.value)}
-                />
-                <button
-                  style={styles.cancelForgotButton}
-                  onClick={() => setOnReset(!onReset)}>
-                  Cancle reset
-                </button>
-                <input type='submit' />
-              </form>
-            </FirstRegisterFormStyle>
+            <Card style={styles.card}>
+              <CardContent styles={styles.content}>
+                <FormControl>
+                  {/* <label></label> */}
+                  <TextField
+                    // helperText='Enter a password:'
+                    id='standard-basic'
+                    variant='standard'
+                    label='Phone Number'
+                    type='tel'
+                    pattern='[0]{1}[5]{1}[0-9]{8}'
+                    required
+                    // placeholder='Enter a Phone Number:'
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className='inputPhoneNum'
+                  />
+                  <br />
+                  <Button
+                    onClick={(e) => phoneSubmit(e)}
+                    variant='contained'
+                    color='primary'
+                    type='submit'>
+                    submit
+                  </Button>
+                  <br />
+                  <TextField
+                    helperText='Enter the temporary password you received in sms'
+                    id='standard-basic'
+                    variant='standard'
+                    label='Temporary Password'
+                    // pattern="[0]{1}[5]{1}[0-9]{8}"
+                    // required
+                    // placeholder='Enter a temporary password:'
+                    value={tempPass}
+                    onChange={(e) => setTempPass(e.target.value)}
+                  />
+                  <br />
+                  <Button
+                    onClick={(e) => approveSubmit(e)}
+                    variant='contained'
+                    color='primary'
+                    type='submit'>
+                    submit
+                  </Button>
+                  <br />
+                  <br />
+                  <TextField
+                    // helperText='Enter a password:'
+                    id='standard-basic'
+                    variant='standard'
+                    label='Final Password'
+                    // pattern="[0]{1}[5]{1}[0-9]{8}"
+                    // required
+                    // placeholder='Enter your final password:'
+                    value={pass}
+                    onChange={(e) => setPass(e.target.value)}
+                  />
+                  <TextField
+                    // helperText='Enter a password:'
+                    id='standard-basic'
+                    variant='standard'
+                    label='Repeat Password'
+                    // pattern="[0]{1}[5]{1}[0-9]{8}"
+                    // required
+                    // placeholder='repeat your password!'
+                    value={pass2}
+                    onChange={(e) => setPass2(e.target.value)}
+                  />
+                  <Button
+                    onClick={(e) => approvePassword()}
+                    variant='contained'
+                    color='primary'
+                    type='submit'>
+                    submit
+                  </Button>
+                  <br />
+                  <Button
+                    // style={styles.cancelForgotButton}
+                    onClick={() => setOnReset(!onReset)}>
+                    Go Back
+                  </Button>
+                </FormControl>
+              </CardContent>
+            </Card>
           )}
         </div>
       )}
-      {loading && <Loading />}
+
+      <Backdrop
+        sx={{ color: "#fff" }}
+        open={loading}
+        // onClick={() => setLoading(false)}
+      >
+        <CircularProgress color='inherit' />
+      </Backdrop>
     </div>
   );
 };
@@ -226,21 +474,32 @@ const styles = {
     padding: 24,
     backgroundColor: "#eaeaea",
   },
-  label: {
-    position: "absolute",
-    left: "140px",
-    top: "5px",
+
+  card: {
+    // height: 400,
+    width: "50%",
+    left: "25%",
+    top: 50,
+    position: "relative",
+    alignItems: "center",
+    textAlign: "center",
+    justifyContent: "center",
+    backgroundColor: "whitesmoke",
   },
-  subBut: {
-    position: "absolute",
-    left: "330px",
-    top: "55px",
+  content: {
+    display: "flex",
+    // justifyContent: "space-around",
+    flexDirection: "column",
+    // marginBottom: 30,
   },
-  label2: {
-    position: "absolute",
-    left: "140px",
-    top: "55px",
+
+  iconsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 30,
   },
+
   input: {
     position: "absolute",
     left: "140px",
@@ -260,7 +519,7 @@ const styles = {
   small: {
     position: "absolute",
     left: "20px",
-    top: "120px",
+    top: "105px",
   },
   small2: {
     position: "absolute",
@@ -269,8 +528,8 @@ const styles = {
   },
   small3: {
     position: "absolute",
-    left: "20px",
-    top: "20px",
+    left: "180px",
+    top: "-20px",
   },
   title: {
     flexDirection: "row",
@@ -291,7 +550,7 @@ const styles = {
   forgotButton: {
     position: "absolute",
     left: "20px",
-    top: "150px",
+    top: "125px",
   },
   cancelForgotButton: {
     position: "absolute",
@@ -314,62 +573,5 @@ const styles = {
     top: "265px",
   },
 };
-const LoginFormStyle = styled.div`
-  ${
-    "" /* background: linear-gradient(135deg, rgb(11,15,67) 5%,rgb(27,100,221) ); */
-  }
-  ${"" /* width: 14px; */}
-  ${"" /* height: 24px; */}
-  ${
-    "" /* background-image: url(data:image/svg+xml;utf8,%3Csvg%20viewBox%3D%220%200%2024%2024%22%20version%3D%221.1%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20xmlns%3Axlink%3D%22http%3A//www.w3.org/1999/xlink%22%3E%0A%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M5%2C11%20C5%2C7.691%207.691%2C5%2011%2C5%20C14.309%2C5%2017%2C7.691%2017%2C11%20C17%2C14.309%2014.309%2C17%2011%2C17%20C7.691%2C17%205%2C14.309%205%2C11%20M20.707%2C19.293%20L17.312%2C15.897%20C18.365%2C14.543%2019%2C12.846%2019%2C11%20C19%2C6.589%2015.411%2C3%2011%2C3%20C6.589%2C3%203%2C6.589%203%2C11%20C3%2C15.411%206.589%2C19%2011%2C19%20C12.846%2C19%2014.543%2C18.365%2015.897%2C17.312%20L19.293%2C20.707%20C19.488%2C20.902%2019.744%2C21%2020%2C21%20C20.256%2C21%2020.512%2C20.902%2020.707%2C20.707%20C21.098%2C20.316%2021.098%2C19.684%2020.707%2C19.293%22%20id%3D%22path-1%22%3E%3C/path%3E%0A%20%20%20%20%3C/defs%3E%0A%20%20%20%20%3Cg%20id%3D%22search%22%20stroke%3D%22none%22%20stroke-width%3D%221%22%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%0A%20%20%20%20%20%20%20%20%3Cmask%20id%3D%22mask-2%22%20fill%3D%22white%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cuse%20xlink%3Ahref%3D%22%23path-1%22%3E%3C/use%3E%0A%20%20%20%20%20%20%20%20%3C/mask%3E%0A%20%20%20%20%20%20%20%20%3Cuse%20id%3D%22%uD83C%uDFA8-Icon-%u0421olor%22%20fill%3D%22%230D1C2E%22%20fill-rule%3D%22nonzero%22%20xlink%3Ahref%3D%22%23path-1%22%3E%3C/use%3E%0A%20%20%20%20%3C/g%3E%0A%3C/svg%3E); */
-  }
- ${"" /* background-position: 50% 50%; */}
- ${"" /* background-repeat: no-repeat; */}
-  padding-left: 2rem;
-  background: transparent
-    linear-gradient(150deg, #025fdb 0%, #025fdb 35%, #0b3668 100%) 0% 0%
-    no-repeat padding-box;
-  box-shadow: 0 3px 20px rgb(0 0 0 / 8%);
-  height: 300px;
-  width: 500px;
-  position: relative;
-  top: 40px;
-  left: 550px;
-  border-radius: 30px;
-  ${"" /* display: flex; */}
-  flex-direction:row;
-  ${"" /* justify-content: space-between; */}
-  ${"" /* padding: 0.5rem calc((100vw - 1000px) / 2); */}
-  ${"" /* z-index: 10; */} /* Third Nav */
-  /* justify-content: flex-start; */
-`;
-const FirstRegisterFormStyle = styled.div`
-  ${
-    "" /* background: linear-gradient(135deg, rgb(11,15,67) 5%,rgb(27,100,221) ); */
-  }
-  ${"" /* width: 14px; */}
-  ${"" /* height: 24px; */}
-  ${
-    "" /* background-image: url(data:image/svg+xml;utf8,%3Csvg%20viewBox%3D%220%200%2024%2024%22%20version%3D%221.1%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20xmlns%3Axlink%3D%22http%3A//www.w3.org/1999/xlink%22%3E%0A%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M5%2C11%20C5%2C7.691%207.691%2C5%2011%2C5%20C14.309%2C5%2017%2C7.691%2017%2C11%20C17%2C14.309%2014.309%2C17%2011%2C17%20C7.691%2C17%205%2C14.309%205%2C11%20M20.707%2C19.293%20L17.312%2C15.897%20C18.365%2C14.543%2019%2C12.846%2019%2C11%20C19%2C6.589%2015.411%2C3%2011%2C3%20C6.589%2C3%203%2C6.589%203%2C11%20C3%2C15.411%206.589%2C19%2011%2C19%20C12.846%2C19%2014.543%2C18.365%2015.897%2C17.312%20L19.293%2C20.707%20C19.488%2C20.902%2019.744%2C21%2020%2C21%20C20.256%2C21%2020.512%2C20.902%2020.707%2C20.707%20C21.098%2C20.316%2021.098%2C19.684%2020.707%2C19.293%22%20id%3D%22path-1%22%3E%3C/path%3E%0A%20%20%20%20%3C/defs%3E%0A%20%20%20%20%3Cg%20id%3D%22search%22%20stroke%3D%22none%22%20stroke-width%3D%221%22%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%0A%20%20%20%20%20%20%20%20%3Cmask%20id%3D%22mask-2%22%20fill%3D%22white%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cuse%20xlink%3Ahref%3D%22%23path-1%22%3E%3C/use%3E%0A%20%20%20%20%20%20%20%20%3C/mask%3E%0A%20%20%20%20%20%20%20%20%3Cuse%20id%3D%22%uD83C%uDFA8-Icon-%u0421olor%22%20fill%3D%22%230D1C2E%22%20fill-rule%3D%22nonzero%22%20xlink%3Ahref%3D%22%23path-1%22%3E%3C/use%3E%0A%20%20%20%20%3C/g%3E%0A%3C/svg%3E); */
-  }
- ${"" /* background-position: 50% 50%; */}
- ${"" /* background-repeat: no-repeat; */}
-  padding-left: 2rem;
-  background: transparent
-    linear-gradient(150deg, #025fdb 0%, #025fdb 35%, #0b3668 100%) 0% 0%
-    no-repeat padding-box;
-  box-shadow: 0 3px 20px rgb(0 0 0 / 8%);
-  height: 260px;
-  width: 360px;
-  position: absolute;
-  left: 50px;
-  top: 220px;
-  border-radius: 30px;
-  ${"" /* display: flex; */}
-  flex-direction:row;
-  ${"" /* justify-content: space-between; */}
-  ${"" /* padding: 0.5rem calc((100vw - 1000px) / 2); */}
-  ${"" /* z-index: 10; */} /* Third Nav */
-  /* justify-content: flex-start; */
-`;
+
 export default Login;

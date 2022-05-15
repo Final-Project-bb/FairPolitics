@@ -1,16 +1,21 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Header from "./Header";
 import Loading from "./Loading";
 import { AppContext } from "./Context";
 
 import UserCard from "./UserCard";
+import { Grid } from "@mui/material";
 const Search = () => {
   const {
+    loading,
     setLoading,
     usersSearch,
+    setUsersSearch,
     setUserDetails,
     is_connected,
     setIsConnected,
+    search,
+    user_details,
   } = useContext(AppContext);
 
   const users = [
@@ -43,16 +48,40 @@ const Search = () => {
       is_public_elected: true,
     },
   ];
+
+  useEffect(() => {
+    const fetchSearchUsers = async () => {
+    const Search = window.localStorage.getItem("search");
+    const user = window.localStorage.getItem("user");
+
+      const response = await fetch(
+        `http://localhost:4000/api/search_by_name/${Search}/${user.user_id}`
+      );
+      const data = await response.json();
+      console.log(data.result);
+      setUsersSearch(data.result);
+    };
+    const user = window.localStorage.getItem("user");
+    const isconnected = window.localStorage.getItem("isconnected");
+    setUserDetails(JSON.parse(user));
+    setIsConnected(isconnected);
+    fetchSearchUsers();
+  }, [search]);
+
   return (
-    <div>
+    <div style={{ backgroundColor: "lightgray", minHeight: 657 }}>
       <Header title='Search Page' />
-      <div style={styles.text}>
-        {usersSearch.map((user) => (
-          <div>
-            <UserCard key={user.user_id} user_info={user} inSearch={true}/>
-          </div>
-        ))}
-      </div>
+      {/* <div style={styles.card}> */}
+      {!loading ? (
+        <Grid container spacing={0} sx={{ marginTop: 5 }}>
+          {usersSearch.map((user) => (
+            <UserCard key={user.user_id} user_info={user}  />
+          ))}
+        </Grid>
+      ) : (
+        <Loading />
+      )}
+      {/* </div> */}
     </div>
   );
 };
@@ -73,15 +102,14 @@ const styles = {
     // top: 10,
     // right:150
   },
-  text: {
+  card: {
     display: "flex",
-    // justifyContent: 'space-around',
     flexDirection: "column",
     position: "relative",
-    // marginLeft:10,
-    top: 0,
-    fontSize: 25,
-    left: 335,
+    // top: 0,
+    // fontSize: 25,
+    justifyContent: "center",
+    alignItems: "center",
   },
   cardFooter: {
     display: "flex",

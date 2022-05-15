@@ -1,6 +1,5 @@
 import "./App.css";
-import React, { useState } from "react";
-import InitialPage from "./components/InitialPage";
+import React, { useState, useEffect } from "react";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import About from "./components/About";
@@ -9,58 +8,93 @@ import Home from "./components/Home";
 import Following from "./components/Following";
 import Follower from "./components/Follower";
 import Profile from "./components/Profile";
-import AddDiscussion from "./components/AddDiscussion";
-import AddFeedback from "./components/AddFeedback";
+import AddPost from "./components/AddPost";
+import AddPoll from "./components/AddPoll";
 import AboutMe from "./components/AboutMe";
+import FriendProfile from "./components/FriendProfile";
 import { AppContext } from "./components/Context";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Search from "./components/Search";
+import EditPostCard from "./components/EditPostCard";
+import EditPollCard from "./components/EditPollCard";
+import Algorithms from "./components/Algorithms";
+import Header from "./components/Header";
+
 function App() {
   const [user_details, setUserDetails] = useState({});
-  const [is_connected, setIsConnected] = useState(false);
+  const [algo_id, setAlgoId] = useState(window.localStorage.getItem("algoID"));
+  const [friend_details, setFriendDetails] = useState({});
+  const [is_connected, setIsConnected] = useState(
+    window.localStorage.getItem("isconnected") == null ? false : true
+  );
   const [loading, setLoading] = useState(false);
-  const [discussionCards, setDiscussionCards] = useState([]);
-  const [feedbackCards, setFeedbackCards] = useState([]);
-  const [profileDiscussionCards, setProfileDiscussionCards] = useState([]);
-  const [profileFeedbackCards, setProfileFeedbackCards] = useState([]);
+  const [postCards, setPostCards] = useState([]);
+  const [pollCards, setPollCards] = useState([]);
+  const [profilePostCards, setProfilePostCards] = useState([]);
+  const [profilePollCards, setProfilePollCards] = useState([]);
   const [followings, setFollowings] = useState([]);
   const [followers, setFollowers] = useState([]);
-  const [followingDetails, setFollowingDetails] = useState([]);
-  const [followerDetails, setFollowerDetails] = useState([]);
+  const [friendFollowings, setFriendFollowings] = useState([]);
+  const [friendFollowers, setFriendFollowers] = useState([]);
+  const [inFriend, setInFriend] = useState(false);
+  const [search, setSearch] = useState('');
   const [usersSearch, setUsersSearch] = useState([]);
+  const [currentItem, setCurrentItem] = useState({
+    title: "",
+    description: "",
+    tag: "",
+    picture: "",
+  });
+
+  // useEffect(() => {
+  //   const user = window.localStorage.getItem("user");
+  //   const isconnected = window.localStorage.getItem("isconnected");
+  //   setUserDetails(JSON.parse(user));
+  //   setIsConnected(isconnected);
+  // }, []);
 
   return (
     <AppContext.Provider
       value={{
         user_details,
         setUserDetails,
+        algo_id,
+        setAlgoId,
+        friend_details,
+        setFriendDetails,
         is_connected,
         setIsConnected,
         loading,
         setLoading,
-        discussionCards,
-        setDiscussionCards,
-        feedbackCards,
-        setFeedbackCards,
-        profileDiscussionCards,
-        setProfileDiscussionCards,
-        profileFeedbackCards,
-        setProfileFeedbackCards,
+        postCards,
+        setPostCards,
+        pollCards,
+        setPollCards,
+        profilePostCards,
+        setProfilePostCards,
+        profilePollCards,
+        setProfilePollCards,
         followings,
         setFollowings,
         followers,
         setFollowers,
-        followingDetails,
-        setFollowingDetails,
-        followerDetails,
-        setFollowerDetails,
+        inFriend,
+        setInFriend,
+        friendFollowings,
+        setFriendFollowings,
+        friendFollowers,
+        setFriendFollowers,
         usersSearch,
         setUsersSearch,
+        currentItem,
+        setCurrentItem,
+        search,
+        setSearch,
       }}>
       <Router>
         <Switch>
           <Route exact path='/'>
-            <InitialPage />
+            <Login />
           </Route>
           <Route exact path='/connection/login'>
             <Login />
@@ -68,40 +102,52 @@ function App() {
           <Route exact path='/connection/register'>
             <Register />
           </Route>
-          <Route exact path='/about'>
+          <Route exact path='/About'>
             <About />
           </Route>
-          <Route exact path='/contact-us'>
+          <Route exact path='/Contact-Us'>
             <ContactUs />
           </Route>
-          {is_connected && (
-            <div>
-              <Route exact path='/home'>
-                <Home />
-              </Route>
-              <Route exact path='/profile'>
-                <Profile />
-              </Route>
-              <Route exact path='/profile/aboutProfile'>
-                <AboutMe />
-              </Route>
-              <Route exact path='/profile/addDiscussion'>
-                <AddDiscussion />
-              </Route>
-              <Route exact path='/profile/addFeedback'>
-                <AddFeedback />
-              </Route>
-              <Route exact path='/profile/following'>
-                <Following />
-              </Route>
-              <Route exact path='/profile/follower'>
-                <Follower />
-              </Route>
-              <Route exact path='/search'>
-                <Search />
-              </Route>
-            </div>
-          )}
+          {/* {is_connected && ( */}
+          <>
+            <Route exact path='/Home'>
+              <Home />
+            </Route>
+            <Route exact path='/Profile'>
+              <Profile />
+            </Route>
+            <Route exact path='/profile/aboutProfile'>
+              <AboutMe />
+            </Route>
+            {/* <Route exact path='/profile/addPost'>
+              <AddPost />
+            </Route>
+            <Route exact path='/profile/addPoll'>
+              <AddPoll />
+            </Route>
+            <Route exact path='/profile/editPost'>
+              <EditPostCard />
+            </Route>
+            <Route exact path='/profile/editPoll'>
+              <EditPollCard />
+            </Route> */}
+            <Route exact path='/profile/following'>
+              <Following />
+            </Route>
+            <Route exact path='/profile/follower'>
+              <Follower />
+            </Route>
+            <Route exact path='/search'>
+              <Search />
+            </Route>
+            <Route exact path='/FriendProfile'>
+              <FriendProfile />
+            </Route>
+            <Route exact path='/Algorithms'>
+              <Algorithms />
+            </Route>
+          </>
+          {/* )} */}
         </Switch>
       </Router>
     </AppContext.Provider>

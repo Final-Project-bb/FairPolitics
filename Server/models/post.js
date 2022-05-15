@@ -1,8 +1,8 @@
-const Comment = require('../models/comment');
-const Picture = require('../models/picture');
-const Like = require('../models/like');
+const Comment = require('./comment');
+const Picture = require('./picture');
+const Like = require('./like');
 
-class Discussion {
+class Post {
     constructor(
         post_id,
         user_id,
@@ -20,4 +20,4 @@ class Discussion {
     }
 }
 
-module.exports = Discussion;
+module.exports = Post;

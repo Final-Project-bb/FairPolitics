@@ -1,9 +1,9 @@
 const mysql = require('mysql');
 const dotenv = require('dotenv');
-dotenv.config({path: './.env'});
+dotenv.config({ path: './.env' });
 
 const connection = mysql.createConnection({
-    host:process.env.DATABASE_HOST, // i.p address of server
+    host: process.env.DATABASE_HOST, // i.p address of server
     user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE

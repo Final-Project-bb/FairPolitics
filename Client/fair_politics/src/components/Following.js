@@ -1,22 +1,48 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Header from "./Header";
 import { AppContext } from "./Context";
 import UserCard from "./UserCard";
 import ProfileHeader from "./ProfileHeader";
-
+import Grid from "@mui/material/Grid";
 
 const Following = () => {
-  const { loading, setLoading, followingDetails,followings } = useContext(AppContext);
-// console.log("followingDetails");
-// console.log(followingDetails);
+  const {
+    loading,
+    setLoading,
+    friendFollowings,
+    followings,
+    inFriend,
+    setUserDetails,
+    setIsConnected,
+  } = useContext(AppContext);
+  // console.log("followingDetails");
+  // console.log(followingDetails);
+
+  useEffect(() => {
+    const user = window.localStorage.getItem("user");
+    const isconnected = window.localStorage.getItem("isconnected");
+    setUserDetails(JSON.parse(user));
+    setIsConnected(isconnected);
+  }, []);
+
   return (
-    <div>
+    <div style={{ backgroundColor: "lightgray" }}>
       <Header title='Following' />
-      <ProfileHeader/>
-      <br/>
-      {followings.map(user =>
-        <UserCard key={user.user_id} user_info={user} inFollowing={true}/>
-      )}
+      <ProfileHeader />
+      <br />
+      <Grid container spacing={0}>
+        {!inFriend
+          ? followings.map((user) => (
+              <UserCard
+                key={user.user_id}
+                user_info={user}
+                inFollowing={true}
+              />
+            ))
+          : friendFollowings.map((user) => (
+              <UserCard key={user.user_id} user_info={user} />
+            ))}
+      </Grid>
     </div>
   );
 };
