@@ -37,35 +37,36 @@ Moreover, we have a unique identification to avoid bias in the results.
       <br> - Is changed regularly.
       <br> - Is different from previous passwords.
 
-    - To run this project basically you'll required to open 3 different bash terminals and execute 3 commands
+      ## Initialize .env file:
+      <strong>make your .env file inside the Server folder and in this format:</strong>
+      <br><br>
+      ```
+      // for DB connection
+      DATABASE_HOST = your DB host (usualy localhost)
+      DATABASE_USER = your DB user name (usualy root)
+      DATABASE_PASSWORD = your DB password
+      DATABASE = your DB schema name
+
+      // Google token
+      GOOGLE_CLIENT_ID = "your id"
+      GOOGLE_CLIENT_SECRET = "your id"
+      ```
+
+      - To run this project basically you'll required to open 3 different bash terminals and execute 3 commands
         <br> 1. Run DBinit.sh script (located in DB Folder, can be run from bash terminal by command: 
         ```
         ./DB/DBinit.sh
         ```
         <br> 2. Server side: run with npm from Server folder by commands: 
         ```
-        cd .\Server\  ;  npm i install ; npm start
+        cd ./Server/ ; npm install ; npm start
         ```
         <br> 3. Client side: run with npm from Client folder by commands: 
         ```
-        cd .\Client\fair_politics\ ;  npm i install ; npm start
+        cd ./Client/fair_politics/ ; npm install ; npm start
         ```
 
 
-## Initialize .env file:
-<strong>make your .env file in this format:</strong>
-<br><br>
-```
-// for DB connection
-DATABASE_HOST = your DB host (usualy localhost)
-DATABASE_USER = your DB user name (usualy root)
-DATABASE_PASSWORD = your DB password
-DATABASE = your DB schema name
-
-// Google token
-GOOGLE_CLIENT_ID = "your id"
-GOOGLE_CLIENT_SECRET = "your id"
-```
 ## Languages:
 - <strong> Backend: Python,nodeJs(express).<strong/><br>
 - <strong> Frontend: html,css,reactJs,bootstrap.<strong/><br>
