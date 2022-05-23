@@ -16,7 +16,7 @@ Moreover, we have a unique identification to avoid bias in the results.
   * Basically can be executed by Linux Ubuntu/Windows.
   - ### requirements:
     - VSCode
-    - NodeJS (npm)
+    - NodeJS (npm) v16.5.0 (read https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04) 
     - Ubuntu 20.04.4 LTS (Linux Ubuntu OS/wsl in windows) 
     - MySQL Server V8.0 
   - ### instructions: 
