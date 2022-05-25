@@ -1,4 +1,4 @@
-const Post = require("../models/post");
+const post = require("../models/post");
 const express = require("express");
 const mysql = require("mysql");
 const algo = require("../../Algorithms/dprsequence");
@@ -6,7 +6,7 @@ const algo = require("../../Algorithms/dprsequence");
 const connection = require("../lib/db");
 
 const createPost = (req, res) => {
-  let sqlInsertPost = `insert into Post(user_id, title, tag, description, picture, upload_date)
+  let sqlInsertPost = `insert into post(user_id, title, tag, description, picture, upload_date)
     values(
     ${JSON.stringify(req.body.user_id)}, 
     ${JSON.stringify(req.body.title)},
@@ -14,7 +14,7 @@ const createPost = (req, res) => {
     ${JSON.stringify(req.body.description)},
     ${JSON.stringify(req.body.picture)},
     ${JSON.stringify(req.body.upload_date)})`;
-  let sqlGetPostId = "select LAST_INSERT_ID() as post_id from Post limit 1";
+  let sqlGetPostId = "select LAST_INSERT_ID() as post_id from post limit 1";
 
   connection.query(sqlInsertPost, function (err, result) {
     if (err) {
@@ -35,7 +35,7 @@ const createPost = (req, res) => {
 };
 
 const updatePost = (req, res) => {
-  let sqlUpdatePost = `update Post set 
+  let sqlUpdatePost = `update post set 
                         title=${JSON.stringify(req.body.title)},
                         tag=${JSON.stringify(req.body.tag)}, 
                         description=${JSON.stringify(req.body.description)},
@@ -50,7 +50,7 @@ const updatePost = (req, res) => {
 };
 
 const deletePost = (req, res) => {
-  let deletePostSql = `delete from Post where post_id = ${JSON.stringify(
+  let deletePostSql = `delete from post where post_id = ${JSON.stringify(
     req.params.post_id
   )}`;
   let deleteAllCommentsSql = `delete from Post_response where post_id = ${JSON.stringify(
@@ -230,14 +230,14 @@ const deleteLikeFromPost = (req, res) => {
 };
 
 const PostsFollowing = (req, res) => {
-  let getPostsWithCommentsSql = `SELECT Post.post_id, Post.user_id, Post.title, Post.description, Post.tag, Post.picture, Post.upload_date,
+  let getPostsWithCommentsSql = `SELECT post.post_id, post.user_id, post.title, post.description, post.tag, post.picture, post.upload_date,
   Post_response.comment_id, Post_response.comment, Post_response.user_id as 'user_id_comment'
-  FROM Post left JOIN Post_response
-  ON Post.post_id = Post_response.post_id
-  where Post.user_id in (select user_following_id from follower where user_id=${JSON.stringify(
+  FROM post left JOIN Post_response
+  ON post.post_id = Post_response.post_id
+  where post.user_id in (select user_following_id from follower where user_id=${JSON.stringify(
     req.params.user_id
   )})
-  group by Post_response.comment_id order by Post.post_id`;
+  group by Post_response.comment_id order by post.post_id`;
 
   let getPostLikesSql = `select * from Post_like_approval order by post_id`;
 
@@ -311,12 +311,12 @@ const PostsFollowing = (req, res) => {
 };
 
 const getPost = (req, res) => {
-  let getPostsWithCommentsSql = `SELECT Post.post_id, Post.user_id, Post.title, Post.description, Post.tag, Post.picture, Post.upload_date,
+  let getPostsWithCommentsSql = `SELECT post.post_id, post.user_id, post.title, post.description, post.tag, post.picture, post.upload_date,
   Post_response.comment_id, Post_response.comment,  Post_response.user_id as 'user_id_comment'
-  FROM Post left JOIN Post_response      
-  ON Post.post_id = Post_response.post_id
-  where Post.user_id = ${JSON.stringify(req.params.user_id)}
-  order by Post.post_id`;
+  FROM post left JOIN Post_response      
+  ON post.post_id = Post_response.post_id
+  where post.user_id = ${JSON.stringify(req.params.user_id)}
+  order by post.post_id`;
 
   let getPostLikesSql = `select * from Post_like_approval order by post_id`;
 

@@ -47,7 +47,7 @@ const Register = () => {
   const [semi_description, setSemiDescription] = useStateIfMounted("");
   const [tempPassFlag, setTempPassFlag] = useStateIfMounted(false);
   const [passFlag, setPassFlag] = useStateIfMounted(false);
-  const [otherFlag, setOtherFlag] = useStateIfMounted(true);
+  const [otherFlag, setOtherFlag] = useStateIfMounted(false);
   // const [isGoogleAuth, setIsGoogleAuth] = useStateIfMounted(false);
   // const [isFacebookAuth, setIsFacebookAuth] = useStateIfMounted(false);
 
