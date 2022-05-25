@@ -26,7 +26,7 @@ const Algorithms = () => {
 
   const { user_details, algo_id, setAlgoId, setUserDetails, setIsConnected } =
     useContext(AppContext);
-  // const [chosenAlgorithm, setChosenAlgorithm] = useStateIfMounted(JSON.parse(window.localStorage.getItem("algoID")));
+  const [chosenAlgorithm, setChosenAlgorithm] = useStateIfMounted(JSON.parse(window.localStorage.getItem("algoID")));
 
   const getAlgorithmChosen = async () => {
     const user = window.localStorage.getItem("user");
@@ -76,7 +76,7 @@ const Algorithms = () => {
   return (
     <div style={{ backgroundColor: "lightgray" }}>
       <Header />
-      {algoid === -1 && (
+      {chosenAlgorithm === -1 && (
         <CardContent sx={{ color: "red" }}>
           Please Choose Algorithm to use for the haluka hogenet{" "}
         </CardContent>
@@ -136,7 +136,7 @@ const Algorithms = () => {
               sx={{
                 width: 500,
                 margin: 3,
-                border: algoid === algo.id ? "2px solid #1769aa" : 0,
+                border: chosenAlgorithm === algo.id ? "2px solid #1769aa" : 0,
                 borderRadius: "1.5%",
               }}>
               <Card raised sx={{ height: 400 }}>
@@ -153,14 +153,14 @@ const Algorithms = () => {
                   }}>
                   <label>{algo.title}</label>
                   <Button
-                    variant={algoid === algo.id ? "contained" : "text"}
+                    variant={chosenAlgorithm === algo.id ? "contained" : "text"}
                     color='primary'
                     sx={{
                       position: "relative",
                       marginLeft: "auto",
                     }}
                     onClick={() => setAlgorithmChosen(algo.id, algo.title)}>
-                    {algoid === algo.id ? "Chosen" : "Choose"}
+                    {chosenAlgorithm === algo.id ? "Chosen" : "Choose"}
                   </Button>
                 </CardContent>
 

@@ -51,12 +51,12 @@ const getPoll = (req, res) => {
   let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll.upload_date, poll_answer.answer_id, poll_answer.answer 
   ,IF((select count(*) from poll_answer_approval where
          user_id=${JSON.stringify(
-           req.params.user_id
-         )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
+    req.params.user_id
+  )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
     FROM poll JOIN poll_answer 
     ON poll.poll_id=poll_answer.poll_id and 
     poll.user_id =${JSON.stringify(req.params.user_id)}
-    group by poll_answer.answer_id order by poll.poll_id`;
+    order by poll.poll_id, poll_answer.answer_id`;
 
   let allPollsWithAnswer = [];
   let poll_id_hand = -1;
@@ -214,8 +214,7 @@ const updateAnswerPoll = (req, res) => {
   // console.log("dsad")
   let deleteOldAnswersSql = `delete from poll_answer_approval 
     where user_id = ${JSON.stringify(req.params.user_id)} 
-    and answer_id in (select answer_id from poll_answer where poll_id=${
-      req.params.poll_id
+    and answer_id in (select answer_id from poll_answer where poll_id=${req.params.poll_id
     })`;
   connection.query(deleteOldAnswersSql, function (err, deleteOldAnswers) {
     if (err) {
@@ -246,13 +245,13 @@ const pollsFollowing = (req, res) => {
   let query = `SELECT poll.poll_id, poll.user_id, poll.title, poll.description, poll.picture, poll.upload_date, poll_answer.answer_id, poll_answer.answer 
   ,IF((select count(*) from poll_answer_approval where
          user_id=${JSON.stringify(
-           req.params.user_id
-         )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
+    req.params.user_id
+  )} and answer_id=poll_answer.answer_id)=1, true, false) as "is_answer"  
     FROM poll JOIN poll_answer 
     ON poll.poll_id=poll_answer.poll_id and 
     poll.user_id in (select user_following_id from follower 
     where user_id=${JSON.stringify(req.params.user_id)}) 
-    group by poll_answer.answer_id order by poll.poll_id`;
+    order by poll_answer.answer_id, poll.poll_id`;
 
   let allPollsWithAnswer = [];
   let poll_id_hand = -1;
