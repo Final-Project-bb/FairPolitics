@@ -7,6 +7,7 @@ import { AppContext } from "./Context";
 import Loading from "./Loading";
 import { FaFacebook, FaSms } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
+import { algorithms } from "./algorithmDetails";
 import GoogleLogin from "react-google-login";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -180,6 +181,8 @@ const Login = () => {
 
         setId(data.result[0].user_id);
         setUserDetails(data.result[0]);
+        window.localStorage.setItem("user", JSON.stringify(data.result[0]));
+        window.localStorage.setItem("isconnected", true);
         setIsConnected(true);
         history.push("/home");
       }
@@ -245,7 +248,8 @@ const Login = () => {
     );
     const data = await response.json();
     setAlgoId(data.result[0].algorithm_id);
-    // window.localStorage.setItem("algoName", algoName);
+    const algoName = algorithms.filter((item) => item.id == data.result[0].algorithm_id)[0].title
+    window.localStorage.setItem("algoName", algoName);
     window.localStorage.setItem("algoID", data.result[0].algorithm_id);
   };
   const phoneSubmit = (event) => {
