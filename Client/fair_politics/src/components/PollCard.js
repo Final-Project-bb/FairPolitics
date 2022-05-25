@@ -59,16 +59,16 @@ const PollCard = ({
   const [dialog, setDialog] = useStateIfMounted(false);
   const [dialogContent, setDialogContent] = useStateIfMounted("");
 
-  // let algoName = !inProfile
-  //   ? algorithms.filter((item) => item.id == poll_algo)[0].title
-  //   : algorithms.filter((item) => item.id == algo_id)[0].title;
+  let algoName = !inProfile
+    ? algorithms.filter((item) => item.id == poll_algo)[0].title
+    : window.localStorage.getItem("algoName");
 
-  const algoName = window.localStorage.getItem("algoName");
+  // let algoName = window.localStorage.getItem("algoName");
 
   useEffect(async () => {
-    // algoName = !inProfile
-    //   ? algorithms.filter((item) => item.id == poll_algo)[0].title
-    //   : algorithms.filter((item) => item.id == algo_id)[0].title;
+    algoName = !inProfile
+      ? algorithms.filter((item) => item.id == poll_algo)[0].title
+      : window.localStorage.getItem("algoName");
 
     const getUserDetails = async () => {
       let id = item.user_id;
@@ -96,6 +96,7 @@ const PollCard = ({
         .then((json) => {
           json.result[0] !== undefined &&
             setPollAlgo(json.result[0].algorithm_id);
+          console.log(json.result[0])
         })
         .catch((err) => console.error(err));
     };
@@ -252,8 +253,8 @@ const PollCard = ({
     // console.log(answers);
     newAnswers.filter((answer) => answer === answer_id).length > 0
       ? setNewAnswers((newAnswers) => {
-          return newAnswers.filter((answer) => answer !== answer_id);
-        })
+        return newAnswers.filter((answer) => answer !== answer_id);
+      })
       : setNewAnswers([...newAnswers, answer_id]);
 
     // console.log("newAnswersFromHandle");
@@ -528,8 +529,8 @@ const PollCard = ({
 };
 PollCard.defaultProps = {
   inProfile: false,
-  setAlert: () => {},
-  setAlertContent: () => {},
+  setAlert: () => { },
+  setAlertContent: () => { },
 };
 const styles = {
   head: {

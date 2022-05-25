@@ -53,10 +53,10 @@ const deletePost = (req, res) => {
   let deletePostSql = `delete from post where post_id = ${JSON.stringify(
     req.params.post_id
   )}`;
-  let deleteAllCommentsSql = `delete from Post_response where post_id = ${JSON.stringify(
+  let deleteAllCommentsSql = `delete from post_response where post_id = ${JSON.stringify(
     req.params.post_id
   )}`;
-  let deleteAllLikesSql = `delete from Post_like_approval where post_id = ${JSON.stringify(
+  let deleteAllLikesSql = `delete from post_like_approval where post_id = ${JSON.stringify(
     req.params.post_id
   )}`;
 
@@ -79,14 +79,14 @@ const deletePost = (req, res) => {
 };
 
 const addComment = (req, res) => {
-  let sqlInsertComment = `insert into Post_response (post_id,user_id,comment)
+  let sqlInsertComment = `insert into post_response (post_id,user_id,comment)
                         values(
                         ${JSON.stringify(req.body.post_id)}, 
                         ${JSON.stringify(req.body.user_id)}, 
                         ${JSON.stringify(req.body.comment)})`;
 
   let sqlGetPostId =
-    "select LAST_INSERT_ID() as comment_id from Post_response limit 1";
+    "select LAST_INSERT_ID() as comment_id from post_response limit 1";
 
   connection.query(sqlInsertComment, function (err, result) {
     if (err) {
@@ -104,7 +104,7 @@ const addComment = (req, res) => {
 };
 
 const updateComment = (req, res) => {
-  let sqlUpdateComment = `update Post_response set 
+  let sqlUpdateComment = `update post_response set 
                           comment=${JSON.stringify(req.body.comment)}
                           where 
                           comment_id=${JSON.stringify(req.params.comment_id)}`;
@@ -118,7 +118,7 @@ const updateComment = (req, res) => {
 };
 
 const deleteComment = (req, res) => {
-  let sqlDelComment = `delete from Post_response where comment_id = ${req.params.comment_id}`;
+  let sqlDelComment = `delete from post_response where comment_id = ${req.params.comment_id}`;
 
   connection.query(sqlDelComment, function (err, result) {
     if (err) {
@@ -129,15 +129,15 @@ const deleteComment = (req, res) => {
 };
 
 const addLikeToPost = (req, res) => {
-  let sqlLikeExists = `select * from Post_like_approval 
+  let sqlLikeExists = `select * from post_like_approval 
                       where post_id=${JSON.stringify(req.body.post_id)} 
                       and user_id=${JSON.stringify(req.body.user_id)}`;
 
-  let sqlInsertLikeDisc = `insert into Post_like_approval(post_id,user_id)
+  let sqlInsertLikeDisc = `insert into post_like_approval(post_id,user_id)
                             values(${JSON.stringify(req.body.post_id)}, 
                             ${JSON.stringify(req.body.user_id)})`;
 
-  let sqlDeleteLikeDisc = `delete from Post_like_approval 
+  let sqlDeleteLikeDisc = `delete from post_like_approval 
                           where post_id=${JSON.stringify(req.body.post_id)} 
                           and user_id=${JSON.stringify(req.body.user_id)}`;
 
@@ -174,8 +174,8 @@ const addLikeToComment = (req, res) => {
 
   let sqlDeleteLikeDisc = `delete from comment_like_approval 
                           where comment_id=${JSON.stringify(
-                            req.body.comment_id
-                          )} 
+    req.body.comment_id
+  )} 
                           and user_id=${JSON.stringify(req.body.user_id)}`;
 
   connection.query(sqlLikeExists, function (err, likeExist) {
@@ -201,7 +201,7 @@ const addLikeToComment = (req, res) => {
 };
 
 const getLikeOfPost = (req, res) => {
-  let sqlGetLikeByPostId = `select user_id from Post_like_approval
+  let sqlGetLikeByPostId = `select user_id from post_like_approval
                             where post_id=${req}`;
 
   connection.query(sqlGetLikeByPostId, function (err, result) {
@@ -215,7 +215,7 @@ const getLikeOfPost = (req, res) => {
 };
 
 const deleteLikeFromPost = (req, res) => {
-  let sqlDelLikeDisc = `delete from Post_like_approval where post_id = ${req.params.post_id}`;
+  let sqlDelLikeDisc = `delete from post_like_approval where post_id = ${req.params.post_id}`;
 
   connection.query(sqlDelLikeDisc, function (err, result) {
     if (err) {
@@ -231,15 +231,15 @@ const deleteLikeFromPost = (req, res) => {
 
 const PostsFollowing = (req, res) => {
   let getPostsWithCommentsSql = `SELECT post.post_id, post.user_id, post.title, post.description, post.tag, post.picture, post.upload_date,
-  Post_response.comment_id, Post_response.comment, Post_response.user_id as 'user_id_comment'
-  FROM post left JOIN Post_response
-  ON post.post_id = Post_response.post_id
+  post_response.comment_id, post_response.comment, post_response.user_id as 'user_id_comment'
+  FROM post left JOIN post_response
+  ON post.post_id = post_response.post_id
   where post.user_id in (select user_following_id from follower where user_id=${JSON.stringify(
     req.params.user_id
   )})
-  group by Post_response.comment_id order by post.post_id`;
+  order by post_response.comment_id, post.post_id`;
 
-  let getPostLikesSql = `select * from Post_like_approval order by post_id`;
+  let getPostLikesSql = `select * from post_like_approval order by post_id`;
 
   let getCommentLikesSql = `select * from comment_like_approval order by comment_id`;
 
@@ -312,13 +312,13 @@ const PostsFollowing = (req, res) => {
 
 const getPost = (req, res) => {
   let getPostsWithCommentsSql = `SELECT post.post_id, post.user_id, post.title, post.description, post.tag, post.picture, post.upload_date,
-  Post_response.comment_id, Post_response.comment,  Post_response.user_id as 'user_id_comment'
-  FROM post left JOIN Post_response      
-  ON post.post_id = Post_response.post_id
+  post_response.comment_id, post_response.comment,  post_response.user_id as 'user_id_comment'
+  FROM post left JOIN post_response      
+  ON post.post_id = post_response.post_id
   where post.user_id = ${JSON.stringify(req.params.user_id)}
   order by post.post_id`;
 
-  let getPostLikesSql = `select * from Post_like_approval order by post_id`;
+  let getPostLikesSql = `select * from post_like_approval order by post_id`;
 
   let getCommentLikesSql = `select * from comment_like_approval order by comment_id`;
 
