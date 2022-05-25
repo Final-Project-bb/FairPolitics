@@ -401,7 +401,7 @@ const PollCard = ({
               justifyContent: "center",
               mx: "auto",
             }}>
-            {item.poll_id} {item.title}
+            {item.title}
           </Typography>
           <Typography
             variant='h7'

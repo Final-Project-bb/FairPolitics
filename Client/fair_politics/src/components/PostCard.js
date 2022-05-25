@@ -326,7 +326,7 @@ const PostCard = ({ item, inProfile, setAlert, setAlertContent }) => {
               justifyContent: "center",
               mx: "auto",
             }}>
-            {item.post_id} {item.title}
+            {item.title}
           </Typography>
           <Typography
             variant='h7'
