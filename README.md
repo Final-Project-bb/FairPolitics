@@ -11,6 +11,8 @@ they get reflect the will of the voters. This system will be convenient and frie
 to the users, including support for a variety of languages common to the population.
 Moreover, we have a unique identification to avoid bias in the results.
 
+## Our video
+you can [click here](https://www.youtube.com/watch?v=a9PqfAU3Ix0) to watch a short video that describes our project.
 
 ## Initialize project: 
   * Basically can be executed by Linux Ubuntu/Windows.
@@ -39,6 +41,7 @@ Moreover, we have a unique identification to avoid bias in the results.
 
       ## Initialize .env file:
       <strong>make your .env file inside the Server folder and in this format:</strong>
+      <br><br>this is tutorial how to create Google OAuth Credentials, [click here.](https://www.youtube.com/watch?v=xH6hAW3EqLk)
       <br><br>
       ```
       // for DB connection
@@ -51,9 +54,10 @@ Moreover, we have a unique identification to avoid bias in the results.
       GOOGLE_CLIENT_ID = "your id"
       GOOGLE_CLIENT_SECRET = "your id"
       ```
-
+      
       - To run this project basically you'll required to open 3 different bash terminals and execute 3 commands
-        <br> 1. Run DBinit.sh script (located in DB Folder, can be run from bash terminal by command: 
+        <br> 1. Run DBinit.sh script (located in DB Folder), can be run from bash terminal by command:
+        <br> Note that these commands match to Linux but not wsl (for wsl use "\\" instead of "/").
         ```
         ./DB/DBinit.sh
         ```
@@ -68,8 +72,8 @@ Moreover, we have a unique identification to avoid bias in the results.
 
 
 ## Languages:
-- <strong> Backend: Python,nodeJs(express).<strong/><br>
-- <strong> Frontend: html,css,reactJs,bootstrap.<strong/><br>
+- <strong> Backend: NodeJS(express).<strong/><br>
+- <strong> Frontend: html,css,reactJS,bootstrap.<strong/><br>
 - <strong> DataBase: MySQL.<strong/><br>
 
 
