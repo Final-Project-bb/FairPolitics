@@ -72,8 +72,8 @@ you can [click here](https://www.youtube.com/watch?v=a9PqfAU3Ix0) to watch a sho
 
 
 ## Languages:
-- <strong> Backend: Python,nodeJs(express).<strong/><br>
-- <strong> Frontend: html,css,reactJs,bootstrap.<strong/><br>
+- <strong> Backend: NodeJS(express).<strong/><br>
+- <strong> Frontend: html,css,reactJS,bootstrap.<strong/><br>
 - <strong> DataBase: MySQL.<strong/><br>
 
 
