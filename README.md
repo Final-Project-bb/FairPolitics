@@ -10,7 +10,7 @@ implement Dynamic Proportional Rankings algorithm feedback, such that the result
 they get reflect the will of the voters. This system will be convenient and friendly
 to the users, including support for a variety of languages common to the population.
 Moreover, we have a unique identification to avoid bias in the results.
-https://www.youtube.com/watch?v=HY6YOd0Ix3g
+
 ## Our video
 you can [click here](https://www.youtube.com/watch?v=HY6YOd0Ix3g) to watch a short video that describes our project.
 
