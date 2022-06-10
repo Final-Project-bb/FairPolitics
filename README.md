@@ -27,17 +27,7 @@ you can [click here](https://www.youtube.com/watch?v=HY6YOd0Ix3g) to watch a sho
      <br> 2. ```sudo apt install mysql-server``` 
      <br> 3. ```sudo /etc/init.d/mysql start ``` 
      <br> 4. ```sudo mysql_secure_installation``` - here you need to create a password for your username (usually root)
-     
-      <strong> password restrictions: </strong>
-      <br> - password Is at least eight characters long.
-      <br> - Combines letters, numbers, and symbol characters within the password.
-      <br> - Is not found in a dictionary.
-      <br> - Is not the name of a command.
-      <br> - Is not the name of a person.
-      <br> - Is not the name of a user.
-      <br> - Is not the name of a computer.
-      <br> - Is changed regularly.
-      <br> - Is different from previous passwords.
+
 
       ## Initialize .env file:
       <strong>make your .env file inside the Server folder and in this format:</strong>
@@ -63,11 +53,15 @@ you can [click here](https://www.youtube.com/watch?v=HY6YOd0Ix3g) to watch a sho
         ```
         <br> 2. Server side: run with npm from Server folder by commands: 
         ```
-        cd ./Server/ ; npm install ; npm start
+        1. cd ./Server/
+        2. npm install
+        3. npm start
         ```
         <br> 3. Client side: run with npm from Client folder by commands: 
         ```
-        cd ./Client/fair_politics/ ; npm install ; npm start
+        1. cd ./Client/fair_politics/
+        2. npm install
+        3. npm start
         ```
 
 
