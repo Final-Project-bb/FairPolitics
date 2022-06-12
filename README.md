@@ -36,7 +36,8 @@ you can [click here](https://www.youtube.com/watch?v=HY6YOd0Ix3g) to watch a sho
       <a href="https://ibb.co/pvQZ1Q6"><img src="https://i.ibb.co/3yvWTv5/Whats-App-Image-2022-06-10-at-15-47-56.jpg" alt="Whats-App-Image-2022-06-10-at-15-47-56" border="0"></a>
       <a href="https://ibb.co/b6J3Kfs"><img src="https://i.ibb.co/51F9R7r/Whats-App-Image-2022-06-10-at-15-48-20.jpg" alt="Whats-App-Image-2022-06-10-at-15-48-20" border="0"></a>
       <br><br>
-      ```
+      ### Now you can create the .env file:
+      ``` 
       // for DB connection
       DATABASE_HOST = your DB host (usualy localhost)
       DATABASE_USER = your DB user name (usualy root)
