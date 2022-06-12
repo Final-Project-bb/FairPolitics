@@ -32,6 +32,9 @@ you can [click here](https://www.youtube.com/watch?v=HY6YOd0Ix3g) to watch a sho
       ## Initialize .env file:
       <strong>make your .env file inside the Server folder and in this format:</strong>
       <br><br>this is tutorial how to create Google OAuth Credentials, [click here.](https://www.youtube.com/watch?v=xH6hAW3EqLk)
+      <br>set the URIs as follows:<br><br>
+      <a href="https://ibb.co/pvQZ1Q6"><img src="https://i.ibb.co/3yvWTv5/Whats-App-Image-2022-06-10-at-15-47-56.jpg" alt="Whats-App-Image-2022-06-10-at-15-47-56" border="0"></a>
+      <a href="https://ibb.co/b6J3Kfs"><img src="https://i.ibb.co/51F9R7r/Whats-App-Image-2022-06-10-at-15-48-20.jpg" alt="Whats-App-Image-2022-06-10-at-15-48-20" border="0"></a>
       <br><br>
       ```
       // for DB connection
