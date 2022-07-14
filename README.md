@@ -56,7 +56,7 @@ you can [click here](https://www.youtube.com/watch?v=HY6YOd0Ix3g) to watch a sho
         ./DB/DBinit.sh
         ```
         Supposed to look like this:
-        <img src="./client/fair_politics/src/images/db.jpeg">
+        <img src="https://raw.githubusercontent.com/Final-Project-bb/FairPolitics/master/Client/fair_politics/src/images/DB.jpeg">
         <br> 2. Server side: run with npm from Server folder by commands: 
         ```
         1. cd ./Server/
@@ -64,7 +64,7 @@ you can [click here](https://www.youtube.com/watch?v=HY6YOd0Ix3g) to watch a sho
         3. npm start
         ```
         Supposed to look like this:
-        <img src="./client/fair_politics/src/images/server.jpeg">
+        <img src="https://raw.githubusercontent.com/Final-Project-bb/FairPolitics/master/Client/fair_politics/src/images/server.jpeg">
         <br> 3. Client side: run with npm from Client folder by commands: 
         ```
         1. cd ./Client/fair_politics/
@@ -72,7 +72,7 @@ you can [click here](https://www.youtube.com/watch?v=HY6YOd0Ix3g) to watch a sho
         3. npm start
         ```
         Supposed to look like this:
-        <img src='./client/fair_politics/src/images/client.jpeg'>
+        <img src='https://raw.githubusercontent.com/Final-Project-bb/FairPolitics/master/Client/fair_politics/src/images/Client.jpeg'>
 
 
 ## Languages:
