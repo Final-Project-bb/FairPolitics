@@ -5,13 +5,11 @@ import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { AppContext } from "./Context";
 import Loading from "./Loading";
-import { FaFacebook, FaSms } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
 import { algorithms } from "./algorithmDetails";
 import GoogleLogin from "react-google-login";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from "@mui/icons-material/Google";
 import { Icon } from "@iconify/react";
 import { useStateIfMounted } from "use-state-if-mounted";
@@ -73,41 +71,7 @@ const Login = () => {
   //   // setUserInfo(data);
   // };
 
-  const faceBook = () => {
-    const port = 4000;
-    const openedWindow = window.open(
-      `http://localhost:${port}/api/facebook`,
-      "Facebook authenticate",
-      "height=600,width=600"
-    );
-    //Note: the fetch starting when the window is closed
-    let flag = true;
-    while (flag) {
-      if (
-        confirm(
-          "you have to closed the Facebook authenticate window to continue!"
-        )
-      ) {
-        openedWindow.window.close();
-        flag = false;
-      }
-    }
-    const timer = setInterval(async () => {
-      if (openedWindow.closed) {
-        clearInterval(timer);
-        console.log('Facebook authenticate" window closed!');
-        const response = await fetch(
-          `http://localhost:${port}/connection/login/facebook/success`
-        )
-          .then((res) => res.json())
-          .then((json) => {
-            console.log("facebook here:");
-            console.log(json);
-            // setChosenAlgorithm(json);
-          });
-      }
-    }, 500);
-  };
+
   const gMail = async () => {
     const port = 4000;
     const openedWindow = window.open(
@@ -352,12 +316,6 @@ const Login = () => {
                   </Button>
                   {/* <small style={styles.small3}>Sign in quickly!</small> */}
                   <CardContent style={styles.iconsContainer}>
-                    {/* <IconButton onClick={() => faceBook()}>
-                      <Icon
-                        icon='logos:facebook'
-                        style={{ fontSize: "40px" }}
-                      />
-                    </IconButton> */}
                     <IconButton onClick={(e) => loginGoogle(e)}>
                       <Icon
                         icon='logos:google-gmail'

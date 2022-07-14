@@ -55,18 +55,24 @@ you can [click here](https://www.youtube.com/watch?v=HY6YOd0Ix3g) to watch a sho
         ```
         ./DB/DBinit.sh
         ```
+        Supposed to look like this:
+        <img src="./client/fair_politics/src/images/db.jpeg">
         <br> 2. Server side: run with npm from Server folder by commands: 
         ```
         1. cd ./Server/
         2. npm install
         3. npm start
         ```
+        Supposed to look like this:
+        <img src="./client/fair_politics/src/images/server.jpeg">
         <br> 3. Client side: run with npm from Client folder by commands: 
         ```
         1. cd ./Client/fair_politics/
         2. npm install
         3. npm start
         ```
+        Supposed to look like this:
+        <img src='./client/fair_politics/src/images/client.jpeg'>
 
 
 ## Languages:

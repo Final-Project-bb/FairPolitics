@@ -4,7 +4,6 @@ import { AppContext } from "./Context";
 import { useHistory } from "react-router-dom";
 import Loading from "./Loading";
 import styled from "styled-components";
-import { FaFacebook, FaSms } from "react-icons/fa";
 import { BiMailSend } from "react-icons/bi";
 import { SiGmail } from "react-icons/si";
 import { FcGoogle, FcOk } from "react-icons/fc";
@@ -49,7 +48,6 @@ const Register = () => {
   const [passFlag, setPassFlag] = useStateIfMounted(false);
   const [otherFlag, setOtherFlag] = useStateIfMounted(false);
   // const [isGoogleAuth, setIsGoogleAuth] = useStateIfMounted(false);
-  // const [isFacebookAuth, setIsFacebookAuth] = useStateIfMounted(false);
 
   const { setUserDetails, setIsConnected, loading, setLoading, setAlgoId } =
     useContext(AppContext);
@@ -176,42 +174,7 @@ const Register = () => {
       })
       .catch((err) => console.error(err));
   };
-  const faceBook = () => {
-    const port = 4000;
-    const openedWindow = window.open(
-      `http://localhost:${port}/api/facebook`,
-      "Facebook authenticate",
-      "height=600,width=600"
-    );
-    //Note: the fetch starting when the window is closed
-    let flag = true;
-    while (flag) {
-      if (
-        confirm(
-          "you have to closed the Facebook authenticate window to continue!"
-        )
-      ) {
-        openedWindow.window.close();
-        flag = false;
-      }
-    }
-    const timer = setInterval(async () => {
-      if (openedWindow.closed) {
-        clearInterval(timer);
-        console.log('Facebook authenticate" window closed!');
-        const response = await fetch(
-          `http://localhost:${port}/connection/login/facebook/success`
-        )
-          .then((res) => res.json())
-          .then((json) => {
-            console.log("facebook here:");
-            console.log(json);
-            // setIsFacebookAuth(true);
-            // setChosenAlgorithm(json);
-          });
-      }
-    }, 500);
-  };
+
   const gMail = async () => {
     const port = 4000;
     const openedWindow = window.open(
@@ -543,18 +506,6 @@ const Register = () => {
                         alignItems: "center",
                         // left: -20,
                       }}>
-                      {/* <Tooltip title='Register via Facebook'>
-                        <IconButton
-                          sx={[
-                            {
-                              "&:hover": { backgroundColor: "white" },
-                              fontSize: "40px",
-                            },
-                          ]}
-                          onClick={() => faceBook()}>
-                          <Icon icon='logos:facebook' />
-                        </IconButton>
-                      </Tooltip> */}
                       <Tooltip title='Register via Gmail'>
                         <Button
                           sx={[

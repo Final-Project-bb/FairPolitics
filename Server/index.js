@@ -56,8 +56,6 @@ app.set('view engine', 'ejs');
 app.get('/connection/login/google/success', (req, res) => res.send(userProfile));
 app.get('/error', (req, res) => res.send("error logging in"));
 
-app.get('/connection/login/facebook/success', (req, res) => res.send(userProfile));
-// app.get('/error', (req, res) => res.send("error logging in"));
 
 
 passport.serializeUser(function(user, cb) {
@@ -92,30 +90,6 @@ app.get('/api/google/callback',
     res.redirect('/connection/login/google/success');
   });
 
-
-/*  Facebook AUTH  */
-const FacebookStrategy = require("passport-facebook").Strategy;
-
-passport.use(new FacebookStrategy({
-      clientID: process.env.FACEBOOK_APP_ID,
-      clientSecret: process.env.FACEBOOK_APP_SECRET,
-      callbackURL: "/api/facebook/callback",
-  },
-  function(accessToken, refreshToken, profile, done) {
-      userProfile=profile;
-      return done(null, userProfile);
-  }
-));
-
-app.get('/api/facebook', 
-  passport.authenticate('facebook', { scope : ['profile', 'email'] }));
- 
-app.get('/api/facebook/callback', 
-  passport.authenticate('facebook', { failureRedirect: '/error' }),
-  function(req, res) {
-    // Successful authentication, redirect success.
-    res.redirect('/connection/login/facebook/success');
-  });
 
 
 module.exports = app;

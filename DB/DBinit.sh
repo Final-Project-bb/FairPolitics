@@ -2,7 +2,7 @@
 
 echo "starting initialize DB..."
 
-DB_PATH="./DB/fairpoliticsdb"
+DB_PATH="./fairpoliticsdb"
 DB_NAME="fairpoliticsdb"
 
 
@@ -20,11 +20,11 @@ DB_NAME="fairpoliticsdb"
 	echo "Importing tables to local Database..."
 	sudo mysql -u $username -p$password < $DB_PATH.sql
 
-	
+	echo "DBinit finished succesfully!"
+
  	echo "Opening fairpoliticsdb schema..."
 	sudo mysql -u $username -p$password $DB_NAME
 
 	ALTER USER `$username`@'localhost' IDENTIFIED WITH mysql_native_password BY `$password`
 
 	
-	echo "DBinit finished succesfully!"
